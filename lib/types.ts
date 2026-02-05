@@ -92,6 +92,8 @@ export interface PredictionResult {
   crowdStats?: {
     last30minReportCount: number;
     last30minStopped: number;
+    last30minDelayed: number; // 🆕
+    last30minCrowded: number; // 🆕
     last30minResumed: number;
   };
 }
@@ -186,6 +188,8 @@ export interface PredictionInput {
     reportCount: number;
     last30minCounts?: {
       stopped: number;
+      delayed: number; // 🆕
+      crowded: number; // 🆕
       resumed: number;
       total: number;
     };

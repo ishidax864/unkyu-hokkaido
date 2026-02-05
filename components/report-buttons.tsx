@@ -18,6 +18,8 @@ interface ReportButtonsProps {
     onReport: (type: ReportType, comment?: string) => void;
     counts?: {
         stopped: number;
+        delayed: number;
+        crowded: number;
         resumed: number;
     };
 }

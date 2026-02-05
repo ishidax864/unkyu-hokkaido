@@ -36,6 +36,8 @@ export interface CrowdsourcedStatus {
     source: 'supabase' | 'localStorage';
     last30minCounts?: {
         stopped: number;
+        delayed: number;
+        crowded: number;
         resumed: number;
         total: number;
     };
@@ -227,7 +229,6 @@ export function aggregateCrowdsourcedStatus(routeId: string): CrowdsourcedStatus
             ? reports.sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0].createdAt
             : '',
         trendingComments,
-        trendingComments,
         source: 'localStorage',
         last30minCounts: getRecentCounts(reports, 30),
     };
@@ -240,6 +241,8 @@ function getRecentCounts(reports: UserReport[], minutes: number) {
     const recent = reports.filter(r => r.createdAt >= since);
     return {
         stopped: recent.filter(r => r.reportType === 'stopped').length,
+        delayed: recent.filter(r => r.reportType === 'delayed').length,
+        crowded: recent.filter(r => r.reportType === 'crowded').length,
         resumed: recent.filter(r => r.reportType === 'resumed' || r.reportType === 'normal').length,
         total: recent.length
     };
@@ -264,7 +267,6 @@ function buildCrowdsourcedStatus(
             .filter(r => r.comment)
             .slice(0, 3)
             .map(r => r.comment!),
-            .map(r => r.comment!),
         source,
         last30minCounts: getRecentCountsDB(reports, 30),
     };
@@ -278,6 +280,8 @@ function getRecentCountsDB(reports: UserReportDB[], minutes: number) {
 
     return {
         stopped: recent.filter(r => r.report_type === 'stopped').length,
+        delayed: recent.filter(r => r.report_type === 'delayed').length,
+        crowded: recent.filter(r => r.report_type === 'crowded').length,
         resumed: recent.filter(r => r.report_type === 'normal').length, // DB has 'normal' mapping for resumed usually
         total: recent.length
     };

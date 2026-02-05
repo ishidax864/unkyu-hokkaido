@@ -344,6 +344,8 @@ export default function Home() {
               onReport={handleReport}
               counts={realtimeStatus?.last30minCounts ? {
                 stopped: realtimeStatus.last30minCounts.stopped,
+                delayed: realtimeStatus.last30minCounts.delayed, // 🆕
+                crowded: realtimeStatus.last30minCounts.crowded, // 🆕
                 resumed: realtimeStatus.last30minCounts.resumed
               } : undefined}
             />
