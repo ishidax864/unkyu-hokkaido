@@ -1,26 +1,136 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
 :root {
+  /* Public Transit Light Mode Palette */
   --background: #ffffff;
-  --foreground: #171717;
-}
+  --background-secondary: #f5f7fa;
+  --foreground: #1a1a1a;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* JR Hokkaido Green */
+  --primary: #007849;
+  --primary-foreground: #ffffff;
+
+  --secondary: #e8eef3;
+  --secondary-foreground: #1a1a1a;
+
+  --muted: #6b7280;
+  --muted-foreground: #9ca3af;
+
+  --accent: #0066cc;
+  --accent-foreground: #ffffff;
+
+  /* Signal Colors - Clear Status Indicators */
+  --status-normal: #22a352;
+  /* Green - 平常運転 */
+  --status-warning: #f5a623;
+  /* Yellow - 遅延 */
+  --status-suspended: #dc3545;
+  /* Red - 運休 */
+
+  --border: #e2e8f0;
+  --input: #f8fafc;
+  --ring: #007849;
+
+  --radius: 0.5rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Card Styles - Clean and Functional */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card-elevated {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Status Badge Styles */
+.status-normal {
+  background: #e8f5ed;
+  color: var(--status-normal);
+  border: 1px solid #c3e6cb;
+}
+
+.status-warning {
+  background: #fff8e6;
+  color: #b8860b;
+  border: 1px solid #ffeeba;
+}
+
+.status-suspended {
+  background: #fde8ea;
+  color: var(--status-suspended);
+  border: 1px solid #f5c6cb;
+}
+
+/* Button Styles */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  border-radius: 0.375rem;
+  transition: background-color 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #006640;
+}
+
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Input Styles */
+.input-field {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--foreground);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 120, 73, 0.1);
+}
+
+/* Section Label */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+/* Route Color Bar */
+.route-color-bar {
+  width: 4px;
+  border-radius: 2px;
+}
+
+/* Utilities */
+.text-balance {
+  text-wrap: balance;
 }

@@ -1,0 +1,253 @@
+'use client';
+
+import { useState } from 'react';
+import { getStationsByRegion, Station } from '@/lib/hokkaido-data';
+import { Calendar, Clock, ChevronDown, ArrowRight, MapPin, PlayCircle, Timer } from 'lucide-react';
+
+interface SearchFormProps {
+    onSearch: (
+        departureId: string,
+        arrivalId: string,
+        date: string,
+        time: string,
+        timeType: 'departure' | 'arrival'
+    ) => void;
+    isLoading?: boolean;
+    // Controlled props
+    departureStation: Station | null;
+    setDepartureStation: (station: Station | null) => void;
+    arrivalStation: Station | null;
+    setArrivalStation: (station: Station | null) => void;
+    date: string;
+    setDate: (date: string) => void;
+    time: string;
+    setTime: (time: string) => void;
+    timeType: 'departure' | 'arrival';
+    setTimeType: (type: 'departure' | 'arrival') => void;
+}
+
+export function SearchForm({
+    onSearch,
+    isLoading,
+    departureStation,
+    setDepartureStation,
+    arrivalStation,
+    setArrivalStation,
+    date,
+    setDate,
+    time,
+    setTime,
+    timeType,
+    setTimeType,
+}: SearchFormProps) {
+    const [isDepartureOpen, setIsDepartureOpen] = useState(false);
+    const [isArrivalOpen, setIsArrivalOpen] = useState(false);
+
+    const stationsByRegion = getStationsByRegion();
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (departureStation && arrivalStation) {
+            onSearch(departureStation.id, arrivalStation.id, date, time, timeType);
+        }
+    };
+
+    // 🆕 現在の日時を設定
+    const setCurrentDateTime = () => {
+        const now = new Date();
+        setDate(now.toISOString().split('T')[0]);
+        setTime(now.toTimeString().slice(0, 5)); // HH:MM format
+        // 指定なしの場合は出発時刻とする
+        setTimeType('departure');
+
+        // 駅が選択されていれば即座に検索実行
+        if (departureStation && arrivalStation) {
+            onSearch(departureStation.id, arrivalStation.id,
+                now.toISOString().split('T')[0],
+                now.toTimeString().slice(0, 5),
+                'departure'
+            );
+        }
+    };
+
+    // 駅選択ドロップダウンコンポーネント
+    const StationSelector = ({
+        label,
+        selectedStation,
+        isOpen,
+        setIsOpen,
+        setStation,
+        otherStation,
+    }: {
+        label: string;
+        selectedStation: Station | null;
+        isOpen: boolean;
+        setIsOpen: (open: boolean) => void;
+        setStation: (station: Station) => void;
+        otherStation: Station | null;
+    }) => (
+        <div className="relative flex-1">
+            <label className="section-label">
+                {label}
+            </label>
+            <button
+                type="button"
+                onClick={() => {
+                    setIsOpen(!isOpen);
+                    if (label === '出発駅') setIsArrivalOpen(false);
+                    else setIsDepartureOpen(false);
+                }}
+                className="w-full input-field p-3 flex items-center justify-between text-left"
+            >
+                <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-[var(--muted)]" />
+                    {selectedStation ? (
+                        <span className="font-medium">{selectedStation.name}</span>
+                    ) : (
+                        <span className="text-[var(--muted)] text-sm">選択</span>
+                    )}
+                </div>
+                <ChevronDown className={`w-4 h-4 text-[var(--muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isOpen && (
+                <div className="absolute z-50 mt-1 w-full max-h-64 overflow-y-auto bg-white border border-[var(--border)] rounded-md shadow-lg">
+                    {Array.from(stationsByRegion.entries()).map(([region, stations]) => (
+                        <div key={region}>
+                            <div className="px-3 py-2 text-xs font-bold text-[var(--muted)] bg-[var(--background-secondary)] sticky top-0">
+                                {region}
+                            </div>
+                            {stations.map((station) => {
+                                const isDisabled = otherStation?.id === station.id;
+                                return (
+                                    <button
+                                        key={station.id}
+                                        type="button"
+                                        disabled={isDisabled}
+                                        onClick={() => {
+                                            setStation(station);
+                                            setIsOpen(false);
+                                        }}
+                                        className={`w-full px-3 py-2 flex items-center gap-2 text-left text-sm
+                                            ${isDisabled
+                                                ? 'opacity-30 cursor-not-allowed bg-gray-50'
+                                                : 'hover:bg-[var(--background-secondary)]'
+                                            }
+                                            ${station.isMajor ? 'font-medium' : ''}
+                                        `}
+                                    >
+                                        <MapPin className={`w-3 h-3 ${station.isMajor ? 'text-[var(--primary)]' : 'text-[var(--muted)]'}`} />
+                                        <span>{station.name}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            {/* 出発・到着駅選択 */}
+            <div className="flex flex-col md:flex-row md:items-end gap-2 relative">
+                <StationSelector
+                    label="出発駅"
+                    selectedStation={departureStation}
+                    isOpen={isDepartureOpen}
+                    setIsOpen={setIsDepartureOpen}
+                    setStation={setDepartureStation}
+                    otherStation={arrivalStation}
+                />
+
+                <div className="flex items-center justify-center py-1 md:pb-3">
+                    <ArrowRight className="w-5 h-5 text-[var(--muted)] rotate-90 md:rotate-0" />
+                </div>
+
+                <StationSelector
+                    label="到着駅"
+                    selectedStation={arrivalStation}
+                    isOpen={isArrivalOpen}
+                    setIsOpen={setIsArrivalOpen}
+                    setStation={setArrivalStation}
+                    otherStation={departureStation}
+                />
+            </div>
+
+            {/* 日付・時刻選択 */}
+            <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label className="section-label flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            日付
+                        </label>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            min={new Date().toISOString().split('T')[0]}
+                            className="w-full input-field p-3 text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label className="section-label flex items-center gap-1 mb-1">
+                            <Clock className="w-3 h-3" />
+                            時刻
+                        </label>
+                        <div className="flex bg-[var(--background-secondary)] rounded-md border border-[var(--border)] p-1 mb-2">
+                            <button
+                                type="button"
+                                onClick={() => setTimeType('departure')}
+                                className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${timeType === 'departure' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
+                            >
+                                <PlayCircle className="w-3 h-3" />
+                                出発
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setTimeType('arrival')}
+                                className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${timeType === 'arrival' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
+                            >
+                                <Timer className="w-3 h-3" />
+                                到着
+                            </button>
+                        </div>
+                        <input
+                            type="time"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            className="w-full input-field p-3 text-sm"
+                        />
+                    </div>
+                </div>
+
+                {/* 🆕 現在ボタン */}
+                <button
+                    type="button"
+                    onClick={setCurrentDateTime}
+                    className="w-full btn-secondary py-2.5 text-sm flex items-center justify-center gap-2"
+                >
+                    📍 現在の日時で検索
+                </button>
+            </div>
+
+            {/* 予測ボタン */}
+            <button
+                type="submit"
+                disabled={!departureStation || !arrivalStation || isLoading}
+                className="w-full btn-primary py-3.5 text-base"
+            >
+                {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        予測中...
+                    </span>
+                ) : (
+                    '運休リスクを予測する'
+                )}
+            </button>
+        </form>
+    );
+}

@@ -1,0 +1,234 @@
+// =====================
+// 運休AI 型定義
+// =====================
+
+// 運行状況レベル
+export type OperationStatus = '平常運転' | '遅延' | '運転見合わせ' | '運休' | '運休中';
+
+// 予測信頼度
+export type ConfidenceLevel = 'high' | 'medium' | 'low';
+
+// 天気影響度
+export type WeatherImpact = 'なし' | '軽微' | '中程度' | '重大';
+
+// 報告タイプ
+export type ReportType = 'stopped' | 'delayed' | 'crowded' | 'normal' | 'resumed';
+
+// JRステータス
+export type JRStatus = 'normal' | 'delay' | 'suspended' | 'cancelled' | 'partial';
+
+// 予測モード
+export type PredictionMode = 'risk' | 'recovery';  // risk: 運休リスク予測, recovery: 復旧予測
+
+// =====================
+// 路線・駅情報
+// =====================
+
+export interface Route {
+  id: string;
+  name: string;
+  company: string;
+  region: string;
+  color?: string;
+}
+
+export interface Station {
+  id: string;
+  name: string;
+  lines: string[];
+  latitude?: number;
+  longitude?: number;
+}
+
+// =====================
+// 気象情報
+// =====================
+
+export interface WeatherWarning {
+  type: '暴風警報' | '大雨警報' | '大雪警報' | '暴風注意報' | '大雨注意報' | '雷注意報';
+  area: string;
+  issuedAt: string;
+}
+
+export interface WeatherForecast {
+  date: string;
+  weather: string;
+  tempMax: number;
+  tempMin: number;
+  precipitation: number;
+  windSpeed: number;
+  snowfall?: number;
+  snowDepth?: number;
+  snowDepthChange?: number; // 🆕 前時間からの積雪増加量(cm)
+  windGust?: number;
+  weatherCode?: number;
+  warnings: WeatherWarning[];
+  targetTime?: string; // HH:MM
+  surroundingHours?: WeatherForecast[]; // 前後数時間の予報
+}
+
+// =====================
+// 予測結果
+// =====================
+
+export interface PredictionResult {
+  routeId: string;
+  targetDate: string;
+  probability: number;
+  status: OperationStatus;
+  confidence: ConfidenceLevel;
+  reasons: string[];
+  weatherImpact: WeatherImpact;
+  updatedAt: string;
+  aiReason?: string;  // AI生成の理由文
+
+  // 復旧予測モード用
+  mode: PredictionMode;
+  isCurrentlySuspended: boolean;
+  estimatedRecoveryTime?: string;  // 例: "13:00頃", "18:30頃"
+  estimatedRecoveryHours?: number; // 🆕 時間単位（0.5, 1, 3, 6, 12）
+  recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
+  suspensionReason?: string;  // 運休の原因
+  crowdStats?: {
+    last30minReportCount: number;
+    last30minStopped: number;
+    last30minResumed: number;
+  };
+}
+
+// =====================
+// 検索・入力
+// =====================
+
+export interface SearchInput {
+  routeId: string;
+  date: string;
+  time: string;
+}
+
+export interface SearchParams {
+  departureId: string;
+  arrivalId: string;
+  date: string;
+  time: string;
+}
+
+// =====================
+// API関連
+// =====================
+
+export interface APIResponse<T> {
+  data?: T;
+  error?: string;
+  source?: 'api' | 'cache' | 'fallback';
+}
+
+export interface JRStatusResponse {
+  items: JRStatusItem[];
+  fetchedAt: string;
+  source: string;
+}
+
+export interface JRStatusItem {
+  routeName: string;
+  status: JRStatus;
+  description: string;
+  updatedAt: string;
+  source: 'official' | 'rss' | 'mock';
+}
+
+export interface AIReasonRequest {
+  routeName: string;
+  probability: number;
+  factors: string[];
+  weather?: {
+    wind: number;
+    snow: number;
+    rain: number;
+  };
+}
+
+export interface AIReasonResponse {
+  reason: string;
+  source: 'gemini' | 'cache' | 'fallback';
+}
+
+// =====================
+// 外部API（ODPT等）
+// =====================
+
+export interface ODPTTrainInfo {
+  id: string;
+  operator: string;
+  railway: string;
+  trainInformationStatus?: string;
+  trainInformationText?: string;
+}
+
+// =====================
+// 予測エンジン内部型
+// =====================
+
+export interface PredictionInput {
+  routeId: string;
+  routeName: string;
+  targetDate: string;
+  targetTime?: string;
+  weather: WeatherForecast | null;
+  currentDelay?: boolean;
+  jrStatus?: {
+    status: JRStatus;
+    statusText?: string;
+    updatedAt?: string;
+  } | null;
+  crowdsourcedStatus?: {
+    consensusStatus: ReportType | 'unknown';
+    reportCount: number;
+    last30minCounts?: {
+      stopped: number;
+      resumed: number;
+      total: number;
+    };
+  } | null;
+  historicalData?: {
+    suspensionRate: number;
+    avgSuspensionsPerWeek: number;
+    recentTrend: 'increasing' | 'decreasing' | 'stable';
+    totalReports: number;
+  } | null;
+  timetableTrain?: any; // To avoid circular dependency with Timetable types for now, or use loose typing
+}
+
+export interface RiskFactor {
+  condition: (input: PredictionInput, vuln: VulnerabilityData) => boolean;
+  weight: (input: PredictionInput, vuln: VulnerabilityData) => number;
+  reason: (input: PredictionInput) => string;
+  priority: number; // 表示優先度（低い方が上）
+}
+
+export interface VulnerabilityData {
+  windThreshold: number;
+  snowThreshold: number;
+  vulnerabilityScore: number;
+  description: string;
+  hasDeerRisk?: boolean; // エゾシカ衝突リスクの高い路線か
+}
+
+// =====================
+// ユーティリティ型
+// =====================
+
+// Partial but with required keys
+export type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+// =====================
+// グラフ用データ型
+// =====================
+
+export interface HourlyRiskData {
+  time: string;
+  risk: number;
+  weatherIcon: 'snow' | 'rain' | 'wind' | 'cloud' | 'sun';
+  isTarget: boolean; // 検索対象の時刻かどうか
+  isCurrent?: boolean; // isTargetと重複するが、明確化のため
+}

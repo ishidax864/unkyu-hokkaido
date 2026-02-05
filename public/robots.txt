@@ -1,0 +1,10 @@
+# 運休AI Robots.txt
+User-agent: *
+Allow: /
+
+# サイトマップ
+Sitemap: https://unkyu-ai.vercel.app/sitemap.xml
+
+# クローラー制限
+Disallow: /api/
+Disallow: /_next/

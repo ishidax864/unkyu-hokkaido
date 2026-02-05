@@ -1,0 +1,39 @@
+{
+    "name": "運休AI",
+    "short_name": "運休AI",
+    "description": "AIが天候から電車の運休リスクを予測。通勤・通学の計画に役立つ無料サービス。",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#007849",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshots/home.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "categories": [
+        "travel",
+        "weather",
+        "utilities"
+    ],
+    "lang": "ja",
+    "dir": "ltr"
+}

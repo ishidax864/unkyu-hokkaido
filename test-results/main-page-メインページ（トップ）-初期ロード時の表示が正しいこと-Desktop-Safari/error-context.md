@@ -1,0 +1,61 @@
+# Page snapshot
+
+```yaml
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - heading "運休AI" [level=1] [ref=e10]
+      - text: 北海道JR
+    - generic [ref=e12]: 札幌
+  - generic [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]: 運休リスクを調べる
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - text: 出発駅
+            - button "選択" [ref=e20]:
+              - generic [ref=e21]:
+                - img [ref=e22]
+                - text: 選択
+              - img [ref=e25]
+          - img [ref=e28]
+          - generic [ref=e30]:
+            - text: 到着駅
+            - button "選択" [ref=e31]:
+              - generic [ref=e32]:
+                - img [ref=e33]
+                - text: 選択
+              - img [ref=e36]
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - img [ref=e42]
+                - text: 日付
+              - textbox [ref=e44]: 2026-02-06
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - img [ref=e47]
+                - text: 時刻
+              - generic [ref=e50]:
+                - button "出発" [ref=e51]:
+                  - img [ref=e52]
+                  - text: 出発
+                - button "到着" [ref=e55]:
+                  - img [ref=e56]
+                  - text: 到着
+              - textbox [ref=e59]: 08:00
+          - button "📍 現在の日時で検索" [ref=e60]
+        - button "運休リスクを予測する" [disabled] [ref=e61]
+    - generic [ref=e62]:
+      - heading "🚀 Proプランで先読み" [level=3] [ref=e63]
+      - paragraph [ref=e64]:
+        - text: 公式発表の30分前にプッシュ通知。
+        - text: 24時間先までの詳細予測グラフも。
+      - button "7日間無料で試す" [ref=e65]
+    - generic [ref=e66]:
+      - paragraph [ref=e67]: © 2026 運休AI - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。
+      - paragraph [ref=e68]: "天気データ: Open-Meteo API"
+```
