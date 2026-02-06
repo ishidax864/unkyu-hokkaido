@@ -73,7 +73,20 @@ export interface AffiliateProvider {
     enabled: boolean;
 }
 
+// PR表記用の定数
+export const PR_LABEL = "PR";
+
 export const TAXI_AFFILIATES: AffiliateProvider[] = [
+    {
+        id: 'nearme',
+        name: 'NearMe (スマートシャトル)',
+        type: 'taxi', // 相乗りタクシー
+        logoUrl: '/affiliates/nearme.png', // 仮
+        deepLink: '',
+        webUrl: 'https://px.a8.net/svt/ejp?a8mat=4AX4SE+16VZM+4Q64+5YJRM',
+        affiliateTag: 'a8',
+        enabled: true,
+    },
     {
         id: 'go',
         name: 'GO タクシー',
@@ -83,7 +96,7 @@ export const TAXI_AFFILIATES: AffiliateProvider[] = [
         // 💰 ここにASP（A8.netなど）のアフィリエイトリンクを設定すると収益化できます
         // 例: 'https://px.a8.net/svt/ejp?a8mat=XXXXXX+XXXXXX+XXXXXX'
         webUrl: 'https://go.mo-t.com/',
-        affiliateTag: 'unkyu-ai', // アプリ連携用タグ（あれば）
+        affiliateTag: 'unkyu-ai',
         enabled: true,
     },
     {
@@ -96,7 +109,6 @@ export const TAXI_AFFILIATES: AffiliateProvider[] = [
         affiliateTag: 'unkyu-ai',
         enabled: true,
     },
-    // 💡 Uberは北海道（札幌）でも利用可能です
     {
         id: 'uber',
         name: 'Uber Taxi',
@@ -107,6 +119,32 @@ export const TAXI_AFFILIATES: AffiliateProvider[] = [
         affiliateTag: 'unkyu-ai',
         enabled: true,
     },
+];
+
+export const RENTAL_CAR_AFFILIATES: AffiliateProvider[] = [
+    {
+        id: 'airtrip-rental',
+        name: 'エアトリレンタカー',
+        type: 'hotel', //便宜上 string
+        logoUrl: '/affiliates/airtrip.png',
+        deepLink: '',
+        webUrl: 'https://px.a8.net/svt/ejp?a8mat=4AX4SE+A4E2A+AD2+2TB4AP',
+        affiliateTag: 'a8',
+        enabled: true,
+    },
+];
+
+export const BUS_AFFILIATES: AffiliateProvider[] = [
+    {
+        id: 'airtrip-bus',
+        name: 'エアトリバス',
+        type: 'taxi', // 便宜上
+        logoUrl: '/affiliates/airtrip.png',
+        deepLink: '',
+        webUrl: 'https://www.airtrip.jp/bus/', // 仮のトップページ（テキストリンクが未発行のため）
+        affiliateTag: 'a8',
+        enabled: true,
+    }
 ];
 
 // ストレージキー

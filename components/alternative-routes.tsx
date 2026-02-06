@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Route, PredictionResult } from '@/lib/types';
-import { TAXI_AFFILIATES } from '@/lib/user-reports';
+import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES } from '@/lib/user-reports';
 import { Station, estimateTaxiFare, getAlternativeRoutes, AlternativeRouteOption } from '@/lib/hokkaido-data';
 import { HourlyRiskData, OperationStatus } from '@/lib/types';
 import {
@@ -389,7 +389,7 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                             <Bus className="w-3 h-3" />
                             路線バス（エリア情報）
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                             {availableBuses.map((bus) => (
                                 <button
                                     key={bus.id}
@@ -411,6 +411,23 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                                 </button>
                             ))}
                         </div>
+                        {/* バス予約（アフィリエイト） */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {BUS_AFFILIATES.filter(b => b.enabled).map((bus) => (
+                                <a
+                                    key={bus.id}
+                                    href={bus.webUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => handleSelect({ type: 'bus', provider: bus.id }, `bus-${bus.id}`)}
+                                    className="relative flex items-center justify-center gap-2 p-2.5 rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                                >
+                                    <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
+                                    <Bus className="w-4 h-4 text-blue-600" />
+                                    <span className="font-medium text-blue-700 text-sm">{bus.name}で予約</span>
+                                </a>
+                            ))}
+                        </div>
                     </div>
                 ) : (
                     /* バスがない場合（特定ルートもなく、ジェネリックもない場合のみメッセージ） */
@@ -426,7 +443,7 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                     <div className="flex items-center justify-between mb-2">
                         <div className="section-label flex items-center gap-1">
                             <Car className="w-3 h-3" />
-                            タクシーで移動
+                            タクシー・シェア
                         </div>
                         {taxiFareEstimate && (
                             <span className="text-xs font-bold text-[var(--muted)]">
@@ -438,14 +455,41 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                         {TAXI_AFFILIATES.filter(t => t.enabled).map((taxi) => (
                             <a
                                 key={taxi.id}
-                                href={`${taxi.webUrl}?ref=${taxi.affiliateTag}`}
+                                href={taxi.affiliateTag === 'a8' ? taxi.webUrl : `${taxi.webUrl}?ref=${taxi.affiliateTag}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => handleSelect({ type: 'taxi', provider: taxi.id }, `taxi-${taxi.id}`)}
-                                className="flex items-center justify-center gap-2 p-3 rounded-md border border-[var(--status-warning)] bg-[#fff8e6] hover:bg-[#fff3d6] transition-colors"
+                                className="relative flex items-center justify-center gap-2 p-3 rounded-md border border-[var(--status-warning)] bg-[#fff8e6] hover:bg-[#fff3d6] transition-colors"
                             >
+                                <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
                                 <Car className="w-4 h-4 text-[#b8860b]" />
                                 <span className="font-medium text-[#b8860b] text-sm">{taxi.name}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                {/* レンタカー */}
+                <div className="pt-2 border-t border-[var(--border)]">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="section-label flex items-center gap-1">
+                            <Car className="w-3 h-3" />
+                            レンタカー
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {RENTAL_CAR_AFFILIATES.filter(r => r.enabled).map((rental) => (
+                            <a
+                                key={rental.id}
+                                href={rental.webUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => handleSelect({ type: 'other', provider: rental.id }, `rental-${rental.id}`)}
+                                className="relative flex items-center justify-center gap-2 p-3 rounded-md border border-green-200 bg-green-50 hover:bg-green-100 transition-colors"
+                            >
+                                <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
+                                <Car className="w-4 h-4 text-green-600" />
+                                <span className="font-medium text-green-700 text-sm">{rental.name}を探す</span>
                             </a>
                         ))}
                     </div>
