@@ -291,6 +291,15 @@ export interface AlternativeRouteOption {
     url?: string; // 公式サイトがあれば
 }
 
+const SAPPORO_AREA = ['sapporo', 'shin-sapporo', 'kotoni', 'teine'];
+const OTARU_AREA = ['otaru', 'otaru-chikko', 'zenibako', 'yoichi'];
+const ASAHIKAWA_AREA = ['asahikawa', 'fukagawa', 'takikawa', 'sunagawa', 'bibai', 'iwamizawa'];
+const MURORAN_AREA = ['tomakomai', 'shiraoi', 'noboribetsu', 'higashi-muroran', 'muroran', 'datemombetsu', 'toya'];
+const HAKODATE_AREA = ['hakodate', 'shin-hakodate-hokuto', 'mori', 'yakumo', 'oshamambe'];
+const OBIHIRO_KUSHIRO_AREA = ['tomamu', 'shintoku', 'obihiro', 'ikeda', 'atsukeshi', 'kushiro', 'nemuro'];
+const SAKHALIN_AREA = ['wakkanai', 'shibetsu', 'nayoro'];
+const ABASHIRI_AREA = ['kamikawa', 'engaru', 'bihoro', 'kitami', 'abashiri', 'shiretoko-shari'];
+
 export const ALTERNATIVE_ROUTE_MAPPING: {
     match: (depId: string, arrId: string) => boolean;
     options: AlternativeRouteOption[];
@@ -316,9 +325,9 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 2. 札幌 ↔ 小樽
+        // 2. 札幌 ↔ 小樽方面
         {
-            match: (d, a) => (d === 'sapporo' && a === 'otaru') || (d === 'otaru' && a === 'sapporo'),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && OTARU_AREA.includes(a)) || (OTARU_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
@@ -336,9 +345,9 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 3. 札幌 ↔ 旭川
+        // 3. 札幌 ↔ 旭川方面
         {
-            match: (d, a) => (d === 'sapporo' && a === 'asahikawa') || (d === 'asahikawa' && a === 'sapporo'),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && ASAHIKAWA_AREA.includes(a)) || (ASAHIKAWA_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
@@ -350,10 +359,9 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 4. 札幌 ↔ 苫小牧・室蘭
+        // 4. 札幌 ↔ 苫小牧・室蘭方面
         {
-            match: (d, a) => (['sapporo'].includes(d) && ['tomakomai', 'muroran', 'higashi-muroran'].includes(a)) ||
-                (['tomakomai', 'muroran', 'higashi-muroran'].includes(d) && ['sapporo'].includes(a)),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && MURORAN_AREA.includes(a)) || (MURORAN_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
@@ -364,10 +372,9 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 5. 札幌 ↔ 函館
+        // 5. 札幌 ↔ 函館方面
         {
-            match: (d, a) => (['sapporo'].includes(d) && ['hakodate', 'shin-hakodate-hokuto', 'mori', 'oshamambe'].includes(a)) ||
-                (['hakodate', 'shin-hakodate-hokuto', 'mori', 'oshamambe'].includes(d) && ['sapporo'].includes(a)),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && HAKODATE_AREA.includes(a)) || (HAKODATE_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
@@ -379,40 +386,23 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 6. 札幌 ↔ 帯広
+        // 6. 札幌 ↔ 帯広・釧路方面（一括）
         {
-            match: (d, a) => (['sapporo'].includes(d) && ['obihiro'].includes(a)) ||
-                (['obihiro'].includes(d) && ['sapporo'].includes(a)),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && OBIHIRO_KUSHIRO_AREA.includes(a)) || (OBIHIRO_KUSHIRO_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
-                    name: 'ポテトライナー（高速帯広号）',
-                    details: '札幌駅前 ↔ 帯広駅前。要予約。',
-                    time: '約3時間50分',
-                    note: '冬季は峠越えのため遅延リスクあり。',
-                    url: 'https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=3'
+                    name: 'ポテトライナー / スターライト釧路号',
+                    details: '札幌駅前 ↔ 帯広・釧路。要予約。',
+                    time: '帯広:約4時間 / 釧路:約5.5時間',
+                    note: '冬季は峠越えのため遅延リスクあり。暴風雪時は運休リスク高。',
+                    url: 'https://www.chuo-bus.co.jp/highway/'
                 }
             ]
         },
-        // 7. 札幌 ↔ 釧路
+        // 8. 札幌 ↔ 稚内方面
         {
-            match: (d, a) => (['sapporo'].includes(d) && ['kushiro'].includes(a)) ||
-                (['kushiro'].includes(d) && ['sapporo'].includes(a)),
-            options: [
-                {
-                    type: 'bus',
-                    name: 'スターライト釧路号',
-                    details: '札幌駅前 ↔ 釧路駅前。要予約。',
-                    time: '約5時間20分',
-                    note: '長距離のため、暴風雪時はバスも運休する可能性が高い。',
-                    url: 'https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=5'
-                }
-            ]
-        },
-        // 8. 札幌 ↔ 稚内
-        {
-            match: (d, a) => (['sapporo'].includes(d) && ['wakkanai'].includes(a)) ||
-                (['wakkanai'].includes(d) && ['sapporo'].includes(a)),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && SAKHALIN_AREA.includes(a)) || (SAKHALIN_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
@@ -424,10 +414,9 @@ export const ALTERNATIVE_ROUTE_MAPPING: {
                 }
             ]
         },
-        // 9. 札幌 ↔ 北見・網走
+        // 9. 札幌 ↔ 北見・網走方面
         {
-            match: (d, a) => (['sapporo'].includes(d) && ['kitami', 'abashiri'].includes(a)) ||
-                (['kitami', 'abashiri'].includes(d) && ['sapporo'].includes(a)),
+            match: (d, a) => (SAPPORO_AREA.includes(d) && ABASHIRI_AREA.includes(a)) || (ABASHIRI_AREA.includes(d) && SAPPORO_AREA.includes(a)),
             options: [
                 {
                     type: 'bus',
