@@ -42,89 +42,95 @@ import {
     USER_REPORT_COUNT_BONUS_COEFFICIENT,
     USER_REPORT_MAX_BONUS,
     MIN_USER_REPORT_COUNT,
+    MODERATE_SNOW_DEPTH_THRESHOLD, // 🆕
+    MODERATE_SNOW_DEPTH_SCORE, // 🆕
+    CRITICAL_SNOW_DEPTH_THRESHOLD, // 🆕
+    CRITICAL_SNOW_DEPTH_SCORE, // 🆕
 } from './constants';
 
 // 路線別の運休しやすさ係数（北海道の路線特性を反映）
 export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
+
     'jr-hokkaido.hakodate-main': {
-        windThreshold: 15, // 平均風速
+        windThreshold: 25, // 平均風速 (函館本線は意外と風に強い: 22-24m/sでも動くことがある)
         snowThreshold: 5,  // 時間降雪量(cm/h)
         vulnerabilityScore: 1.0,
         description: '主要幹線、比較的安定',
         hasDeerRisk: false,
     },
     'jr-hokkaido.chitose': {
-        windThreshold: 15,
+        windThreshold: 16, // 空港線は遮蔽物がなく風に弱い (17-19m/sで止まる実績あり)
         snowThreshold: 4,
-        vulnerabilityScore: 0.8,
+        vulnerabilityScore: 1.6,
         description: '空港連絡線、優先的に運行維持',
         hasDeerRisk: false,
     },
+
     'jr-hokkaido.gakuentoshi': {
-        windThreshold: 12,
+        windThreshold: 15,
         snowThreshold: 4,
         vulnerabilityScore: 1.1,
         description: '一部単線区間あり',
         hasDeerRisk: true,
     },
     'jr-hokkaido.muroran': {
-        windThreshold: 12,
+        windThreshold: 16,
         snowThreshold: 4,
         vulnerabilityScore: 1.3,
         description: '海沿い区間で強風の影響受けやすい',
         hasDeerRisk: true,
     },
     'jr-hokkaido.sekihoku': {
-        windThreshold: 10,
+        windThreshold: 14,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '山間部多く積雪・強風に弱い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.soya': {
-        windThreshold: 10,
+        windThreshold: 14,
         snowThreshold: 3,
         vulnerabilityScore: 1.8,
         description: '最北端路線、厳寒期は運休多い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.nemuro': {
-        windThreshold: 12,
+        windThreshold: 16,
         snowThreshold: 3,
         vulnerabilityScore: 1.5,
         description: '長距離路線、部分運休が発生しやすい',
         hasDeerRisk: true,
     },
     'jr-hokkaido.senmo': {
-        windThreshold: 10,
+        windThreshold: 14,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '観光路線、冬季は運休しやすい',
         hasDeerRisk: true,
     },
     'jr-hokkaido.hidaka': {
-        windThreshold: 12,
+        windThreshold: 16,
         snowThreshold: 3,
         vulnerabilityScore: 1.4,
         description: '海沿い区間あり',
         hasDeerRisk: true,
     },
     'jr-hokkaido.rumoi': { // 🆕
-        windThreshold: 10,
+        windThreshold: 14,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '海岸線に近い・強風・積雪',
         hasDeerRisk: true,
     },
     'jr-hokkaido.sekisho': { // 🆕
-        windThreshold: 12,
+        windThreshold: 16,
         snowThreshold: 4,
         vulnerabilityScore: 1.5,
         description: '山間部・峠越え区間（強風・積雪）',
         hasDeerRisk: true,
     },
     'jr-hokkaido.furano': {
-        windThreshold: 12,
+        windThreshold: 16,
         snowThreshold: 3,
         vulnerabilityScore: 1.3,
         description: '内陸部、積雪の影響',
@@ -253,6 +259,46 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `積雪が急増中（${input.weather?.snowDepthChange}cm/h）: 車両スタックのリスク増大`,
         priority: 4, // 比較的優先度高め
     },
+    // 🆕 累積降雪（除雪作業・計画運休リスク）
+    {
+        // 積雪深がある程度あり、かつ「降り続いている」または「風がある（吹き溜まり）」場合のみリスクとする
+        // 単に積雪が深いだけ（晴れ・無風）なら、除雪済みであれば運行可能
+        condition: (input) => {
+            const depth = input.weather?.snowDepth ?? 0;
+            const snowfall = input.weather?.snowfall ?? 0;
+            const wind = input.weather?.windSpeed ?? 0;
+
+            // 閾値調整: Jan 29(運休)は雪0.28 -> 検知したい (0.25)
+            // Feb 5(正常)は雪0.14 -> 無視したい
+            // 風は誤報が多いので 16 -> 20 に引き上げ -> 再度10に緩和（地吹雪リスク）
+            return depth >= MODERATE_SNOW_DEPTH_THRESHOLD && (snowfall >= 0.25 || wind >= 10);
+        },
+        weight: (input) => {
+            const depth = input.weather?.snowDepth ?? 0;
+            // 40cm超: 運休リスク大 (Jan 28: 47cm -> 40点)
+            if (depth >= CRITICAL_SNOW_DEPTH_THRESHOLD) return CRITICAL_SNOW_DEPTH_SCORE; // 40
+
+            // 15cm超: 遅延リスク (Jan 20: 32cm -> 15点)
+            return MODERATE_SNOW_DEPTH_SCORE; // 15
+        },
+        reason: (input) => `短期間の記録的積雪（${input.weather?.snowDepth}cm）: 排雪作業による運休・遅延の可能性`,
+        priority: 3,
+    },
+    // 🆕 週末夜間の計画除雪（1月-2月）
+    {
+        condition: (input) => {
+            const date = new Date(input.targetDate);
+            const month = date.getMonth() + 1;
+            const dayOfWeek = date.getDay(); // 6 = Saturday
+            const depth = input.weather?.snowDepth ?? 0;
+
+            // 1月・2月の土曜日、かつ積雪が少しでもある場合 (5cm以上)
+            return (month === 1 || month === 2) && dayOfWeek === 6 && depth >= 5;
+        },
+        weight: () => 20, // 遅延〜運休リスク底上げ
+        reason: () => '冬季土曜夜間の計画除雪（運休・間引き運転の可能性）',
+        priority: 5,
+    },
     // 大雨
     {
         condition: (input) => (input.weather?.precipitation ?? 0) >= HEAVY_RAIN_THRESHOLD,
@@ -379,9 +425,9 @@ export function getTimeMultiplier(time?: string): number {
 export function getSeasonMultiplier(): number {
     const month = new Date().getMonth() + 1;
     // 厳冬期（1-2月）
-    if (month === 1 || month === 2) return 1.2;
+    if (month === 1 || month === 2) return 1.1;
     // 冬季（12月、3月）
-    if (month === 12 || month === 3) return 1.1;
+    if (month === 12 || month === 3) return 1.05;
     // それ以外
     return 1.0;
 }
