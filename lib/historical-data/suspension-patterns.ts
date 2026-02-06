@@ -113,6 +113,12 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
         hour = parseInt(timeStr.split(':')[0]);
     }
 
+    // 異常値対策: 平均風速に対して突風があまりに大きすぎる場合（3倍以上かつ平均15m/s未満）
+    let effectiveGust = gust;
+    if (wind < 15 && gust > wind * 3) {
+        effectiveGust = Math.max(wind * 3, 15); // 最低でも15m/sは維持しつつ、3倍でキャップ
+    }
+
     // 優先度順にチェック
 
     // 1. 災害級大雪 (季節問わず、降雪量で判定)
@@ -125,8 +131,8 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-rain-typhoon') || null;
     }
 
-    // 3. 暴風 (季節問わず、25m/s以上)
-    if (gust >= 25 || wind >= 20) {
+    // 3. 暴風 (季節問わず、有効最大風速25m/s以上)
+    if (effectiveGust >= 25 || wind >= 20) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-wind-low-pressure') || null;
     }
 
