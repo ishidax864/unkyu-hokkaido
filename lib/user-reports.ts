@@ -87,38 +87,6 @@ export const TAXI_AFFILIATES: AffiliateProvider[] = [
         affiliateTag: 'a8',
         enabled: true,
     },
-    {
-        id: 'go',
-        name: 'GO タクシー',
-        type: 'taxi',
-        logoUrl: '/affiliates/go-taxi.png',
-        deepLink: 'go-taxi://book',
-        // 💰 ここにASP（A8.netなど）のアフィリエイトリンクを設定すると収益化できます
-        // 例: 'https://px.a8.net/svt/ejp?a8mat=XXXXXX+XXXXXX+XXXXXX'
-        webUrl: 'https://go.mo-t.com/',
-        affiliateTag: 'unkyu-ai',
-        enabled: true,
-    },
-    {
-        id: 'didi',
-        name: 'DiDi',
-        type: 'taxi',
-        logoUrl: '/affiliates/didi.png',
-        deepLink: 'didi://',
-        webUrl: 'https://www.didiglobal.com/',
-        affiliateTag: 'unkyu-ai',
-        enabled: true,
-    },
-    {
-        id: 'uber',
-        name: 'Uber Taxi',
-        type: 'taxi',
-        logoUrl: '/affiliates/uber.png',
-        deepLink: 'uber://',
-        webUrl: 'https://www.uber.com/jp/ja/ride/',
-        affiliateTag: 'unkyu-ai',
-        enabled: true,
-    },
 ];
 
 export const RENTAL_CAR_AFFILIATES: AffiliateProvider[] = [

@@ -382,7 +382,7 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                     </div>
                 )}
 
-                {/* バス */}
+                {/* バス情報（アフィリエイトなし） */}
                 {availableBuses.length > 0 ? (
                     <div className="pt-2 border-t border-[var(--border)]">
                         <div className="section-label flex items-center gap-1">
@@ -411,26 +411,9 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                                 </button>
                             ))}
                         </div>
-                        {/* バス予約（アフィリエイト） */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {BUS_AFFILIATES.filter(b => b.enabled).map((bus) => (
-                                <a
-                                    key={bus.id}
-                                    href={bus.webUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={() => handleSelect({ type: 'bus', provider: bus.id }, `bus-${bus.id}`)}
-                                    className="relative flex items-center justify-center gap-2 p-2.5 rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
-                                >
-                                    <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
-                                    <Bus className="w-4 h-4 text-blue-600" />
-                                    <span className="font-medium text-blue-700 text-sm">{bus.name}で予約</span>
-                                </a>
-                            ))}
-                        </div>
                     </div>
                 ) : (
-                    /* バスがない場合（特定ルートもなく、ジェネリックもない場合のみメッセージ） */
+                    /* バスがない場合メッセージ */
                     (availableBuses.length === 0 && specificAlternatives.length === 0) && (
                         <div className="pt-2 border-t border-[var(--border)] text-xs text-[var(--muted)] italic">
                             ※悪天候のためバス等の運行も乱れている可能性があります
@@ -438,20 +421,42 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                     )
                 )}
 
-                {/* タクシー */}
+                {/* 予約・手配（アフィリエイト・PR統合セクション） */}
                 <div className="pt-2 border-t border-[var(--border)]">
                     <div className="flex items-center justify-between mb-2">
                         <div className="section-label flex items-center gap-1">
                             <Car className="w-3 h-3" />
-                            タクシー・シェア
+                            移動手段の予約・手配
                         </div>
                         {taxiFareEstimate && (
                             <span className="text-xs font-bold text-[var(--muted)]">
-                                概算: ¥{taxiFareEstimate.toLocaleString()}〜
+                                タクシー概算: ¥{taxiFareEstimate.toLocaleString()}〜
                             </span>
                         )}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {/* バス予約 */}
+                        {BUS_AFFILIATES.filter(b => b.enabled).map((bus) => (
+                            <a
+                                key={bus.id}
+                                href={bus.webUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => handleSelect({ type: 'bus', provider: bus.id }, `bus-${bus.id}`)}
+                                className="relative flex items-center gap-3 p-3 rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                            >
+                                <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
+                                <div className="bg-blue-200 p-2 rounded-full">
+                                    <Bus className="w-5 h-5 text-blue-700" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-blue-800">高速・路線バス</span>
+                                    <span className="text-[10px] text-blue-600">{bus.name}</span>
+                                </div>
+                            </a>
+                        ))}
+
+                        {/* シェア・タクシー予約 */}
                         {TAXI_AFFILIATES.filter(t => t.enabled).map((taxi) => (
                             <a
                                 key={taxi.id}
@@ -459,25 +464,20 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => handleSelect({ type: 'taxi', provider: taxi.id }, `taxi-${taxi.id}`)}
-                                className="relative flex items-center justify-center gap-2 p-3 rounded-md border border-[var(--status-warning)] bg-[#fff8e6] hover:bg-[#fff3d6] transition-colors"
+                                className="relative flex items-center gap-3 p-3 rounded-md border border-[var(--status-warning)] bg-[#fff8e6] hover:bg-[#fff3d6] transition-colors"
                             >
                                 <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
-                                <Car className="w-4 h-4 text-[#b8860b]" />
-                                <span className="font-medium text-[#b8860b] text-sm">{taxi.name}</span>
+                                <div className="bg-[#fceeb5] p-2 rounded-full">
+                                    <Car className="w-5 h-5 text-[#b8860b]" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-[#b8860b]">相乗りタクシー</span>
+                                    <span className="text-[10px] text-[#9a7b26]">{taxi.name.split(' ')[0]}</span>
+                                </div>
                             </a>
                         ))}
-                    </div>
-                </div>
 
-                {/* レンタカー */}
-                <div className="pt-2 border-t border-[var(--border)]">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="section-label flex items-center gap-1">
-                            <Car className="w-3 h-3" />
-                            レンタカー
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {/* レンタカー予約 */}
                         {RENTAL_CAR_AFFILIATES.filter(r => r.enabled).map((rental) => (
                             <a
                                 key={rental.id}
@@ -485,11 +485,16 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => handleSelect({ type: 'other', provider: rental.id }, `rental-${rental.id}`)}
-                                className="relative flex items-center justify-center gap-2 p-3 rounded-md border border-green-200 bg-green-50 hover:bg-green-100 transition-colors"
+                                className="relative flex items-center gap-3 p-3 rounded-md border border-green-200 bg-green-50 hover:bg-green-100 transition-colors"
                             >
                                 <span className="absolute top-0.5 right-1 text-[9px] text-gray-400">PR</span>
-                                <Car className="w-4 h-4 text-green-600" />
-                                <span className="font-medium text-green-700 text-sm">{rental.name}を探す</span>
+                                <div className="bg-green-200 p-2 rounded-full">
+                                    <Car className="w-5 h-5 text-green-700" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-green-800">レンタカー</span>
+                                    <span className="text-[10px] text-green-600">{rental.name}</span>
+                                </div>
                             </a>
                         ))}
                     </div>
