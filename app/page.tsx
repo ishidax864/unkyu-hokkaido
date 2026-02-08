@@ -335,7 +335,7 @@ export default function Home() {
           </section>
         )}
 
-        {/* Pro誘導バナー */}
+        {/* Pro誘導バナー - 後で機能追加予定（現在非公開）
         <div className="mt-8 card p-5 text-center border-[var(--primary)] border-2">
           <h3 className="text-base font-bold text-[var(--primary)] mb-2">🚀 Proプランで先読み</h3>
           <p className="text-sm text-[var(--muted)] mb-4">
@@ -346,6 +346,7 @@ export default function Home() {
             7日間無料で試す
           </button>
         </div>
+        */}
 
         {/* フッター */}
         <footer className="mt-8 text-center text-xs text-[var(--muted)]">
