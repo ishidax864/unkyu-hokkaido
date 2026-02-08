@@ -9,11 +9,17 @@ import { getJRStatusUrl } from '@/lib/hokkaido-data';
 interface PredictionResultCardProps {
     result: PredictionResult;
     route: Route;
+    targetDate: string; // YYYY-MM-DD format
 }
 
-export function PredictionResultCard({ result, route }: PredictionResultCardProps) {
+export function PredictionResultCard({ result, route, targetDate }: PredictionResultCardProps) {
     const isHighRisk = result.probability >= 50;
     const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended;
+
+    // 当日かどうかを判定
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isToday = targetDate === today;
 
     // ステータスに応じた設定（信号色）
     const getStatusConfig = () => {
@@ -170,28 +176,30 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                 </div>
             </div>
 
-            {/* 📡 現在の運行状況（JR公式）*/}
-            <div className="mb-4 p-3 rounded-lg bg-gray-50 border border-gray-200">
-                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                    <span>📡</span> 現在の運行状況（JR公式）
+            {/* 📡 現在の運行状況（JR公式） - 当日のみ表示 */}
+            {isToday && (
+                <div className="mb-4 p-3 rounded-lg bg-gray-50 border border-gray-200">
+                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                        <span>📡</span> 現在の運行状況（JR公式）
+                    </div>
+                    <div className="font-bold text-lg flex items-center gap-2">
+                        {result.isCurrentlySuspended ? (
+                            <>
+                                <span className="text-red-600">🔴 運休中</span>
+                                {result.estimatedRecoveryTime && (
+                                    <span className="text-sm font-normal text-gray-600">
+                                        （{result.estimatedRecoveryTime}頃 再開見込み）
+                                    </span>
+                                )}
+                            </>
+                        ) : result.status === '遅延' ? (
+                            <span className="text-yellow-600">🟡 遅延中</span>
+                        ) : (
+                            <span className="text-green-600">🟢 通常運行中</span>
+                        )}
+                    </div>
                 </div>
-                <div className="font-bold text-lg flex items-center gap-2">
-                    {result.isCurrentlySuspended ? (
-                        <>
-                            <span className="text-red-600">🔴 運休中</span>
-                            {result.estimatedRecoveryTime && (
-                                <span className="text-sm font-normal text-gray-600">
-                                    （{result.estimatedRecoveryTime}頃 再開見込み）
-                                </span>
-                            )}
-                        </>
-                    ) : result.status === '遅延' ? (
-                        <span className="text-yellow-600">🟡 遅延中</span>
-                    ) : (
-                        <span className="text-green-600">🟢 通常運行中</span>
-                    )}
-                </div>
-            </div>
+            )}
 
             {/* 📊 予測セクション (ユーザーの出発時刻に基づく) */}
             <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">

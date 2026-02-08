@@ -274,6 +274,7 @@ export default function Home() {
             <PredictionResultCard
               result={prediction}
               route={getRouteById(selectedRouteId)!}
+              targetDate={date}
             />
 
             {/* 状況報告（代替ルートの前へ移動） */}
