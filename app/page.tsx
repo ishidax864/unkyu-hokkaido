@@ -128,17 +128,17 @@ export default function Home() {
 
         {/* 天気サマリー */}
         {todayWeather && (
-          <div className="card p-3 mb-4 flex items-center justify-between">
+          <section className="card p-3 mb-4 flex items-center justify-between" aria-labelledby="weather-summary-title">
             <div className="flex items-center gap-3">
-              <Cloud className="w-5 h-5 text-[var(--muted)]" />
+              <Cloud className="w-5 h-5 text-[var(--muted)]" aria-hidden="true" />
               <div>
-                <div className="font-medium text-sm flex items-center gap-2">
+                <h2 id="weather-summary-title" className="font-medium text-sm flex items-center gap-2">
                   今日の天気（{locationName}）
-                  {userLocation && <MapPin className="w-3 h-3 text-[var(--primary)]" />}
+                  {userLocation && <MapPin className="w-3 h-3 text-[var(--primary)]" aria-hidden="true" />}
                   {isWeatherLoading && (
-                    <RefreshCw className="w-3 h-3 animate-spin text-[var(--muted)]" />
+                    <RefreshCw className="w-3 h-3 animate-spin text-[var(--muted)]" aria-hidden="true" />
                   )}
-                </div>
+                </h2>
                 <div className="text-xs text-[var(--muted)]">
                   {todayWeather.weather}
                   {lastWeatherUpdate && (
@@ -148,18 +148,18 @@ export default function Home() {
               </div>
             </div>
             <div className="text-right" role="img" aria-label={`現在の天気: ${todayWeather.weather}`}>
-              <div className="text-xl">
+              <div className="text-xl" aria-hidden="true">
                 {getWeatherIcon(todayWeather.weather)}
               </div>
               <div className="text-xs text-[var(--muted)]">
                 {todayWeather.windSpeed >= 15 ? (
-                  <span className="text-orange-500">💨{todayWeather.windSpeed}m/s</span>
+                  <span className="text-orange-500 font-bold">💨{todayWeather.windSpeed}m/s</span>
                 ) : (
                   <span>{todayWeather.tempMax}°/{todayWeather.tempMin}°</span>
                 )}
               </div>
             </div>
-          </div>
+          </section>
         )}
 
         {/* 全道の警報表示 (折りたたみコンポーネント) */}
