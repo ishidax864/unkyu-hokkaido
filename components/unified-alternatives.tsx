@@ -96,26 +96,26 @@ export function UnifiedAlternativesCard({
             <div className="space-y-3">
                 {/* 0. 時間変更提案（早い列車に変更） */}
                 {timeShiftSuggestion && timeShiftSuggestion.difference >= 15 && (
-                    <div className="p-3 rounded-lg bg-green-50 border-2 border-green-300">
-                        <div className="flex items-center justify-between">
+                    <div className="card p-4 border-l-4 border-l-[var(--status-normal)] relative overflow-hidden">
+                        <div className="flex items-center justify-between relative z-10">
                             <div className="flex items-center gap-2">
-                                <Clock className="w-5 h-5 text-green-600" />
-                                <span className="font-bold text-sm text-green-700">
+                                <Clock className="w-5 h-5 text-[var(--status-normal)]" />
+                                <span className="font-bold text-sm text-[var(--foreground)]">
                                     🚃 {timeShiftSuggestion.isEarlier ? '早い時間' : '遅い時間'}の列車に変更
                                 </span>
                             </div>
-                            <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full font-bold">
+                            <span className="text-xs bg-green-50 text-[var(--status-normal)] px-2 py-0.5 rounded-full font-bold border border-green-100">
                                 {timeShiftSuggestion.time}発
                             </span>
                         </div>
-                        <div className="mt-1 text-xs text-green-600">
-                            運休リスク {timeShiftSuggestion.risk}%（通常より{timeShiftSuggestion.difference}%低い）
+                        <div className="mt-2 text-xs text-[var(--muted)] relative z-10">
+                            運休リスク <span className="text-[var(--status-normal)] font-black">{timeShiftSuggestion.risk}%</span>（通常より{timeShiftSuggestion.difference}%低い）
                         </div>
                     </div>
                 )}
 
                 {/* 1. 推奨ルート・バス（アフィリエイト含む） */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                     {recommendedRoutes.map((route, idx) => (
                         <a
                             key={idx}
@@ -123,28 +123,37 @@ export function UnifiedAlternativesCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             className={cn(
-                                "block p-3 rounded-lg border-2 transition-colors",
-                                busRisk === 'low' ? "bg-blue-50 border-blue-200 hover:bg-blue-100" :
-                                    busRisk === 'medium' ? "bg-yellow-50 border-yellow-200 hover:bg-yellow-100" :
-                                        "bg-red-50 border-red-200 hover:bg-red-100"
+                                "block p-4 card border-l-4 transition-all hover:bg-gray-50 active:scale-[0.98]",
+                                route.type === 'subway' ? "border-l-[var(--status-normal)]" :
+                                    busRisk === 'low' ? "border-l-[var(--accent)]" :
+                                        busRisk === 'medium' ? "border-l-[var(--status-warning)]" :
+                                            "border-l-[var(--status-suspended)]"
                             )}
                         >
                             <div className="flex items-start gap-3">
-                                {route.type === 'bus' ? (
-                                    <Bus className="w-5 h-5 text-blue-600 mt-0.5" />
-                                ) : route.type === 'subway' ? (
-                                    <Train className="w-5 h-5 text-green-600 mt-0.5" />
-                                ) : (
-                                    <Car className="w-5 h-5 text-gray-600 mt-0.5" />
-                                )}
+                                <div className={cn(
+                                    "p-2 rounded-full",
+                                    route.type === 'subway' ? "bg-green-50 text-[var(--status-normal)]" :
+                                        busRisk === 'low' ? "bg-blue-50 text-[var(--accent)]" :
+                                            busRisk === 'medium' ? "bg-orange-50 text-[var(--status-warning)]" :
+                                                "bg-red-50 text-[var(--status-suspended)]"
+                                )}>
+                                    {route.type === 'bus' ? (
+                                        <Bus className="w-4 h-4" />
+                                    ) : route.type === 'subway' ? (
+                                        <Train className="w-4 h-4" />
+                                    ) : (
+                                        <Car className="w-4 h-4" />
+                                    )}
+                                </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-bold text-sm">{route.name}</span>
-                                        <span className="text-xs text-gray-500">{route.time}</span>
+                                        <span className="font-bold text-sm text-[var(--foreground)]">{route.name}</span>
+                                        <span className="text-xs font-black text-[var(--foreground)]">{route.time}</span>
                                     </div>
-                                    <div className="text-xs text-gray-600 mt-0.5">{route.details}</div>
+                                    <div className="text-xs text-[var(--muted)] mt-1 leading-relaxed">{route.details}</div>
                                 </div>
-                                <ExternalLink className="w-4 h-4 text-gray-400" />
+                                <ExternalLink className="w-4 h-4 text-gray-300 ml-1" />
                             </div>
                         </a>
                     ))}
@@ -155,43 +164,49 @@ export function UnifiedAlternativesCard({
                             href={busAffiliate.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block p-3 rounded-lg bg-blue-50 border-2 border-blue-100 hover:bg-blue-100 transition-colors relative"
+                            className="block p-4 card border-l-4 border-l-blue-400 hover:bg-blue-50/30 transition-all active:scale-[0.98] relative"
                         >
-                            <div className="absolute top-1 right-1 text-[9px] font-bold text-blue-400">{PR_LABEL}</div>
+                            <div className="absolute top-2 right-2 flex items-center gap-1">
+                                <span className="text-[9px] font-black text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter">{PR_LABEL}</span>
+                                <ExternalLink className="w-3 h-3 text-blue-300" />
+                            </div>
                             <div className="flex items-center gap-3">
-                                <Bus className="w-5 h-5 text-blue-500" />
-                                <div className="flex-1">
-                                    <div className="text-sm font-bold text-blue-700">高速・路線バス予約</div>
-                                    <div className="text-[10px] text-blue-500">{busAffiliate.name}</div>
+                                <div className="p-2 bg-blue-50 rounded-full text-blue-500">
+                                    <Bus className="w-4 h-4" />
                                 </div>
-                                <ExternalLink className="w-4 h-4 text-blue-300" />
+                                <div>
+                                    <div className="text-sm font-bold text-[var(--foreground)]">高速・路線バス予約</div>
+                                    <div className="text-[10px] text-blue-500 font-medium">{busAffiliate.name}</div>
+                                </div>
                             </div>
                         </a>
                     )}
                 </div>
 
                 {/* 2. タクシー・レンタカー（アフィリエイト統合） */}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                     {/* タクシー */}
                     {facilities?.hasTaxi && (
                         <a
                             href={taxiAffiliate?.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block p-3 rounded-lg bg-yellow-50 border border-yellow-200 hover:bg-yellow-100 transition-colors relative"
+                            className="block p-4 card border-l-4 border-l-[var(--status-warning)] hover:bg-gray-50 transition-all active:scale-[0.98] relative"
                         >
-                            <div className="absolute top-1 right-1 text-[9px] font-bold text-yellow-500">{PR_LABEL}</div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <Car className="w-4 h-4 text-yellow-600" />
-                                <span className="font-bold text-sm text-yellow-700">🚕 タクシー</span>
+                            <div className="absolute top-2 right-2">
+                                <span className="text-[9px] font-black text-orange-400 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100 uppercase tracking-tighter">{PR_LABEL}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Car className="w-4 h-4 text-[var(--status-warning)]" />
+                                <span className="font-bold text-sm text-[var(--foreground)]">タクシー</span>
                             </div>
                             {taxiInfo && (
-                                <div className="text-[11px] text-yellow-700 leading-tight">
-                                    <div>概算: ¥{taxiInfo.fare.toLocaleString()}〜</div>
-                                    <div>約{taxiInfo.time}分</div>
+                                <div className="text-[11px] text-[var(--muted)] leading-tight space-y-1">
+                                    <div className="flex items-center justify-between"><span>概算</span><span className="font-bold text-[var(--foreground)]">¥{taxiInfo.fare.toLocaleString()}〜</span></div>
+                                    <div className="flex items-center justify-between"><span>目安</span><span className="font-bold text-[var(--foreground)]">約{taxiInfo.time}分</span></div>
                                 </div>
                             )}
-                            <div className="mt-2 text-[10px] text-yellow-600 font-bold underline flex items-center gap-0.5">
+                            <div className="mt-3 text-[10px] text-[var(--status-warning)] font-bold border-t border-orange-50 pt-2 flex items-center justify-between">
                                 今すぐ手配 <ExternalLink className="w-3 h-3" />
                             </div>
                         </a>
@@ -203,18 +218,20 @@ export function UnifiedAlternativesCard({
                             href={rentalAffiliate?.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors relative"
+                            className="block p-4 card border-l-4 border-l-purple-400 hover:bg-gray-50 transition-all active:scale-[0.98] relative"
                         >
-                            <div className="absolute top-1 right-1 text-[9px] font-bold text-purple-500">{PR_LABEL}</div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <Car className="w-4 h-4 text-purple-600" />
-                                <span className="font-bold text-sm text-purple-700">🚗 レンタカー</span>
+                            <div className="absolute top-2 right-2">
+                                <span className="text-[9px] font-black text-purple-400 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 uppercase tracking-tighter">{PR_LABEL}</span>
                             </div>
-                            <div className="text-[11px] text-purple-700 leading-tight">
+                            <div className="flex items-center gap-2 mb-2">
+                                <Car className="w-4 h-4 text-purple-600" />
+                                <span className="font-bold text-sm text-[var(--foreground)]">レンタカー</span>
+                            </div>
+                            <div className="text-[11px] text-[var(--muted)] leading-tight">
                                 駅周辺に店舗あり
                             </div>
-                            <div className="mt-2 text-[10px] text-purple-600 font-bold underline flex items-center gap-0.5">
-                                空き状況を確認 <ExternalLink className="w-3 h-3" />
+                            <div className="mt-3 text-[10px] text-purple-600 font-bold border-t border-purple-50 pt-2 flex items-center justify-between">
+                                空き状況 <ExternalLink className="w-3 h-3" />
                             </div>
                         </a>
                     )}
@@ -222,40 +239,48 @@ export function UnifiedAlternativesCard({
 
                 {/* 3. 地下鉄（札幌のみ） */}
                 {facilities?.hasSubway && facilities.subwayLines && (
-                    <div className="p-3 rounded-lg bg-green-50 border border-green-100">
-                        <div className="flex items-center gap-2">
-                            <Train className="w-4 h-4 text-green-600" />
-                            <span className="font-bold text-sm text-green-700">🚇 地下鉄（{facilities.subwayLines.join('・')}）</span>
-                        </div>
-                        <div className="mt-1 text-xs text-green-600">
-                            雪・風の影響なし。市内移動は最も確実
+                    <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/10">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-50 rounded-full text-[var(--status-normal)]">
+                                <Train className="w-4 h-4" />
+                            </div>
+                            <div>
+                                <div className="font-bold text-sm text-[var(--foreground)]">地下鉄（{facilities.subwayLines.join('・')}）</div>
+                                <div className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed">
+                                    雪・風の影響なし。市内移動は最も確実
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
 
                 {/* 4. 長期化時の滞在施設 */}
                 {showStayOptions && (
-                    <div className="pt-2 border-t border-gray-100">
-                        <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                    <div className="pt-4 border-t border-gray-100">
+                        <div className="text-[10px] font-black text-[var(--muted)] mb-3 flex items-center gap-1.5 uppercase tracking-widest">
                             <Clock className="w-3 h-3" />
-                            復旧まで{estimatedRecoveryHours}時間以上の見込み
+                            長期見合わせ時の滞在・宿泊
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-3">
                             {facilities?.hasHotel && (
-                                <div className="p-2 rounded-lg bg-pink-50 border border-pink-100 flex items-center gap-2">
-                                    <Hotel className="w-4 h-4 text-pink-500" />
+                                <div className="p-3 card border-l-4 border-l-pink-400 flex items-center gap-3">
+                                    <div className="p-1.5 bg-pink-50 rounded-full text-pink-500">
+                                        <Hotel className="w-3.5 h-3.5" />
+                                    </div>
                                     <div className="flex-1">
-                                        <div className="text-xs font-bold text-pink-700">🏨 ホテル</div>
-                                        <div className="text-[10px] text-pink-500">周辺に宿泊施設あり</div>
+                                        <div className="text-xs font-bold text-[var(--foreground)]">ホテル</div>
+                                        <div className="text-[10px] text-[var(--muted)]">周辺に宿泊施設あり</div>
                                     </div>
                                 </div>
                             )}
                             {facilities?.hasCafe && (
-                                <div className="p-2 rounded-lg bg-orange-50 border border-orange-100 flex items-center gap-2">
-                                    <Coffee className="w-4 h-4 text-orange-500" />
+                                <div className="p-3 card border-l-4 border-l-orange-400 flex items-center gap-3">
+                                    <div className="p-1.5 bg-orange-50 rounded-full text-orange-500">
+                                        <Coffee className="w-3.5 h-3.5" />
+                                    </div>
                                     <div className="flex-1">
-                                        <div className="text-xs font-bold text-orange-700">☕ カフェ</div>
-                                        <div className="text-[10px] text-orange-500">電源・Wi-Fi利用可</div>
+                                        <div className="text-xs font-bold text-[var(--foreground)]">カフェ</div>
+                                        <div className="text-[10px] text-[var(--muted)]">電源・Wi-Fi利用可</div>
                                     </div>
                                 </div>
                             )}

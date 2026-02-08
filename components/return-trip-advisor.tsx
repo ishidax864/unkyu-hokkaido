@@ -1,5 +1,6 @@
 import { ArrowRight, Hotel, Home, Coffee } from 'lucide-react';
 import { PredictionResult } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface ReturnTripAdvisorProps {
     prediction: PredictionResult;
@@ -32,39 +33,48 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
     if (status === 'safe' && !isEveningSoon) return null; // Don't show "Safe" during morning commute? Maybe show small reassurance.
 
     return (
-        <div className={`mt-4 mb-2 p-4 rounded-xl border ${status === 'critical' ? 'bg-red-50 border-red-200' :
-            status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-                'bg-green-50 border-green-200'
-            }`}>
-            <div className="flex items-start gap-3">
-                <div className="mt-1 shrink-0 p-2 bg-white rounded-full shadow-sm">
-                    {status === 'critical' ? <Hotel className="text-red-500" /> :
-                        status === 'warning' ? <Home className="text-yellow-500" /> :
-                            <Coffee className="text-green-500" />}
-                </div>
-                <div>
-                    <h3 className={`font-bold text-sm ${status === 'critical' ? 'text-red-800' :
-                        status === 'warning' ? 'text-yellow-800' :
-                            'text-green-800'
-                        }`}>
-                        帰宅サバイバル判定
-                    </h3>
-                    <p className={`text-sm mt-1 leading-relaxed ${status === 'critical' ? 'text-red-700' :
-                        status === 'warning' ? 'text-yellow-700' :
-                            'text-green-700'
-                        }`}>
-                        {message}
-                    </p>
+        <div className={cn(
+            "mt-4 mb-2 p-4 card-elevated border-l-4 flex items-start gap-4",
+            status === 'critical' ? 'border-l-[var(--status-suspended)] bg-red-50/5' :
+                status === 'warning' ? 'border-l-[var(--status-warning)] bg-orange-50/5' :
+                    'border-l-[var(--status-normal)] bg-green-50/5'
+        )}>
+            <div className={cn(
+                "mt-1 shrink-0 p-3 rounded-full shadow-sm",
+                status === 'critical' ? 'bg-red-50 text-[var(--status-suspended)]' :
+                    status === 'warning' ? 'bg-orange-50 text-[var(--status-warning)]' :
+                        'bg-green-50 text-[var(--status-normal)]'
+            )}>
+                {status === 'critical' ? <Hotel className="w-6 h-6" /> :
+                    status === 'warning' ? <Home className="w-6 h-6" /> :
+                        <Coffee className="w-6 h-6" />}
+            </div>
+            <div className="flex-1">
+                <h3 className={cn(
+                    "font-bold text-sm",
+                    status === 'critical' ? 'text-red-950' :
+                        status === 'warning' ? 'text-orange-950' :
+                            'text-green-950'
+                )}>
+                    帰宅サバイバル判定
+                </h3>
+                <p className={cn(
+                    "text-sm mt-1.5 leading-relaxed",
+                    status === 'critical' ? 'text-red-900' :
+                        status === 'warning' ? 'text-orange-900' :
+                            'text-green-900'
+                )}>
+                    {message}
+                </p>
 
-                    {/* Action Button (Fake for MVP) */}
-                    {status === 'critical' && (
-                        <button className="mt-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2 w-full justify-center transition-colors shadow-sm">
-                            <Hotel className="w-4 h-4" />
-                            <span>近くのホテルを探す</span>
-                            <ArrowRight className="w-3 h-3 ml-1 opactiy-70" />
-                        </button>
-                    )}
-                </div>
+                {/* Action Button (Fake for MVP) */}
+                {status === 'critical' && (
+                    <button className="mt-4 bg-[var(--status-suspended)] hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 w-full justify-center transition-all shadow-md active:scale-[0.98]">
+                        <Hotel className="w-4 h-4" />
+                        <span>近くのホテルを探す</span>
+                        <ArrowRight className="w-3 h-3 ml-1 opacity-70" />
+                    </button>
+                )}
             </div>
         </div>
     );

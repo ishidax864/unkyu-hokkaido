@@ -114,32 +114,46 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
             {/* 戦略的アドバイスの表示 - 統合カードの上に移動 */}
             {advice && (
                 <div className={cn(
-                    "mb-4 p-3 rounded-md border text-sm",
-                    advice.type === 'critical' ? "bg-red-50 border-red-200 text-red-800" :
-                        advice.type === 'warning' ? "bg-orange-50 border-orange-200 text-orange-800" :
-                            "bg-blue-50 border-blue-200 text-blue-800"
+                    "mb-4 p-4 card-elevated border-l-4 text-sm flex items-start gap-3",
+                    advice.type === 'critical' ? "border-l-[var(--status-suspended)]" :
+                        advice.type === 'warning' ? "border-l-[var(--status-warning)]" :
+                            "border-l-[var(--primary)]"
                 )}>
-                    <div className="font-bold mb-1 flex items-center gap-2">
+                    <div className={cn(
+                        "mt-1 p-2 rounded-full",
+                        advice.type === 'critical' ? "bg-red-50 text-[var(--status-suspended)]" :
+                            advice.type === 'warning' ? "bg-orange-50 text-[var(--status-warning)]" :
+                                "bg-green-50 text-[var(--primary)]"
+                    )}>
                         {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
                             advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
                                 <Train className="w-4 h-4" />}
-                        {advice.title}
                     </div>
-                    <div className="text-xs md:text-sm opacity-90 leading-relaxed">
-                        {advice.message}
-                    </div>
+                    <div className="flex-1">
+                        <div className={cn(
+                            "font-bold mb-1",
+                            advice.type === 'critical' ? "text-red-950" :
+                                advice.type === 'warning' ? "text-orange-950" :
+                                    "text-green-950"
+                        )}>
+                            {advice.title}
+                        </div>
+                        <div className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                            {advice.message}
+                        </div>
 
-                    {/* 🆕 アクションボタン */}
-                    {(advice as any).actionLink && (
-                        <a
-                            href={(advice as any).actionLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-3 inline-flex items-center gap-1 text-xs font-bold bg-white/60 px-3 py-2 rounded-lg border border-current hover:bg-white/90 transition-colors shadow-sm"
-                        >
-                            {(advice as any).actionLabel || '詳細を見る'} <ExternalLink className="w-3 h-3" />
-                        </a>
-                    )}
+                        {/* 🆕 アクションボタン */}
+                        {(advice as any).actionLink && (
+                            <a
+                                href={(advice as any).actionLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] bg-green-50/50 px-3 py-1.5 rounded-lg border border-green-100 hover:bg-green-100 transition-colors"
+                            >
+                                {(advice as any).actionLabel || '詳細を見る'} <ExternalLink className="w-3 h-3" />
+                            </a>
+                        )}
+                    </div>
                 </div>
             )}
 
