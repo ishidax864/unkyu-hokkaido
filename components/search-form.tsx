@@ -151,7 +151,8 @@ export function SearchForm({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             {/* 出発・到着駅選択 */}
-            <div className="flex flex-col md:flex-row md:items-end gap-2 relative">
+            {/* 出発・到着駅選択 */}
+            <div className="flex flex-col md:flex-row md:items-end gap-0 md:gap-2 relative">
                 <StationSelector
                     label="出発駅"
                     selectedStation={departureStation}
@@ -161,8 +162,8 @@ export function SearchForm({
                     otherStation={arrivalStation}
                 />
 
-                <div className="flex items-center justify-center py-1 md:pb-3">
-                    <ArrowRight className="w-5 h-5 text-[var(--muted)] rotate-90 md:rotate-0" />
+                <div className="flex items-center justify-center -my-1 z-10 md:my-0 md:pb-3">
+                    <ArrowRight className="w-4 h-4 text-[var(--muted)] rotate-90 md:rotate-0" />
                 </div>
 
                 <StationSelector
