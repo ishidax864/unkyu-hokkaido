@@ -25,12 +25,27 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
     // 日付フォーマット
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        const now = new Date(); // 現在時刻
 
-        if (dateStr === today.toISOString().split('T')[0]) return '今日';
-        if (dateStr === tomorrow.toISOString().split('T')[0]) return '明日';
+        // JSTでの「今日」の日付文字列を取得 (YYYY-MM-DD)
+        // sv-SEロケールは標準でYYYY-MM-DD形式を返すため、フォーマット揺れが少ない
+        const jstToday = new Intl.DateTimeFormat('sv-SE', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Tokyo'
+        }).format(now);
+
+        // JSTでの「明日」の日付文字列を取得
+        const jstTomorrowStr = new Intl.DateTimeFormat('sv-SE', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Tokyo'
+        }).format(new Date(now.getTime() + 24 * 60 * 60 * 1000));
+
+        if (dateStr === jstToday) return '今日';
+        if (dateStr === jstTomorrowStr) return '明日';
 
         const month = date.getMonth() + 1;
         const day = date.getDate();
