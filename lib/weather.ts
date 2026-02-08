@@ -194,7 +194,8 @@ export async function fetchHourlyWeatherForecast(
             `latitude=${lat}&longitude=${lon}` +
             `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m` +
             `&timezone=Asia/Tokyo` +
-            `&forecast_days=7`
+            `&forecast_days=7`,
+            { next: { revalidate: 3600 } } // 1時間ごとに更新
         );
 
         if (!response.ok) {
@@ -323,7 +324,8 @@ export async function fetchDailyWeatherForecast(
             `latitude=${lat}&longitude=${lon}` +
             `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,winddirection_10m,snowfall` +
             `&timezone=Asia/Tokyo` +
-            `&forecast_days=7`
+            `&forecast_days=7`,
+            { next: { revalidate: 3600 } } // 1時間ごとに更新
         );
 
         if (!response.ok) {
