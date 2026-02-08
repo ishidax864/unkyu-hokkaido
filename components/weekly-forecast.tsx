@@ -2,20 +2,14 @@
 
 import { PredictionResult } from '@/lib/types';
 import { WeatherForecast } from '@/lib/types';
-import { TrendingUp, Calendar } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
+import { getWeatherIcon } from '@/lib/weather-utils';
 
 interface WeeklyForecastChartProps {
     predictions: PredictionResult[];
     weather: WeatherForecast[];
 }
 
-// 天気アイコン取得
-function getWeatherIcon(weather: string): string {
-    if (weather.includes('雪')) return '❄️';
-    if (weather.includes('雨')) return '🌧️';
-    if (weather.includes('曇')) return '☁️';
-    return '☀️';
-}
 
 export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChartProps) {
     if (predictions.length === 0) return null;
@@ -68,10 +62,10 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
     };
 
     return (
-        <div className="card p-4">
+        <section className="card p-4" aria-labelledby="weekly-forecast-title">
             <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4 text-[var(--primary)]" />
-                <span className="text-sm font-bold">週間運休リスク予測</span>
+                <h3 id="weekly-forecast-title" className="text-sm font-bold">週間運休リスク予測</h3>
             </div>
 
             <div className="space-y-3">
@@ -139,6 +133,6 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                     <span className="text-[var(--muted)]">高リスク</span>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

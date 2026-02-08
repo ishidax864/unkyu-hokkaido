@@ -105,10 +105,10 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
     };
 
     return (
-        <div className="card p-4">
+        <section className="card p-4" aria-labelledby="alternative-routes-title">
             <div className="flex items-center gap-2 mb-4">
                 <Train className="w-4 h-4 text-[var(--primary)]" />
-                <span className="text-sm font-bold">代替ルート・行動提案</span>
+                <h3 id="alternative-routes-title" className="text-sm font-bold">代替ルート・行動提案</h3>
             </div>
 
             {/* 戦略的アドバイスの表示 - 統合カードの上に移動 */}
@@ -183,6 +183,6 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
 
                 {/* 移動手段の予約・手配はUnifiedAlternativesCard内に統合済み */}
             </div>
-        </div>
+        </section>
     );
 }

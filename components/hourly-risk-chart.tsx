@@ -35,10 +35,10 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
     };
 
     return (
-        <div className="card p-4 mt-4">
+        <section className="card p-4 mt-4" aria-labelledby="hourly-risk-title">
             <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4 text-[var(--primary)]" />
-                <span className="text-sm font-bold">時間帯別リスク推移</span>
+                <h3 id="hourly-risk-title" className="text-sm font-bold">時間帯別リスク推移</h3>
             </div>
 
             <div className="flex items-end justify-between gap-3 pt-2 pb-2">
@@ -85,6 +85,6 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
             <div className="text-[10px] text-center text-[var(--muted)] mt-2">
                 ※前後2時間の予測推移
             </div>
-        </div>
+        </section>
     );
 }

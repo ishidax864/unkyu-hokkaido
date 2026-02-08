@@ -1,6 +1,6 @@
 {
-    "name": "運休AI",
-    "short_name": "運休AI",
+    "name": "運休北海道",
+    "short_name": "運休北海道",
     "description": "AIが天候から電車の運休リスクを予測。通勤・通学の計画に役立つ無料サービス。",
     "start_url": "/",
     "display": "standalone",
