@@ -12,6 +12,8 @@ import {
     AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { RouteComparisonCard } from './route-comparison';
+import { ReturnTripAdvisor } from './return-trip-advisor';
 
 interface AlternativeRoutesProps {
     originalRoute: Route;
@@ -249,6 +251,22 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                 <Train className="w-4 h-4 text-[var(--primary)]" />
                 <span className="text-sm font-bold">代替ルート・行動提案</span>
             </div>
+
+            {/* 🆕 UX Upgrade: 帰宅サバイバル判定 & JRバス比較 */}
+            {predictionResult && (
+                <div className="mb-6 space-y-4">
+                    <ReturnTripAdvisor prediction={predictionResult} />
+
+                    {predictionResult.comparisonData && (
+                        <RouteComparisonCard
+                            jrStatus={predictionResult.status as any}
+                            jrProb={predictionResult.probability}
+                            windSpeed={predictionResult.comparisonData.wind}
+                            snowfall={predictionResult.comparisonData.snow}
+                        />
+                    )}
+                </div>
+            )}
 
             {/* 戦略的アドバイスの表示 */}
             {advice && (

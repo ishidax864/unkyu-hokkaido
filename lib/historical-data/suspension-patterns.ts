@@ -131,8 +131,8 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-rain-typhoon') || null;
     }
 
-    // 3. 暴風 (季節問わず、有効最大風速25m/s以上)
-    if (effectiveGust >= 25 || wind >= 20) {
+    // 3. 暴風 (季節問わず、有効最大風速33m/s以上)
+    if (effectiveGust >= 35 || wind >= 33) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-wind-low-pressure') || null;
     }
 

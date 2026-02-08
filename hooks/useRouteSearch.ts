@@ -7,6 +7,8 @@ import { fetchRealWeatherForecast, fetchHourlyWeatherForecast } from '@/lib/weat
 import { JROperationStatus } from '@/lib/jr-status';
 import { aggregateCrowdsourcedStatus } from '@/lib/user-reports';
 import { calculateSuspensionRisk, calculateWeeklyForecast } from '@/lib/prediction-engine';
+import { logger } from '@/lib/logger';
+import { JRStatusItem, JRStatusResponse, PredictionInput } from '@/lib/types';
 
 export function useRouteSearch() {
     // Search Form State
@@ -33,7 +35,7 @@ export function useRouteSearch() {
     } | null>(null);
     const [riskTrend, setRiskTrend] = useState<HourlyRiskData[]>([]);
     // 🆕 Always hold real-time status
-    const [realtimeStatus, setRealtimeStatus] = useState<any | null>(null);
+    const [realtimeStatus, setRealtimeStatus] = useState<PredictionInput['crowdsourcedStatus'] | null>(null);
 
     const handleSearch = async (
         departureId: string,
@@ -88,13 +90,13 @@ export function useRouteSearch() {
         try {
             targetWeather = await fetchHourlyWeatherForecast(routeId, targetDateTime);
         } catch (error) {
-            console.error('Hourly weather fetch failed', error);
+            logger.error('Hourly weather fetch failed', error);
         }
 
         try {
             weeklyWeather = await fetchRealWeatherForecast(routeId);
         } catch (error) {
-            console.error('Weekly weather fetch failed', error);
+            logger.error('Weekly weather fetch failed', error);
         }
 
         // JR Status
@@ -107,13 +109,13 @@ export function useRouteSearch() {
         try {
             const response = await fetch('/api/jr-status');
             if (response.ok) {
-                const data = await response.json();
+                const data: JRStatusResponse & { hasAlerts?: boolean } = await response.json();
                 const routeName = primaryRoute?.name || '';
-                let matchingStatus = data.items.find((item: any) =>
+                let matchingStatus = data.items.find((item: JRStatusItem) =>
                     item.routeName === routeName || routeName.includes(item.routeName)
                 );
                 if (!matchingStatus) {
-                    matchingStatus = data.items.find((item: any) => item.routeName === 'JR北海道');
+                    matchingStatus = data.items.find((item: JRStatusItem) => item.routeName === 'JR北海道');
                 }
                 if (isToday && data.hasAlerts && matchingStatus && matchingStatus.status !== 'normal') {
                     jrStatus = {
@@ -127,7 +129,7 @@ export function useRouteSearch() {
                 }
             }
         } catch (error) {
-            console.error('JR Status fetch failed', error);
+            logger.error('JR Status fetch failed', error);
         }
 
         // Crowdsourced Status
@@ -144,7 +146,7 @@ export function useRouteSearch() {
                     historicalData = result.data;
                 }
             } catch (e) {
-                console.warn('Historical data fetch failed', e);
+                logger.warn('Historical data fetch failed', { error: e });
             }
         }
 

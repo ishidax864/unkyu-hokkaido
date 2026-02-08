@@ -46,24 +46,27 @@ import {
     MODERATE_SNOW_DEPTH_SCORE, // 🆕
     CRITICAL_SNOW_DEPTH_THRESHOLD, // 🆕
     CRITICAL_SNOW_DEPTH_SCORE, // 🆕
+    SAFE_WIND_DIRECTION_MULTIPLIER, // 🆕
+    SNOW_DRIFT_WIND_THRESHOLD, // 🆕
 } from './constants';
 
 // 路線別の運休しやすさ係数（北海道の路線特性を反映）
 export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
 
     'jr-hokkaido.hakodate-main': {
-        windThreshold: 25, // 平均風速 (函館本線は意外と風に強い: 22-24m/sでも動くことがある)
-        snowThreshold: 5,  // 時間降雪量(cm/h)
+        windThreshold: 20, // 20: 安全サイドに戻す
+        snowThreshold: 5,
         vulnerabilityScore: 1.0,
         description: '主要幹線、比較的安定',
         hasDeerRisk: false,
     },
     'jr-hokkaido.chitose': {
-        windThreshold: 16, // 空港線は遮蔽物がなく風に弱い (17-19m/sで止まる実績あり)
+        windThreshold: 18, // 16 -> 18: 16m/sでは止まらない実績あり
         snowThreshold: 4,
         vulnerabilityScore: 1.6,
         description: '空港連絡線、優先的に運行維持',
         hasDeerRisk: false,
+        safeWindDirections: [[350, 360], [0, 10]], // 北風(線路並行)は影響比較的少なめ
     },
 
     'jr-hokkaido.gakuentoshi': {
@@ -81,21 +84,21 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
         hasDeerRisk: true,
     },
     'jr-hokkaido.sekihoku': {
-        windThreshold: 14,
+        windThreshold: 20, // 25 -> 20: 安全サイドに戻す
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '山間部多く積雪・強風に弱い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.soya': {
-        windThreshold: 14,
+        windThreshold: 20, // 30 -> 20: 安全サイドに戻す
         snowThreshold: 3,
         vulnerabilityScore: 1.8,
         description: '最北端路線、厳寒期は運休多い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.nemuro': {
-        windThreshold: 16,
+        windThreshold: 20, // 25 -> 20
         snowThreshold: 3,
         vulnerabilityScore: 1.5,
         description: '長距離路線、部分運休が発生しやすい',
@@ -146,6 +149,12 @@ export const DEFAULT_VULNERABILITY: VulnerabilityData = {
     hasDeerRisk: false,
 };
 
+// 風向が安全範囲内かチェック
+function isSafeWindDirection(direction: number | undefined, safeRanges: number[][] | undefined): boolean {
+    if (direction === undefined || !safeRanges) return false;
+    return safeRanges.some(([min, max]) => direction >= min && direction <= max);
+}
+
 export const RISK_FACTORS: RiskFactor[] = [
     // 暴風警報
     {
@@ -185,7 +194,13 @@ export const RISK_FACTORS: RiskFactor[] = [
         weight: (input, vuln) => {
             const ws = input.weather?.windSpeed ?? 0;
             const excess = ws - vuln.windThreshold;
-            return STRONG_WIND_BASE_SCORE + Math.min(excess * STRONG_WIND_EXCESS_COEFFICIENT, STRONG_WIND_MAX_BONUS);
+            const score = STRONG_WIND_BASE_SCORE + Math.min(excess * STRONG_WIND_EXCESS_COEFFICIENT, STRONG_WIND_MAX_BONUS);
+
+            // 安全な風向ならスコア大幅減
+            if (isSafeWindDirection(input.weather?.windDirection, vuln.safeWindDirections)) {
+                return Math.round(score * SAFE_WIND_DIRECTION_MULTIPLIER);
+            }
+            return score;
         },
         reason: (input) => `風速${input.weather?.windSpeed}m/sの予報（運転規制基準）`,
         priority: 4,
@@ -196,9 +211,15 @@ export const RISK_FACTORS: RiskFactor[] = [
             const ws = input.weather?.windSpeed ?? 0;
             return ws >= MODERATE_WIND_MIN && ws < vuln.windThreshold;
         },
-        weight: (input) => {
+        weight: (input, vuln) => {
             const ws = input.weather?.windSpeed ?? 0;
-            return MODERATE_WIND_BASE_SCORE + Math.round((ws - MODERATE_WIND_MIN) * MODERATE_WIND_COEFFICIENT);
+            const score = MODERATE_WIND_BASE_SCORE + Math.round((ws - MODERATE_WIND_MIN) * MODERATE_WIND_COEFFICIENT);
+
+            // 安全な風向ならスコア大幅減
+            if (isSafeWindDirection(input.weather?.windDirection, vuln.safeWindDirections)) {
+                return Math.round(score * SAFE_WIND_DIRECTION_MULTIPLIER);
+            }
+            return score;
         },
         reason: (input) => `風速${input.weather?.windSpeed}m/sの予報（徐行運転の可能性）`,
         priority: 7,
@@ -263,7 +284,7 @@ export const RISK_FACTORS: RiskFactor[] = [
     {
         // 積雪深がある程度あり、かつ「降り続いている」または「風がある（吹き溜まり）」場合のみリスクとする
         // 単に積雪が深いだけ（晴れ・無風）なら、除雪済みであれば運行可能
-        condition: (input) => {
+        condition: (input, vuln) => {
             const depth = input.weather?.snowDepth ?? 0;
             const snowfall = input.weather?.snowfall ?? 0;
             const wind = input.weather?.windSpeed ?? 0;
@@ -271,7 +292,14 @@ export const RISK_FACTORS: RiskFactor[] = [
             // 閾値調整: Jan 29(運休)は雪0.28 -> 検知したい (0.25)
             // Feb 5(正常)は雪0.14 -> 無視したい
             // 風は誤報が多いので 16 -> 20 に引き上げ -> 再度10に緩和（地吹雪リスク）
-            return depth >= MODERATE_SNOW_DEPTH_THRESHOLD && (snowfall >= 0.25 || wind >= 10);
+            // 安全な風向の場合は風条件を除外（地吹雪リスク低い）
+            const isSafeWind = isSafeWindDirection(input.weather?.windDirection, vuln.safeWindDirections);
+            // 🆕 修正(v4): 風だけで「積雪深リスク」を発動させない。
+            // 降雪 >= 1cm (0.25 -> 1.0へ引き上げ) のみ条件とする。
+            // 地吹雪リスクは風速そのもの（または暴風警報）で評価する。
+            const activeDisruption = (snowfall >= 1.0);
+
+            return depth >= MODERATE_SNOW_DEPTH_THRESHOLD && activeDisruption;
         },
         weight: (input) => {
             const depth = input.weather?.snowDepth ?? 0;
@@ -352,17 +380,24 @@ export const RISK_FACTORS: RiskFactor[] = [
     // 瞬間風速が非常に強い
     {
         condition: (input) => (input.weather?.windGust ?? 0) >= WIND_GUST_DANGER_THRESHOLD,
-        weight: (input) => {
+        weight: (input, vuln) => {
             const gust = input.weather?.windGust ?? 0;
             const mean = input.weather?.windSpeed ?? 0;
+            let score = 0;
 
             // 異常値対策: 平均風速に対して突風があまりに大きすぎる場合（3倍以上かつ平均15m/s未満）
             if (mean < 15 && gust > mean * 3) {
                 const effectiveGust = Math.min(gust, mean * 3);
-                return WIND_GUST_BASE_SCORE + Math.min(Math.max(0, effectiveGust - WIND_GUST_DANGER_THRESHOLD), WIND_GUST_MAX_BONUS) * 0.5;
+                score = WIND_GUST_BASE_SCORE + Math.min(Math.max(0, effectiveGust - WIND_GUST_DANGER_THRESHOLD), WIND_GUST_MAX_BONUS) * 0.5;
+            } else {
+                score = WIND_GUST_BASE_SCORE + Math.min(gust - WIND_GUST_DANGER_THRESHOLD, WIND_GUST_MAX_BONUS);
             }
 
-            return WIND_GUST_BASE_SCORE + Math.min(gust - WIND_GUST_DANGER_THRESHOLD, WIND_GUST_MAX_BONUS);
+            // 安全な風向ならスコア大幅減
+            if (isSafeWindDirection(input.weather?.windDirection, vuln.safeWindDirections)) {
+                return Math.round(score * SAFE_WIND_DIRECTION_MULTIPLIER);
+            }
+            return score;
         },
         reason: (input) => {
             const gust = input.weather?.windGust ?? 0;

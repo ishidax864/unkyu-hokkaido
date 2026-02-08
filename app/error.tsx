@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function Error({
     error,
@@ -12,7 +13,7 @@ export default function Error({
 }) {
     useEffect(() => {
         // エラーをログ（本番ではSentryなどに送信）
-        console.error('Application error:', error);
+        logger.error('Application error:', error);
     }, [error]);
 
     return (

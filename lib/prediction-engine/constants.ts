@@ -51,6 +51,9 @@ export const COMPOUND_RISK_BASE_SCORE = 20;
 /** 複合リスク追加加算値（両方が閾値100%以上） */
 export const COMPOUND_RISK_BONUS_SCORE = 25;
 
+/** 複合リスク乗数（デサイシブスコアリング用） */
+export const COMPOUND_RISK_MULTIPLIER = 1.5;
+
 // =====================
 // 風速関連の閾値
 // =====================
@@ -64,14 +67,14 @@ export const LIGHT_WIND_MAX = 10;
 /** 軽い風のリスクスコア */
 export const LIGHT_WIND_SCORE = 3;
 
-/** やや強い風の最小値（m/s） */
-export const MODERATE_WIND_MIN = 10;
+/** やや強い風の最小値（m/s） (15 -> 13: 遅延検知のため感度向上) */
+export const MODERATE_WIND_MIN = 13;
 
-/** やや強い風の基本スコア */
-export const MODERATE_WIND_BASE_SCORE = 0;
+/** やや強い風の基本スコア (5 -> 10: 遅延見逃し防止) */
+export const MODERATE_WIND_BASE_SCORE = 10;
 
-/** やや強い風のスコア係数（m/s単位） */
-export const MODERATE_WIND_COEFFICIENT = 0.5;
+/** やや強い風のスコア係数（m/s単位） (0.5 -> 1.5: 18m/sで遅延リスクを出すため) */
+export const MODERATE_WIND_COEFFICIENT = 1.5;
 
 /** 強風のベースリスクスコア（25 -> 20に引き下げて境界値の過剰反応を防ぐ） */
 export const STRONG_WIND_BASE_SCORE = 60;
@@ -90,6 +93,10 @@ export const WIND_GUST_BASE_SCORE = 20;
 
 /** 瞬間風速の最大追加スコア */
 export const WIND_GUST_MAX_BONUS = 25;
+
+/** 安全な風向の場合のリスク軽減係数 */
+export const SAFE_WIND_DIRECTION_MULTIPLIER = 0.3;
+
 
 // =====================
 // 積雪関連の閾値（時間降雪量 cm/h）
@@ -129,17 +136,21 @@ export const SUSPENSION_SNOW_THRESHOLD = 15;
 // 積雪深（累積）関連の閾値 🆕
 // =====================
 
-/** 中程度の積雪深（cm） - 遅延リスク */
-export const MODERATE_SNOW_DEPTH_THRESHOLD = 15;
+/** 中程度の積雪深（cm） - 遅延リスク (15 -> 30) */
+export const MODERATE_SNOW_DEPTH_THRESHOLD = 30;
 
 /** 中程度の積雪深スコア */
 export const MODERATE_SNOW_DEPTH_SCORE = 13;
 
-/** 危険な積雪深（cm） - 運休リスク */
-export const CRITICAL_SNOW_DEPTH_THRESHOLD = 45;
+/** 危険な積雪深（cm） - 運休リスク (45 -> 80) */
+export const CRITICAL_SNOW_DEPTH_THRESHOLD = 80;
 
 /** 危険な積雪深スコア */
 export const CRITICAL_SNOW_DEPTH_SCORE = 40;
+
+/** 地吹雪（吹き溜まり）リスクの風速閾値（m/s） */
+export const SNOW_DRIFT_WIND_THRESHOLD = 10;
+
 
 // =====================
 // 降水量関連の閾値

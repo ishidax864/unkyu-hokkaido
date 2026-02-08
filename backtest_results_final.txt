@@ -1,0 +1,147 @@
+=== Starting Accuracy Verification (Backtest) ===
+Target Dates: 23 records
+
+Testing: 2025-12-05 [jr-hokkaido.hakodate-main] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 8, factorCount: 2 }
+  -> AI Prediction: 18% Risk (Wind:15.6m/s [Dir:256°], SnowHr:1.26cm, Snow24h:5.1cm, Depth:13.0cm)
+  -> Verdict: ✅ CORRECT (Low Risk Predicted)
+  -> Reasons: 風速15.6m/sの予報（徐行運転の可能性）, 積雪1.26cm（軽微な影響の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2025-12-14 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 103.2, factorCount: 3 }
+  -> AI Prediction: 85% Risk (Wind:31.3m/s [Dir:18°], SnowHr:0.98cm, Snow24h:5.8cm, Depth:38.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（38cm）: 排雪作業による運休・遅延の可能性, 風速31.3m/sの予報（運転規制基準）, 積雪0.98cm（軽微な影響の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2025-12-16 [jr-hokkaido.chitose] (Actual: delayed)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.chitose', score: 20.8, factorCount: 2 }
+  -> AI Prediction: 37% Risk (Wind:10.0m/s [Dir:221°], SnowHr:0.14cm, Snow24h:0.5cm, Depth:18.0cm)
+  -> Verdict: ✅ CORRECT (Warning Level)
+  -> Reasons: 短期間の記録的積雪（18cm）: 排雪作業による運休・遅延の可能性, 風速10m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-03 [jr-hokkaido.chitose] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.chitose', score: 106.88, factorCount: 1 }
+  -> AI Prediction: 85% Risk (Wind:17.7m/s [Dir:340°], SnowHr:0cm, Snow24h:0.0cm, Depth:2.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 風速17.7m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-10 [jr-hokkaido.hakodate-main] (Actual: delayed)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 68, factorCount: 4 }
+  -> AI Prediction: 85% Risk (Wind:36.0m/s [Dir:161°], SnowHr:0.63cm, Snow24h:0.6cm, Depth:34.0cm)
+  -> Verdict: ✅ CORRECT (Warning Level)
+  -> Reasons: 【過去事例】発達した低気圧による暴風（2023年2月型）に近い気象条件です。このケースでは6時間以上の運休が発生しました, 短期間の記録的積雪（34cm）: 排雪作業による運休・遅延の可能性, 風速36m/sの予報（運転規制基準）, 冬季土曜夜間の計画除雪（運休・間引き運転の可能性）, 積雪0.63cm（軽微な影響の可能性）
+
+Testing: 2026-01-20 [jr-hokkaido.hakodate-main] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 24, factorCount: 3 }
+  -> AI Prediction: 39% Risk (Wind:22.1m/s [Dir:277°], SnowHr:1.05cm, Snow24h:1.8cm, Depth:32.0cm)
+  -> Verdict: ✅ CORRECT (Low Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（32cm）: 排雪作業による運休・遅延の可能性, 風速22.1m/sの予報（徐行運転の可能性）, 積雪1.05cm（軽微な影響の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-25 [jr-hokkaido.chitose] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.chitose', score: 136, factorCount: 2 }
+  -> AI Prediction: 85% Risk (Wind:19.0m/s [Dir:334°], SnowHr:0.21cm, Snow24h:0.3cm, Depth:27.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（27cm）: 排雪作業による運休・遅延の可能性, 風速19m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-25 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 47, factorCount: 2 }
+  -> AI Prediction: 69% Risk (Wind:23.3m/s [Dir:25°], SnowHr:0.07cm, Snow24h:0.8cm, Depth:50.0cm)
+  -> Verdict: ⚠️  PARTIAL (Warning level, but might need stronger signal)
+  -> Reasons: 短期間の記録的積雪（50cm）: 排雪作業による運休・遅延の可能性, 風速23.3m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-26 [jr-hokkaido.chitose] (Actual: delayed)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.chitose', score: 123.2, factorCount: 2 }
+  -> AI Prediction: 85% Risk (Wind:17.0m/s [Dir:333°], SnowHr:0.07cm, Snow24h:0.1cm, Depth:29.0cm)
+  -> Verdict: ✅ CORRECT (Warning Level)
+  -> Reasons: 短期間の記録的積雪（28.999999999999996cm）: 排雪作業による運休・遅延の可能性, 風速17m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-28 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 44, factorCount: 2 }
+  -> AI Prediction: 65% Risk (Wind:17.4m/s [Dir:32°], SnowHr:0.35cm, Snow24h:1.3cm, Depth:47.0cm)
+  -> Verdict: ⚠️  PARTIAL (Warning level, but might need stronger signal)
+  -> Reasons: 短期間の記録的積雪（47cm）: 排雪作業による運休・遅延の可能性, 風速17.4m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-29 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 16, factorCount: 2 }
+  -> AI Prediction: 29% Risk (Wind:16.9m/s [Dir:21°], SnowHr:0cm, Snow24h:0.0cm, Depth:43.0cm)
+  -> Verdict: ❌  MISS (Predicted Safe)
+  -> Reasons: 短期間の記録的積雪（43cm）: 排雪作業による運休・遅延の可能性, 風速16.9m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2026-01-31 [jr-hokkaido.gakuentoshi] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.gakuentoshi', score: 159.06, factorCount: 5 }
+  -> AI Prediction: 85% Risk (Wind:17.4m/s [Dir:296°], SnowHr:1.54cm, Snow24h:9.2cm, Depth:73.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（73cm）: 排雪作業による運休・遅延の可能性, 風速17.4m/sの予報（運転規制基準）, 冬季土曜夜間の計画除雪（運休・間引き運転の可能性）, 積雪1.54cm（軽微な影響の可能性）, エゾシカ多発時期・時間帯（衝突リスクあり）
+
+Testing: 2026-02-05 [jr-hokkaido.hakodate-main] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 41, factorCount: 2 }
+  -> AI Prediction: 62% Risk (Wind:15.7m/s [Dir:155°], SnowHr:0.14cm, Snow24h:0.1cm, Depth:49.0cm)
+  -> Verdict: ❌  FALSE ALARM (Predicted Risk)
+  -> Reasons: 短期間の記録的積雪（49cm）: 排雪作業による運休・遅延の可能性, 風速15.7m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-01-25 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 134, factorCount: 2 }
+  -> AI Prediction: 85% Risk (Wind:33.5m/s [Dir:327°], SnowHr:0.14cm, Snow24h:2.0cm, Depth:60.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 【過去事例】発達した低気圧による暴風（2023年2月型）に近い気象条件です。このケースでは6時間以上の運休が発生しました, 短期間の記録的積雪（60cm）: 排雪作業による運休・遅延の可能性, 風速33.5m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-01-29 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 40, factorCount: 2 }
+  -> AI Prediction: 60% Risk (Wind:10.9m/s [Dir:197°], SnowHr:0.28cm, Snow24h:0.8cm, Depth:57.0cm)
+  -> Verdict: ⚠️  PARTIAL (Warning level, but might need stronger signal)
+  -> Reasons: 短期間の記録的積雪（56.99999999999999cm）: 排雪作業による運休・遅延の可能性, 風速10.9m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-02-01 [jr-hokkaido.chitose] (Actual: stopped)
+[DEBUG] Risk factors evaluated {
+  routeId: 'jr-hokkaido.chitose',
+  score: 178.24000000000004,
+  factorCount: 2
+}
+  -> AI Prediction: 85% Risk (Wind:25.6m/s [Dir:281°], SnowHr:0.07cm, Snow24h:0.1cm, Depth:22.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（22cm）: 排雪作業による運休・遅延の可能性, 風速25.6m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-01-13 [jr-hokkaido.hakodate-main] (Actual: delayed)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 62, factorCount: 3 }
+  -> AI Prediction: 85% Risk (Wind:13.0m/s [Dir:66°], SnowHr:0.14cm, Snow24h:0.4cm, Depth:50.0cm)
+  -> Verdict: ✅ CORRECT (Warning Level)
+  -> Reasons: 短期間の記録的積雪（50cm）: 排雪作業による運休・遅延の可能性, 冬季土曜夜間の計画除雪（運休・間引き運転の可能性）, 風速13m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-01-20 [jr-hokkaido.hakodate-main] (Actual: delayed)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 61, factorCount: 3 }
+  -> AI Prediction: 85% Risk (Wind:12.8m/s [Dir:79°], SnowHr:0.07cm, Snow24h:0.2cm, Depth:53.0cm)
+  -> Verdict: ✅ CORRECT (Warning Level)
+  -> Reasons: 短期間の記録的積雪（53cm）: 排雪作業による運休・遅延の可能性, 冬季土曜夜間の計画除雪（運休・間引き運転の可能性）, 風速12.8m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2023-01-25 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 140, factorCount: 2 }
+  -> AI Prediction: 85% Risk (Wind:43.5m/s [Dir:282°], SnowHr:0.21cm, Snow24h:2.7cm, Depth:59.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 【過去事例】発達した低気圧による暴風（2023年2月型）に近い気象条件です。このケースでは6時間以上の運休が発生しました, 短期間の記録的積雪（59cm）: 排雪作業による運休・遅延の可能性, 風速43.5m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2023-02-01 [jr-hokkaido.hakodate-main] (Actual: stopped)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 128.6, factorCount: 3 }
+  -> AI Prediction: 85% Risk (Wind:30.9m/s [Dir:7°], SnowHr:1.61cm, Snow24h:7.1cm, Depth:66.0cm)
+  -> Verdict: ✅ CORRECT (High Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（66cm）: 排雪作業による運休・遅延の可能性, 風速30.9m/sの予報（運転規制基準）, 積雪1.61cm（軽微な影響の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-01-10 [jr-hokkaido.hakodate-main] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 126, factorCount: 2 }
+  -> AI Prediction: 85% Risk (Wind:31.5m/s [Dir:292°], SnowHr:0.28cm, Snow24h:2.7cm, Depth:47.0cm)
+  -> Verdict: ❌  FALSE ALARM (Predicted Risk)
+  -> Reasons: 短期間の記録的積雪（47cm）: 排雪作業による運休・遅延の可能性, 風速31.5m/sの予報（運転規制基準）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2024-02-15 [jr-hokkaido.chitose] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.chitose', score: 75.2, factorCount: 3 }
+  -> AI Prediction: 85% Risk (Wind:25.1m/s [Dir:352°], SnowHr:0.63cm, Snow24h:3.4cm, Depth:15.0cm)
+  -> Verdict: ❌  FALSE ALARM (Predicted Risk)
+  -> Reasons: 短期間の記録的積雪（15cm）: 排雪作業による運休・遅延の可能性, 風速25.1m/sの予報（運転規制基準）, 積雪0.63cm（軽微な影響の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+Testing: 2023-01-15 [jr-hokkaido.hakodate-main] (Actual: normal)
+[DEBUG] Risk factors evaluated { routeId: 'jr-hokkaido.hakodate-main', score: 20, factorCount: 2 }
+  -> AI Prediction: 34% Risk (Wind:24.0m/s [Dir:19°], SnowHr:0.14cm, Snow24h:0.4cm, Depth:42.0cm)
+  -> Verdict: ✅ CORRECT (Low Risk Predicted)
+  -> Reasons: 短期間の記録的積雪（42cm）: 排雪作業による運休・遅延の可能性, 風速24m/sの予報（徐行運転の可能性）, 通勤時間帯につき遅延波及リスク上昇
+
+=== Final Results ===
+Accuracy: 82.6% (19/23)

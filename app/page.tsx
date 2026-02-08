@@ -10,8 +10,8 @@ import { ShareCard } from '@/components/share-card';
 import { WeatherWarningList } from '@/components/weather-warning-list'; // 🆕
 import { HourlyRiskChart } from '@/components/hourly-risk-chart'; // 🆕
 import { getRouteById, getStationById, getCommonLines, getJRStatusUrl, Station } from '@/lib/hokkaido-data';
-import { calculateSuspensionRisk, calculateWeeklyForecast } from '@/lib/prediction-engine';
-import { fetchRealWeatherForecast, fetchHourlyWeatherForecast, fetchAllHokkaidoWarnings, findNearestWeatherPoint, getRouteCoordinates, fetchDailyWeatherForecast } from '@/lib/weather';
+// unused imports removed
+import { useAppInit } from '@/hooks/useAppInit'; // 🆕
 import { findTrain } from '@/lib/timetable-data'; // 🆕
 import { JROperationStatus } from '@/lib/jr-status';
 import { saveUserReport, aggregateCrowdsourcedStatus } from '@/lib/user-reports';
@@ -48,94 +48,21 @@ export default function Home() {
     refreshRealtimeStatus // 🆕
   } = useRouteSearch();
 
-  const [weather, setWeather] = useState<WeatherForecast[]>([]);
-  const [warnings, setWarnings] = useState<Array<{ area: string; warnings: WeatherWarning[] }>>([]);
-  const [currentTime, setCurrentTime] = useState<string>('');
-  const [isWeatherLoading, setIsWeatherLoading] = useState(true);
-  const [lastWeatherUpdate, setLastWeatherUpdate] = useState<string>('');
-  const [locationName, setLocationName] = useState<string>('札幌');
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | undefined>(undefined);
+  // 初期化ロジック（天気、現在地、警報、時刻）
+  const {
+    weather,
+    warnings,
+    currentTime,
+    isWeatherLoading,
+    lastWeatherUpdate,
+    locationName,
+    userLocation
+  } = useAppInit();
+
+
 
   // お気に入りフック
   const { favorites, addFavorite, removeFavorite, isFavorite, isLoaded: isFavoritesLoaded } = useFavorites();
-
-  // 現在時刻の更新
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // 天気データと警報の取得
-  useEffect(() => {
-    const loadData = async () => {
-      setIsWeatherLoading(true);
-
-      // 1. 位置情報の取得（ブラウザAPI）
-      let currentCoords: { lat: number; lon: number } | undefined = undefined;
-
-      try {
-        if (navigator.geolocation) {
-          await new Promise<void>((resolve) => {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                currentCoords = {
-                  lat: position.coords.latitude,
-                  lon: position.coords.longitude
-                };
-                setUserLocation(currentCoords);
-
-                // 最寄りの地点名を特定
-                const nearest = findNearestWeatherPoint(currentCoords.lat, currentCoords.lon);
-                setLocationName(nearest.name); // 例: "千歳"
-                resolve();
-              },
-              (err) => {
-                console.log('Geolocation denied/error:', err);
-                // 札幌（デフォルト）のまま
-                resolve();
-              },
-              { timeout: 5000 }
-            );
-          });
-        }
-      } catch (e) {
-        console.error('Geolocation setup failed', e);
-      }
-
-      // 2. 現在地（またはデフォルト）の天気予報取得
-      try {
-        // 現在地の座標を渡して天気取得 (routeIdなしで座標指定)
-        const realWeather = await fetchDailyWeatherForecast(undefined, currentCoords);
-        setWeather(realWeather);
-        setLastWeatherUpdate(new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }));
-      } catch (error) {
-        console.error('Weather fetch failed:', error);
-      }
-
-      // 3. 全道の警報取得
-      try {
-        const allWarnings = await fetchAllHokkaidoWarnings();
-        setWarnings(allWarnings);
-      } catch (error) {
-        console.error('Warning fetch failed:', error);
-      } finally {
-        setIsWeatherLoading(false);
-      }
-    };
-
-    loadData();
-
-    // 30分ごとに更新
-    const interval = setInterval(loadData, 30 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-
 
   // ユーザー報告を保存（Supabase優先、ローカルストレージにフォールバック）
   const handleReport = async (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string) => {

@@ -36,10 +36,12 @@ import {
     WEATHER_IMPACT_SEVERE_THRESHOLD,
     WEATHER_IMPACT_MODERATE_THRESHOLD,
     WEATHER_IMPACT_MINOR_THRESHOLD,
-    MAX_DISPLAY_REASONS
+    MAX_DISPLAY_REASONS,
+    COMPOUND_RISK_MULTIPLIER
 } from './constants';
 
 import { predictRecoveryTime, analyzeWeatherTrend } from '../recovery-prediction';
+import { calculateResumptionTime } from './resumption';
 
 // ==========================================
 // Main Prediction Function
@@ -106,6 +108,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         });
     }
 
+    // 🆕 Decisive Scoring: 危険因子が複数ある場合、乗算でリスクを跳ね上げる
+    // Priority 4以下（=重要）の要因が2つ以上ある場合、全体スコアを1.5倍にする
+    const criticalFactors = reasonsWithPriority.filter(r => r.priority <= 4).length;
+    if (criticalFactors >= 2) {
+        totalScore = Math.round(totalScore * COMPOUND_RISK_MULTIPLIER);
+        logger.debug('Applied compound multiplier', { originalScore: totalScore / COMPOUND_RISK_MULTIPLIER, newScore: totalScore });
+    }
+
     // 3.5 過去の災害事例との照合
     if (input.weather) {
         const historicalMatch = findHistoricalMatch(input.weather);
@@ -134,6 +144,28 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 5. 確率計算と上限適用
     const maxProbability = determineMaxProbability(input);
     let probability = Math.min(Math.round(totalScore), maxProbability);
+
+    // 🆕 Confidence Filter (Wolf Boy Mitigation)
+    // 風速18m/s未満、かつ降雪2cm未満の場合、リスクが30-60%程度あっても
+    // 「遅延警告」を出さず「注意レベル(20-29%)」に留める
+    if (input.weather && probability >= 30 && probability < 60) {
+        const wind = input.weather.windSpeed || 0;
+        const snow = input.weather.snowfall || 0;
+        // 暴風でも大雪でもない
+        if (wind < 18 && snow < 2.0) {
+            probability = 25; // 強制的に「注意」レベルへ
+            logger.debug('Confidence Filter Applied: Suppressed minor warning', {
+                original: totalScore,
+                new: probability,
+                reason: 'Weak weather signal'
+            });
+            // 理由もマイルドに書き換え
+            const index = reasonsWithPriority.findIndex(r => r.reason.includes('徐行運転の可能性'));
+            if (index !== -1) {
+                reasonsWithPriority[index].reason = `風速${wind}m/s前後の強風（運行への影響は限定的）`;
+            }
+        }
+    }
 
     // 6. 履歴データによる補正
     if (input.historicalData) {
@@ -174,8 +206,24 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             estimatedRecoveryTime = recoveryPrediction.estimatedTime;
             recoveryRecommendation = recoveryPrediction.recommendationMessage;
 
+
+            // 🆕 New Resumption Logic (Standardized)
+            if (input.weather && input.weather.surroundingHours) {
+                const resumption = calculateResumptionTime(input.weather.surroundingHours, input.routeId);
+                if (resumption.estimatedResumption) {
+                    estimatedRecoveryTime = resumption.estimatedResumption;
+                    estimatedRecoveryHours = resumption.requiredBufferHours;
+                    recoveryRecommendation = `${resumption.reason}のため、${resumption.estimatedResumption}頃の運転再開が見込まれます。`;
+
+                    // Override existing logic
+                    if (isCurrentlySuspended) {
+                        reasons.unshift(`【復旧予測】${recoveryRecommendation}`);
+                    }
+                }
+            }
+
             // 復旧予測理由をトップに追加（実際に運休している場合のみ）
-            if (isCurrentlySuspended) {
+            if (isCurrentlySuspended && !estimatedRecoveryTime) {
                 const recoveryReasons = recoveryPrediction.reasoning.map((r: string) => r);
                 reasons.unshift(...recoveryReasons);
             }
@@ -222,6 +270,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             last30minCrowded: input.crowdsourcedStatus.last30minCounts.crowded, // 🆕
             last30minResumed: input.crowdsourcedStatus.last30minCounts.resumed
         } : undefined,
+        comparisonData: {
+            wind,
+            snow
+        }
     };
 }
 

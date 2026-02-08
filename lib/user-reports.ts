@@ -8,6 +8,7 @@ import {
     getReportStats,
     type UserReportDB
 } from './supabase';
+import { logger } from './logger';
 
 // 報告タイプ
 export type ReportType = 'stopped' | 'delayed' | 'crowded' | 'normal' | 'resumed';
@@ -170,7 +171,7 @@ function saveToLocalStorage(report: UserReport): void {
         existing.push(report);
         localStorage.setItem(REPORTS_STORAGE_KEY, JSON.stringify(existing));
     } catch (error) {
-        console.error('LocalStorage save error:', error);
+        logger.error('LocalStorage save error:', error);
     }
 }
 

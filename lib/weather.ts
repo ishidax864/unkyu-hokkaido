@@ -42,7 +42,12 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     return R * c;
 }
 
-// 最寄りの気象観測点を探す
+/**
+ * Find the nearest weather observation point from the given coordinates.
+ * @param lat Latitude
+ * @param lon Longitude
+ * @returns Object containing the ID and name of the nearest point.
+ */
 export function findNearestWeatherPoint(lat: number, lon: number): { id: string; name: string } {
     let nearestPoint = 'jr-hokkaido.hakodate-main'; // デフォルト札幌
     let minDistance = Infinity;
@@ -61,7 +66,12 @@ export function findNearestWeatherPoint(lat: number, lon: number): { id: string;
     };
 }
 
-// 路線IDまたは座標から座標を取得
+/**
+ * Get coordinates for a specific route ID or use provided coordinates.
+ * Defaults to Sapporo if neither is valid.
+ * @param routeId Optional route ID to look up.
+ * @param coordinates Optional direct coordinates.
+ */
 export function getRouteCoordinates(routeId?: string, coordinates?: { lat: number; lon: number }): { lat: number; lon: number } {
     if (coordinates) {
         logger.debug('Using provided user coordinates', { coordinates });
@@ -96,7 +106,8 @@ interface OpenMeteoHourlyResponse {
         wind_gusts_10m: number[];
         snow_depth: number[];
         weather_code: number[];
-        snowfall?: number[]; // 追加
+        snowfall?: number[];
+        winddirection_10m: number[]; // 🆕
     };
 }
 
@@ -163,7 +174,13 @@ function generateWarningsFromHourly(
     return warnings;
 }
 
-// 時間単位の天気予報を取得（未来の特定時刻用）
+/**
+ * Fetch hourly weather forecast for a specific route and time.
+ * Used for detailed risk calculation at a specific point in time.
+ * @param routeId Route ID
+ * @param targetDateTime Target date and time (ISO string)
+ * @param coordinates Optional custom coordinates
+ */
 export async function fetchHourlyWeatherForecast(
     routeId?: string,
     targetDateTime?: string, // ISO format: "2026-02-03T15:00"
@@ -175,7 +192,7 @@ export async function fetchHourlyWeatherForecast(
         const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?` +
             `latitude=${lat}&longitude=${lon}` +
-            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall` +
+            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m` +
             `&timezone=Asia/Tokyo` +
             `&forecast_days=7`
         );
@@ -223,6 +240,7 @@ export async function fetchHourlyWeatherForecast(
             snowDepthChange: parseFloat(snowDepthChangeVal.toFixed(1)),
             snowfall: data.hourly.snowfall ? data.hourly.snowfall[closestIndex] : 0,
             weatherCode: data.hourly.weather_code[closestIndex],
+            windDirection: data.hourly.winddirection_10m[closestIndex], // 🆕
         };
 
         const warnings = generateWarningsFromHourly(
@@ -260,6 +278,7 @@ export async function fetchHourlyWeatherForecast(
                     snowfall: hSnowfall,
                     windGust: data.hourly.wind_gusts_10m[targetIdx],
                     weatherCode: data.hourly.weather_code[targetIdx],
+                    windDirection: data.hourly.winddirection_10m[targetIdx], // 🆕
                     warnings: hWarnings,
                 });
             }
@@ -275,6 +294,7 @@ export async function fetchHourlyWeatherForecast(
             snowfall: currentHourData.snowfall,
             windGust: currentHourData.windGust,
             weatherCode: currentHourData.weatherCode,
+            windDirection: currentHourData.windDirection, // 🆕
             warnings,
             surroundingHours, // 追加
         };
@@ -284,7 +304,12 @@ export async function fetchHourlyWeatherForecast(
     }
 }
 
-// 日単位の天気予報を取得（週間予測用 - 営業時間内06:00-24:00の最大値を採用）
+/**
+ * Fetch daily weather forecast for the next 7 days.
+ * Aggregates hourly data to find daily maximums/minimums and risks.
+ * @param routeId Route ID
+ * @param coordinates Optional custom coordinates
+ */
 export async function fetchDailyWeatherForecast(
     routeId?: string,
     coordinates?: { lat: number; lon: number }
@@ -296,7 +321,7 @@ export async function fetchDailyWeatherForecast(
         const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?` +
             `latitude=${lat}&longitude=${lon}` +
-            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code` +
+            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,winddirection_10m,snowfall` +
             `&timezone=Asia/Tokyo` +
             `&forecast_days=7`
         );
@@ -315,6 +340,7 @@ export async function fetchDailyWeatherForecast(
             windSpeeds: number[];
             windGusts: number[];
             snowDepths: number[];
+            windDirections: number[]; // 🆕
             weatherCodes: number[];
         }> = {};
 
@@ -333,6 +359,7 @@ export async function fetchDailyWeatherForecast(
                         windSpeeds: [],
                         windGusts: [],
                         snowDepths: [],
+                        windDirections: [], // 🆕
                         weatherCodes: [],
                     };
                 }
@@ -341,6 +368,7 @@ export async function fetchDailyWeatherForecast(
                 groupedByDate[date].windSpeeds.push(data.hourly.wind_speed_10m[i]);
                 groupedByDate[date].windGusts.push(data.hourly.wind_gusts_10m[i]);
                 groupedByDate[date].snowDepths.push(data.hourly.snow_depth[i]);
+                groupedByDate[date].windDirections.push(data.hourly.winddirection_10m[i]); // 🆕
                 groupedByDate[date].weatherCodes.push(data.hourly.weather_code[i]);
             }
         });
@@ -366,6 +394,25 @@ export async function fetchDailyWeatherForecast(
             const percentileIndex = Math.floor(group.windSpeeds.length * 0.15);
             const windSpeed = sortedWinds[percentileIndex] || sortedWinds[0] || 0;
             const windGust = sortedGusts[percentileIndex] || sortedGusts[0] || 0;
+
+            // 風向は「最大風速時」のものを採用する
+            // 全体の平均をとるより、リスクがある瞬間の風向が重要
+            // windSpeedに対応するindexを見つけるのは難しい（sortしてしまっているため）
+            // なので簡易的に「最多風向」または「平均ベクトル」を採用すべきだが、
+            // ここではシンプルに「最大風速を記録した時間帯の風向」に近いものを取るのがベスト。
+            // しかしgroup.windSpeedsはsort済みではない元の配列が欲しい。
+            // -> group.windSpeedsは未ソート。
+
+            // 最大風速のインデックスを探す
+            let maxWindIndex = 0;
+            let maxWindVal = -1;
+            group.windSpeeds.forEach((w, idx) => {
+                if (w > maxWindVal) {
+                    maxWindVal = w;
+                    maxWindIndex = idx;
+                }
+            });
+            const windDirection = group.windDirections[maxWindIndex] || 0;
 
             // 積雪は最大深さ - 最小深さ（その日の積雪増分）または最大値
             // ここではシンプルにその日の最大積雪深を採用（除雪閾値と比較するため）
@@ -408,6 +455,7 @@ export async function fetchDailyWeatherForecast(
                 windSpeed,
                 snowfall,
                 windGust,
+                windDirection, // 🆕
                 weatherCode,
                 warnings,
             });
@@ -420,7 +468,10 @@ export async function fetchDailyWeatherForecast(
     }
 }
 
-// 全道の気象警報を取得
+/**
+ * Fetch active weather warnings for major areas in Hokkaido.
+ * @returns Array of areas with their active warnings.
+ */
 export async function fetchAllHokkaidoWarnings(): Promise<Array<{ area: string; warnings: WeatherWarning[] }>> {
     const results: Array<{ area: string; warnings: WeatherWarning[] }> = [];
 

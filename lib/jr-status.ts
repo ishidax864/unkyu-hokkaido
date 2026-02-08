@@ -1,5 +1,6 @@
 // JR北海道 運行情報取得
 // 公式サイトからの運行情報をパース
+import { logger } from './logger';
 
 export interface JROperationStatus {
     routeId: string;
@@ -44,7 +45,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
         // ここではモックデータを返す
         return getMockJRStatus();
     } catch (error) {
-        console.error('Failed to fetch JR Hokkaido status:', error);
+        logger.error('Failed to fetch JR Hokkaido status:', error);
         return getMockJRStatus();
     }
 }

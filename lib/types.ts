@@ -57,6 +57,7 @@ export interface WeatherForecast {
   tempMin: number;
   precipitation: number;
   windSpeed: number;
+  windDirection?: number; // 🆕 風向 (0-360)
   snowfall?: number;
   snowDepth?: number;
   snowDepthChange?: number; // 🆕 前時間からの積雪増加量(cm)
@@ -95,6 +96,10 @@ export interface PredictionResult {
     last30minDelayed: number; // 🆕
     last30minCrowded: number; // 🆕
     last30minResumed: number;
+  };
+  comparisonData?: { // 🆕 For Route Comparison
+    wind: number;
+    snow: number;
   };
 }
 
@@ -216,6 +221,7 @@ export interface VulnerabilityData {
   vulnerabilityScore: number;
   description: string;
   hasDeerRisk?: boolean; // エゾシカ衝突リスクの高い路線か
+  safeWindDirections?: number[][]; // 安全な風向範囲 [[min, max], ...]
 }
 
 // =====================

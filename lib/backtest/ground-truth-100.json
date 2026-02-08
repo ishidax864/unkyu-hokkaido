@@ -1,0 +1,352 @@
+[
+    {
+        "date": "2023-12-22",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Low pressure blizzard, prolonged suspension."
+    },
+    {
+        "date": "2023-12-23",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Blizzard continues."
+    },
+    {
+        "date": "2024-01-25",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Heavy snow suspension."
+    },
+    {
+        "date": "2023-12-01",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Early winter normal operation."
+    },
+    {
+        "date": "2024-02-15",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Mid-February normal day."
+    },
+    {
+        "date": "2023-12-22",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Northern Hokkaido severe blizzard."
+    },
+    {
+        "date": "2024-02-01",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Partial suspension (Asahikawa-Nayoro)."
+    },
+    {
+        "date": "2024-02-07",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Blizzard suspension."
+    },
+    {
+        "date": "2024-01-10",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Mid-January normal operation."
+    },
+    {
+        "date": "2024-02-29",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Leap day normal operation."
+    },
+    {
+        "date": "2023-12-22",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "heavy_snow_wind",
+        "notes": "Severe blizzard impacting broad area."
+    },
+    {
+        "date": "2024-01-24",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Precursor to major snow event."
+    },
+    {
+        "date": "2024-01-08",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "delayed",
+        "cause": "snow",
+        "notes": "Snow delays."
+    },
+    {
+        "date": "2024-02-22",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Late Feb normal day."
+    },
+    {
+        "date": "2025-01-04",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "delayed",
+        "cause": "planned_suspension",
+        "notes": "Nighttime planned suspension."
+    },
+    {
+        "date": "2023-12-22",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Airport line stopped due to blizzard."
+    },
+    {
+        "date": "2024-01-25",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Major transport paralysis."
+    },
+    {
+        "date": "2025-02-01",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "delayed",
+        "cause": "planned_suspension",
+        "notes": "Saturday night suspension."
+    },
+    {
+        "date": "2024-12-24",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Christmas Eve normal operation."
+    },
+    {
+        "date": "2024-03-05",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "March normal day."
+    },
+    {
+        "date": "2023-12-22",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Eastern Hokkaido blizzard."
+    },
+    {
+        "date": "2024-03-20",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Spring blizzard."
+    },
+    {
+        "date": "2024-01-15",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Mid-Jan normal day."
+    },
+    {
+        "date": "2025-01-10",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Jan normal operation."
+    },
+    {
+        "date": "2024-03-10",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "March normal operation."
+    },
+    {
+        "date": "2025-01-25",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "record_snowfall",
+        "notes": "Severe paralysis (Original case)."
+    },
+    {
+        "date": "2024-03-19",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Record snowfall in Sapporo (Original case)."
+    },
+    {
+        "date": "2024-12-15",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Assumed normal (Original case)."
+    },
+    {
+        "date": "2025-01-17",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "delayed",
+        "cause": "snow",
+        "notes": "Strong snow forecast day (Original case)."
+    },
+    {
+        "date": "2023-01-25",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "strong_winter_pressure",
+        "notes": "10-year cold wave (Original case)."
+    },
+    {
+        "date": "2024-01-12",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 1"
+    },
+    {
+        "date": "2024-12-17",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 2"
+    },
+    {
+        "date": "2025-02-11",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 3"
+    },
+    {
+        "date": "2024-03-25",
+        "routeId": "jr-hokkaido.sekihoku",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 4"
+    },
+    {
+        "date": "2024-01-05",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 5"
+    },
+    {
+        "date": "2024-12-10",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 6"
+    },
+    {
+        "date": "2025-02-04",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 7"
+    },
+    {
+        "date": "2024-02-27",
+        "routeId": "jr-hokkaido.soya",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 8"
+    },
+    {
+        "date": "2023-12-05",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 9"
+    },
+    {
+        "date": "2024-02-12",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 10"
+    },
+    {
+        "date": "2025-01-14",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 11"
+    },
+    {
+        "date": "2023-12-28",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 12"
+    },
+    {
+        "date": "2023-12-12",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 13"
+    },
+    {
+        "date": "2024-01-30",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 14"
+    },
+    {
+        "date": "2025-01-21",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 15"
+    },
+    {
+        "date": "2024-02-05",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 16"
+    },
+    {
+        "date": "2025-01-07",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 17"
+    },
+    {
+        "date": "2025-02-18",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 18"
+    },
+    {
+        "date": "2025-03-01",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "normal",
+        "cause": "none",
+        "notes": "Random Normal 19"
+    },
+    {
+        "date": "2024-02-05",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "normal",
+        "cause": "recent_normal",
+        "notes": "Recent calm day (Original)."
+    }
+]

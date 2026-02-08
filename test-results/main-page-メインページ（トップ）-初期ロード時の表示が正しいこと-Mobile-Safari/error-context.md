@@ -34,7 +34,7 @@
               - generic [ref=e41]:
                 - img [ref=e42]
                 - text: 日付
-              - textbox [ref=e44]: 2026-02-06
+              - textbox [ref=e44]: 2026-02-07
             - generic [ref=e45]:
               - generic [ref=e46]:
                 - img [ref=e47]

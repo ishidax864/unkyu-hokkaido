@@ -1,0 +1,67 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - heading "運休AI" [level=1] [ref=e10]
+        - generic [ref=e11]: 北海道JR
+      - generic [ref=e12]:
+        - generic [ref=e13]: 札幌
+        - generic [ref=e14]: 01:34
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: 運休リスクを調べる
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - generic [ref=e21]:
+              - text: 出発駅
+              - button "選択" [ref=e22]:
+                - generic [ref=e23]:
+                  - img [ref=e24]
+                  - generic [ref=e27]: 選択
+                - img [ref=e28]
+            - img [ref=e31]
+            - generic [ref=e33]:
+              - text: 到着駅
+              - button "選択" [ref=e34]:
+                - generic [ref=e35]:
+                  - img [ref=e36]
+                  - generic [ref=e39]: 選択
+                - img [ref=e40]
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - generic [ref=e44]:
+                - generic [ref=e45]:
+                  - img [ref=e46]
+                  - text: 日付
+                - textbox [ref=e48]: 2026-02-07
+              - generic [ref=e49]:
+                - generic [ref=e50]:
+                  - img [ref=e51]
+                  - text: 時刻
+                - generic [ref=e54]:
+                  - button "出発" [ref=e55]:
+                    - img [ref=e56]
+                    - text: 出発
+                  - button "到着" [ref=e59]:
+                    - img [ref=e60]
+                    - text: 到着
+                - textbox [ref=e63]: 08:00
+            - button "📍 現在の日時で検索" [ref=e64]
+          - button "運休リスクを予測する" [disabled] [ref=e65]
+      - generic [ref=e66]:
+        - heading "🚀 Proプランで先読み" [level=3] [ref=e67]
+        - paragraph [ref=e68]:
+          - text: 公式発表の30分前にプッシュ通知。
+          - text: 24時間先までの詳細予測グラフも。
+        - button "7日間無料で試す" [ref=e69]
+      - generic [ref=e70]:
+        - paragraph [ref=e71]: © 2026 運休AI - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。
+        - paragraph [ref=e72]: "天気データ: Open-Meteo API"
+  - button "Open Next.js Dev Tools" [ref=e78] [cursor=pointer]:
+    - img [ref=e79]
+  - alert [ref=e82]
+```
