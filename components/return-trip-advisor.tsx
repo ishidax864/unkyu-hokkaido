@@ -22,9 +22,9 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
         status = 'critical';
         message = '帰宅困難になる可能性が高いです。今すぐ帰るか、駅近くのホテル確保を強く推奨します。';
         icon = <Hotel className="w-5 h-5 text-red-600" />;
-    } else if (prob >= 40) {
+    } else if (prob >= 30) { // Changed from 40 to 30 to align with Route Comparison visibility
         status = 'warning';
-        message = '夜遅くなると運休リスクが高まります。20時までの帰宅を目指してください。';
+        message = '夜遅くなると運休リスクが高まります。余裕を持った行動を推奨します。';
         icon = <Home className="w-5 h-5 text-yellow-600" />;
     }
 
@@ -33,8 +33,8 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
 
     return (
         <div className={`mt-4 mb-2 p-4 rounded-xl border ${status === 'critical' ? 'bg-red-50 border-red-200' :
-                status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-                    'bg-green-50 border-green-200'
+            status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+                'bg-green-50 border-green-200'
             }`}>
             <div className="flex items-start gap-3">
                 <div className="mt-1 shrink-0 p-2 bg-white rounded-full shadow-sm">
@@ -44,14 +44,14 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
                 </div>
                 <div>
                     <h3 className={`font-bold text-sm ${status === 'critical' ? 'text-red-800' :
-                            status === 'warning' ? 'text-yellow-800' :
-                                'text-green-800'
+                        status === 'warning' ? 'text-yellow-800' :
+                            'text-green-800'
                         }`}>
                         帰宅サバイバル判定
                     </h3>
                     <p className={`text-sm mt-1 leading-relaxed ${status === 'critical' ? 'text-red-700' :
-                            status === 'warning' ? 'text-yellow-700' :
-                                'text-green-700'
+                        status === 'warning' ? 'text-yellow-700' :
+                            'text-green-700'
                         }`}>
                         {message}
                     </p>

@@ -12,6 +12,18 @@ interface HourlyRiskChartProps {
 export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
     if (data.length === 0) return null;
 
+    // 天気アイコンを絵文字に変換
+    const getWeatherEmoji = (icon: string) => {
+        switch (icon) {
+            case 'snow': return '❄️';
+            case 'rain': return '🌧️';
+            case 'wind': return '💨';
+            case 'cloud': return '☁️';
+            case 'sun': return '☀️';
+            default: return '🌤️';
+        }
+    };
+
     // 高さ計算用
     const maxRisk = Math.max(...data.map(d => d.risk), 10); // 最小でも10%分の高さは確保
 
@@ -64,7 +76,7 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
                                 )}>
                                     {item.time}
                                 </div>
-                                <div className="text-base mt-1">{item.weatherIcon}</div>
+                                <div className="text-base mt-1">{getWeatherEmoji(item.weatherIcon)}</div>
                             </div>
                         </div>
                     );

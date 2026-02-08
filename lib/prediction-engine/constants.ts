@@ -76,11 +76,11 @@ export const MODERATE_WIND_BASE_SCORE = 10;
 /** やや強い風のスコア係数（m/s単位） (0.5 -> 1.5: 18m/sで遅延リスクを出すため) */
 export const MODERATE_WIND_COEFFICIENT = 1.5;
 
-/** 強風のベースリスクスコア（25 -> 20に引き下げて境界値の過剰反応を防ぐ） */
-export const STRONG_WIND_BASE_SCORE = 60;
+/** 強風のベースリスクスコア（60 -> 50に引き下げて過剰反応を防ぐ） */
+export const STRONG_WIND_BASE_SCORE = 50;
 
-/** 強風の超過分係数（3 -> 4に引き上げて、強い風ほど急激にリスクを高める） */
-export const STRONG_WIND_EXCESS_COEFFICIENT = 4;
+/** 強風の超過分係数（4 -> 3に引き下げ） */
+export const STRONG_WIND_EXCESS_COEFFICIENT = 3;
 
 /** 強風の最大追加スコア */
 export const STRONG_WIND_MAX_BONUS = 40;
@@ -251,14 +251,14 @@ export const MAX_DISPLAY_REASONS = 5;
 // 確率と状態の対応
 // =====================
 
-/** 運休判定の最小確率（%） */
-export const STATUS_CANCELLED_THRESHOLD = 70;
+/** 運休判定の最小確率（%）- ユーザー要望により厳格化 (70 -> 80) */
+export const STATUS_CANCELLED_THRESHOLD = 80;
 
-/** 運転見合わせ判定の最小確率（%） */
-export const STATUS_SUSPENDED_THRESHOLD = 50;
+/** 運転見合わせ判定の最小確率（%）- ユーザー要望により40-70%を遅延/可能性とするため引き上げ (50 -> 75) */
+export const STATUS_SUSPENDED_THRESHOLD = 75;
 
-/** 遅延判定の最小確率（%） */
-export const STATUS_DELAYED_THRESHOLD = 20;
+/** 遅延判定の最小確率（%）- 範囲拡大 (20 -> 30) */
+export const STATUS_DELAYED_THRESHOLD = 30;
 
 // =====================
 // 天候影響レベルの閾値

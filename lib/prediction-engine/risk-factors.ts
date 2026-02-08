@@ -1,5 +1,5 @@
 import { PredictionInput, RiskFactor, VulnerabilityData } from '../types';
-import { getStatusWeight, JROperationStatus } from '../jr-status';
+import { getJRStatusWeight } from '../jr-status';
 import { getRecencyWeight } from './helpers';
 
 import {
@@ -54,14 +54,14 @@ import {
 export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
 
     'jr-hokkaido.hakodate-main': {
-        windThreshold: 20, // 20: 安全サイドに戻す
+        windThreshold: 23, // 20 -> 23: 安全サイド緩和 (バックテスト結果反映)
         snowThreshold: 5,
         vulnerabilityScore: 1.0,
         description: '主要幹線、比較的安定',
         hasDeerRisk: false,
     },
     'jr-hokkaido.chitose': {
-        windThreshold: 18, // 16 -> 18: 16m/sでは止まらない実績あり
+        windThreshold: 20, // 18 -> 20: バックテスト結果反映、空港線は強めに運行
         snowThreshold: 4,
         vulnerabilityScore: 1.6,
         description: '空港連絡線、優先的に運行維持',
@@ -84,21 +84,21 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
         hasDeerRisk: true,
     },
     'jr-hokkaido.sekihoku': {
-        windThreshold: 20, // 25 -> 20: 安全サイドに戻す
+        windThreshold: 23, // 20 -> 23: バックテスト結果反映
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '山間部多く積雪・強風に弱い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.soya': {
-        windThreshold: 20, // 30 -> 20: 安全サイドに戻す
+        windThreshold: 23, // 20 -> 23
         snowThreshold: 3,
         vulnerabilityScore: 1.8,
         description: '最北端路線、厳寒期は運休多い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.nemuro': {
-        windThreshold: 20, // 25 -> 20
+        windThreshold: 23, // 20 -> 23
         snowThreshold: 3,
         vulnerabilityScore: 1.5,
         description: '長距離路線、部分運休が発生しやすい',
@@ -181,7 +181,7 @@ export const RISK_FACTORS: RiskFactor[] = [
     {
         condition: (input) => input.jrStatus != null && input.jrStatus.status !== 'normal',
         weight: (input) => {
-            const base = getStatusWeight({ status: input.jrStatus!.status } as JROperationStatus);
+            const base = getJRStatusWeight(input.jrStatus!.status);
             const recency = getRecencyWeight(input.jrStatus?.updatedAt);
             return Math.round(base * recency);
         },
@@ -320,11 +320,15 @@ export const RISK_FACTORS: RiskFactor[] = [
             const dayOfWeek = date.getDay(); // 6 = Saturday
             const depth = input.weather?.snowDepth ?? 0;
 
-            // 1月・2月の土曜日、かつ積雪が少しでもある場合 (5cm以上)
-            return (month === 1 || month === 2) && dayOfWeek === 6 && depth >= 5;
+            // 時間帯チェック: 20時以降のみ対象 (18時は早すぎる)
+            if (!input.targetTime) return false;
+            const hour = parseInt(input.targetTime.slice(0, 2));
+
+            // 1月・2月の土曜日、かつ積雪が少しでもある場合 (5cm以上)、かつ20時以降
+            return (month === 1 || month === 2) && dayOfWeek === 6 && depth >= 5 && hour >= 20;
         },
         weight: () => 20, // 遅延〜運休リスク底上げ
-        reason: () => '冬季土曜夜間の計画除雪（運休・間引き運転の可能性）',
+        reason: () => '冬季土曜夜間の計画除雪（20時以降、運休・間引き運転の可能性）',
         priority: 5,
     },
     // 大雨
@@ -430,7 +434,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         },
         weight: () => 10, // 10%加算（確率は低いが影響は大きい）
         reason: () => 'エゾシカ多発時期・時間帯（衝突リスクあり）',
-        priority: 12,
+        priority: 8,
     },
 ];
 

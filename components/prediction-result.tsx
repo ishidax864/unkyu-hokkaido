@@ -2,8 +2,9 @@
 
 import { PredictionResult } from '@/lib/types';
 import { Route } from '@/lib/types';
-import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, TrendingUp, Clock, AlertOctagon, Users } from 'lucide-react';
+import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, TrendingUp, Clock, AlertOctagon, Users, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getJRStatusUrl } from '@/lib/hokkaido-data';
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -107,7 +108,9 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                             {result.estimatedRecoveryTime || '復旧時刻未定'}
                         </div>
                         <div className="text-sm text-[var(--muted)] mt-1">
-                            ※天気予報と過去データに基づく予測です
+                            {result.isOfficialOverride
+                                ? '※JR北海道公式発表に基づく情報です'
+                                : '※天気予報と過去データに基づく予測です'}
                         </div>
                     </div>
                 </div>
@@ -132,12 +135,20 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                 </div>
 
                 {/* 公式情報へのリンク促進 */}
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm">
-                    <div className="flex items-center gap-2 text-orange-700 font-medium">
-                        <AlertTriangle className="w-4 h-4" />
-                        最新情報はJR公式サイトをご確認ください
+                <a
+                    href={getJRStatusUrl(route.id).url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm hover:bg-orange-100 transition-colors"
+                >
+                    <div className="flex items-center gap-2 text-orange-700 font-medium justify-center">
+                        <div className="flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4" />
+                            最新情報はJR公式サイトをご確認ください
+                        </div>
+                        <ExternalLink className="w-3 h-3 opacity-70" />
                     </div>
-                </div>
+                </a>
             </div>
         );
     }
@@ -158,24 +169,34 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     </div>
                 </div>
             </div>
-            <div className={cn('px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm font-bold', statusConfig.className)}>
-                <StatusIcon className="w-4 h-4" />
-                <span>{result.status}</span>
+
+            {/* 📡 現在の運行状況（JR公式）*/}
+            <div className="mb-4 p-3 rounded-lg bg-gray-50 border border-gray-200">
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                    <span>📡</span> 現在の運行状況（JR公式）
+                </div>
+                <div className="font-bold text-lg flex items-center gap-2">
+                    {result.isCurrentlySuspended ? (
+                        <>
+                            <span className="text-red-600">🔴 運休中</span>
+                            {result.estimatedRecoveryTime && (
+                                <span className="text-sm font-normal text-gray-600">
+                                    （{result.estimatedRecoveryTime}頃 再開見込み）
+                                </span>
+                            )}
+                        </>
+                    ) : result.status === '遅延' ? (
+                        <span className="text-yellow-600">🟡 遅延中</span>
+                    ) : (
+                        <span className="text-green-600">🟢 通常運行中</span>
+                    )}
+                </div>
             </div>
 
-
-            {/* 🆕 復旧予測バッジ (運休リスクが高い場合) */}
-            {
-                result.estimatedRecoveryTime && !isRecoveryMode && (
-                    <div className="mb-4 bg-blue-50 text-blue-800 p-3 rounded-lg text-sm flex items-start gap-2 border border-blue-100">
-                        <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <span className="font-bold">運転再開見込み: {result.estimatedRecoveryTime}頃</span>
-                            <div className="text-xs opacity-80 mt-0.5">※万が一運休した場合の目安です</div>
-                        </div>
-                    </div>
-                )
-            }
+            {/* 📊 予測セクション (ユーザーの出発時刻に基づく) */}
+            <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                <span>📊</span> あなたの出発時刻の予測
+            </div>
 
             {/* ユーザー報告（リアルタイム） */}
             {
@@ -235,10 +256,10 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                             'bg-blue-50 text-blue-800 border-2 border-blue-100'
                     }`}>
                     {
-                        result.probability >= 70 ? '運休の可能性が高い' :
-                            result.probability >= 40 ? '遅延・運休の可能性あり' :
-                                result.probability >= 20 ? '一部遅延の可能性あり' :
-                                    '平常運転の見込み'
+                        result.probability >= 70 ? '運休見込み' :
+                            result.probability >= 40 ? '遅延見込み' :
+                                result.probability >= 20 ? '軽微な影響見込み' :
+                                    '通常運行見込み'
                     }
                 </div>
 

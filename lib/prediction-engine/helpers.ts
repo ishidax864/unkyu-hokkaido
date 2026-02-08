@@ -19,9 +19,12 @@ import {
     MAX_PREDICTION_WITH_DELAY,
     MAX_PREDICTION_WITH_USER_CONSENSUS,
     HISTORICAL_DATA_WEIGHT,
+
     TREND_INCREASING_BONUS,
     TREND_DECREASING_PENALTY,
     USER_CONSENSUS_MIN_REPORTS,
+    SUSPENSION_SNOW_THRESHOLD, // 🆕
+    HEAVY_RAIN_THRESHOLD, // 🆕
 } from './constants';
 
 // =====================
@@ -300,13 +303,65 @@ export function determineSuspensionReason(
     snow: number,
     rain: number
 ): string {
-    if (snow >= 3) {
+    // 優先順位: 雪 > 風 > 雨
+    if (snow >= 3) { // 3cm/hはかなり強い雪（constantsのHEAVY_SNOW_MIN相当だが未定義、一旦3で維持か、補正）
         return '大雪のため';
-    } else if (wind >= 20) {
+    } else if (wind >= 20) { // 20m/s以上（constantsの遅延/運休ライン）
         return '強風のため';
-    } else if (rain >= 30) {
+    } else if (rain >= HEAVY_RAIN_THRESHOLD) {
         return '大雨のため';
     } else {
         return '気象条件のため';
     }
+}
+
+// =====================
+// Confidence Filter (Wolf Boy Mitigation)
+// =====================
+
+interface ConfidenceFilterParams {
+    probability: number;
+    totalScore: number;
+    windSpeed: number;
+    windGust: number;
+    snowfall: number;
+}
+
+interface ConfidenceFilterResult {
+    filteredProbability: number;
+    wasFiltered: boolean;
+    reason?: string;
+}
+
+/**
+ * Confidence Filter: 「オオカミ少年」対策
+ * 弱い気象信号で警告を出しすぎないよう、リスクを抑制する
+ * 
+ * 条件:
+ * - 確率が30-60%の中間領域
+ * - スコアが50未満（強い信号ではない）
+ * - 平均風速 < 15m/s
+ * - 突風 < 25m/s
+ * - 降雪 < 2cm
+ */
+export function applyConfidenceFilter(params: ConfidenceFilterParams): ConfidenceFilterResult {
+    const { probability, totalScore, windSpeed, windGust, snowfall } = params;
+
+    // フィルタ適用条件をチェック
+    const isInFilterRange = probability >= 30 && probability < 60;
+    const isLowScore = totalScore < 50;
+    const isWeakWeather = windSpeed < 15 && windGust < 25 && snowfall < 2.0;
+
+    if (isInFilterRange && isLowScore && isWeakWeather) {
+        return {
+            filteredProbability: 25,
+            wasFiltered: true,
+            reason: `Weak weather signal (wind: ${windSpeed}m/s, gust: ${windGust}m/s, snow: ${snowfall}cm)`
+        };
+    }
+
+    return {
+        filteredProbability: probability,
+        wasFiltered: false
+    };
 }

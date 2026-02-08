@@ -1,5 +1,5 @@
 import { PredictionResult, OperationStatus, ConfidenceLevel, PredictionInput } from '../types';
-import { getStatusWeight, JROperationStatus } from '../jr-status';
+import { getJRStatusWeight, JROperationStatus } from '../jr-status';
 import { logger } from '../logger';
 import { CrowdsourcedStatus } from '../user-reports';
 import { WeatherForecast } from '../types';
@@ -21,6 +21,7 @@ import {
     evaluateRiskFactors,
     applyHistoricalDataAdjustment,
     determineSuspensionReason,
+    applyConfidenceFilter,
     RiskEvaluationResult
 } from './helpers';
 
@@ -146,24 +147,23 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
     // 🆕 Confidence Filter (Wolf Boy Mitigation)
-    // 風速18m/s未満、かつ降雪2cm未満の場合、リスクが30-60%程度あっても
-    // 「遅延警告」を出さず「注意レベル(20-29%)」に留める
-    if (input.weather && probability >= 30 && probability < 60) {
-        const wind = input.weather.windSpeed || 0;
-        const snow = input.weather.snowfall || 0;
-        // 暴風でも大雪でもない
-        if (wind < 18 && snow < 2.0) {
-            probability = 25; // 強制的に「注意」レベルへ
-            logger.debug('Confidence Filter Applied: Suppressed minor warning', {
+    // 弱い気象信号で警告を出しすぎないよう、リスクを抑制する
+    if (input.weather) {
+        const filterResult = applyConfidenceFilter({
+            probability,
+            totalScore,
+            windSpeed: input.weather.windSpeed || 0,
+            windGust: input.weather.windGust || 0,
+            snowfall: input.weather.snowfall || 0
+        });
+
+        if (filterResult.wasFiltered) {
+            probability = filterResult.filteredProbability;
+            logger.debug('Confidence Filter Applied', {
                 original: totalScore,
-                new: probability,
-                reason: 'Weak weather signal'
+                filtered: probability,
+                reason: filterResult.reason
             });
-            // 理由もマイルドに書き換え
-            const index = reasonsWithPriority.findIndex(r => r.reason.includes('徐行運転の可能性'));
-            if (index !== -1) {
-                reasonsWithPriority[index].reason = `風速${wind}m/s前後の強風（運行への影響は限定的）`;
-            }
         }
     }
 
@@ -175,7 +175,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 7. 最終的な理由リスト作成
-    const reasons = reasonsWithPriority
+    let reasons = reasonsWithPriority
         .sort((a, b) => a.priority - b.priority)
         .slice(0, MAX_DISPLAY_REASONS)
         .map(r => r.reason);
@@ -209,15 +209,23 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
             // 🆕 New Resumption Logic (Standardized)
             if (input.weather && input.weather.surroundingHours) {
-                const resumption = calculateResumptionTime(input.weather.surroundingHours, input.routeId);
-                if (resumption.estimatedResumption) {
-                    estimatedRecoveryTime = resumption.estimatedResumption;
-                    estimatedRecoveryHours = resumption.requiredBufferHours;
-                    recoveryRecommendation = `${resumption.reason}のため、${resumption.estimatedResumption}頃の運転再開が見込まれます。`;
+                // Filter to only consider future/current hours relative to targetTime
+                // This prevents "Resumed at 11:00" when searching for "12:00"
+                const futureForecasts = (input.targetTime && input.weather.surroundingHours.length > 0)
+                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= (input.targetTime || '00:00'))
+                    : input.weather.surroundingHours;
 
-                    // Override existing logic
-                    if (isCurrentlySuspended) {
-                        reasons.unshift(`【復旧予測】${recoveryRecommendation}`);
+                if (futureForecasts.length > 0) {
+                    const resumption = calculateResumptionTime(futureForecasts, input.routeId);
+                    if (resumption.estimatedResumption) {
+                        estimatedRecoveryTime = resumption.estimatedResumption;
+                        estimatedRecoveryHours = resumption.requiredBufferHours;
+                        recoveryRecommendation = `${resumption.reason}のため、${resumption.estimatedResumption}頃の運転再開が見込まれます。`;
+
+                        // Override existing logic
+                        if (isCurrentlySuspended) {
+                            reasons.unshift(`【復旧予測】${recoveryRecommendation}`);
+                        }
                     }
                 }
             }
@@ -242,6 +250,79 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
     }
 
+
+    // 🆕 公式テキストフィルタリング関数
+    function filterOfficialText(text: string, routeName: string): string {
+        if (!text || !routeName) return text;
+
+        // 除外対象となる他路線名リスト（簡易版）
+        const otherRoutes = [
+            '千歳線', '函館線', '函館本線', '学園都市線', '札沼線',
+            '室蘭線', '室蘭本線', '石勝線', '根室線', '根室本線',
+            '宗谷線', '宗谷本線', '石北線', '石北本線', '釧網線', '釧網本線', '富良野線', '日高線', '日高本線'
+        ];
+
+        // 自分の路線名は除外対象から外す
+        // 例: routeName="函館本線" なら "函館線","函館本線" を除外リストから消す
+        const targetKeywords = routeName.replace('（道南）', '').replace('（道北）', '').replace('（道東）', '').replace('（道央）', '').split('・');
+        const safeOtherRoutes = otherRoutes.filter(r =>
+            !targetKeywords.some(k => r.includes(k) || k.includes(r))
+        );
+
+        // 行ごとに分割してフィルタリング
+        const lines = text.split(/[\n。]/).map(l => l.trim()).filter(l => l.length > 0);
+        const filteredLines = lines.filter(line => {
+            // 共通的な内容は残す
+            if (line.includes('全区間') || line.includes('札幌圏') || line.includes('全道') || line.includes('特急')) return true;
+
+            // 他路線名が含まれていて、かつ自路線名が含まれていない行は除外
+            const hasOtherRoute = safeOtherRoutes.some(r => line.includes(r));
+            const hasTargetRoute = targetKeywords.some(k => line.includes(k));
+
+            if (hasOtherRoute && !hasTargetRoute) return false;
+
+            return true;
+        });
+
+        return filteredLines.join('。') + (filteredLines.length > 0 ? '。' : '');
+    }
+
+    // 🆕 公式情報の解析とオーバーライド (Official Info Override)
+    // 気象データに基づく予測よりも、公式の「終日運休」等の発表を絶対的に優先する
+    let isOfficialOverride = false; // 🆕
+
+    if (input.jrStatus) {
+        let text = input.jrStatus.rawText || input.jrStatus.statusText || '';
+
+        // 🆕 フィルタリング適用 (他路線の詳細情報を除外)
+        text = filterOfficialText(text, input.routeName);
+
+        // 終日運休・全区間運休パターン
+        // 終日運休・全区間運休パターン
+        const isAllDaySuspension =
+            text.includes('終日運休') ||
+            text.includes('終日運転見合わせ') ||
+            text.includes('全区間運休') ||
+            (text.includes('本日の運転') && text.includes('見合わせ'));
+
+        if (isAllDaySuspension) {
+            estimatedRecoveryTime = '終日運休';
+            estimatedRecoveryHours = undefined; // 時間計算ではないためundefined
+            recoveryRecommendation = `JR北海道公式発表: ${text}`;
+            isOfficialOverride = true; // 🆕
+
+            // 理由リストの先頭に公式情報を追加（重複しないようにチェック）
+            const officialReason = `【公式発表】${text}`;
+
+            // 既存の公式理由があれば削除して、より詳細なものを優先する
+            reasons = reasons.filter(r => !r.startsWith('【公式発表】') && !r.startsWith('【運休中】'));
+            reasons.unshift(officialReason);
+
+            // 運休理由も公式情報で上書き
+            suspensionReason = 'JR北海道公式発表による';
+        }
+    }
+
     if (reasons.length === 0) {
         reasons.push('現時点で運休リスクを高める要因は検出されていません');
     }
@@ -252,7 +333,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         probability: isCurrentlySuspended ? 100 : probability,
         status: isCurrentlySuspended ? '運休中' : getStatusFromProbability(probability),
         confidence,
-        reasons: isCurrentlySuspended
+        // 公式オーバーライド時は既に詳細理由が入っているため、追加のプレフィックスは不要
+        reasons: (isCurrentlySuspended && !isOfficialOverride)
             ? [`【運休中】${suspensionReason || ''}運転を見合わせています`, ...reasons]
             : reasons,
         weatherImpact: getWeatherImpact(probability),
@@ -263,6 +345,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         estimatedRecoveryHours,
         recoveryRecommendation,
         suspensionReason,
+        isOfficialOverride, // 🆕
         crowdStats: input.crowdsourcedStatus?.last30minCounts ? {
             last30minReportCount: input.crowdsourcedStatus.last30minCounts.total,
             last30minStopped: input.crowdsourcedStatus.last30minCounts.stopped,

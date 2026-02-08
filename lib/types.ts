@@ -45,7 +45,7 @@ export interface Station {
 // =====================
 
 export interface WeatherWarning {
-  type: '暴風警報' | '大雨警報' | '大雪警報' | '暴風注意報' | '大雨注意報' | '雷注意報';
+  type: '暴風警報' | '大雨警報' | '大雪警報' | '暴風雪警報' | '暴風注意報' | '大雨注意報' | '大雪注意報' | '雷注意報';
   area: string;
   issuedAt: string;
 }
@@ -87,7 +87,7 @@ export interface PredictionResult {
   mode: PredictionMode;
   isCurrentlySuspended: boolean;
   estimatedRecoveryTime?: string;  // 例: "13:00頃", "18:30頃"
-  estimatedRecoveryHours?: number; // 🆕 時間単位（0.5, 1, 3, 6, 12）
+  estimatedRecoveryHours?: number | string; // 🆕 時間単位（0.5, 1, 3, 6, 12）または '終日運休'
   recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
   suspensionReason?: string;  // 運休の原因
   crowdStats?: {
@@ -101,6 +101,7 @@ export interface PredictionResult {
     wind: number;
     snow: number;
   };
+  isOfficialOverride?: boolean; // 🆕 公式情報によるオーバーライドかどうか
 }
 
 // =====================
@@ -134,14 +135,17 @@ export interface JRStatusResponse {
   items: JRStatusItem[];
   fetchedAt: string;
   source: string;
+  hasAlerts: boolean;
 }
 
 export interface JRStatusItem {
+  routeId?: string;
   routeName: string;
   status: JRStatus;
   description: string;
   updatedAt: string;
   source: 'official' | 'rss' | 'mock';
+  rawText?: string; // 🆕
 }
 
 export interface AIReasonRequest {
@@ -187,6 +191,7 @@ export interface PredictionInput {
     status: JRStatus;
     statusText?: string;
     updatedAt?: string;
+    rawText?: string; // 🆕
   } | null;
   crowdsourcedStatus?: {
     consensusStatus: ReportType | 'unknown';

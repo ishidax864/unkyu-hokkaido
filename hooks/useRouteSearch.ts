@@ -110,21 +110,24 @@ export function useRouteSearch() {
             const response = await fetch('/api/jr-status');
             if (response.ok) {
                 const data: JRStatusResponse & { hasAlerts?: boolean } = await response.json();
-                const routeName = primaryRoute?.name || '';
+                // Match by routeId first, then routeName as fallback
                 let matchingStatus = data.items.find((item: JRStatusItem) =>
-                    item.routeName === routeName || routeName.includes(item.routeName)
+                    (item.routeId && item.routeId === routeId) ||
+                    item.routeName === (primaryRoute?.name || '')
                 );
+
                 if (!matchingStatus) {
                     matchingStatus = data.items.find((item: JRStatusItem) => item.routeName === 'JR北海道');
                 }
+
                 if (isToday && data.hasAlerts && matchingStatus && matchingStatus.status !== 'normal') {
                     jrStatus = {
                         routeId: routeId,
                         routeName: primaryRoute?.name || matchingStatus.routeName,
-                        status: matchingStatus.status === 'suspended' ? 'suspended' :
-                            matchingStatus.status === 'delay' ? 'delay' : 'normal',
+                        status: matchingStatus.status, // type mismatch handled in calculation
                         statusText: matchingStatus.description,
                         updatedAt: matchingStatus.updatedAt,
+                        rawText: matchingStatus.rawText, // 🆕
                     };
                 }
             }
@@ -185,7 +188,10 @@ export function useRouteSearch() {
         }
 
         // Helper: Time Shift & Risk Trend
-        if (result.probability >= 30) {
+        // 🆕 終日運休等の場合は時間変更提案をしない
+        const isAllDaySuspension = result.estimatedRecoveryTime === '終日運休' || result.isOfficialOverride;
+
+        if (result.probability >= 30 && !isAllDaySuspension) {
             // ... (Logic for time shift suggestion - Simplified for now or copied)
             // I will copy the logic in separate steps if needed, but for now I'll include the core logic.
             // Actually, logic is complex. I should extract `generateTimeShiftSuggestions` to a helper if possible?
@@ -203,6 +209,12 @@ export function useRouteSearch() {
                 const hStr = h.toString().padStart(2, '0');
                 const checkTime = `${hStr}:00`;
                 const checkDateTime = `${searchDate}T${checkTime}:00`;
+
+                // 🆕 過去の時間は提案しない
+                if (isToday) {
+                    const checkDateObj = new Date(checkDateTime);
+                    if (checkDateObj < now) continue;
+                }
 
                 let w: WeatherForecast | null = null;
                 try {

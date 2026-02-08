@@ -1,10 +1,19 @@
-# 運休AI - 電車運休予測サービス
+# 運休北海道 - JR北海道の運休予測サービス
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-AIが天候からJR北海道の運休リスクを予測するWebサービス。
+**AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。北海道の通勤・通学を支える運行予報士。**
+
+## 特徴
+
+- ⚡ **リアルタイム予測**: 気象データとJR公式情報から運休リスクを即座に算出
+- 🔮 **先読み機能**: 数時間先〜1週間先までの予測に対応
+- 🚌 **代替ルート提案**: 高速バス、地下鉄、タクシーなど、状況に応じた最適ルートを提案
+- ⏰ **時刻シフト提案**: 運休回避のための最適な出発時刻をアドバイス
+- 📊 **詳細な根拠表示**: 予測の理由を明確に提示し、信頼性を担保
+- ❄️ **北海道特化**: 吹雪・大雪など北海道特有の気象条件に最適化
 
 ## 機能
 
@@ -17,7 +26,9 @@ AIが天候からJR北海道の運休リスクを予測するWebサービス。
 
 ## デモ
 
-👉 [https://unkyu-ai.vercel.app](https://unkyu-ai.vercel.app)
+デプロイ先は`.env.local`の`NEXT_PUBLIC_SITE_URL`で設定されます。
+
+デフォルト: `https://unkyu-ai.vercel.app`（環境変数未設定時）
 
 ## 技術スタック
 

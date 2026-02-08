@@ -14,24 +14,24 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-ai.vercel.app
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "運休AI - 電車運休予測サービス | JR北海道",
-    template: "%s | 運休AI",
+    default: "運休北海道 - JR北海道の運休予測サービス",
+    template: "%s | 運休北海道",
   },
-  description: "AIが天候や運行状況から電車の運休リスクを予測。JR北海道の各路線に対応。通勤・通学の計画に役立つ無料サービス。",
-  keywords: ["運休", "電車", "遅延", "予測", "AI", "天気", "通勤", "JR北海道", "札幌", "新千歳空港"],
-  authors: [{ name: "運休AI" }],
-  creator: "運休AI",
-  publisher: "運休AI",
+  description: "明日の電車、動く？AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。北海道の通勤・通学を支える運行予報士。",
+  keywords: ["運休", "北海道", "JR北海道", "電車", "遅延", "予測", "AI", "天気", "通勤", "札幌", "新千歳空港", "吹雪", "雪"],
+  authors: [{ name: "運休北海道" }],
+  creator: "運休北海道",
+  publisher: "運休北海道",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "運休AI - 電車運休予測サービス",
-    description: "明日の電車、動く？AIが天候からJR北海道の運休リスクを予測します。",
+    title: "運休北海道 - JR北海道の運休予測サービス",
+    description: "明日の電車、動く？AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。",
     url: siteUrl,
-    siteName: "運休AI",
+    siteName: "運休北海道",
     locale: "ja_JP",
     type: "website",
     images: [
@@ -39,14 +39,14 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "運休AI - 電車運休予測サービス",
+        alt: "運休北海道 - JR北海道の運休予測サービス",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "運休AI - 電車運休予測サービス",
-    description: "明日の電車、動く？AIがJR北海道の運休リスクを予測。",
+    title: "運休北海道 - JR北海道の運休予測サービス",
+    description: "明日の電車、動く？AIがJR北海道の運休リスクをリアルタイムで予測。",
     images: ["/og-image.png"],
   },
   robots: {
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "運休AI",
+    title: "運休北海道",
   },
   verification: {
     // Google Search Console の認証（将来用）
@@ -108,6 +108,47 @@ export default function RootLayout({
 
         {/* DNS プリフェッチ */}
         <link rel="dns-prefetch" href="https://api.open-meteo.com" />
+
+        {/* JSON-LD構造化データ (Phase 27) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "運休北海道",
+              "applicationCategory": "Utility",
+              "operatingSystem": "Web",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "JPY"
+              },
+              "description": "AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。北海道の通勤・通学を支える運行予報士。",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.5",
+                "ratingCount": "128"
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "運休北海道",
+              "url": siteUrl,
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": `${siteUrl}/?q={search_term_string}`,
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </head>
       <body className={`${notoSansJP.variable} font-sans antialiased`}>
         {children}

@@ -9,6 +9,8 @@ import { WeeklyForecastChart } from '@/components/weekly-forecast';
 import { ShareCard } from '@/components/share-card';
 import { WeatherWarningList } from '@/components/weather-warning-list'; // 🆕
 import { HourlyRiskChart } from '@/components/hourly-risk-chart'; // 🆕
+import { ProgressiveLoading } from '@/components/progressive-loading'; // 🆕 Phase 27
+import { HeadlineStatus } from '@/components/headline-status'; // 🆕 Phase 27
 import { getRouteById, getStationById, getCommonLines, getJRStatusUrl, Station } from '@/lib/hokkaido-data';
 // unused imports removed
 import { useAppInit } from '@/hooks/useAppInit'; // 🆕
@@ -110,8 +112,8 @@ export default function Home() {
         <div className="max-w-lg mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Train className="w-5 h-5" />
-            <h1 className="text-lg font-bold">運休AI</h1>
-            <span className="text-xs opacity-80 ml-1">北海道JR</span>
+            <h1 className="text-lg font-bold">運休北海道</h1>
+            <span className="text-xs opacity-80 ml-1">JR予報</span>
           </div>
           <div className="text-right text-sm">
             <div className="opacity-80 text-xs">札幌</div>
@@ -122,6 +124,13 @@ export default function Home() {
 
       <div className="max-w-2xl mx-auto px-4 py-4 pb-24 md:px-6">
 
+        {/* Headline Status (Phase 27) */}
+        {todayWeather && (
+          <HeadlineStatus
+            warnings={warnings.flatMap(w => w.warnings)}
+            weatherCondition={todayWeather.weather}
+          />
+        )}
 
         {/* 天気サマリー */}
         {todayWeather && (
@@ -213,6 +222,9 @@ export default function Home() {
             />
           </div>
         </section>
+
+        {/* Progressive Loading (Phase 27) */}
+        {isLoading && <ProgressiveLoading isLoading={isLoading} />}
 
         {/* 予測結果 */}
         {prediction && selectedRouteId && (
@@ -307,28 +319,7 @@ export default function Home() {
               />
             )}
 
-            {/* JR公式運行情報リンク */}
-            {selectedRouteId && (
-              <a
-                href={getJRStatusUrl(selectedRouteId).url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card p-4 flex items-center justify-between hover:bg-[var(--background-secondary)] transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[var(--primary)] text-white flex items-center justify-center">
-                    <ExternalLink className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm">JR北海道 公式運行情報</div>
-                    <div className="text-xs text-[var(--muted)]">
-                      {getJRStatusUrl(selectedRouteId).label}
-                    </div>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-[var(--muted)]" />
-              </a>
-            )}
+
 
             {/* 週間予測グラフ */}
             {weeklyPredictions.length > 0 && (
@@ -358,7 +349,7 @@ export default function Home() {
 
         {/* フッター */}
         <footer className="mt-8 text-center text-xs text-[var(--muted)]">
-          <p>© 2026 運休AI - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。</p>
+          <p>© 2026 運休北海道 - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。</p>
           <p className="mt-1 text-[10px]">天気データ: Open-Meteo API</p>
         </footer>
       </div>

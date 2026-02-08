@@ -116,6 +116,19 @@ export const BUS_AFFILIATES: AffiliateProvider[] = [
     }
 ];
 
+export const CAFE_AFFILIATES: AffiliateProvider[] = [
+    {
+        id: 'hotpepper-cafe',
+        name: 'ホットペッパーグルメ（カフェ検索）',
+        type: 'cafe',
+        logoUrl: '',
+        deepLink: '',
+        webUrl: 'https://www.hotpepper.jp/SA30/XY00/G014/', // 仮: アフィリエイトリンクに差し替え予定
+        affiliateTag: 'a8',
+        enabled: true,
+    }
+];
+
 // ストレージキー
 const REPORTS_STORAGE_KEY = 'unkyu-ai-user-reports';
 
