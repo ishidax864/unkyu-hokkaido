@@ -162,7 +162,7 @@ export function SearchForm({
                     otherStation={arrivalStation}
                 />
 
-                <div className="flex items-center justify-center py-0.5 z-10 md:my-0 md:pb-3">
+                <div className="hidden md:flex items-center justify-center py-0.5 z-10 md:my-0 md:pb-3">
                     <ArrowRight className="w-4 h-4 text-[var(--muted)] rotate-90 md:rotate-0" />
                 </div>
 
