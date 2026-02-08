@@ -300,7 +300,7 @@ export default function Home() {
                 timeShiftSuggestion={timeShiftSuggestion}
                 futureRisks={riskTrend} // 🆕 未来のリスク推移を渡す
                 onSelect={(selection) => {
-                  console.log('Alternative selected:', selection);
+                  // console.log('Alternative selected:', selection);
                 }}
               />
             )}

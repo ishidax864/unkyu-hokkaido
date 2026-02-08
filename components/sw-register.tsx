@@ -9,7 +9,7 @@ export function ServiceWorkerRegistration() {
                 navigator.serviceWorker
                     .register('/sw.js')
                     .then((registration) => {
-                        console.log('SW registered:', registration.scope);
+                        // console.log('SW registered:', registration.scope);
 
                         // 更新チェック
                         registration.addEventListener('updatefound', () => {
