@@ -29,6 +29,9 @@ export function WeatherWarningList({ warnings }: WeatherWarningListProps) {
             <div
                 className="flex items-start justify-between cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
+                role="button"
+                aria-expanded={isOpen}
+                aria-controls="warning-details"
             >
                 <div className="flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -51,14 +54,18 @@ export function WeatherWarningList({ warnings }: WeatherWarningListProps) {
                         </div>
                     </div>
                 </div>
-                <button className="text-[var(--primary)]">
+                <button
+                    className="text-[var(--primary)]"
+                    aria-label={isOpen ? "詳細を閉じる" : "詳細を開く"}
+                    aria-expanded={isOpen}
+                >
                     {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </button>
             </div>
 
             {/* 詳細リスト（折りたたみ） */}
             {isOpen && (
-                <div className="mt-3 pt-3 border-t border-red-200/50 space-y-3">
+                <div id="warning-details" className="mt-3 pt-3 border-t border-red-200/50 space-y-3">
                     {warnings.map((group, index) => (
                         <div key={index}>
                             <div className="text-xs font-bold mb-1 opacity-80">{group.area}</div>

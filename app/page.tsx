@@ -23,13 +23,7 @@ import { useRouteSearch } from '@/hooks/useRouteSearch';
 import { FavoriteSelector } from '@/components/favorite-selector';
 import { Cloud, AlertTriangle, Train, ArrowRight, RefreshCw, Radio, ExternalLink, ChevronRight, MapPin, Star } from 'lucide-react';
 
-// 天気アイコン取得（簡易版）
-function getWeatherIcon(weather: string): string {
-  if (weather.includes('雪')) return '❄️';
-  if (weather.includes('雨')) return '🌧️';
-  if (weather.includes('曇')) return '☁️';
-  return '☀️';
-}
+import { getWeatherIcon } from '@/lib/weather-utils';
 
 export default function Home() {
   // 検索ロジックのフック
@@ -153,11 +147,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-right" role="img" aria-label={`現在の天気: ${todayWeather.weather}`}>
               <div className="text-xl">
-                {todayWeather.weather.includes('雪') ? '❄️' :
-                  todayWeather.weather.includes('雨') ? '🌧️' :
-                    todayWeather.weather.includes('曇') ? '☁️' : '☀️'}
+                {getWeatherIcon(todayWeather.weather)}
               </div>
               <div className="text-xs text-[var(--muted)]">
                 {todayWeather.windSpeed >= 15 ? (
@@ -174,8 +166,8 @@ export default function Home() {
         <WeatherWarningList warnings={warnings} />
 
         {/* 検索フォーム */}
-        <section className="mb-6">
-          <div className="section-label">運休リスクを調べる</div>
+        <section className="mb-6" aria-labelledby="search-section-title">
+          <h2 id="search-section-title" className="section-label">運休リスクを調べる</h2>
 
 
           {/* 🆕 お気に入りルートセレクター */}
@@ -228,8 +220,8 @@ export default function Home() {
 
         {/* 予測結果 */}
         {prediction && selectedRouteId && (
-          <section className="space-y-3">
-            <div className="section-label">予測結果</div>
+          <section className="space-y-3" aria-labelledby="result-section-title">
+            <h2 id="result-section-title" className="section-label">予測結果</h2>
 
             {/* 区間表示 & お気に入り登録 */}
             {depStation && arrStation && (
@@ -255,15 +247,16 @@ export default function Home() {
                     ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
                     : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
                     }`}
+                  aria-label={isFavorite(depStation.id, arrStation.id) ? "お気に入りから削除" : "お気に入りに追加"}
                 >
                   {isFavorite(depStation.id, arrStation.id) ? (
                     <>
-                      <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
+                      <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" role="presentation" />
                       登録済み
                     </>
                   ) : (
                     <>
-                      <Star className="w-3.5 h-3.5" />
+                      <Star className="w-3.5 h-3.5" role="presentation" />
                       登録
                     </>
                   )}

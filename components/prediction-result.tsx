@@ -57,7 +57,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
     // 復旧予測モードの場合は別のUIを表示
     if (isRecoveryMode) {
         return (
-            <div className="card p-4 border-2 border-[var(--status-suspended)]">
+            <article className="card p-4 border-2 border-[var(--status-suspended)]">
                 {/* 運休中バナー */}
                 <div className="bg-[var(--status-suspended)] text-white px-4 py-3 -mx-4 -mt-4 mb-4 rounded-t-xl flex items-center gap-3">
                     <AlertOctagon className="w-6 h-6" />
@@ -155,13 +155,13 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         <ExternalLink className="w-3 h-3 opacity-70" />
                     </div>
                 </a>
-            </div>
+            </article>
         );
     }
 
     // 通常モード（運休リスク予測）
     return (
-        <div className="card p-4">
+        <article className="card p-4">
             {/* ヘッダー */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -327,6 +327,6 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                 </div>
             </div>
 
-        </div>
+        </article>
     );
 }

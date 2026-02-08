@@ -1,7 +1,7 @@
-import { PredictionResult, OperationStatus, ConfidenceLevel, PredictionInput } from '../types';
-import { getJRStatusWeight, JROperationStatus } from '../jr-status';
+import { PredictionResult, ConfidenceLevel, PredictionInput } from '../types';
 import { logger } from '../logger';
 import { CrowdsourcedStatus } from '../user-reports';
+import { JROperationStatus } from '../jr-status';
 import { WeatherForecast } from '../types';
 import { findHistoricalMatch } from '../historical-data/suspension-patterns';
 
@@ -21,22 +21,17 @@ import {
     evaluateRiskFactors,
     applyHistoricalDataAdjustment,
     determineSuspensionReason,
-    applyConfidenceFilter,
-    RiskEvaluationResult
+    applyConfidenceFilter
 } from './helpers';
 
 import {
-    HIGH_CONFIDENCE_MIN_FACTORS,
-    HIGH_CONFIDENCE_MIN_PROBABILITY,
-    MEDIUM_CONFIDENCE_MIN_FACTORS,
-    MEDIUM_CONFIDENCE_MIN_PROBABILITY,
-    REALTIME_DATA_MIN_FACTORS,
-    STATUS_CANCELLED_THRESHOLD,
-    STATUS_SUSPENDED_THRESHOLD,
-    STATUS_DELAYED_THRESHOLD,
-    WEATHER_IMPACT_SEVERE_THRESHOLD,
-    WEATHER_IMPACT_MODERATE_THRESHOLD,
-    WEATHER_IMPACT_MINOR_THRESHOLD,
+    getStatusFromProbability,
+    getConfidence,
+    getWeatherImpact,
+    filterOfficialText
+} from './formatters';
+
+import {
     MAX_DISPLAY_REASONS,
     COMPOUND_RISK_MULTIPLIER
 } from './constants';
@@ -47,27 +42,6 @@ import { calculateResumptionTime } from './resumption';
 // ==========================================
 // Main Prediction Function
 // ==========================================
-
-function getStatusFromProbability(prob: number): OperationStatus {
-    if (prob >= STATUS_CANCELLED_THRESHOLD) return '運休';
-    if (prob >= STATUS_SUSPENDED_THRESHOLD) return '運転見合わせ';
-    if (prob >= STATUS_DELAYED_THRESHOLD) return '遅延';
-    return '平常運転';
-}
-
-function getConfidence(prob: number, factorCount: number, hasRealData: boolean): ConfidenceLevel {
-    if (hasRealData && factorCount >= REALTIME_DATA_MIN_FACTORS) return 'high';
-    if (factorCount >= HIGH_CONFIDENCE_MIN_FACTORS || prob >= HIGH_CONFIDENCE_MIN_PROBABILITY) return 'high';
-    if (factorCount >= MEDIUM_CONFIDENCE_MIN_FACTORS || prob >= MEDIUM_CONFIDENCE_MIN_PROBABILITY) return 'medium';
-    return 'low';
-}
-
-function getWeatherImpact(prob: number): '重大' | '中程度' | '軽微' | 'なし' {
-    if (prob >= WEATHER_IMPACT_SEVERE_THRESHOLD) return '重大';
-    if (prob >= WEATHER_IMPACT_MODERATE_THRESHOLD) return '中程度';
-    if (prob >= WEATHER_IMPACT_MINOR_THRESHOLD) return '軽微';
-    return 'なし';
-}
 
 // メインの予測関数（強化版）
 export function calculateSuspensionRisk(input: PredictionInput): PredictionResult {
@@ -251,42 +225,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
 
-    // 🆕 公式テキストフィルタリング関数
-    function filterOfficialText(text: string, routeName: string): string {
-        if (!text || !routeName) return text;
-
-        // 除外対象となる他路線名リスト（簡易版）
-        const otherRoutes = [
-            '千歳線', '函館線', '函館本線', '学園都市線', '札沼線',
-            '室蘭線', '室蘭本線', '石勝線', '根室線', '根室本線',
-            '宗谷線', '宗谷本線', '石北線', '石北本線', '釧網線', '釧網本線', '富良野線', '日高線', '日高本線'
-        ];
-
-        // 自分の路線名は除外対象から外す
-        // 例: routeName="函館本線" なら "函館線","函館本線" を除外リストから消す
-        const targetKeywords = routeName.replace('（道南）', '').replace('（道北）', '').replace('（道東）', '').replace('（道央）', '').split('・');
-        const safeOtherRoutes = otherRoutes.filter(r =>
-            !targetKeywords.some(k => r.includes(k) || k.includes(r))
-        );
-
-        // 行ごとに分割してフィルタリング
-        const lines = text.split(/[\n。]/).map(l => l.trim()).filter(l => l.length > 0);
-        const filteredLines = lines.filter(line => {
-            // 共通的な内容は残す
-            if (line.includes('全区間') || line.includes('札幌圏') || line.includes('全道') || line.includes('特急')) return true;
-
-            // 他路線名が含まれていて、かつ自路線名が含まれていない行は除外
-            const hasOtherRoute = safeOtherRoutes.some(r => line.includes(r));
-            const hasTargetRoute = targetKeywords.some(k => line.includes(k));
-
-            if (hasOtherRoute && !hasTargetRoute) return false;
-
-            return true;
-        });
-
-        return filteredLines.join('。') + (filteredLines.length > 0 ? '。' : '');
-    }
-
     // 🆕 公式情報の解析とオーバーライド (Official Info Override)
     // 気象データに基づく予測よりも、公式の「終日運休」等の発表を絶対的に優先する
     let isOfficialOverride = false; // 🆕
@@ -297,7 +235,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         // 🆕 フィルタリング適用 (他路線の詳細情報を除外)
         text = filterOfficialText(text, input.routeName);
 
-        // 終日運休・全区間運休パターン
         // 終日運休・全区間運休パターン
         const isAllDaySuspension =
             text.includes('終日運休') ||
@@ -368,7 +305,10 @@ export function calculateWeeklyForecast(
     jrStatus?: JROperationStatus | null,
     crowdsourcedStatus?: CrowdsourcedStatus | null
 ): PredictionResult[] {
-    const today = new Date().toISOString().split('T')[0];
+    // 🆕 Timezone fix: Use JST for today determination
+    const today = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Tokyo'
+    }).format(new Date());
 
     return weeklyWeather.map(weather =>
         calculateSuspensionRisk({
