@@ -83,6 +83,8 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
                     let count = 0;
                     if (counts) {
                         if (option.type === 'stopped') count = counts.stopped;
+                        if (option.type === 'delayed') count = counts.delayed;
+                        if (option.type === 'crowded') count = counts.crowded;
                         if (option.type === 'normal') count = counts.resumed;
                     }
 
@@ -107,8 +109,10 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
                                 <span className={cn(
                                     "absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border shadow-sm px-1",
                                     option.type === 'stopped' ? "bg-red-500 text-white border-red-600" :
-                                        option.type === 'normal' ? "bg-green-500 text-white border-green-600" :
-                                            "bg-gray-500 text-white"
+                                        option.type === 'delayed' ? "bg-yellow-500 text-white border-yellow-600" :
+                                            option.type === 'crowded' ? "bg-orange-500 text-white border-orange-600" :
+                                                option.type === 'normal' ? "bg-green-500 text-white border-green-600" :
+                                                    "bg-gray-500 text-white"
                                 )}>
                                     {count}
                                 </span>
