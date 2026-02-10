@@ -118,10 +118,12 @@ body {
 
 /* Section Label */
 .section-label {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 600;
   color: var(--muted);
   margin-bottom: 0.5rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
 }
 
 /* Route Color Bar */

@@ -36,13 +36,13 @@ export function WeatherWarningList({ warnings }: WeatherWarningListProps) {
                 <div className="flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
                     <div>
-                        <div className="font-bold text-sm flex items-center gap-2">
+                        <div className="font-black text-base flex items-center gap-2">
                             気象警報・注意報発令中
-                            <span className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-xs">
+                            <span className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[10px] font-bold">
                                 {totalWarnings}件
                             </span>
                         </div>
-                        <div className="text-xs mt-1 opacity-90">
+                        <div className="text-[10px] mt-0.5 font-medium opacity-80 uppercase tracking-tight">
                             {highPriorityWarnings.length > 0 ? (
                                 <span>
                                     {highPriorityWarnings.slice(0, 2).join('、')}

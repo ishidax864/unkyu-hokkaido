@@ -68,7 +68,7 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
         <div className="card p-4">
             <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="w-4 h-4 text-[var(--muted)]" />
-                <span className="text-sm font-medium">
+                <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">
                     {routeName}の状況を報告
                 </span>
             </div>
@@ -134,7 +134,7 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
                         placeholder="状況を詳しく教えてください（任意）"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
-                        className="w-full input-field px-3 py-2 text-sm"
+                        className="w-full input-field px-3 py-2.5 text-sm"
                         maxLength={100}
                     />
 

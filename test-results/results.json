@@ -179,31 +179,31 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 10625,
+                      "duration": 6163,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 67,
-                          "line": 10
+                          "column": 42,
+                          "line": 9
                         },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:19.003Z",
+                      "startTime": "2026-02-10T01:21:20.041Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -229,8 +229,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 67,
-                        "line": 10
+                        "column": 42,
+                        "line": 9
                       }
                     }
                   ],
@@ -258,48 +258,33 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "failed",
-                      "duration": 4372,
+                      "duration": 12565,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 34,
-                          "line": 31
+                          "column": 33,
+                          "line": 21
                         },
-                        "snippet": "\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 34,
-                            "line": 31
+                            "column": 33,
+                            "line": 21
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10967 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\n\n\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:19.003Z",
+                      "startTime": "2026-02-10T01:21:20.047Z",
                       "annotations": [],
                       "attachments": [
-                        {
-                          "name": "search-form-default-expected.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/tests/visual/main-page.spec.ts-snapshots/search-form-default-Desktop-Chrome-darwin.png"
-                        },
-                        {
-                          "name": "search-form-default-actual.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Chrome/search-form-default-actual.png"
-                        },
-                        {
-                          "name": "search-form-default-diff.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Chrome/search-form-default-diff.png"
-                        },
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
@@ -323,8 +308,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 34,
-                        "line": 31
+                        "column": 33,
+                        "line": 21
                       }
                     }
                   ],
@@ -352,31 +337,31 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "failed",
-                      "duration": 22841,
+                      "duration": 11459,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 67,
-                          "line": 10
+                          "column": 42,
+                          "line": 9
                         },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:19.002Z",
+                      "startTime": "2026-02-10T01:21:20.057Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -402,8 +387,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 67,
-                        "line": 10
+                        "column": 42,
+                        "line": 9
                       }
                     }
                   ],
@@ -431,48 +416,33 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 20660,
+                      "duration": 23152,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 34,
-                          "line": 31
+                          "column": 33,
+                          "line": 21
                         },
-                        "snippet": "\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 34,
-                            "line": 31
+                            "column": 33,
+                            "line": 21
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 278px, received 590px by 320px. 43907 pixels (ratio 0.24 of all image pixels) are different.\u001b[22m\n\n\n\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:19.004Z",
+                      "startTime": "2026-02-10T01:21:20.042Z",
                       "annotations": [],
                       "attachments": [
-                        {
-                          "name": "search-form-default-expected.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/tests/visual/main-page.spec.ts-snapshots/search-form-default-Desktop-Firefox-darwin.png"
-                        },
-                        {
-                          "name": "search-form-default-actual.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Firefox/search-form-default-actual.png"
-                        },
-                        {
-                          "name": "search-form-default-diff.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Firefox/search-form-default-diff.png"
-                        },
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
@@ -496,8 +466,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 34,
-                        "line": 31
+                        "column": 33,
+                        "line": 21
                       }
                     }
                   ],
@@ -523,30 +493,33 @@
                   "results": [
                     {
                       "workerIndex": 4,
-                      "parallelIndex": 1,
-                      "status": "timedOut",
-                      "duration": 30376,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15008,
                       "error": {
-                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
+                        "location": {
+                          "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                          "column": 42,
+                          "line": 9
+                        },
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
-                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                        },
-                        {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:34.863Z",
+                      "startTime": "2026-02-10T01:21:31.360Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -569,7 +542,12 @@
                           "contentType": "application/zip",
                           "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-初期ロード時の表示が正しいこと-Desktop-Safari/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                        "column": 42,
+                        "line": 9
+                      }
                     }
                   ],
                   "status": "unexpected"
@@ -582,7 +560,7 @@
             },
             {
               "title": "検索フォームの操作フロー",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -594,19 +572,64 @@
                   "results": [
                     {
                       "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 29693,
-                      "errors": [],
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 15345,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
+                        "location": {
+                          "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                          "column": 33,
+                          "line": 21
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                            "column": 33,
+                            "line": 21
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:33:36.206Z",
+                      "startTime": "2026-02-10T01:21:39.091Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Safari/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Safari/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Desktop-Safari/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                        "column": 33,
+                        "line": 21
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "33f5736246c5ed244e6d-44f43db0ee4aa728e4ee",
@@ -627,34 +650,34 @@
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 3,
+                      "workerIndex": 6,
+                      "parallelIndex": 2,
                       "status": "failed",
-                      "duration": 13526,
+                      "duration": 6566,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 67,
-                          "line": 10
+                          "column": 42,
+                          "line": 9
                         },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:06.191Z",
+                      "startTime": "2026-02-10T01:21:48.726Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -680,8 +703,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 67,
-                        "line": 10
+                        "column": 42,
+                        "line": 9
                       }
                     }
                   ],
@@ -706,51 +729,36 @@
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 2,
+                      "workerIndex": 7,
+                      "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 5718,
+                      "duration": 11975,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33688 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33688 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 34,
-                          "line": 31
+                          "column": 33,
+                          "line": 21
                         },
-                        "snippet": "\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 34,
-                            "line": 31
+                            "column": 33,
+                            "line": 21
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33688 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 327px by 321px, received 327px by 519px. 33687 pixels (ratio 0.20 of all image pixels) are different.\u001b[22m\n\n\n\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:06.191Z",
+                      "startTime": "2026-02-10T01:21:50.207Z",
                       "annotations": [],
                       "attachments": [
-                        {
-                          "name": "search-form-default-expected.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/tests/visual/main-page.spec.ts-snapshots/search-form-default-Mobile-Chrome-darwin.png"
-                        },
-                        {
-                          "name": "search-form-default-actual.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Chrome/search-form-default-actual.png"
-                        },
-                        {
-                          "name": "search-form-default-diff.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Chrome/search-form-default-diff.png"
-                        },
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
@@ -774,8 +782,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 34,
-                        "line": 31
+                        "column": 33,
+                        "line": 21
                       }
                     }
                   ],
@@ -803,31 +811,31 @@
                       "workerIndex": 8,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 14252,
+                      "duration": 7950,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 67,
-                          "line": 10
+                          "column": 42,
+                          "line": 9
                         },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:11.202Z",
+                      "startTime": "2026-02-10T01:21:53.881Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -853,8 +861,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 67,
-                        "line": 10
+                        "column": 42,
+                        "line": 9
                       }
                     }
                   ],
@@ -868,7 +876,7 @@
             },
             {
               "title": "検索フォームの操作フロー",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -880,19 +888,64 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 9591,
-                      "errors": [],
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 9547,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
+                        "location": {
+                          "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                          "column": 33,
+                          "line": 21
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                            "column": 33,
+                            "line": 21
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:11.203Z",
+                      "startTime": "2026-02-10T01:22:01.079Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Safari/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Safari/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Mobile-Safari/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
+                        "column": 33,
+                        "line": 21
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "33f5736246c5ed244e6d-e1ddb104a80dd986ee24",
@@ -914,33 +967,33 @@
                   "results": [
                     {
                       "workerIndex": 10,
-                      "parallelIndex": 2,
+                      "parallelIndex": 1,
                       "status": "failed",
-                      "duration": 8292,
+                      "duration": 4504,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 67,
-                          "line": 10
+                          "column": 42,
+                          "line": 9
                         },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 67,
-                            "line": 10
+                            "column": 42,
+                            "line": 9
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '路線を検索' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '路線を検索' })\u001b[22m\n\n\n\u001b[0m \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n \u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\n \u001b[90m 13 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'home-page-initial.png'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:10:67\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('h1')\nExpected substring: \u001b[32m\"運休AI\"\u001b[39m\nError: strict mode violation: locator('h1') resolved to 2 elements:\n    1) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Study. Focus. Achieve.' })\n    2) <h1 class=\"text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-2xl\">…</h1> aka getByRole('heading', { name: 'Learn. Grow. Thrive.' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m         \u001b[90m// Check key elements exist before screenshot\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'運休AI'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m         \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'路線を検索'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m         \u001b[90m// Take snapshot\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:9:42\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:19.636Z",
+                      "startTime": "2026-02-10T01:22:01.080Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -966,8 +1019,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 67,
-                        "line": 10
+                        "column": 42,
+                        "line": 9
                       }
                     }
                   ],
@@ -995,48 +1048,33 @@
                       "workerIndex": 11,
                       "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 1435,
+                      "duration": 9498,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33",
                         "location": {
                           "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                          "column": 34,
-                          "line": 31
+                          "column": 33,
+                          "line": 21
                         },
-                        "snippet": "\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                            "column": 34,
-                            "line": 31
+                            "column": 33,
+                            "line": 21
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('form').first()\n  Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\n\n  Snapshot: search-form-default.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(search-form-default.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('form').first()\u001b[22m\n\u001b[2m    - locator resolved to <form class=\"space-y-4\">…</form>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - Expected an image 446px by 321px, received 590px by 321px. 10964 pixels (ratio 0.06 of all image pixels) are different.\u001b[22m\n\n\n\u001b[0m \u001b[90m 29 |\u001b[39m         \u001b[36mconst\u001b[39m searchForm \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m         \u001b[36mawait\u001b[39m expect(searchForm)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m'search-form-default.png'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:31:34\u001b[22m"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"date\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"date\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 19 |\u001b[39m         \u001b[90m// Select date (today)\u001b[39m\n \u001b[90m 20 |\u001b[39m         \u001b[36mconst\u001b[39m dateInput \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"date\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m         \u001b[36mawait\u001b[39m expect(dateInput)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m         \u001b[90m// Check elements for desktop layout\u001b[39m\n \u001b[90m 24 |\u001b[39m         \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.md\\\\:hidden'\u001b[39m)\u001b[33m.\u001b[39misVisible()) { \u001b[90m// if not mobile menu\u001b[39m\u001b[0m\n\u001b[2m    at /Users/shota/運休AI/tests/visual/main-page.spec.ts:21:33\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-06T16:34:29.904Z",
+                      "startTime": "2026-02-10T01:22:05.797Z",
                       "annotations": [],
                       "attachments": [
-                        {
-                          "name": "search-form-default-expected.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/tests/visual/main-page.spec.ts-snapshots/search-form-default-Tablet-darwin.png"
-                        },
-                        {
-                          "name": "search-form-default-actual.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Tablet/search-form-default-actual.png"
-                        },
-                        {
-                          "name": "search-form-default-diff.png",
-                          "contentType": "image/png",
-                          "path": "/Users/shota/運休AI/test-results/main-page-メインページ（トップ）-検索フォームの操作フロー-Tablet/search-form-default-diff.png"
-                        },
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
@@ -1060,8 +1098,8 @@
                       ],
                       "errorLocation": {
                         "file": "/Users/shota/運休AI/tests/visual/main-page.spec.ts",
-                        "column": 34,
-                        "line": 31
+                        "column": 33,
+                        "line": 21
                       }
                     }
                   ],
@@ -1080,11 +1118,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-06T16:33:10.509Z",
-    "duration": 83988.93,
-    "expected": 2,
+    "startTime": "2026-02-10T01:20:12.419Z",
+    "duration": 124648.399,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 10,
+    "unexpected": 12,
     "flaky": 0
   }
 }

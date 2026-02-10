@@ -106,12 +106,12 @@ export default function Home() {
         <div className="max-w-lg mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Train className="w-5 h-5" />
-            <h1 className="text-lg font-bold">運休北海道</h1>
-            <span className="text-xs opacity-80 ml-1">JR予報</span>
+            <h1 className="text-xl font-bold">運休北海道</h1>
+            <span className="text-[10px] opacity-80 ml-1">JR予報</span>
           </div>
           <div className="text-right text-sm">
-            <div className="opacity-80 text-xs">札幌</div>
-            <div className="font-semibold">{currentTime}</div>
+            <div className="opacity-80 text-[10px]">札幌</div>
+            <div className="font-bold text-base">{currentTime}</div>
           </div>
         </div>
       </header>
@@ -148,10 +148,10 @@ export default function Home() {
               </div>
             </div>
             <div className="text-right" role="img" aria-label={`現在の天気: ${todayWeather.weather}`}>
-              <div className="text-xl" aria-hidden="true">
+              <div className="text-2xl" aria-hidden="true">
                 {getWeatherIcon(todayWeather.weather)}
               </div>
-              <div className="text-xs text-[var(--muted)]">
+              <div className="text-[10px] font-medium text-[var(--muted)]">
                 {todayWeather.windSpeed >= 15 ? (
                   <span className="text-orange-500 font-bold">💨{todayWeather.windSpeed}m/s</span>
                 ) : (
@@ -343,9 +343,9 @@ export default function Home() {
         */}
 
         {/* フッター */}
-        <footer className="mt-8 text-center text-xs text-[var(--muted)]">
+        <footer className="mt-8 text-center text-[10px] text-[var(--muted)] pb-8">
           <p>© 2026 運休北海道 - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。</p>
-          <p className="mt-1 text-[10px]">天気データ: Open-Meteo API</p>
+          <p className="mt-1 opacity-70">天気データ: Open-Meteo API</p>
         </footer>
       </div>
     </main>

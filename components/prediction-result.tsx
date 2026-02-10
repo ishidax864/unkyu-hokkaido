@@ -60,10 +60,10 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
             <article className="card p-4 border-2 border-[var(--status-suspended)]">
                 {/* 運休中バナー */}
                 <div className="bg-[var(--status-suspended)] text-white px-4 py-3 -mx-4 -mt-4 mb-4 rounded-t-xl flex items-center gap-3">
-                    <AlertOctagon className="w-6 h-6" />
+                    <AlertOctagon className="w-7 h-7" />
                     <div>
-                        <div className="font-bold text-lg">現在運休中</div>
-                        <div className="text-sm opacity-90">{result.suspensionReason || '運転を見合わせています'}</div>
+                        <div className="font-black text-xl leading-tight">現在運休中</div>
+                        <div className="text-xs opacity-90">{result.suspensionReason || '運転を見合わせています'}</div>
                     </div>
                 </div>
 
@@ -71,12 +71,12 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div
-                            className="route-color-bar h-12"
+                            className="route-color-bar h-14"
                             style={{ backgroundColor: route.color || '#666' }}
                         />
                         <div>
-                            <h3 className="font-bold text-lg">{route.name}</h3>
-                            <p className="text-sm text-[var(--muted)]">{route.company}</p>
+                            <h3 className="font-black text-xl leading-tight">{route.name}</h3>
+                            <p className="text-xs text-[var(--muted)] uppercase tracking-wider">{route.company}</p>
                         </div>
                     </div>
                 </div>
@@ -110,10 +110,10 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         復旧見込み
                     </div>
                     <div className="bg-[var(--background-secondary)] rounded-lg p-4">
-                        <div className="text-2xl font-bold text-[var(--status-suspended)]">
+                        <div className="text-3xl font-black text-[var(--status-suspended)]">
                             {result.estimatedRecoveryTime || '復旧時刻未定'}
                         </div>
-                        <div className="text-sm text-[var(--muted)] mt-1">
+                        <div className="text-[10px] text-[var(--muted)] mt-1 opacity-80">
                             {result.isOfficialOverride
                                 ? '※JR北海道公式発表に基づく情報です'
                                 : '※天気予報と過去データに基づく予測です'}
@@ -166,12 +166,12 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                     <div
-                        className="route-color-bar h-12"
+                        className="route-color-bar h-14"
                         style={{ backgroundColor: route.color || '#666' }}
                     />
                     <div>
-                        <h3 className="font-bold text-lg">{route.name}</h3>
-                        <p className="text-sm text-[var(--muted)]">{route.company}</p>
+                        <h3 className="font-black text-xl leading-tight">{route.name}</h3>
+                        <p className="text-xs text-[var(--muted)] uppercase tracking-wider">{route.company}</p>
                     </div>
                 </div>
             </div>
@@ -182,12 +182,12 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                     <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
                         <span>📡</span> 現在の運行状況（JR公式）
                     </div>
-                    <div className="font-bold text-lg flex items-center gap-2">
+                    <div className="font-black text-xl flex items-center gap-2">
                         {result.isCurrentlySuspended ? (
                             <>
                                 <span className="text-red-600">🔴 運休中</span>
                                 {result.estimatedRecoveryTime && (
-                                    <span className="text-sm font-normal text-gray-600">
+                                    <span className="text-xs font-medium text-gray-500">
                                         （{result.estimatedRecoveryTime}頃 再開見込み）
                                     </span>
                                 )}
@@ -195,7 +195,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         ) : result.status === '遅延' ? (
                             <span className="text-yellow-600">🟡 遅延中</span>
                         ) : (
-                            <span className="text-green-600">🟢 通常運行中</span>
+                            <span className="text-green-600 text-lg">🟢 通常運行中</span>
                         )}
                     </div>
                 </div>
@@ -248,17 +248,18 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
 
             {/* 確率表示 */}
             <div className="mb-5">
-                <div className="flex items-end justify-between mb-2">
-                    <span className="text-sm font-medium text-[var(--muted)]">運休リスク</span>
+                <div className="flex items-end justify-between mb-1">
+                    <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">運休リスク</span>
                     <div className="flex items-baseline gap-0.5">
-                        <span className={cn("text-4xl font-black", getProbabilityTextColor())}>
+                        <span className={cn("text-5xl font-black leading-none", getProbabilityTextColor())}>
                             {result.probability}
                         </span>
+                        <span className={cn("text-base font-bold", getProbabilityTextColor())}>%</span>
                     </div>
                 </div>
 
                 {/* 🆕 予測結果の明示的表示 (ユーザーにとっての結論) */}
-                <div className={`text-center py-2 px-4 rounded-lg font-bold text-lg mb-3 ${result.probability >= 70 ? 'bg-red-100 text-red-800 border-2 border-red-200' :
+                <div className={`text-center py-2.5 px-4 rounded-lg font-black text-xl mb-4 ${result.probability >= 70 ? 'bg-red-100 text-red-800 border-2 border-red-200' :
                     result.probability >= 40 ? 'bg-orange-100 text-orange-800 border-2 border-orange-200' :
                         result.probability >= 20 ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-200' :
                             'bg-blue-50 text-blue-800 border-2 border-blue-100'
@@ -288,13 +289,13 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                     <Info className="w-4 h-4" />
                     予測根拠
                 </div>
-                <ul className="space-y-1.5">
+                <ul className="space-y-1.5 opacity-90">
                     {result.reasons.map((reason, index) => (
                         <li
                             key={index}
-                            className="flex items-start gap-2 text-sm"
+                            className="flex items-start gap-2 text-xs"
                         >
-                            <span className="text-[var(--primary)] mt-0.5">•</span>
+                            <span className="text-[var(--primary)] mt-1">•</span>
                             {reason}
                         </li>
                     ))}

@@ -102,7 +102,7 @@ export function SearchForm({
                 <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-[var(--muted)]" />
                     {selectedStation ? (
-                        <span className="font-medium">{selectedStation.name}</span>
+                        <span className="font-black text-lg">{selectedStation.name}</span>
                     ) : (
                         <span className="text-[var(--muted)] text-sm">選択</span>
                     )}
@@ -137,7 +137,7 @@ export function SearchForm({
                                         `}
                                     >
                                         <MapPin className={`w-3 h-3 ${station.isMajor ? 'text-[var(--primary)]' : 'text-[var(--muted)]'}`} />
-                                        <span>{station.name}</span>
+                                        <span className={station.isMajor ? 'font-bold' : ''}>{station.name}</span>
                                     </button>
                                 );
                             })}
@@ -219,7 +219,7 @@ export function SearchForm({
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className="w-full input-field p-3 text-sm"
+                            className="w-full input-field p-3 text-base font-bold"
                         />
                     </div>
                 </div>

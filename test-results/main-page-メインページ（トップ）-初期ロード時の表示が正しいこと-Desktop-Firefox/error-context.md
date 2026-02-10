@@ -2,71 +2,392 @@
 
 ```yaml
 - generic [active] [ref=e1]:
-  - main [ref=e2]:
-    - generic [ref=e4]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
       - generic [ref=e5]:
-        - img [ref=e6]
-        - heading "運休AI" [level=1] [ref=e14]
-        - generic [ref=e15]: 北海道JR
-      - generic [ref=e16]:
-        - generic [ref=e17]: 札幌
-        - generic [ref=e18]: 01:33
-    - generic [ref=e19]:
+        - link "⏱️ AndR Pomodoro" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: ⏱️
+          - generic [ref=e8]: AndR Pomodoro
+        - generic [ref=e9]:
+          - link "How It Works" [ref=e10] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Impact" [ref=e11] [cursor=pointer]:
+            - /url: "#impact"
+          - link "Pricing" [ref=e12] [cursor=pointer]:
+            - /url: "#pricing"
+          - link "FAQ" [ref=e13] [cursor=pointer]:
+            - /url: "#faq"
+        - link "Get Started Free" [ref=e15] [cursor=pointer]:
+          - /url: /signup
+          - button "Get Started Free" [ref=e16]
+    - generic [ref=e18]:
       - generic [ref=e20]:
-        - generic [ref=e21]: 運休リスクを調べる
-        - generic [ref=e23]:
-          - generic [ref=e24]:
-            - generic [ref=e25]:
-              - text: 出発駅
-              - button "選択" [ref=e26]:
-                - generic [ref=e27]:
-                  - img [ref=e28]
-                  - generic [ref=e31]: 選択
-                - img [ref=e32]
-            - img [ref=e35]
-            - generic [ref=e38]:
-              - text: 到着駅
-              - button "選択" [ref=e39]:
-                - generic [ref=e40]:
-                  - img [ref=e41]
-                  - generic [ref=e44]: 選択
-                - img [ref=e45]
-          - generic [ref=e47]:
-            - generic [ref=e48]:
-              - generic [ref=e49]:
-                - generic [ref=e50]:
-                  - img [ref=e51]
-                  - text: 日付
-                - textbox [ref=e56]: 2026-02-07
-              - generic [ref=e57]:
-                - generic [ref=e58]:
-                  - img [ref=e59]
-                  - text: 時刻
-                - generic [ref=e62]:
-                  - button "出発" [ref=e63]:
-                    - img [ref=e64]
-                    - text: 出発
-                  - button "到着" [ref=e67]:
-                    - img [ref=e68]
-                    - text: 到着
-                - textbox [ref=e72]: 08:00
-            - button "📍 現在の日時で検索" [ref=e73]
-          - button "運休リスクを予測する" [disabled] [ref=e74]
-      - generic [ref=e75]:
-        - heading "🚀 Proプランで先読み" [level=3] [ref=e76]
-        - paragraph [ref=e77]:
-          - text: 公式発表の30分前にプッシュ通知。
-          - text: 24時間先までの詳細予測グラフも。
-        - button "7日間無料で試す" [ref=e78]
-      - generic [ref=e79]:
-        - paragraph [ref=e80]: © 2026 運休AI - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。
-        - paragraph [ref=e81]: "天気データ: Open-Meteo API"
-  - button "Open Next.js Dev Tools" [ref=e87] [cursor=pointer]:
-    - generic [ref=e90]:
-      - text: Compiling
-      - generic [ref=e91]:
-        - generic [ref=e92]: .
-        - generic [ref=e93]: .
-        - generic [ref=e94]: .
-  - alert [ref=e95]
+        - img "Student studying" [ref=e21]
+        - generic [ref=e24]:
+          - heading "Study. Focus. Achieve." [level=1] [ref=e25]:
+            - text: Study.
+            - text: Focus.
+            - text: Achieve.
+          - paragraph [ref=e26]:
+            - text: 25分勉強 = $0.025の寄付
+            - strong [ref=e27]: あなたの集中が、誰かの教育を支える。
+          - link "無料で始める" [ref=e28] [cursor=pointer]:
+            - /url: /signup
+            - button "無料で始める" [ref=e29]:
+              - img [ref=e30]
+              - text: 無料で始める
+      - generic [ref=e34]:
+        - img "Children learning" [ref=e35]
+        - generic [ref=e38]:
+          - heading "Learn. Grow. Thrive." [level=1] [ref=e39]:
+            - text: Learn.
+            - text: Grow.
+            - text: Thrive.
+          - button "仕組みを見る" [ref=e40]:
+            - text: 仕組みを見る
+            - img [ref=e41]
+      - button "Next slide" [ref=e43]:
+        - img [ref=e44]
+      - button "Previous slide" [ref=e47]:
+        - img [ref=e48]
+      - generic [ref=e51]:
+        - button "Go to slide 1" [ref=e52]
+        - button "Go to slide 2" [ref=e53]
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - heading "仕組み" [level=2] [ref=e58]
+        - paragraph [ref=e59]: 3ステップで始められます
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: "01"
+          - heading "25分集中" [level=3] [ref=e63]
+          - paragraph [ref=e64]: ポモドーロタイマーで集中セッションを開始。深い集中状態に入ります。
+        - generic [ref=e65]:
+          - generic [ref=e66]: "02"
+          - heading "自動寄付" [level=3] [ref=e67]
+          - paragraph [ref=e68]: あなたのプランに応じて、AndRが自動的に教育支援団体に寄付します。
+        - generic [ref=e69]:
+          - generic [ref=e70]: "03"
+          - heading "インパクト確認" [level=3] [ref=e71]
+          - paragraph [ref=e72]: 累計セッション数、寄付額、支援した子どもの数をリアルタイムで追跡できます。
+    - generic [ref=e76]:
+      - generic:
+        - img "Children learning"
+      - generic [ref=e77]:
+        - heading "Why We Built AndR" [level=2] [ref=e78]
+        - generic [ref=e79]:
+          - paragraph [ref=e80]: "As a student struggling with focus, I realized two things: staying concentrated is hard, and millions of children worldwide lack access to quality education."
+          - paragraph [ref=e81]: What if we could solve both problems at once?
+          - paragraph [ref=e82]:
+            - text: "AndR Pomodoro was born from this simple idea:"
+            - strong [ref=e83]: your focus can change lives
+            - text: . Every minute you study not only improves your own skills but also provides educational opportunities for children in need.
+          - paragraph [ref=e84]: We've partnered with trusted education charities to ensure every donation makes a real difference. Together, we're building a community where personal growth and social impact go hand in hand.
+        - generic [ref=e85]:
+          - img "Founder" [ref=e86]
+          - generic [ref=e87]:
+            - generic [ref=e88]: Shota Ishida
+            - generic [ref=e89]: Founder, AndR Pomodoro
+    - generic [ref=e92]:
+      - heading "ミッション" [level=2] [ref=e93]
+      - paragraph [ref=e94]: 生産性と社会貢献を両立させる。100万人の学生の集中力向上と、10万人の子どもたちへの教育支援を同時に実現します。
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]: 100万人
+          - generic [ref=e98]: 目標学生数
+        - generic [ref=e99]:
+          - generic [ref=e100]: 10万人
+          - generic [ref=e101]: 目標支援児童数
+        - generic [ref=e102]:
+          - generic [ref=e103]: 50カ国
+          - generic [ref=e104]: 目標展開国数
+    - generic [ref=e109]:
+      - generic [ref=e112]: リアルタイム
+      - heading "累計インパクト" [level=2] [ref=e113]
+      - paragraph [ref=e114]: コミュニティ全体の集中が生み出した変化
+      - generic [ref=e115]:
+        - generic [ref=e116]: $0.00
+        - generic [ref=e117]: Total Donated to Education
+        - generic [ref=e118]: Updated in real-time
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]: 0+
+          - generic [ref=e122]: 累計学習時間
+        - generic [ref=e123]:
+          - generic [ref=e124]: 0+
+          - generic [ref=e125]: 支援した子どもたち
+        - generic [ref=e126]:
+          - generic [ref=e127]: 2,500+
+          - generic [ref=e128]: 寄付した教科書
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - heading "集中が生み出す変化" [level=2] [ref=e133]
+        - paragraph [ref=e134]: 生産性と社会貢献を同時に実現する機能
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - heading "ポモドーロ技法" [level=3] [ref=e137]
+          - paragraph [ref=e138]: 25分間の集中と5分間の休憩を繰り返す、科学的に実証された生産性向上メソッド。
+        - generic [ref=e139]:
+          - heading "自動寄付" [level=3] [ref=e140]
+          - paragraph [ref=e141]: 勉強時間に応じて自動的に寄付。追加の手続きは一切不要です。
+        - generic [ref=e142]:
+          - heading "インパクト追跡" [level=3] [ref=e143]
+          - paragraph [ref=e144]: 累計セッション、寄付総額、支援した子どもの数を詳細に確認できます。
+        - generic [ref=e145]:
+          - heading "100%透明性" [level=3] [ref=e146]
+          - paragraph [ref=e147]: すべての寄付は追跡・検証されており、寄付先を正確に確認できます。
+    - generic [ref=e150]:
+      - generic [ref=e151]:
+        - heading "支援している子どもたち" [level=2] [ref=e152]
+        - paragraph [ref=e153]: あなたの集中が実際に変化を生み出しています
+      - generic [ref=e154]:
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - img "Amara" [ref=e157]
+            - generic [ref=e159]:
+              - heading "Amara" [level=3] [ref=e160]
+              - generic [ref=e161]: 8歳 • Kenya
+          - generic [ref=e162]:
+            - paragraph [ref=e163]: Amara dreams of becoming a teacher. With your support, she now has textbooks and school supplies to continue her education.
+            - generic [ref=e164]:
+              - img [ref=e165]
+              - paragraph [ref=e167]: Your 25-minute study session provides textbooks for 1 child like Amara.
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - img "Sophea, Dara & Vanna" [ref=e170]
+            - generic [ref=e172]:
+              - heading "Sophea, Dara & Vanna" [level=3] [ref=e173]
+              - generic [ref=e174]: 9歳 • Cambodia
+          - generic [ref=e175]:
+            - paragraph [ref=e176]: These three friends study together every day in their village school. AndR's donations help keep their classroom equipped with essential learning materials.
+            - generic [ref=e177]:
+              - img [ref=e178]
+              - paragraph [ref=e180]: When you study for 1 hour, AndR provides school supplies for 3 children.
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - img "Raj" [ref=e183]
+            - generic [ref=e185]:
+              - heading "Raj" [level=3] [ref=e186]
+              - generic [ref=e187]: 9歳 • India
+          - generic [ref=e188]:
+            - paragraph [ref=e189]: Raj walks 5km to school every day. Thanks to supporters like you, he now has access to quality education and a bright future ahead.
+            - generic [ref=e190]:
+              - img [ref=e191]
+              - paragraph [ref=e193]: Your daily study habit provides 1 week of meals for 1 child like Raj.
+    - generic [ref=e196]:
+      - generic [ref=e197]:
+        - heading "ユーザーの声" [level=2] [ref=e198]
+        - paragraph [ref=e199]: 多くの学生・社会人が利用しています
+      - generic [ref=e200]:
+        - generic [ref=e201]:
+          - paragraph [ref=e202]: "\"AndR Pomodoro transformed my study routine. Knowing that my focus helps children makes every session meaningful. I've never been more motivated!\""
+          - generic [ref=e203]:
+            - img "Sarah Johnson" [ref=e204]
+            - generic [ref=e205]:
+              - generic [ref=e206]: Sarah Johnson
+              - generic [ref=e207]: Medical Student
+        - generic [ref=e208]:
+          - paragraph [ref=e209]: "\"The perfect blend of productivity and purpose. I love seeing my impact grow with each study session. This app changed how I think about focus.\""
+          - generic [ref=e210]:
+            - img "Michael Chen" [ref=e211]
+            - generic [ref=e212]:
+              - generic [ref=e213]: Michael Chen
+              - generic [ref=e214]: Software Engineer
+        - generic [ref=e215]:
+          - paragraph [ref=e216]: "\"Finally, a timer app that matters. The transparency reports show exactly where donations go. It's incredible to be part of something bigger.\""
+          - generic [ref=e217]:
+            - img "Emma Williams" [ref=e218]
+            - generic [ref=e219]:
+              - generic [ref=e220]: Emma Williams
+              - generic [ref=e221]: Law Student
+    - generic [ref=e224]:
+      - generic [ref=e225]:
+        - heading "機能" [level=2] [ref=e226]
+        - paragraph [ref=e227]: 生産性と社会貢献を両立する全機能
+      - generic [ref=e228]:
+        - generic [ref=e229]:
+          - heading "カスタマイズ可能" [level=3] [ref=e230]
+          - paragraph [ref=e231]: 集中時間と休憩時間を自由に設定。あなたの学習スタイルに合わせられます。
+        - generic [ref=e232]:
+          - heading "進捗追跡" [level=3] [ref=e233]
+          - paragraph [ref=e234]: 詳細な統計とグラフで生産性を可視化。成長を実感できます。
+        - generic [ref=e235]:
+          - heading "どこでも使える" [level=3] [ref=e236]
+          - paragraph [ref=e237]: デバイス間で自動同期。スマホ、タブレット、PCから利用可能です。
+        - generic [ref=e238]:
+          - heading "スマート通知" [level=3] [ref=e239]
+          - paragraph [ref=e240]: 集中を妨げない優しいリマインダーで、学習習慣をサポートします。
+        - generic [ref=e241]:
+          - heading "デイリーゴール" [level=3] [ref=e242]
+          - paragraph [ref=e243]: 1日の目標を設定して達成。継続的な学習習慣を構築できます。
+        - generic [ref=e244]:
+          - heading "実績バッジ" [level=3] [ref=e245]
+          - paragraph [ref=e246]: マイルストーンを達成するとバッジを獲得。進捗を祝えます。
+    - generic [ref=e249]:
+      - generic [ref=e250]:
+        - heading "Choose Your Impact Level" [level=2] [ref=e251]
+        - paragraph [ref=e252]: Every plan makes a difference. Upgrade to multiply your impact.
+      - generic [ref=e253]:
+        - generic [ref=e254]:
+          - generic [ref=e255]: CURRENT
+          - generic [ref=e257]: ✨
+          - heading "Free" [level=3] [ref=e258]
+          - paragraph [ref=e259]: Get started with basic features
+          - generic [ref=e260]: $0/mo
+          - paragraph [ref=e261]: Forever free
+          - list [ref=e262]:
+            - listitem [ref=e263]:
+              - img [ref=e264]
+              - generic [ref=e266]: Unlimited sessions
+            - listitem [ref=e267]:
+              - img [ref=e268]
+              - generic [ref=e270]: Basic timer customization
+            - listitem [ref=e271]:
+              - img [ref=e272]
+              - generic [ref=e274]: Daily statistics
+            - listitem [ref=e275]:
+              - img [ref=e276]
+              - generic [ref=e278]: $0.0001/min donation ($1.00/month cap)
+          - button "Current Plan" [ref=e279]
+        - generic [ref=e280]:
+          - generic [ref=e282]: 🚀
+          - heading "Casual" [level=3] [ref=e283]
+          - paragraph [ref=e284]: For regular learners
+          - generic [ref=e285]: $4.99/mo
+          - list [ref=e286]:
+            - listitem [ref=e287]:
+              - img [ref=e288]
+              - generic [ref=e290]: Unlimited Pomodoro sessions
+            - listitem [ref=e291]:
+              - img [ref=e292]
+              - generic [ref=e294]: Full timer customization
+            - listitem [ref=e295]:
+              - img [ref=e296]
+              - generic [ref=e298]: Daily & cumulative statistics
+            - listitem [ref=e299]:
+              - img [ref=e300]
+              - generic [ref=e302]: $0.001/min donation ($9.98/month cap)
+            - listitem [ref=e303]:
+              - img [ref=e304]
+              - generic [ref=e306]: Priority support
+          - button "Subscribe" [ref=e307]
+        - generic [ref=e308]:
+          - generic [ref=e309]: MOST POPULAR
+          - generic [ref=e311]: 👑
+          - heading "Champion" [level=3] [ref=e312]
+          - paragraph [ref=e313]: For dedicated learners
+          - generic [ref=e314]: $19.99/mo
+          - list [ref=e315]:
+            - listitem [ref=e316]:
+              - img [ref=e317]
+              - generic [ref=e319]: Everything in Casual
+            - listitem [ref=e320]:
+              - img [ref=e321]
+              - generic [ref=e323]: Advanced analytics dashboard
+            - listitem [ref=e324]:
+              - img [ref=e325]
+              - generic [ref=e327]: Study streak tracking
+            - listitem [ref=e328]:
+              - img [ref=e329]
+              - generic [ref=e331]: $0.002/min donation ($39.98/month cap)
+            - listitem [ref=e332]:
+              - img [ref=e333]
+              - generic [ref=e335]: Early access to new features
+            - listitem [ref=e336]:
+              - img [ref=e337]
+              - generic [ref=e339]: Premium notification sounds
+          - button "Subscribe" [ref=e340]
+    - generic [ref=e343]:
+      - generic [ref=e344]:
+        - heading "Frequently Asked Questions" [level=2] [ref=e345]
+        - paragraph [ref=e346]: Everything you need to know about AndR Pomodoro
+      - generic [ref=e347]:
+        - button "How does the donation system work?" [ref=e349]:
+          - generic [ref=e350]: How does the donation system work?
+          - img [ref=e351]
+        - button "Which charities do you support?" [ref=e355]:
+          - generic [ref=e356]: Which charities do you support?
+          - img [ref=e357]
+        - button "Can I cancel my subscription anytime?" [ref=e361]:
+          - generic [ref=e362]: Can I cancel my subscription anytime?
+          - img [ref=e363]
+        - button "Is my study data private?" [ref=e367]:
+          - generic [ref=e368]: Is my study data private?
+          - img [ref=e369]
+        - button "What's the Pomodoro Technique?" [ref=e373]:
+          - generic [ref=e374]: What's the Pomodoro Technique?
+          - img [ref=e375]
+        - button "Do I need to install anything?" [ref=e379]:
+          - generic [ref=e380]: Do I need to install anything?
+          - img [ref=e381]
+    - generic [ref=e388]:
+      - heading "Ready to Make Your Focus Count?" [level=2] [ref=e389]
+      - paragraph [ref=e390]: Join thousands of learners who are turning their study time into real-world impact.
+      - link "Start Free Today" [ref=e392] [cursor=pointer]:
+        - /url: /signup
+        - button "Start Free Today" [ref=e393]:
+          - text: Start Free Today
+          - img [ref=e394]
+      - paragraph [ref=e397]: No credit card required • Cancel anytime • Start making an impact in 60 seconds
+    - contentinfo [ref=e398]:
+      - generic [ref=e399]:
+        - generic [ref=e400]:
+          - generic [ref=e401]:
+            - generic [ref=e402]:
+              - generic [ref=e403]: ⏱️
+              - generic [ref=e404]: AndR Pomodoro
+            - paragraph [ref=e405]: Turning focus into impact, one Pomodoro at a time.
+          - generic [ref=e406]:
+            - heading "Product" [level=3] [ref=e407]
+            - list [ref=e408]:
+              - listitem [ref=e409]:
+                - link "How It Works" [ref=e410] [cursor=pointer]:
+                  - /url: "#how-it-works"
+              - listitem [ref=e411]:
+                - link "Pricing" [ref=e412] [cursor=pointer]:
+                  - /url: "#pricing"
+              - listitem [ref=e413]:
+                - link "FAQ" [ref=e414] [cursor=pointer]:
+                  - /url: "#faq"
+              - listitem [ref=e415]:
+                - link "Timer" [ref=e416] [cursor=pointer]:
+                  - /url: /timer
+          - generic [ref=e417]:
+            - heading "Company" [level=3] [ref=e418]
+            - list [ref=e419]:
+              - listitem [ref=e420]:
+                - link "Privacy Policy" [ref=e421] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=e422]:
+                - link "Terms of Service" [ref=e423] [cursor=pointer]:
+                  - /url: /terms
+              - listitem [ref=e424]:
+                - link "Commercial Transactions" [ref=e425] [cursor=pointer]:
+                  - /url: /legal
+              - listitem [ref=e426]:
+                - link "FAQ" [ref=e427] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=e428]:
+                - link "How Donations Work" [ref=e429] [cursor=pointer]:
+                  - /url: /how-donations-work
+              - listitem [ref=e430]:
+                - link "Donation Reports" [ref=e431] [cursor=pointer]:
+                  - /url: /donation-reports
+          - generic [ref=e432]:
+            - heading "Connect" [level=3] [ref=e433]
+            - list [ref=e434]:
+              - listitem [ref=e435]:
+                - link "Contact Us" [ref=e436] [cursor=pointer]:
+                  - /url: mailto:contact@andrpomodoro.com
+              - listitem [ref=e437]:
+                - link "Twitter" [ref=e438] [cursor=pointer]:
+                  - /url: https://twitter.com/andrpomodoro
+              - listitem [ref=e439]:
+                - link "Instagram" [ref=e440] [cursor=pointer]:
+                  - /url: https://instagram.com/andrpomodoro
+        - paragraph [ref=e442]: © 2026 AndR Pomodoro. All rights reserved.
+  - button "Open Next.js Dev Tools" [ref=e448] [cursor=pointer]:
+    - img [ref=e449]
+  - alert [ref=e453]
 ```
