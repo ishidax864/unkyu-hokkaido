@@ -271,6 +271,11 @@ export default function Home() {
               targetDate={date}
             />
 
+            {/* 時間帯別リスク推移 (追加) */}
+            {riskTrend && riskTrend.length > 0 && (
+              <HourlyRiskChart data={riskTrend} />
+            )}
+
             {/* 状況報告（代替ルートの前へ移動） */}
             <ReportButtons
               routeId={selectedRouteId}
