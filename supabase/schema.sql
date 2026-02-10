@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS user_reports (
     report_type TEXT NOT NULL CHECK (report_type IN ('stopped', 'delayed', 'crowded', 'normal')),
     comment TEXT,
     ip_hash TEXT,
+    is_verified BOOLEAN DEFAULT FALSE, -- 🆕 管理者による確認済みフラグ
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -85,3 +86,36 @@ CREATE TRIGGER prevent_spam_reports
     BEFORE INSERT ON user_reports
     FOR EACH ROW
     EXECUTE FUNCTION check_spam_report();
+
+-- B2B パートナー管理テーブル
+CREATE TABLE IF NOT EXISTS partners (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    industry TEXT, -- 'logistics', 'tourism', 'taxi', etc.
+    tier TEXT DEFAULT 'free' CHECK (tier IN ('free', 'pro', 'enterprise')),
+    contact_email TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- APIキー管理テーブル
+CREATE TABLE IF NOT EXISTS api_keys (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    partner_id UUID REFERENCES partners(id) ON DELETE CASCADE,
+    key_hash TEXT NOT NULL UNIQUE,
+    key_prefix TEXT NOT NULL, -- 表示用 (例: "uk_...")
+    is_active BOOLEAN DEFAULT TRUE,
+    rate_limit_per_min INTEGER DEFAULT 60,
+    last_used_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- B2B 用インデックス
+CREATE INDEX IF NOT EXISTS idx_api_keys_partner_id ON api_keys(partner_id);
+
+-- RLS (Adminのみフルアクセス、他は閲覧不可想定)
+ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_keys ENABLE ROW LEVEL SECURITY;
+
+-- 開発用: 特定のロールを持つユーザーのみアクセス可能にするのが一般的だが
+-- ここでは一旦、Adminダッシュボードからのアクセスを想定してポリシーを空にするか
+-- サービスロールでの操作を前提とする。
