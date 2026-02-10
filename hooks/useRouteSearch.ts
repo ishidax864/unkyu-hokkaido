@@ -191,76 +191,81 @@ export function useRouteSearch() {
         // 🆕 終日運休等の場合は時間変更提案をしない
         const isAllDaySuspension = result.estimatedRecoveryTime === '終日運休' || result.isOfficialOverride;
 
-        if (result.probability >= 30 && !isAllDaySuspension) {
-            // ... (Logic for time shift suggestion - Simplified for now or copied)
-            // I will copy the logic in separate steps if needed, but for now I'll include the core logic.
-            // Actually, logic is complex. I should extract `generateTimeShiftSuggestions` to a helper if possible?
-            // Or just keep it here.
+        // Calculate risk trend always
+        const trendData: HourlyRiskData[] = [];
+        let bestShift = null; // Initialize bestShift
 
-            // Re-implementing Time Shift Logic here:
-            const currentHour = parseInt(targetTimeStr.split(':')[0]);
-            const surroundingHours = [-2, -1, 1, 2];
-            let bestShift = null;
-            const trendData: HourlyRiskData[] = [];
+        const currentHour = parseInt(targetTimeStr.split(':')[0]);
 
-            for (let offset = -2; offset <= 2; offset++) {
-                const h = currentHour + offset;
-                if (h < 0 || h > 23) continue;
-                const hStr = h.toString().padStart(2, '0');
-                const checkTime = `${hStr}:00`;
-                const checkDateTime = `${searchDate}T${checkTime}:00`;
+        for (let offset = -2; offset <= 2; offset++) {
+            const h = currentHour + offset;
+            if (h < 0 || h > 23) continue;
 
-                // 🆕 過去の時間は提案しない
-                if (isToday) {
-                    const checkDateObj = new Date(checkDateTime);
-                    if (checkDateObj < now) continue;
-                }
+            // Format time string HH:00
+            const hStr = h.toString().padStart(2, '0');
+            const checkTime = `${hStr}:00`;
+            const checkDateTime = `${searchDate}T${checkTime}:00`; // Assuming 00 minutes for trend
 
-                let w: WeatherForecast | null = null;
-                try {
-                    w = await fetchHourlyWeatherForecast(routeId, checkDateTime);
-                } catch { }
+            let trendWeather: WeatherForecast | null = null;
+            try {
+                // Fetch weather for this hour
+                // Note: fetchHourlyWeatherForecast might be async, ensure we await or handle
+                // In this scope, we can await inside loop if it's async
+                trendWeather = await fetchHourlyWeatherForecast(routeId, checkDateTime);
+            } catch { }
 
-                // Simple risk calc for trend
-                const r = calculateSuspensionRisk({
-                    weather: w,
-                    routeId,
-                    routeName: primaryRoute?.name || '',
-                    targetDate: searchDate,
-                    targetTime: checkTime,
-                    historicalData,
-                    jrStatus: offset === 0 ? jrStatus : null, // Only apply current status to current? Or all? Usually current.
-                    crowdsourcedStatus: offset === 0 ? crowdsourcedStatus : null
-                });
+            // Calculate risk for this hour
+            const r = calculateSuspensionRisk({
+                weather: trendWeather,
+                routeId,
+                routeName: primaryRoute?.name || '',
+                targetDate: searchDate,
+                targetTime: checkTime,
+                historicalData: null, // Don't use historical data for trend to keep it simple/fast? Or use it?
+                // Using null for historical/jr/crowd for trend to reflect WEATHER trend primarily
+                jrStatus: offset === 0 ? jrStatus : null,
+                crowdsourcedStatus: offset === 0 ? crowdsourcedStatus : null,
+                timetableTrain: undefined // Don't verify timetable for every hour in trend
+            });
 
-                trendData.push({
-                    time: checkTime,
-                    risk: r.probability,
-                    weatherIcon: w ? (w.snowfall && w.snowfall > 0 ? 'snow' : w.windSpeed > 10 ? 'wind' : 'cloud') : 'cloud',
-                    isTarget: offset === 0,
-                    isCurrent: offset === 0
-                });
+            // Determine icon
+            let icon = 'cloud';
+            if (trendWeather) {
+                if ((trendWeather.snowfall ?? 0) > 0) icon = 'snow';
+                else if (trendWeather.rain && trendWeather.rain > 0) icon = 'rain';
+                else if (trendWeather.windSpeed >= 15) icon = 'wind';
+                else if (trendWeather.weather.includes('晴')) icon = 'sun';
+            }
 
-                if (offset !== 0) {
-                    const diff = result.probability - r.probability;
-                    if (diff >= 20) {
-                        if (!bestShift || diff > bestShift.difference) {
-                            bestShift = {
-                                time: checkTime,
-                                risk: r.probability,
-                                difference: diff,
-                                isEarlier: offset < 0
-                            };
-                        }
+            trendData.push({
+                time: checkTime,
+                risk: r.probability,
+                weatherIcon: icon,
+                isTarget: offset === 0,
+                isCurrent: offset === 0
+            });
+
+            // Calculate best shift if high risk
+            if (result.probability >= 30 && !isAllDaySuspension && offset !== 0) {
+                const diff = result.probability - r.probability;
+                // 🆕 過去の時間は提案しない (Simple check)
+                const isPast = isToday && (h < new Date().getHours());
+
+                if (diff >= 20 && !isPast) {
+                    if (!bestShift || diff > bestShift.difference) {
+                        bestShift = {
+                            time: checkTime,
+                            risk: r.probability,
+                            difference: diff,
+                            isEarlier: offset < 0
+                        };
                     }
                 }
             }
-            setRiskTrend(trendData);
-            setTimeShiftSuggestion(bestShift);
-        } else {
-            setRiskTrend([]);
-            setTimeShiftSuggestion(null);
         }
+
+        setRiskTrend(trendData);
+        setTimeShiftSuggestion(bestShift);
 
         setIsLoading(false);
     };
