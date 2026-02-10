@@ -355,9 +355,17 @@ export default function Home() {
             <DonationButton />
           )}
 
-          <div className="mt-6 text-[10px] text-[var(--muted)] opacity-70">
-            <p className="mb-1">天気データ: Open-Meteo API</p>
-            <p>&copy; 2026 運休北海道 - Unkyu Hokkaido AI</p>
+          <div className="mt-8 text-[10px] text-[var(--muted)] opacity-70 space-y-2">
+            <div>
+              <p>運営: 株式会社アンドアール</p>
+              <a href="mailto:info@andr.ltd" className="hover:text-[var(--primary)] transition-colors">
+                お問い合わせ: info@andr.ltd
+              </a>
+            </div>
+            <div>
+              <p className="mb-0.5">天気データ: Open-Meteo API</p>
+              <p>&copy; 2026 運休北海道 - Unkyu Hokkaido AI</p>
+            </div>
           </div>
         </footer>
       </div>
