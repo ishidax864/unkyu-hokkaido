@@ -229,10 +229,10 @@ export function useRouteSearch() {
             });
 
             // Determine icon
-            let icon = 'cloud';
+            let icon: HourlyRiskData['weatherIcon'] = 'cloud';
             if (trendWeather) {
                 if ((trendWeather.snowfall ?? 0) > 0) icon = 'snow';
-                else if (trendWeather.rain && trendWeather.rain > 0) icon = 'rain';
+                else if (trendWeather.precipitation && trendWeather.precipitation > 0) icon = 'rain';
                 else if (trendWeather.windSpeed >= 15) icon = 'wind';
                 else if (trendWeather.weather.includes('晴')) icon = 'sun';
             }

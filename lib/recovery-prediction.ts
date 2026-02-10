@@ -215,3 +215,6 @@ export function predictRecoveryTime(
         reasoning: reasons,
     };
 }
+
+// Alias for compatibility
+export const getRoutePrediction = predictRecoveryTime;

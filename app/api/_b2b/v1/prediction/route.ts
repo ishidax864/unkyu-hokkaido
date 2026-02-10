@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/b2b-auth';
-import { getRoutePrediction } from '@/lib/recovery-prediction'; // 既存の予測ロジック
+import { calculateSuspensionRisk } from '@/lib/prediction-engine';
+import { fetchHourlyWeatherForecast } from '@/lib/weather';
 
 export async function GET(req: NextRequest) {
     const apiKey = req.headers.get('x-api-key');
@@ -18,20 +19,33 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        // 既存の予測ロジックを呼び出す
-        // 本来は日付や時刻もクエリから取るべきだが、一旦現在の予測を返す簡易版
         const now = new Date();
         const date = now.toISOString().split('T')[0];
         const time = now.toTimeString().slice(0, 5);
+        const targetDateTime = `${date}T${time}:00`;
 
-        const prediction = await getRoutePrediction(routeId, date, time);
+        // 天気予報を取得
+        const weather = await fetchHourlyWeatherForecast(routeId, targetDateTime);
+
+        // リスク計算
+        const prediction = calculateSuspensionRisk({
+            weather,
+            routeId,
+            routeName: 'API Request', // ルート名取得は省略
+            targetDate: date,
+            targetTime: time,
+            historicalData: null,
+            jrStatus: null,
+            crowdsourcedStatus: null
+        });
 
         return NextResponse.json({
-            partner: partner.name,
+            partner: partner?.name || 'Unknown',
             timestamp: new Date().toISOString(),
             prediction
         });
     } catch (err) {
+        console.error(err);
         return NextResponse.json({ error: 'Failed to fetch prediction' }, { status: 500 });
     }
 }

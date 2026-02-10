@@ -43,7 +43,7 @@ export async function validateApiKey(apiKey: string | null) {
 
     return {
         authorized: true,
-        partner: data.partners,
+        partner: data.partners as any,
         rateLimit: data.rate_limit_per_min
     };
 }
