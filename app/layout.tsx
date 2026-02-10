@@ -97,6 +97,9 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+import { PremiumProvider } from '@/contexts/premium-context';
+import { PremiumPromoBanner } from '@/components/premium-promo-banner';
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -2,6 +2,7 @@
 
 import { PredictionResult } from '@/lib/types';
 import { Route } from '@/lib/types';
+import { SmartAffiliateCard } from "./smart-affiliate-card";
 import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, TrendingUp, Clock, AlertOctagon, Users, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
@@ -113,6 +114,9 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         <div className="text-3xl font-black text-[var(--status-suspended)]">
                             {result.estimatedRecoveryTime || '復旧時刻未定'}
                         </div>
+                        <div className="text-[10px] text-[var(--muted)]/70 text-right mt-1">
+                            Powered by Open-Meteo
+                        </div>
                         <div className="text-[10px] text-[var(--muted)] mt-1 opacity-80">
                             {result.isOfficialOverride
                                 ? '※JR北海道公式発表に基づく情報です'
@@ -120,6 +124,12 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         </div>
                     </div>
                 </div>
+
+                {/* Smart Affiliate Suggestion (Monetization) */}
+                <SmartAffiliateCard
+                    prediction={result}
+                    routeId={route.id}
+                />
 
                 {/* 詳細情報 */}
                 <div className="space-y-2 mb-4">
