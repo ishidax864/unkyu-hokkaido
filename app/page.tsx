@@ -304,10 +304,6 @@ export default function Home() {
               />
             )}
 
-            {/* 時間帯別リスクグラフ */}
-            {riskTrend.length > 0 && prediction.probability >= 30 && (
-              <HourlyRiskChart data={riskTrend} />
-            )}
 
             {/* SNSシェア */}
             {depStation && arrStation && (
