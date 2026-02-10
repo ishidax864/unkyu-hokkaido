@@ -5,6 +5,7 @@ import { SearchForm } from '@/components/search-form';
 import { PredictionResultCard } from '@/components/prediction-result';
 import { ReportButtons } from '@/components/report-buttons';
 import { AlternativeRoutes } from '@/components/alternative-routes';
+import { DonationButton } from "@/components/donation-button";
 import { WeeklyForecastChart } from '@/components/weekly-forecast';
 import { ShareCard } from '@/components/share-card';
 import { WeatherWarningList } from '@/components/weather-warning-list'; // 🆕
@@ -343,9 +344,21 @@ export default function Home() {
         */}
 
         {/* フッター */}
-        <footer className="mt-8 text-center text-[10px] text-[var(--muted)] pb-8">
-          <p>© 2026 運休北海道 - 予測は参考情報です。最新情報はJR北海道の公式発表をご確認ください。</p>
-          <p className="mt-1 opacity-70">天気データ: Open-Meteo API</p>
+        <footer className="mt-8 text-center pb-8 border-t border-[var(--border)] pt-8">
+          <p className="text-[10px] text-[var(--muted)] mb-4">
+            ※本サービスは予測に基づく参考情報です。<br />
+            実際の運行状況は必ずJR北海道公式サイトをご確認ください。
+          </p>
+
+          {/* Donation Button (Dev Only) */}
+          {process.env.NODE_ENV === 'development' && (
+            <DonationButton />
+          )}
+
+          <div className="mt-6 text-[10px] text-[var(--muted)] opacity-70">
+            <p className="mb-1">天気データ: Open-Meteo API</p>
+            <p>&copy; 2026 運休北海道 - Unkyu Hokkaido AI</p>
+          </div>
         </footer>
       </div>
     </main>
