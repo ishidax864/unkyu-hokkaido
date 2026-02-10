@@ -200,6 +200,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${notoSansJP.variable} font-sans antialiased`}>
+        {/*
+        <PremiumProvider>
+          {children}
+          <PremiumPromoBanner />
+        </PremiumProvider>
+        */}
         {children}
       </body>
     </html>
