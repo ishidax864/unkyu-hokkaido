@@ -271,12 +271,22 @@ export default function Home() {
               targetDate={date}
             />
 
+            {/* SNSシェア (重要度が高いため、結果のすぐ下に移動) */}
+            {depStation && arrStation && (
+              <ShareCard
+                prediction={prediction}
+                routeName={getRouteById(selectedRouteId)?.name || ''}
+                departureStation={depStation.name}
+                arrivalStation={arrStation.name}
+              />
+            )}
+
             {/* 時間帯別リスク推移 (追加) */}
             {riskTrend && riskTrend.length > 0 && (
               <HourlyRiskChart data={riskTrend} />
             )}
 
-            {/* 状況報告（代替ルートの前へ移動） */}
+            {/* 状況報告 */}
             <ReportButtons
               routeId={selectedRouteId}
               routeName={getRouteById(selectedRouteId)?.name || ''}
@@ -305,15 +315,6 @@ export default function Home() {
             )}
 
 
-            {/* SNSシェア */}
-            {depStation && arrStation && (
-              <ShareCard
-                prediction={prediction}
-                routeName={getRouteById(selectedRouteId)?.name || ''}
-                departureStation={depStation.name}
-                arrivalStation={arrStation.name}
-              />
-            )}
 
 
 

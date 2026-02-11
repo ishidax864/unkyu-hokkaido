@@ -93,73 +93,58 @@ ${prediction.reasons[0] || ''}
     };
 
     return (
-        <div className="space-y-3">
-            {/* シェアボタン */}
-            <button
-                onClick={handleNativeShare}
-                className="w-full card p-3 flex items-center justify-center gap-2 text-[var(--primary)] font-medium hover:bg-[var(--background-secondary)] transition-colors"
-            >
-                <Share2 className="w-4 h-4" />
-                予測結果をシェア
-            </button>
+        <div className="card p-4 space-y-4">
+            <div className="flex items-center justify-between">
+                <div className="section-label mb-0">結果をシェア</div>
+                <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 text-xs text-[var(--muted)] hover:text-[var(--primary)] transition-colors"
+                >
+                    {copied ? (
+                        <Check className="w-3.5 h-3.5 text-[var(--status-normal)]" />
+                    ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                    )}
+                    <span>{copied ? 'コピー済み' : 'テキストをコピー'}</span>
+                </button>
+            </div>
 
-            {/* シェアオプション（Web Share API非対応時） */}
-            {showShare && (
-                <div className="card p-4 space-y-3">
-                    <div className="section-label">シェア方法を選択</div>
+            <div className="grid grid-cols-2 gap-3">
+                <button
+                    onClick={shareToTwitter}
+                    className="flex items-center justify-center gap-2 py-3 rounded-lg bg-[#000000] text-white font-bold text-sm hover:opacity-90 transition-opacity"
+                >
+                    <Twitter className="w-4 h-4 fill-white" />
+                    X でシェア
+                </button>
 
-                    <div className="grid grid-cols-3 gap-2">
-                        <button
-                            onClick={shareToTwitter}
-                            className="flex flex-col items-center gap-1.5 p-3 rounded-md border border-[var(--border)] hover:bg-[var(--background-secondary)] transition-colors"
-                        >
-                            <Twitter className="w-5 h-5 text-[#1DA1F2]" />
-                            <span className="text-xs">X</span>
-                        </button>
+                <button
+                    onClick={shareToLine}
+                    className="flex items-center justify-center gap-2 py-3 rounded-lg bg-[#06C755] text-white font-bold text-sm hover:opacity-90 transition-opacity"
+                >
+                    <MessageCircle className="w-4 h-4 fill-white" />
+                    LINE
+                </button>
+            </div>
 
-                        <button
-                            onClick={shareToLine}
-                            className="flex flex-col items-center gap-1.5 p-3 rounded-md border border-[var(--border)] hover:bg-[var(--background-secondary)] transition-colors"
-                        >
-                            <MessageCircle className="w-5 h-5 text-[#00B900]" />
-                            <span className="text-xs">LINE</span>
-                        </button>
-
-                        <button
-                            onClick={handleCopy}
-                            className="flex flex-col items-center gap-1.5 p-3 rounded-md border border-[var(--border)] hover:bg-[var(--background-secondary)] transition-colors"
-                        >
-                            {copied ? (
-                                <Check className="w-5 h-5 text-[var(--status-normal)]" />
-                            ) : (
-                                <Copy className="w-5 h-5 text-[var(--muted)]" />
-                            )}
-                            <span className="text-xs">{copied ? 'コピー済み' : 'コピー'}</span>
-                        </button>
-                    </div>
-
-                    {/* プレビュー */}
-                    <div ref={cardRef} className={`p-4 rounded-lg border ${getRiskBgColor()}`}>
-                        <div className="text-xs text-[var(--muted)] mb-1">運休AI 予測</div>
-                        <div className="font-bold text-sm mb-2">
-                            {departureStation} → {arrivalStation}
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-black">{prediction.probability}</span>
-                            <span className="text-sm font-bold text-[var(--muted)]">%</span>
-                            <span className={`ml-2 text-sm font-bold ${prediction.probability >= 50 ? 'text-[var(--status-suspended)]' :
-                                prediction.probability >= 20 ? 'text-[var(--status-warning)]' :
-                                    'text-[var(--status-normal)]'
-                                }`}>
-                                {prediction.status}
-                            </span>
-                        </div>
-                        <div className="text-xs text-[var(--muted)] mt-2">
-                            {prediction.reasons[0]}
-                        </div>
-                    </div>
-                </div>
+            {/* その他のシェア (Web Share API) */}
+            {typeof navigator !== 'undefined' && !!navigator.share && (
+                <button
+                    onClick={handleNativeShare}
+                    className="w-full py-2.5 rounded-lg border border-[var(--border)] text-[var(--muted)] text-xs font-medium flex items-center justify-center gap-2 hover:bg-[var(--background-secondary)] transition-colors"
+                >
+                    <Share2 className="w-3.5 h-3.5" />
+                    その他の方法でシェア
+                </button>
             )}
+
+            {/* プレビュー (折りたたみ可能にしても良いが、一旦表示) */}
+            <div className={`p-3 rounded-lg border ${getRiskBgColor()} opacity-60 text-[10px]`}>
+                <div className="font-bold flex justify-between">
+                    <span>{departureStation} → {arrivalStation}</span>
+                    <span>{prediction.probability}% {prediction.status}</span>
+                </div>
+            </div>
         </div>
     );
 }

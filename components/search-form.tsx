@@ -189,6 +189,11 @@ export function SearchForm({
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                             min={new Date().toISOString().split('T')[0]}
+                            max={(() => {
+                                const d = new Date();
+                                d.setDate(d.getDate() + 7);
+                                return d.toISOString().split('T')[0];
+                            })()}
                             className="w-full input-field p-3 text-sm"
                         />
                     </div>
