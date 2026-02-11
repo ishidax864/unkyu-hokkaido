@@ -13,6 +13,7 @@ import { WeatherWarningList } from '@/components/weather-warning-list'; // 🆕
 import { HourlyRiskChart } from '@/components/hourly-risk-chart'; // 🆕
 import { ProgressiveLoading } from '@/components/progressive-loading'; // 🆕 Phase 27
 import { HeadlineStatus } from '@/components/headline-status'; // 🆕 Phase 27
+import { ServiceFeatures } from '@/components/service-features'; // 🆕
 import { getRouteById, getStationById, getCommonLines, getJRStatusUrl, Station } from '@/lib/hokkaido-data';
 // unused imports removed
 import { useAppInit } from '@/hooks/useAppInit'; // 🆕
@@ -359,6 +360,9 @@ export default function Home() {
           </button>
         </div>
         */}
+
+        {/* サービス特徴・価値提案 */}
+        <ServiceFeatures />
 
         {/* フッター */}
         <footer className="mt-8 text-center pb-8 border-t border-[var(--border)] pt-8">
