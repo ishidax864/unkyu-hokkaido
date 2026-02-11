@@ -148,9 +148,22 @@ export function SearchForm({
         </div>
     );
 
+    // 🆕 バリデーション：日付が範囲内か
+    const isDateValid = (dateStr: string) => {
+        if (!dateStr) return false;
+        const selected = new Date(dateStr);
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        const min = new Date(now);
+        const max = new Date(now);
+        max.setDate(max.getDate() + 7);
+
+        return selected >= min && selected <= max;
+    };
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            {/* 出発・到着駅選択 */}
             {/* 出発・到着駅選択 */}
             <div className="flex flex-col md:flex-row md:items-end gap-0 md:gap-2 relative">
                 <StationSelector
@@ -188,14 +201,18 @@ export function SearchForm({
                             type="date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
+                            onKeyDown={(e) => e.preventDefault()} // 🆕 手入力不可（年を数万年にする等のイタズラ防止）
+                            min={new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date())}
                             max={(() => {
                                 const d = new Date();
                                 d.setDate(d.getDate() + 7);
-                                return d.toISOString().split('T')[0];
+                                return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
                             })()}
-                            className="w-full input-field p-3 text-sm"
+                            className={`w-full input-field p-3 text-sm ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
                         />
+                        {!isDateValid(date) && (
+                            <p className="text-[10px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
+                        )}
                     </div>
                     <div>
                         <label className="section-label flex items-center gap-1 mb-1">
@@ -242,8 +259,8 @@ export function SearchForm({
             {/* 予測ボタン */}
             <button
                 type="submit"
-                disabled={!departureStation || !arrivalStation || isLoading}
-                className="w-full btn-primary py-3.5 text-base"
+                disabled={!departureStation || !arrivalStation || !isDateValid(date) || isLoading}
+                className="w-full btn-primary py-3.5 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
             >
                 {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

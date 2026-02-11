@@ -286,18 +286,20 @@ export default function Home() {
               <HourlyRiskChart data={riskTrend} />
             )}
 
-            {/* 状況報告 */}
-            <ReportButtons
-              routeId={selectedRouteId}
-              routeName={getRouteById(selectedRouteId)?.name || ''}
-              onReport={handleReport}
-              counts={realtimeStatus?.last15minCounts ? {
-                stopped: realtimeStatus.last15minCounts.stopped,
-                delayed: realtimeStatus.last15minCounts.delayed, // 🆕
-                crowded: realtimeStatus.last15minCounts.crowded, // 🆕
-                resumed: realtimeStatus.last15minCounts.resumed
-              } : undefined}
-            />
+            {/* 状況報告（当日のみ表示） */}
+            {date === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date()) && (
+              <ReportButtons
+                routeId={selectedRouteId}
+                routeName={getRouteById(selectedRouteId)?.name || ''}
+                onReport={handleReport}
+                counts={realtimeStatus?.last15minCounts ? {
+                  stopped: realtimeStatus.last15minCounts.stopped,
+                  delayed: realtimeStatus.last15minCounts.delayed, // 🆕
+                  crowded: realtimeStatus.last15minCounts.crowded, // 🆕
+                  resumed: realtimeStatus.last15minCounts.resumed
+                } : undefined}
+              />
+            )}
 
             {/* 代替ルート提案 */}
             {prediction.probability >= 30 && (
