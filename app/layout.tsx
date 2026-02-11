@@ -100,12 +100,15 @@ export const viewport: Viewport = {
 
 import { PremiumProvider } from '@/contexts/premium-context';
 import { PremiumPromoBanner } from '@/components/premium-promo-banner';
+import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID; // 🆕 GA4測定ID
+
   return (
     <html lang="ja">
       <head>
@@ -208,6 +211,7 @@ export default function RootLayout({
         </PremiumProvider>
         */}
         {children}
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
