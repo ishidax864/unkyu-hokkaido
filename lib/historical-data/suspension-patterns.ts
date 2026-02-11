@@ -24,23 +24,65 @@ export const HISTORICAL_PATTERNS: HistoricalPattern[] = [
         id: 'disaster-snow-sapporo',
         label: '札幌圏災害級大雪（2022年2月型）',
         conditions: {
-            snowDepth: { min: 40 }, // 24時間で40cm以上など
-            snowfallHourly: { min: 5 }, // 1時間に5cm以上が続く
+            snowDepth: { min: 40 },
+            snowfallHourly: { min: 5 },
         },
         consequences: {
             suspensionScale: 'all',
-            typicalDurationHours: 24, // 実質丸1日止まることが多い
-            recoveryTendency: 'next-day',
-            advice: '過去の事例では、このクラスの大雪は終日運休となり、運転再開は早くても「翌日の朝」以降でした。無理に駅で待機せず、他の移動手段か宿泊を検討してください。',
+            typicalDurationHours: 48,
+            recoveryTendency: 'slow',
+            advice: '過去の2022年2月大雪では、札幌圏の全列車が2日間にわたり運休しました。除雪が追いつかず、再開後も数日はダイヤが混乱します。無理な移動は避け、早めの代替手段確保を。',
         },
-        examples: ['2022年2月6日', '2026年1月25日'],
+        examples: ['2022年2月6日', '2022年2月21日'],
+    },
+    {
+        id: 'explosive-cyclogenesis',
+        label: '猛烈な発達を遂げた爆弾低気圧（2014年12月型）',
+        conditions: {
+            windGust: { min: 35 },
+            isStorm: true,
+        },
+        consequences: {
+            suspensionScale: 'all',
+            typicalDurationHours: 24,
+            recoveryTendency: 'slow',
+            advice: '2014年の記録的低気圧では、全道で数日間にわたり交通がストップし、数千人が駅などで足止めされました。猛吹雪による視界ゼロ（ホワイトアウト）の危険があるため、命を守る行動を優先してください。',
+        },
+        examples: ['2014年12月17日', '2015年1月19日'],
+    },
+    {
+        id: 'typhoon-multi-hit',
+        label: '連続台風・記録的大雨（2016年8月型）',
+        conditions: {
+            // 24時間降水量150mm以上目安
+        },
+        consequences: {
+            suspensionScale: 'all',
+            typicalDurationHours: 72,
+            recoveryTendency: 'slow',
+            advice: '2016年の連続台風では、橋梁流出や土砂流入により、石勝線・根室線などが数ヶ月にわたり不通となりました。大雨による地盤緩みは雨が止んだ後も危険が続くため、長期的な運休を覚悟する必要があります。',
+        },
+        examples: ['2016年8月17日(台風7号/11号/9号/10号)'],
+    },
+    {
+        id: 'record-intense-snow',
+        label: '短時間記録的大雪（2016年12月型）',
+        conditions: {
+            snowfallHourly: { min: 10 },
+        },
+        consequences: {
+            suspensionScale: 'all',
+            typicalDurationHours: 12,
+            recoveryTendency: 'fast',
+            advice: '短時間で50cm以上の雪が積もる「ドカ雪」パターンです。駅や線路の除雪が追いつかず、突発的な運転見合わせが発生します。雪のピークが過ぎれば数時間で再開しますが、駅の混雑に注意してください。',
+        },
+        examples: ['2016年12月22日(新千歳空港欠航100便超)'],
     },
     {
         id: 'heavy-wind-low-pressure',
         label: '発達した低気圧による暴風（2023年2月型）',
         conditions: {
             windGust: { min: 25 },
-            windSpeed: { min: 20 },
         },
         consequences: {
             suspensionScale: 'all',
@@ -48,49 +90,45 @@ export const HISTORICAL_PATTERNS: HistoricalPattern[] = [
             recoveryTendency: 'slow',
             advice: '過去の事例では、風速25m/sを超えると安全確保のため運転見合わせとなりました。風のピークが過ぎるまで数時間は再開されません。地下鉄などは動いている可能性があります。',
         },
-        examples: ['2023年2月1日', '2026年1月19日'],
+        examples: ['2023年2月1日', '2024年1月15日'],
+    },
+    {
+        id: 'spring-storm',
+        label: '春の嵐・急速な融雪（3月-5月型）',
+        conditions: {},
+        consequences: {
+            suspensionScale: 'partial',
+            typicalDurationHours: 4,
+            recoveryTendency: 'fast',
+            advice: '春特有の低気圧による強風や、急速な融雪による線路下の地盤緩み、飛来物による架線トラブルが発生しやすい時期です。突発的な遅延や一部運休に注意してください。',
+        },
+        examples: ['2024年3月20日', '2024年4月9日'],
     },
     {
         id: 'night-snow-removal',
         label: '除雪作業のための計画運休',
         conditions: {
-            snowfallHourly: { min: 3 }, // 断続的な雪
+            snowfallHourly: { min: 3 },
         },
         consequences: {
             suspensionScale: 'partial',
-            typicalDurationHours: 12, // 夜間〜翌朝
+            typicalDurationHours: 12,
             recoveryTendency: 'next-day',
             advice: '大雪予報のため、除雪作業時間を確保するための「計画運休（最終列車の繰り上げ等）」が実施される可能性があります。夜間の移動は早めに行動してください。',
         },
-        examples: ['2026年1月28日'],
+        examples: ['2022年1月', '2024年1月'],
     },
     {
         id: 'autumn-deer-collision',
         label: '秋季エゾシカ多発時期（10-12月夕方）',
-        conditions: {
-            // 条件は季節・時間帯（ロジック側で判定）
-        },
+        conditions: {},
         consequences: {
             suspensionScale: 'delay',
-            typicalDurationHours: 2, // 処理に2時間程度
+            typicalDurationHours: 2,
             recoveryTendency: 'fast',
             advice: '10月〜12月の夕方（16時〜20時）はエゾシカ衝突事故が年間で最も多い時間帯です。急な急停車や30分〜2時間程度の遅れが発生する確率が高いです。',
         },
         examples: ['2020年10月', '2023年11月'],
-    },
-    {
-        id: 'heavy-rain-typhoon',
-        label: '秋季台風・大雨（2022年8月型）',
-        conditions: {
-            // 降水量
-        },
-        consequences: {
-            suspensionScale: 'all',
-            typicalDurationHours: 12,
-            recoveryTendency: 'slow',
-            advice: '過去の事例では、この規模の大雨（土砂流入リスク）により始発から終日運休となりました。雨が止んでも点検に半日以上かかることがあります。',
-        },
-        examples: ['2022年8月16日', '2021年10月20日'],
     },
 ];
 
@@ -121,27 +159,42 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
 
     // 優先度順にチェック
 
-    // 1. 災害級大雪 (季節問わず、降雪量で判定)
+    // 1. 爆弾低気圧 (猛烈な暴風: 瞬間35m/s以上)
+    if (effectiveGust >= 35) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'explosive-cyclogenesis') || null;
+    }
+
+    // 2. 連続台風・記録的大雨 (24h降水量または現在降水量で判定)
+    if (rain >= 40 || ((month >= 8 && month <= 10) && rain >= 25)) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'typhoon-multi-hit') || null;
+    }
+
+    // 3. 短時間記録的大雪 (10cm/h以上)
+    if (snow >= 10) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'record-intense-snow') || null;
+    }
+
+    // 4. 災害級大雪 (5cm/h以上)
     if (snow >= 5) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'disaster-snow-sapporo') || null;
     }
 
-    // 2. 秋季台風・大雨 (8-10月, 30mm/h以上)
-    if ((month >= 8 && month <= 10) && rain >= 30) {
-        return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-rain-typhoon') || null;
-    }
-
-    // 3. 暴風 (季節問わず、有効最大風速33m/s以上)
-    if (effectiveGust >= 35 || wind >= 33) {
+    // 5. 発達した低気圧による暴風 (25m/s以上)
+    if (effectiveGust >= 25 || wind >= 20) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-wind-low-pressure') || null;
     }
 
-    // 4. エゾシカ (10-12月, 16-20時)
+    // 6. 春の嵐 (3-5月, 15m/s以上)
+    if ((month >= 3 && month <= 5) && effectiveGust >= 20) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'spring-storm') || null;
+    }
+
+    // 7. エゾシカ (10-12月, 16-20時)
     if ((month >= 10 && month <= 12) && (hour >= 16 && hour <= 20)) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'autumn-deer-collision') || null;
     }
 
-    // 5. 断続的な雪（冬期夜間運休リスク）
+    // 8. 断続的な雪（冬期夜間運休リスク）
     if (snow >= 3) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'night-snow-removal') || null;
     }
