@@ -97,12 +97,6 @@ https://unkyu-hokkaido.jp
         window.open(url, '_blank');
     };
 
-    // リスクに応じた色
-    const getRiskBgColor = () => {
-        if (prediction.probability >= 50) return 'bg-red-50 border-red-200';
-        if (prediction.probability >= 20) return 'bg-amber-50 border-amber-200';
-        return 'bg-green-50 border-green-200';
-    };
 
     return (
         <div className="card p-4 space-y-4">
@@ -150,13 +144,6 @@ https://unkyu-hokkaido.jp
                 </button>
             )}
 
-            {/* プレビュー (折りたたみ可能にしても良いが、一旦表示) */}
-            <div className={`p-3 rounded-lg border ${getRiskBgColor()} opacity-60 text-[10px]`}>
-                <div className="font-bold flex justify-between">
-                    <span>{departureStation} → {arrivalStation}</span>
-                    <span>{prediction.probability}% {prediction.status}</span>
-                </div>
-            </div>
         </div>
     );
 }

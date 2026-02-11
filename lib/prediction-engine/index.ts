@@ -3,7 +3,7 @@ import { logger } from '../logger';
 import { CrowdsourcedStatus } from '../user-reports';
 import { JROperationStatus } from '../jr-status';
 import { WeatherForecast } from '../types';
-import { findHistoricalMatch } from '../historical-data/suspension-patterns';
+import { findHistoricalMatch, HistoricalPattern } from '../historical-data/suspension-patterns';
 
 // Refactored Modules
 import {
@@ -36,8 +36,8 @@ import {
     COMPOUND_RISK_MULTIPLIER
 } from './constants';
 
-import { predictRecoveryTime, analyzeWeatherTrend } from '../recovery-prediction';
-import { calculateResumptionTime } from './resumption';
+import { analyzeWeatherTrend } from '../recovery-prediction';
+import { calculateResumptionTime, matchTendencyToText } from './resumption';
 
 // ==========================================
 // Main Prediction Function
@@ -47,10 +47,22 @@ import { calculateResumptionTime } from './resumption';
 export function calculateSuspensionRisk(input: PredictionInput): PredictionResult {
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
 
+    // 0. 過去事例の事前抽出 (Early matching for dependency injections)
+    const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
+    const enrichedInput = { ...input, historicalMatch };
+
     // 1. リスク要因の包括的評価
-    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(input, vulnerability, RISK_FACTORS);
+    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS);
     let totalScore = bScore;
     const reasonsWithPriority = [...bReasons];
+
+    // 🆕 過去事例に基づく理由の追加（evaluateRiskFactors内でカバーされない広範な理由）
+    if (historicalMatch) {
+        reasonsWithPriority.push({
+            reason: `【過去事例】${historicalMatch.label}に近い気象条件です。`,
+            priority: 1,
+        });
+    }
 
     logger.debug('Risk factors evaluated', {
         routeId: input.routeId,
@@ -91,18 +103,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         logger.debug('Applied compound multiplier', { originalScore: totalScore / COMPOUND_RISK_MULTIPLIER, newScore: totalScore });
     }
 
-    // 3.5 過去の災害事例との照合
-    if (input.weather) {
-        const historicalMatch = findHistoricalMatch(input.weather);
-        if (historicalMatch) {
-            // 過去事例に該当する場合、スコアを大幅加算
-            totalScore += 20; // ほぼ確実に運休レベルへ
-            reasonsWithPriority.push({
-                reason: `【過去事例】${historicalMatch.label}に近い気象条件です。このケースでは${historicalMatch.consequences.typicalDurationHours}時間以上の運休が発生しました`,
-                priority: 1, // 最優先
-            });
-        }
-    }
 
     // 4. 時間帯・季節補正
     const timeMultiplier = getTimeMultiplier(input.targetTime);
@@ -174,49 +174,48 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             const rain = input.weather.precipitation || 0;
             suspensionReason = determineSuspensionReason(wind, snow, rain);
 
-            const recoveryPrediction = predictRecoveryTime(weatherTrend, suspensionReason || '');
-
-            estimatedRecoveryHours = recoveryPrediction.estimatedHours;
-            estimatedRecoveryTime = recoveryPrediction.estimatedTime;
-            recoveryRecommendation = recoveryPrediction.recommendationMessage;
 
 
-            // 🆕 New Resumption Logic (Standardized)
+
+            // 🆕 Unified Resumption Logic
             if (input.weather && input.weather.surroundingHours) {
-                // Filter to only consider future/current hours relative to targetTime
-                // This prevents "Resumed at 11:00" when searching for "12:00"
                 const futureForecasts = (input.targetTime && input.weather.surroundingHours.length > 0)
                     ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= (input.targetTime || '00:00'))
                     : input.weather.surroundingHours;
 
                 if (futureForecasts.length > 0) {
-                    const resumption = calculateResumptionTime(futureForecasts, input.routeId);
+                    // 全体予報の中からピーク気象を特定して過去事例にマッチさせる
+                    const peakSnow = Math.max(...input.weather.surroundingHours.map(h => h.snowfall || 0));
+                    const peakWind = Math.max(...input.weather.surroundingHours.map(h => h.windSpeed || 0));
+                    const peakGust = Math.max(...input.weather.surroundingHours.map(h => h.windGust || 0));
+                    const repWeather = input.weather.surroundingHours.find(h => (h.snowfall || 0) === peakSnow) || input.weather;
+
+                    const matchForResumption = findHistoricalMatch({
+                        ...repWeather,
+                        windSpeed: peakWind,
+                        windGust: peakGust
+                    });
+
+                    let eventStartHour = 6;
+                    if (input.jrStatus && input.jrStatus.updatedAt) {
+                        const updateTime = input.jrStatus.updatedAt.match(/(\d{1,2}):(\d{2})/);
+                        if (updateTime) eventStartHour = parseInt(updateTime[1]);
+                    }
+
+                    const resumption = calculateResumptionTime(futureForecasts, input.routeId, matchForResumption, eventStartHour, input.targetDate);
+
                     if (resumption.estimatedResumption) {
                         estimatedRecoveryTime = resumption.estimatedResumption;
                         estimatedRecoveryHours = resumption.requiredBufferHours;
-                        recoveryRecommendation = `${resumption.reason}のため、${resumption.estimatedResumption}頃の運転再開が見込まれます。`;
+                        recoveryRecommendation = resumption.reason;
 
-                        // Override existing logic
                         if (isCurrentlySuspended) {
-                            reasons.unshift(`【復旧予測】${recoveryRecommendation}`);
+                            reasons.unshift(`【復旧予測】${resumption.reason}`);
+                            if (matchForResumption) {
+                                reasons.unshift(`【経験則】${matchForResumption.label}のパターンに合致。`);
+                            }
                         }
                     }
-                }
-            }
-
-            // 復旧予測理由をトップに追加（実際に運休している場合のみ）
-            if (isCurrentlySuspended && !estimatedRecoveryTime) {
-                const recoveryReasons = recoveryPrediction.reasoning.map((r: string) => r);
-                reasons.unshift(...recoveryReasons);
-            }
-
-            // 🆕 過去事例に基づくアドバイスの上書き
-            const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
-            if (historicalMatch) {
-                recoveryRecommendation = historicalMatch.consequences.advice;
-                if (historicalMatch.consequences.recoveryTendency === 'next-day') {
-                    estimatedRecoveryTime = '翌日朝以降';
-                    estimatedRecoveryHours = 24;
                 }
             }
         } catch (e) {

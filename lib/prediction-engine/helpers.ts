@@ -178,7 +178,10 @@ export function evaluateRiskFactors(
     // 各リスク要因を評価
     for (const factor of riskFactors) {
         if (factor.condition(input, vuln)) {
-            const weight = factor.weight(input, vuln);
+            // overrideWeightが定義されており、かつ値を返す場合はそれを使用する（過去事例マッチング等）
+            const override = factor.overrideWeight ? factor.overrideWeight(input, vuln) : null;
+            const weight = (override !== null) ? override : factor.weight(input, vuln);
+
             const score = weight * vuln.vulnerabilityScore;
             totalScore += score;
 
@@ -342,19 +345,19 @@ interface ConfidenceFilterResult {
  * - スコアが50未満（強い信号ではない）
  * - 平均風速 < 15m/s
  * - 突風 < 25m/s
- * - 降雪 < 2cm
+ * - 降雪 < 1cm (1cmでも遅延リスクを認める)
  */
 export function applyConfidenceFilter(params: ConfidenceFilterParams): ConfidenceFilterResult {
     const { probability, totalScore, windSpeed, windGust, snowfall } = params;
 
     // フィルタ適用条件をチェック
     const isInFilterRange = probability >= 30 && probability < 60;
-    const isLowScore = totalScore < 50;
-    const isWeakWeather = windSpeed < 15 && windGust < 25 && snowfall < 2.0;
+    const isLowScore = totalScore < 40; // 抑制をより限定的に（40点以上は信じる）
+    const isWeakWeather = windSpeed < 15 && windGust < 25 && snowfall < 1.0;
 
     if (isInFilterRange && isLowScore && isWeakWeather) {
         return {
-            filteredProbability: 25,
+            filteredProbability: probability * 0.8, // 25固定ではなく、現在の値を2割抑制する程度に
             wasFiltered: true,
             reason: `Weak weather signal (wind: ${windSpeed}m/s, gust: ${windGust}m/s, snow: ${snowfall}cm)`
         };

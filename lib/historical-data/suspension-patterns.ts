@@ -119,6 +119,36 @@ export const HISTORICAL_PATTERNS: HistoricalPattern[] = [
         examples: ['2022年1月', '2024年1月'],
     },
     {
+        id: 'blizzard-coastal',
+        label: '沿岸部暴風雪（オホーツク・日本海沿岸型）',
+        conditions: {
+            windSpeed: { min: 18 },
+            snowfallHourly: { min: 2 },
+        },
+        consequences: {
+            suspensionScale: 'all',
+            typicalDurationHours: 12,
+            recoveryTendency: 'slow',
+            advice: '沿岸部特有の猛烈な吹き溜まりにより、除雪作業が難航するパターンです。風が止んだ後も、線路の除雪に半日以上を要することがあります。',
+        },
+        examples: ['石北線', '宗谷線', '根室線（花咲線）'],
+    },
+    {
+        id: 'heavy-snow-inland',
+        label: '内陸部集中豪雪（空知・上川型）',
+        conditions: {
+            snowDepth: { min: 30 },
+            snowfallHourly: { min: 5 },
+        },
+        consequences: {
+            suspensionScale: 'all',
+            typicalDurationHours: 18,
+            recoveryTendency: 'slow',
+            advice: '内陸部の集中豪雪により、駅構内やポイントの除雪に長時間を要します。特に岩見沢周辺や旭川周辺での大規模な運休が発生しやすい事例です。',
+        },
+        examples: ['函館本線（岩見沢〜旭川）', '宗谷本線'],
+    },
+    {
         id: 'autumn-deer-collision',
         label: '秋季エゾシカ多発時期（10-12月夕方）',
         conditions: {},
@@ -159,8 +189,8 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
 
     // 優先度順にチェック
 
-    // 1. 爆弾低気圧 (猛烈な暴風: 瞬間35m/s以上)
-    if (effectiveGust >= 35) {
+    // 1. 爆弾低気圧 (猛烈な暴風: 瞬間40m/s以上、または平均25m/s以上)
+    if (effectiveGust >= 40 || wind >= 25) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'explosive-cyclogenesis') || null;
     }
 
@@ -179,9 +209,19 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
         return HISTORICAL_PATTERNS.find(p => p.id === 'disaster-snow-sapporo') || null;
     }
 
-    // 5. 発達した低気圧による暴風 (25m/s以上)
-    if (effectiveGust >= 25 || wind >= 20) {
+    // 5. 発達した低気圧による暴風 (瞬間30m/s以上、または平均20m/s以上)
+    if (effectiveGust >= 30 || wind >= 20) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-wind-low-pressure') || null;
+    }
+
+    // 🆕 沿岸部暴風雪の追加判定
+    if (wind >= 18 && snow >= 2) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'blizzard-coastal') || null;
+    }
+
+    // 🆕 内陸部集中豪雪の追加判定
+    if (snow >= 5 && (month === 1 || month === 2)) {
+        return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-snow-inland') || null;
     }
 
     // 6. 春の嵐 (3-5月, 15m/s以上)

@@ -1,0 +1,242 @@
+[
+  {
+    "date": "2023-12-22",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-12-23",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-01-25",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "N/A",
+    "buffer": 0,
+    "reason": "気象状況の回復が見込まれません",
+    "isNightResumption": null
+  },
+  {
+    "date": "2023-12-22",
+    "route": "jr-hokkaido.soya",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-02-01",
+    "route": "jr-hokkaido.soya",
+    "resumption": "09:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-02-07",
+    "route": "jr-hokkaido.soya",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-12-22",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-01-24",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-12-22",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-01-25",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "12:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-12-22",
+    "route": "jr-hokkaido.nemuro",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-03-20",
+    "route": "jr-hokkaido.nemuro",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2025-01-25",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-03-19",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-01-25",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "23:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-22",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-23",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-01-25",
+    "route": "jr-hokkaido.sekihoku",
+    "resumption": "09:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-22",
+    "route": "jr-hokkaido.soya",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-02-01",
+    "route": "jr-hokkaido.soya",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-02-07",
+    "route": "jr-hokkaido.soya",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-22",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-01-24",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "05:00",
+    "buffer": 2,
+    "reason": "安全確認後、始発（05:00頃）より再開見込み",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-22",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-01-25",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-12-22",
+    "route": "jr-hokkaido.nemuro",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-03-20",
+    "route": "jr-hokkaido.nemuro",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2024-01-25",
+    "route": "jr-hokkaido.chitose",
+    "resumption": "12:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2023-03-19",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  },
+  {
+    "date": "2022-01-25",
+    "route": "jr-hokkaido.hakodate-main",
+    "resumption": "11:00",
+    "buffer": 2,
+    "reason": "安全確認・点検（2時間程度）",
+    "isNightResumption": false
+  }
+]

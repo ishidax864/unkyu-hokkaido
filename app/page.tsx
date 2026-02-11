@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { SearchForm } from '@/components/search-form';
 import { PredictionResultCard } from '@/components/prediction-result';
 import { ReportButtons } from '@/components/report-buttons';
@@ -374,6 +375,10 @@ export default function Home() {
           <div className="mt-8 text-[10px] text-[var(--muted)] opacity-70 space-y-2">
             <div>
               <p>運営: 株式会社アンドアール</p>
+              <div className="flex justify-center gap-4 my-2">
+                <Link href="/terms" className="hover:text-[var(--primary)] transition-colors">利用規約</Link>
+                <Link href="/privacy" className="hover:text-[var(--primary)] transition-colors">プライバシーポリシー</Link>
+              </div>
               <a href="mailto:info@andr.ltd" className="hover:text-[var(--primary)] transition-colors">
                 お問い合わせ: info@andr.ltd
               </a>

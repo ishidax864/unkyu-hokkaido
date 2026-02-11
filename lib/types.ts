@@ -198,8 +198,8 @@ export interface PredictionInput {
     reportCount: number;
     last15minCounts?: {
       stopped: number;
-      delayed: number; // 🆕
-      crowded: number; // 🆕
+      delayed: number;
+      crowded: number;
       resumed: number;
       total: number;
     };
@@ -210,13 +210,15 @@ export interface PredictionInput {
     recentTrend: 'increasing' | 'decreasing' | 'stable';
     totalReports: number;
   } | null;
-  timetableTrain?: any; // To avoid circular dependency with Timetable types for now, or use loose typing
+  historicalMatch?: any | null;
+  timetableTrain?: any;
 }
 
 export interface RiskFactor {
   condition: (input: PredictionInput, vuln: VulnerabilityData) => boolean;
   weight: (input: PredictionInput, vuln: VulnerabilityData) => number;
   reason: (input: PredictionInput) => string;
+  overrideWeight?: (input: PredictionInput, vuln: VulnerabilityData) => number | null; // 🆕 過去事例に基づく強制的な重み付け
   priority: number; // 表示優先度（低い方が上）
 }
 

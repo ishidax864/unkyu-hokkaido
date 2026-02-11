@@ -114,14 +114,14 @@ export const LIGHT_SNOW_SCORE = 5;
 /** 中程度の積雪の最小値（cm/h） */
 export const MODERATE_SNOW_MIN = 2;
 
-/** 中程度の積雪の基本スコア */
-export const MODERATE_SNOW_BASE_SCORE = 15;
+/** 中程度の積雪の基本スコア (15 -> 25) */
+export const MODERATE_SNOW_BASE_SCORE = 25;
 
-/** 中程度の積雪のスコア係数（cm単位） */
-export const MODERATE_SNOW_COEFFICIENT = 10;
+/** 中程度の積雪のスコア係数（cm単位） (10 -> 15) */
+export const MODERATE_SNOW_COEFFICIENT = 15;
 
-/** 大雪（閾値以上）のベースリスクスコア */
-export const HEAVY_SNOW_BASE_SCORE = 60;
+/** 大雪（閾値以上）のベースリスクスコア (60 -> 65) */
+export const HEAVY_SNOW_BASE_SCORE = 65;
 
 /** 大雪の超過分係数（1cm/h増えるごとに加算） */
 export const HEAVY_SNOW_EXCESS_COEFFICIENT = 10;
@@ -136,17 +136,17 @@ export const SUSPENSION_SNOW_THRESHOLD = 15;
 // 積雪深（累積）関連の閾値 🆕
 // =====================
 
-/** 中程度の積雪深（cm） - 遅延リスク (15 -> 30) */
-export const MODERATE_SNOW_DEPTH_THRESHOLD = 30;
+/** 中程度の積雪深（cm） - 遅延リスク (30 -> 15) */
+export const MODERATE_SNOW_DEPTH_THRESHOLD = 15;
 
-/** 中程度の積雪深スコア */
-export const MODERATE_SNOW_DEPTH_SCORE = 13;
+/** 中程度の積雪深スコア (13 -> 20) */
+export const MODERATE_SNOW_DEPTH_SCORE = 20;
 
-/** 危険な積雪深（cm） - 運休リスク (45 -> 80) */
-export const CRITICAL_SNOW_DEPTH_THRESHOLD = 80;
+/** 危険な積雪深（cm） - 運休リスク (80 -> 40) */
+export const CRITICAL_SNOW_DEPTH_THRESHOLD = 40;
 
-/** 危険な積雪深スコア */
-export const CRITICAL_SNOW_DEPTH_SCORE = 40;
+/** 危険な積雪深スコア (40 -> 50) */
+export const CRITICAL_SNOW_DEPTH_SCORE = 50;
 
 /** 地吹雪（吹き溜まり）リスクの風速閾値（m/s） */
 export const SNOW_DRIFT_WIND_THRESHOLD = 10;
@@ -229,7 +229,7 @@ export const USER_CONSENSUS_MIN_REPORTS = 5;
 // =====================
 
 /** 履歴データの重み（全体に対する割合） */
-export const HISTORICAL_DATA_WEIGHT = 0.15;
+export const HISTORICAL_DATA_WEIGHT = 0.25;
 
 /** 運休増加傾向の場合の追加スコア */
 export const TREND_INCREASING_BONUS = 3;
@@ -251,14 +251,14 @@ export const MAX_DISPLAY_REASONS = 5;
 // 確率と状態の対応
 // =====================
 
-/** 運休判定の最小確率（%）- ユーザー要望により厳格化 (70 -> 80) */
-export const STATUS_CANCELLED_THRESHOLD = 80;
+/** 運休判定の最小確率（%）- ユーザー要望により厳格化 (80 -> 70: 大規模検証に基づき微調整) */
+export const STATUS_CANCELLED_THRESHOLD = 70;
 
-/** 運転見合わせ判定の最小確率（%）- ユーザー要望により40-70%を遅延/可能性とするため引き上げ (50 -> 75) */
-export const STATUS_SUSPENDED_THRESHOLD = 75;
+/** 運転見合わせ判定の最小確率（%） (75 -> 65) */
+export const STATUS_SUSPENDED_THRESHOLD = 65;
 
-/** 遅延判定の最小確率（%）- 範囲拡大 (20 -> 30) */
-export const STATUS_DELAYED_THRESHOLD = 30;
+/** 遅延判定の最小確率（%） (30 -> 25) */
+export const STATUS_DELAYED_THRESHOLD = 25;
 
 // =====================
 // 天候影響レベルの閾値

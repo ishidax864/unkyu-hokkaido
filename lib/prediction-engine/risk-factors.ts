@@ -160,6 +160,13 @@ export const RISK_FACTORS: RiskFactor[] = [
     {
         condition: (input) => input.weather?.warnings.some(w => w.type === '暴風警報') ?? false,
         weight: () => STORM_WARNING_SCORE,
+        overrideWeight: (input) => {
+            // 過去事例に暴風系がマッチしている場合、100%運休(100点)に引き上げる
+            if (input.historicalMatch?.id === 'explosive-cyclogenesis' || input.historicalMatch?.id === 'heavy-wind-low-pressure') {
+                return 100;
+            }
+            return null;
+        },
         reason: () => '暴風警報が発令されています',
         priority: 1,
     },
@@ -167,6 +174,13 @@ export const RISK_FACTORS: RiskFactor[] = [
     {
         condition: (input) => input.weather?.warnings.some(w => w.type === '大雪警報') ?? false,
         weight: () => HEAVY_SNOW_WARNING_SCORE,
+        overrideWeight: (input) => {
+            // 過去事例に大雪系がマッチしている場合、100%運休に引き上げる
+            if (input.historicalMatch?.id === 'disaster-snow-sapporo' || input.historicalMatch?.id === 'record-intense-snow') {
+                return 100;
+            }
+            return null;
+        },
         reason: () => '大雪警報が発令されています',
         priority: 2,
     },
@@ -241,6 +255,12 @@ export const RISK_FACTORS: RiskFactor[] = [
             const snow = input.weather?.snowfall ?? 0;
             const excess = snow - vuln.snowThreshold;
             return HEAVY_SNOW_BASE_SCORE + Math.min(excess * HEAVY_SNOW_EXCESS_COEFFICIENT, HEAVY_SNOW_MAX_BONUS);
+        },
+        overrideWeight: (input) => {
+            // 過去事例マッチがあれば強引にスコアを上げる
+            if (input.historicalMatch?.id === 'record-intense-snow') return 100;
+            if (input.historicalMatch?.id === 'disaster-snow-sapporo') return 90;
+            return null;
         },
         reason: (input) => `積雪${input.weather?.snowfall}cmの予報（除雪作業により遅延見込み）`,
         priority: 5,
