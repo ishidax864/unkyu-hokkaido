@@ -11,6 +11,7 @@ import {
     Send
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
 interface ReportButtonsProps {
     routeId: string;
@@ -51,6 +52,13 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
         if (!selectedType) return;
 
         setIsSubmitting(true);
+        // 🆕 GA4イベント送信
+        sendGAEvent('event', 'report_submit', {
+            report_type: selectedType,
+            route_name: routeName,
+            has_comment: (!!comment).toString()
+        });
+
         await new Promise(resolve => setTimeout(resolve, 500));
 
         onReport(selectedType, comment || undefined);

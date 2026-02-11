@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { PredictionResult } from '@/lib/types';
 import { Share2, Copy, Check, Twitter, MessageCircle } from 'lucide-react';
+import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
 interface ShareCardProps {
     prediction: PredictionResult;
@@ -47,6 +48,8 @@ https://unkyu-hokkaido.jp
         try {
             await navigator.clipboard.writeText(text);
             setCopied(true);
+            // 🆕 GA4イベント送信
+            sendGAEvent('event', 'share', { method: 'copy_clipboard', route: routeName });
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error('Failed to copy:', err);
@@ -64,6 +67,8 @@ https://unkyu-hokkaido.jp
                     text,
                     url: window.location.href,
                 });
+                // 🆕 GA4イベント送信
+                sendGAEvent('event', 'share', { method: 'web_share_api', route: routeName });
             } catch (err) {
                 if ((err as Error).name !== 'AbortError') {
                     console.error('Share failed:', err);
@@ -78,6 +83,8 @@ https://unkyu-hokkaido.jp
     const shareToTwitter = () => {
         const text = encodeURIComponent(getShareText());
         const url = `https://twitter.com/intent/tweet?text=${text}`;
+        // 🆕 GA4イベント送信
+        sendGAEvent('event', 'share', { method: 'twitter', route: routeName });
         window.open(url, '_blank', 'width=550,height=420');
     };
 
@@ -85,6 +92,8 @@ https://unkyu-hokkaido.jp
     const shareToLine = () => {
         const text = encodeURIComponent(getShareText());
         const url = `https://social-plugins.line.me/lineit/share?text=${text}`;
+        // 🆕 GA4イベント送信
+        sendGAEvent('event', 'share', { method: 'line', route: routeName });
         window.open(url, '_blank');
     };
 

@@ -23,6 +23,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useRouteSearch } from '@/hooks/useRouteSearch';
 import { FavoriteSelector } from '@/components/favorite-selector';
 import { Cloud, AlertTriangle, Train, ArrowRight, RefreshCw, Radio, ExternalLink, ChevronRight, MapPin, Star } from 'lucide-react';
+import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
 import { getWeatherIcon } from '@/lib/weather-utils';
 
@@ -42,8 +43,13 @@ export default function Home() {
     riskTrend,
     realtimeStatus, // 🆕
     handleSearch,
-    refreshRealtimeStatus // 🆕
+    refreshRealtimeStatus, // 🆕
   } = useRouteSearch();
+
+  const handleRefresh = () => {
+    sendGAEvent('event', 'refresh_status', { route: selectedRouteId });
+    refreshRealtimeStatus();
+  };
 
   // 初期化ロジック（天気、現在地、警報、時刻）
   const {
@@ -137,7 +143,7 @@ export default function Home() {
                   今日の天気（{locationName}）
                   {userLocation && <MapPin className="w-3 h-3 text-[var(--primary)]" aria-hidden="true" />}
                   {isWeatherLoading && (
-                    <RefreshCw className="w-3 h-3 animate-spin text-[var(--muted)]" aria-hidden="true" />
+                    <RefreshCw className="w-3 h-3 animate-spin text-[var(--muted)]" aria-hidden="true" onClick={handleRefresh} />
                   )}
                 </h2>
                 <div className="text-xs text-[var(--muted)]">
@@ -188,6 +194,10 @@ export default function Home() {
                 setTimeType('departure');
 
                 // setIsLoading(true); // Hook handles this
+                sendGAEvent('event', 'favorite_select', {
+                  departure: fav.departureName,
+                  arrival: fav.arrivalName
+                });
                 handleSearch(
                   fav.departureId,
                   fav.arrivalId,
@@ -238,9 +248,11 @@ export default function Home() {
                 <button
                   onClick={() => {
                     if (isFavorite(depStation.id, arrStation.id)) {
+                      sendGAEvent('event', 'favorite_remove', { route: `${depStation.name}-${arrStation.name}` });
                       const id = `${depStation.id}-${arrStation.id}`;
                       removeFavorite(id);
                     } else {
+                      sendGAEvent('event', 'favorite_add', { route: `${depStation.name}-${arrStation.name}` });
                       addFavorite(depStation.id, arrStation.id, depStation.name, arrStation.name);
                     }
                   }}

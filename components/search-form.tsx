@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { getStationsByRegion, Station } from '@/lib/hokkaido-data';
 import { Calendar, Clock, ChevronDown, ArrowRight, MapPin, PlayCircle, Timer } from 'lucide-react';
+import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
 interface SearchFormProps {
     onSearch: (
@@ -48,6 +49,14 @@ export function SearchForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (departureStation && arrivalStation) {
+            // 🆕 GA4イベント送信
+            sendGAEvent('event', 'search_prediction', {
+                departure: departureStation.name,
+                arrival: arrivalStation.name,
+                date: date,
+                time: time,
+                timeType: timeType
+            });
             onSearch(departureStation.id, arrivalStation.id, date, time, timeType);
         }
     };
@@ -55,18 +64,29 @@ export function SearchForm({
     // 🆕 現在の日時を設定
     const setCurrentDateTime = () => {
         const now = new Date();
-        setDate(now.toISOString().split('T')[0]);
-        setTime(now.toTimeString().slice(0, 5)); // HH:MM format
-        // 指定なしの場合は出発時刻とする
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().slice(0, 5);
+
+        setDate(dateStr);
+        setTime(timeStr);
         setTimeType('departure');
+
+        // 🆕 GA4イベント送信
+        sendGAEvent('event', 'search_current_location', {
+            is_valid_search: (!!departureStation && !!arrivalStation).toString()
+        });
 
         // 駅が選択されていれば即座に検索実行
         if (departureStation && arrivalStation) {
-            onSearch(departureStation.id, arrivalStation.id,
-                now.toISOString().split('T')[0],
-                now.toTimeString().slice(0, 5),
-                'departure'
-            );
+            sendGAEvent('event', 'search_prediction', {
+                departure: departureStation.name,
+                arrival: arrivalStation.name,
+                date: dateStr,
+                time: timeStr,
+                timeType: 'departure',
+                trigger: 'current_btn'
+            });
+            onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr, 'departure');
         }
     };
 

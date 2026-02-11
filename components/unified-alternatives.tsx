@@ -5,6 +5,7 @@ import { Bus, Car, Train, Coffee, Hotel, ExternalLink, Clock } from 'lucide-reac
 import { Station, getAlternativeRoutes, AlternativeRouteOption, estimateTaxiFare } from '@/lib/hokkaido-data';
 import { getStationFacilities } from '@/lib/alternative-options';
 import { cn } from '@/lib/utils';
+import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
 import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES, PR_LABEL } from '@/lib/user-reports';
 
@@ -122,6 +123,7 @@ export function UnifiedAlternativesCard({
                             href={route.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
                             className={cn(
                                 "block p-4 card border-l-4 transition-all hover:bg-gray-50 active:scale-[0.98]",
                                 route.type === 'subway' ? "border-l-[var(--status-normal)]" :
@@ -164,6 +166,7 @@ export function UnifiedAlternativesCard({
                             href={busAffiliate.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'bus', provider: busAffiliate.name })}
                             className="block p-4 card border-l-4 border-l-blue-400 hover:bg-blue-50/30 transition-all active:scale-[0.98] relative"
                         >
                             <div className="absolute top-2 right-2 flex items-center gap-1">
@@ -191,6 +194,7 @@ export function UnifiedAlternativesCard({
                             href={taxiAffiliate?.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: taxiAffiliate?.name })}
                             className="block p-4 card border-l-4 border-l-[var(--status-warning)] hover:bg-gray-50 transition-all active:scale-[0.98] relative"
                         >
                             <div className="absolute top-2 right-2">
@@ -218,6 +222,7 @@ export function UnifiedAlternativesCard({
                             href={rentalAffiliate?.webUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'rental', provider: rentalAffiliate?.name })}
                             className="block p-4 card border-l-4 border-l-purple-400 hover:bg-gray-50 transition-all active:scale-[0.98] relative"
                         >
                             <div className="absolute top-2 right-2">
