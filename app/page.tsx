@@ -291,11 +291,11 @@ export default function Home() {
               routeId={selectedRouteId}
               routeName={getRouteById(selectedRouteId)?.name || ''}
               onReport={handleReport}
-              counts={realtimeStatus?.last30minCounts ? {
-                stopped: realtimeStatus.last30minCounts.stopped,
-                delayed: realtimeStatus.last30minCounts.delayed, // 🆕
-                crowded: realtimeStatus.last30minCounts.crowded, // 🆕
-                resumed: realtimeStatus.last30minCounts.resumed
+              counts={realtimeStatus?.last15minCounts ? {
+                stopped: realtimeStatus.last15minCounts.stopped,
+                delayed: realtimeStatus.last15minCounts.delayed, // 🆕
+                crowded: realtimeStatus.last15minCounts.crowded, // 🆕
+                resumed: realtimeStatus.last15minCounts.resumed
               } : undefined}
             />
 

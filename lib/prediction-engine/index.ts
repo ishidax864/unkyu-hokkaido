@@ -283,12 +283,12 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         recoveryRecommendation,
         suspensionReason,
         isOfficialOverride, // 🆕
-        crowdStats: input.crowdsourcedStatus?.last30minCounts ? {
-            last30minReportCount: input.crowdsourcedStatus.last30minCounts.total,
-            last30minStopped: input.crowdsourcedStatus.last30minCounts.stopped,
-            last30minDelayed: input.crowdsourcedStatus.last30minCounts.delayed, // 🆕
-            last30minCrowded: input.crowdsourcedStatus.last30minCounts.crowded, // 🆕
-            last30minResumed: input.crowdsourcedStatus.last30minCounts.resumed
+        crowdStats: input.crowdsourcedStatus?.last15minCounts ? {
+            last15minReportCount: input.crowdsourcedStatus.last15minCounts.total,
+            last15minStopped: input.crowdsourcedStatus.last15minCounts.stopped,
+            last15minDelayed: input.crowdsourcedStatus.last15minCounts.delayed, // 🆕
+            last15minCrowded: input.crowdsourcedStatus.last15minCounts.crowded, // 🆕
+            last15minResumed: input.crowdsourcedStatus.last15minCounts.resumed
         } : undefined,
         comparisonData: {
             wind,

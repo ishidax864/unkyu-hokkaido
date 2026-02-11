@@ -35,7 +35,7 @@ export interface CrowdsourcedStatus {
     lastReportAt: string;
     trendingComments: string[];
     source: 'supabase' | 'localStorage';
-    last30minCounts?: {
+    last15minCounts?: {
         stopped: number;
         delayed: number;
         crowded: number;
@@ -149,7 +149,7 @@ export async function saveUserReport(report: Omit<UserReport, 'id' | 'expiresAt'
     const newReport: UserReport = {
         ...report,
         id: generateReportId(),
-        expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
         upvotes: 0,
     };
 
@@ -263,7 +263,7 @@ export function aggregateCrowdsourcedStatus(routeId: string): CrowdsourcedStatus
             : '',
         trendingComments,
         source: 'localStorage',
-        last30minCounts: getRecentCounts(reports, 30),
+        last15minCounts: getRecentCounts(reports, 15),
     };
 }
 
@@ -301,7 +301,7 @@ function buildCrowdsourcedStatus(
             .slice(0, 3)
             .map(r => r.comment!),
         source,
-        last30minCounts: getRecentCountsDB(reports, 30),
+        last15minCounts: getRecentCountsDB(reports, 15),
     };
 }
 

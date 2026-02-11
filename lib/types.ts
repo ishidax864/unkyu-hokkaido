@@ -91,11 +91,11 @@ export interface PredictionResult {
   recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
   suspensionReason?: string;  // 運休の原因
   crowdStats?: {
-    last30minReportCount: number;
-    last30minStopped: number;
-    last30minDelayed: number; // 🆕
-    last30minCrowded: number; // 🆕
-    last30minResumed: number;
+    last15minReportCount: number;
+    last15minStopped: number;
+    last15minDelayed: number; // 🆕
+    last15minCrowded: number; // 🆕
+    last15minResumed: number;
   };
   comparisonData?: { // 🆕 For Route Comparison
     wind: number;
@@ -196,7 +196,7 @@ export interface PredictionInput {
   crowdsourcedStatus?: {
     consensusStatus: ReportType | 'unknown';
     reportCount: number;
-    last30minCounts?: {
+    last15minCounts?: {
       stopped: number;
       delayed: number; // 🆕
       crowded: number; // 🆕

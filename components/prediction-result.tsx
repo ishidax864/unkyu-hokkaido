@@ -83,21 +83,21 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                 </div>
 
                 {/* ユーザー報告（リアルタイム） */}
-                {result.crowdStats && (result.crowdStats.last30minStopped > 0 || result.crowdStats.last30minResumed > 0) && (
+                {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minResumed > 0) && (
                     <div className="mb-4 space-y-2">
-                        {result.crowdStats.last30minStopped > 0 && (
+                        {result.crowdStats.last15minStopped > 0 && (
                             <div className="bg-red-50 text-red-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-red-100 animate-pulse">
                                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minStopped}人</span>が「止まっている」と報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minStopped}人</span>が「止まっている」と報告しています
                                 </span>
                             </div>
                         )}
-                        {result.crowdStats.last30minResumed > 0 && (
+                        {result.crowdStats.last15minResumed > 0 && (
                             <div className="bg-green-50 text-green-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-green-100 animate-pulse">
                                 <CheckCircle className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minResumed}人</span>が「動き出した」と報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minResumed}人</span>が「動き出した」と報告しています
                                 </span>
                             </div>
                         )}
@@ -218,37 +218,37 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
 
             {/* ユーザー報告（リアルタイム） */}
             {
-                result.crowdStats && (result.crowdStats.last30minStopped > 0 || result.crowdStats.last30minDelayed > 0 || result.crowdStats.last30minCrowded > 0 || result.crowdStats.last30minResumed > 0) && (
+                result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minCrowded > 0 || result.crowdStats.last15minResumed > 0) && (
                     <div className="mb-4 space-y-2">
-                        {result.crowdStats.last30minStopped > 0 && (
+                        {result.crowdStats.last15minStopped > 0 && (
                             <div className="bg-red-50 text-red-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-red-100 animate-pulse">
                                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minStopped}人</span>が「止まっている」と報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minStopped}人</span>が「止まっている」と報告しています
                                 </span>
                             </div>
                         )}
-                        {result.crowdStats.last30minDelayed > 0 && (
+                        {result.crowdStats.last15minDelayed > 0 && (
                             <div className="bg-yellow-50 text-yellow-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-yellow-100 animate-pulse">
                                 <Clock className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minDelayed}人</span>が「遅延」を報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minDelayed}人</span>が「遅延」を報告しています
                                 </span>
                             </div>
                         )}
-                        {result.crowdStats.last30minCrowded > 0 && (
+                        {result.crowdStats.last15minCrowded > 0 && (
                             <div className="bg-orange-50 text-orange-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-orange-100 animate-pulse">
                                 <Users className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minCrowded}人</span>が「混雑」を報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minCrowded}人</span>が「混雑」を報告しています
                                 </span>
                             </div>
                         )}
-                        {result.crowdStats.last30minResumed > 0 && (
+                        {result.crowdStats.last15minResumed > 0 && (
                             <div className="bg-green-50 text-green-800 p-3 rounded-lg text-sm flex items-center gap-2 border border-green-100 animate-pulse">
                                 <CheckCircle className="w-4 h-4 flex-shrink-0" />
                                 <span>
-                                    直近30分で<span className="font-bold text-lg mx-1">{result.crowdStats.last30minResumed}人</span>が「動き出した」と報告しています
+                                    直近15分で<span className="font-bold text-lg mx-1">{result.crowdStats.last15minResumed}人</span>が「動き出した」と報告しています
                                 </span>
                             </div>
                         )}
