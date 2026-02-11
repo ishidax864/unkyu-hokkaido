@@ -35,6 +35,9 @@ ${statusEmoji} 運休リスク: ${prediction.probability}%（${riskLevel}）
 
 ${prediction.reasons[0] || ''}
 
+運行予報を確認する：
+https://unkyu-hokkaido.jp
+
 #運休AI #JR北海道 #運休予測`;
     };
 
