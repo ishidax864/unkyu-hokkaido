@@ -79,8 +79,14 @@ export function UnifiedAlternativesCard({
         return null;
     }
 
-    const recoveryHours = typeof estimatedRecoveryHours === 'number' ? estimatedRecoveryHours : 0;
-    const showStayOptions = recoveryHours >= 2 || estimatedRecoveryHours === '終日運休';
+    const numericHours = typeof estimatedRecoveryHours === 'number' ? estimatedRecoveryHours : 0;
+    const isSevere = numericHours >= 2 || estimatedRecoveryHours === '終日運休' || estimatedRecoveryHours === '目処立たず';
+    const isModerate = numericHours >= 0.5 && numericHours < 2;
+
+    // 表示するセクションの制御
+    const showLongStayOptions = isSevere; // ホテル
+    const showShortStayOptions = isModerate; // カフェ
+    const showHeavyTransport = isSevere; // 高速バス・レンタカー
 
     const taxiAffiliate = TAXI_AFFILIATES[0];
     const busAffiliate = BUS_AFFILIATES[0];
@@ -117,51 +123,53 @@ export function UnifiedAlternativesCard({
 
                 {/* 1. 推奨ルート・バス（アフィリエイト含む） */}
                 <div className="space-y-3">
-                    {recommendedRoutes.map((route, idx) => (
-                        <a
-                            key={idx}
-                            href={route.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
-                            className={cn(
-                                "block p-4 card border-l-4 transition-all hover:bg-gray-50 active:scale-[0.98]",
-                                route.type === 'subway' ? "border-l-[var(--status-normal)]" :
-                                    busRisk === 'low' ? "border-l-[var(--accent)]" :
-                                        busRisk === 'medium' ? "border-l-[var(--status-warning)]" :
-                                            "border-l-[var(--status-suspended)]"
-                            )}
-                        >
-                            <div className="flex items-start gap-3">
-                                <div className={cn(
-                                    "p-2 rounded-full",
-                                    route.type === 'subway' ? "bg-green-50 text-[var(--status-normal)]" :
-                                        busRisk === 'low' ? "bg-blue-50 text-[var(--accent)]" :
-                                            busRisk === 'medium' ? "bg-orange-50 text-[var(--status-warning)]" :
-                                                "bg-red-50 text-[var(--status-suspended)]"
-                                )}>
-                                    {route.type === 'bus' ? (
-                                        <Bus className="w-4 h-4" />
-                                    ) : route.type === 'subway' ? (
-                                        <Train className="w-4 h-4" />
-                                    ) : (
-                                        <Car className="w-4 h-4" />
-                                    )}
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex items-center justify-between">
-                                        <span className="font-bold text-sm text-[var(--foreground)]">{route.name}</span>
-                                        <span className="text-xs font-black text-[var(--foreground)]">{route.time}</span>
+                    {recommendedRoutes
+                        .filter(route => showHeavyTransport || route.type === 'subway') // 短時間ならバス・レンタカーを除外（地下鉄は残す）
+                        .map((route, idx) => (
+                            <a
+                                key={idx}
+                                href={route.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
+                                className={cn(
+                                    "block p-4 card border-l-4 transition-all hover:bg-gray-50 active:scale-[0.98]",
+                                    route.type === 'subway' ? "border-l-[var(--status-normal)]" :
+                                        busRisk === 'low' ? "border-l-[var(--accent)]" :
+                                            busRisk === 'medium' ? "border-l-[var(--status-warning)]" :
+                                                "border-l-[var(--status-suspended)]"
+                                )}
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div className={cn(
+                                        "p-2 rounded-full",
+                                        route.type === 'subway' ? "bg-green-50 text-[var(--status-normal)]" :
+                                            busRisk === 'low' ? "bg-blue-50 text-[var(--accent)]" :
+                                                busRisk === 'medium' ? "bg-orange-50 text-[var(--status-warning)]" :
+                                                    "bg-red-50 text-[var(--status-suspended)]"
+                                    )}>
+                                        {route.type === 'bus' ? (
+                                            <Bus className="w-4 h-4" />
+                                        ) : route.type === 'subway' ? (
+                                            <Train className="w-4 h-4" />
+                                        ) : (
+                                            <Car className="w-4 h-4" />
+                                        )}
                                     </div>
-                                    <div className="text-xs text-[var(--muted)] mt-1 leading-relaxed">{route.details}</div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-bold text-sm text-[var(--foreground)]">{route.name}</span>
+                                            <span className="text-xs font-black text-[var(--foreground)]">{route.time}</span>
+                                        </div>
+                                        <div className="text-xs text-[var(--muted)] mt-1 leading-relaxed">{route.details}</div>
+                                    </div>
+                                    <ExternalLink className="w-4 h-4 text-gray-300 ml-1" />
                                 </div>
-                                <ExternalLink className="w-4 h-4 text-gray-300 ml-1" />
-                            </div>
-                        </a>
-                    ))}
+                            </a>
+                        ))}
 
-                    {/* PR: 高速バス・路線バス予約（推奨ルートがある場合のみ表示） */}
-                    {recommendedRoutes.length > 0 && busAffiliate && (
+                    {/* PR: 高速バス・路線バス予約（推奨ルートがある場合 かつ 長期遅延時のみ表示） */}
+                    {showHeavyTransport && recommendedRoutes.length > 0 && busAffiliate && (
                         <a
                             href={busAffiliate.webUrl}
                             target="_blank"
@@ -188,7 +196,7 @@ export function UnifiedAlternativesCard({
 
                 {/* 2. タクシー・レンタカー（アフィリエイト統合） */}
                 <div className="grid grid-cols-2 gap-3">
-                    {/* タクシー */}
+                    {/* タクシー（常時表示、ただし短期・長期どちらも有用） */}
                     {facilities?.hasTaxi && (
                         <a
                             href={taxiAffiliate?.webUrl}
@@ -216,8 +224,8 @@ export function UnifiedAlternativesCard({
                         </a>
                     )}
 
-                    {/* レンタカー */}
-                    {facilities?.hasRentalCar && (
+                    {/* レンタカー（長期遅延時のみ） */}
+                    {showHeavyTransport && facilities?.hasRentalCar && (
                         <a
                             href={rentalAffiliate?.webUrl}
                             target="_blank"
@@ -242,7 +250,7 @@ export function UnifiedAlternativesCard({
                     )}
                 </div>
 
-                {/* 3. 地下鉄（札幌のみ） */}
+                {/* 3. 地下鉄（常時表示） */}
                 {facilities?.hasSubway && facilities.subwayLines && (
                     <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/10">
                         <div className="flex items-center gap-3">
@@ -259,15 +267,16 @@ export function UnifiedAlternativesCard({
                     </div>
                 )}
 
-                {/* 4. 長期化時の滞在施設 */}
-                {showStayOptions && (
+                {/* 4. 滞在・待機施設（状況に応じて切り替え） */}
+                {(showLongStayOptions || showShortStayOptions) && (
                     <div className="pt-4 border-t border-gray-100">
                         <div className="text-[10px] font-black text-[var(--muted)] mb-3 flex items-center gap-1.5 uppercase tracking-widest">
                             <Clock className="w-3 h-3" />
-                            長期見合わせ時の滞在・宿泊
+                            {showLongStayOptions ? '長期見合わせ時の滞在・宿泊' : '運転再開までの待機場所'}
                         </div>
                         <div className="grid grid-cols-2 gap-3">
-                            {facilities?.hasHotel && (
+                            {/* ホテル（長期時のみ） */}
+                            {showLongStayOptions && facilities?.hasHotel && (
                                 <a
                                     href={`https://search.travel.rakuten.co.jp/ds/hotel/search?f_keyword=${encodeURIComponent(departureStation.name + '駅')}`}
                                     target="_blank"
@@ -285,7 +294,9 @@ export function UnifiedAlternativesCard({
                                     <ExternalLink className="w-3 h-3 text-pink-300" />
                                 </a>
                             )}
-                            {facilities?.hasCafe && (
+
+                            {/* カフェ（短期時のみ、または長期時でホテルがない場合） */}
+                            {(showShortStayOptions || (showLongStayOptions && !facilities?.hasHotel)) && facilities?.hasCafe && (
                                 <a
                                     href={`https://www.google.com/maps/search/カフェ+${encodeURIComponent(departureStation.name + '駅')}`}
                                     target="_blank"
