@@ -286,15 +286,22 @@ export function UnifiedAlternativesCard({
                                 </a>
                             )}
                             {facilities?.hasCafe && (
-                                <div className="p-3 card border-l-4 border-l-orange-400 flex items-center gap-3">
+                                <a
+                                    href={`https://www.google.com/maps/search/カフェ+${encodeURIComponent(departureStation.name + '駅')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'cafe_search', station: departureStation.name })}
+                                    className="block p-3 card border-l-4 border-l-orange-400 flex items-center gap-3 hover:bg-orange-50/50 transition-all active:scale-[0.98]"
+                                >
                                     <div className="p-1.5 bg-orange-50 rounded-full text-orange-500">
                                         <Coffee className="w-3.5 h-3.5" />
                                     </div>
                                     <div className="flex-1">
-                                        <div className="text-xs font-bold text-[var(--foreground)]">カフェ</div>
-                                        <div className="text-[10px] text-[var(--muted)]">電源・Wi-Fi利用可</div>
+                                        <div className="text-xs font-bold text-[var(--foreground)]">カフェを探す</div>
+                                        <div className="text-[10px] text-[var(--muted)]">電源・Wi-Fi利用可の場所</div>
                                     </div>
-                                </div>
+                                    <ExternalLink className="w-3 h-3 text-orange-300" />
+                                </a>
                             )}
                         </div>
                     </div>
