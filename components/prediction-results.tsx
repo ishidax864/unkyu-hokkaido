@@ -85,8 +85,6 @@ export function PredictionResults({
                 </button>
             </div>
 
-            {/* 帰宅アドバイザー */}
-            <ReturnTripAdvisor prediction={prediction} />
 
             {/* 予測カード */}
             <PredictionResultCard
@@ -117,6 +115,10 @@ export function PredictionResults({
                     counts={realtimeStatus?.last15minCounts}
                 />
             )}
+
+
+            {/* 帰宅アドバイザー */}
+            <ReturnTripAdvisor prediction={prediction} />
 
             {/* 代替ルート提案 */}
             {prediction.probability >= 30 && (

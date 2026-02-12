@@ -223,10 +223,6 @@ export default function Home() {
         </section>
 
 
-        {/* 運行状況詳細・警報 */}
-        {!isLoading && (
-          <WeatherWarningList warnings={warnings} />
-        )}
 
         {/* Progressive Loading (Phase 27) */}
         {isLoading && <ProgressiveLoading isLoading={isLoading} />}
