@@ -10,6 +10,9 @@
 /** 天気予報のみの場合の予測確率上限（公式情報なし） */
 export const MAX_PREDICTION_WITHOUT_OFFICIAL_DATA = 85;
 
+/** JR公式で通常運行確認済みの場合の上限 */
+export const MAX_PREDICTION_WITH_NORMAL_DATA = 35;
+
 /** JR公式で運休・見合わせ確認済みの場合の上限 */
 export const MAX_PREDICTION_WITH_CANCELLATION = 100;
 

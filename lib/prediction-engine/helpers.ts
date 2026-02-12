@@ -23,8 +23,9 @@ import {
     TREND_INCREASING_BONUS,
     TREND_DECREASING_PENALTY,
     USER_CONSENSUS_MIN_REPORTS,
-    SUSPENSION_SNOW_THRESHOLD, // 🆕
-    HEAVY_RAIN_THRESHOLD, // 🆕
+    SUSPENSION_SNOW_THRESHOLD,
+    HEAVY_RAIN_THRESHOLD,
+    MAX_PREDICTION_WITH_NORMAL_DATA, // 🆕
 } from './constants';
 
 // =====================
@@ -131,6 +132,9 @@ export function determineMaxProbability(input: PredictionInput): number {
             maxProbability = MAX_PREDICTION_WITH_CANCELLATION;
         } else if (input.jrStatus.status === 'delay') {
             maxProbability = MAX_PREDICTION_WITH_DELAY;
+        } else if (input.jrStatus.status === 'normal') {
+            // 🆕 公式が平常運転なら、気象に関わらずリスクを低く抑える（上限35%）
+            maxProbability = MAX_PREDICTION_WITH_NORMAL_DATA;
         }
     }
 
@@ -347,19 +351,22 @@ interface ConfidenceFilterResult {
  * - 突風 < 25m/s
  * - 降雪 < 1cm (1cmでも遅延リスクを認める)
  */
-export function applyConfidenceFilter(params: ConfidenceFilterParams): ConfidenceFilterResult {
-    const { probability, totalScore, windSpeed, windGust, snowfall } = params;
+export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatus?: string | null }): ConfidenceFilterResult {
+    const { probability, totalScore, windSpeed, windGust, snowfall, jrStatus } = params;
 
     // フィルタ適用条件をチェック
-    const isInFilterRange = probability >= 30 && probability < 60;
-    const isLowScore = totalScore < 40; // 抑制をより限定的に（40点以上は信じる）
-    const isWeakWeather = windSpeed < 15 && windGust < 25 && snowfall < 1.0;
+    // 🆕 公式が平常（normal）かつ気象警報等がない場合、抑制をより広範囲に適用する
+    const isOfficialNormal = jrStatus === 'normal';
+    const isInFilterRange = isOfficialNormal ? (probability >= 10 && probability < 80) : (probability >= 30 && probability < 60);
+    const isLowScore = isOfficialNormal ? totalScore < 100 : totalScore < 40;
+    const isWeakWeather = windSpeed < 20 && windGust < 30 && snowfall < 5.0; // 閾値を少し緩和して公式情報を優先
 
     if (isInFilterRange && isLowScore && isWeakWeather) {
+        const suppressionRatio = isOfficialNormal ? 0.4 : 0.8; // 公式平常ならリスクをさらに6割カット
         return {
-            filteredProbability: probability * 0.8, // 25固定ではなく、現在の値を2割抑制する程度に
+            filteredProbability: Math.round(probability * suppressionRatio),
             wasFiltered: true,
-            reason: `Weak weather signal (wind: ${windSpeed}m/s, gust: ${windGust}m/s, snow: ${snowfall}cm)`
+            reason: `Filtered due to ${isOfficialNormal ? 'Official Normal Status' : 'Weak weather signal'} (wind: ${windSpeed}m/s, gust: ${windGust}m/s, snow: ${snowfall}cm)`
         };
     }
 

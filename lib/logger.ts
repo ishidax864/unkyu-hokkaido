@@ -40,11 +40,18 @@ async function sendToExternalService(entry: LogEntry): Promise<void> {
     if (!isProduction) return;
 
     const sentryDsn = process.env.SENTRY_DSN;
-    if (!sentryDsn) return;
+    if (!sentryDsn) {
+        // Sentry DSNが設定されていない場合は警告（初回のみ等に抑えるのが望ましいが、ここではシンプルに保持）
+        return;
+    }
 
-    // Sentry SDK を使用する場合はここで呼び出し
-    // 現在は構造化ログとして console に出力
-    // 将来的に Sentry.captureException() 等を追加
+    // 将来的な SDK 導入時のコード
+    // import * as Sentry from "@sentry/nextjs";
+    // if (entry.level === 'error') {
+    //     Sentry.captureException(entry.context?.error || entry.message, { extra: entry.context });
+    // } else {
+    //     Sentry.captureMessage(entry.message, { level: entry.level as Sentry.SeverityLevel, extra: entry.context });
+    // }
 }
 
 export const logger = {

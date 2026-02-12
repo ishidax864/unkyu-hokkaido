@@ -63,7 +63,7 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
     'jr-hokkaido.chitose': {
         windThreshold: 20, // 18 -> 20: バックテスト結果反映、空港線は強めに運行
         snowThreshold: 4,
-        vulnerabilityScore: 1.6,
+        vulnerabilityScore: 1.2, // 1.6 -> 0.7 -> 1.2: 空港連絡線としての高い回復力・維持能力を反映（公式発表キャップと合わせて調整）
         description: '空港連絡線、優先的に運行維持',
         hasDeerRisk: false,
         safeWindDirections: [[350, 360], [0, 10]], // 北風(線路並行)は影響比較的少なめ

@@ -1,9 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { getStationsByRegion, Station } from '@/lib/hokkaido-data';
-import { Calendar, Clock, ChevronDown, ArrowRight, MapPin, PlayCircle, Timer } from 'lucide-react';
-import { sendGAEvent } from '@next/third-parties/google'; // 🆕
+import { StationSelector } from './station-selector'; // 🆕
 
 interface SearchFormProps {
     onSearch: (
@@ -43,13 +40,12 @@ export function SearchForm({
 }: SearchFormProps) {
     const [isDepartureOpen, setIsDepartureOpen] = useState(false);
     const [isArrivalOpen, setIsArrivalOpen] = useState(false);
-
-    const stationsByRegion = getStationsByRegion();
+    const [depQuery, setDepQuery] = useState('');
+    const [arrQuery, setArrQuery] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (departureStation && arrivalStation) {
-            // 🆕 GA4イベント送信
             sendGAEvent('event', 'search_prediction', {
                 departure: departureStation.name,
                 arrival: arrivalStation.name,
@@ -61,7 +57,6 @@ export function SearchForm({
         }
     };
 
-    // 🆕 現在の日時を設定
     const setCurrentDateTime = () => {
         const now = new Date();
         const dateStr = now.toISOString().split('T')[0];
@@ -71,12 +66,13 @@ export function SearchForm({
         setTime(timeStr);
         setTimeType('departure');
 
-        // 🆕 GA4イベント送信
         sendGAEvent('event', 'search_current_location', {
             is_valid_search: (!!departureStation && !!arrivalStation).toString()
         });
 
-        // 駅が選択されていれば即座に検索実行
+        if (departureStation) setDepQuery(departureStation.name);
+        if (arrivalStation) setArrQuery(arrivalStation.name);
+
         if (departureStation && arrivalStation) {
             sendGAEvent('event', 'search_prediction', {
                 departure: departureStation.name,
@@ -89,84 +85,6 @@ export function SearchForm({
             onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr, 'departure');
         }
     };
-
-    // 駅選択ドロップダウンコンポーネント
-    const StationSelector = ({
-        label,
-        selectedStation,
-        isOpen,
-        setIsOpen,
-        setStation,
-        otherStation,
-    }: {
-        label: string;
-        selectedStation: Station | null;
-        isOpen: boolean;
-        setIsOpen: (open: boolean) => void;
-        setStation: (station: Station) => void;
-        otherStation: Station | null;
-    }) => (
-        <div className="relative flex-1">
-            <label className="section-label">
-                {label}
-            </label>
-            <button
-                type="button"
-                onClick={() => {
-                    setIsOpen(!isOpen);
-                    if (label === '出発駅') setIsArrivalOpen(false);
-                    else setIsDepartureOpen(false);
-                }}
-                className="w-full input-field p-3 flex items-center justify-between text-left"
-            >
-                <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-[var(--muted)]" />
-                    {selectedStation ? (
-                        <span className="font-black text-lg">{selectedStation.name}</span>
-                    ) : (
-                        <span className="text-[var(--muted)] text-sm">選択</span>
-                    )}
-                </div>
-                <ChevronDown className={`w-4 h-4 text-[var(--muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isOpen && (
-                <div className="absolute z-50 mt-1 w-full max-h-64 overflow-y-auto bg-white border border-[var(--border)] rounded-md shadow-lg">
-                    {Array.from(stationsByRegion.entries()).map(([region, stations]) => (
-                        <div key={region}>
-                            <div className="px-3 py-2 text-xs font-bold text-[var(--muted)] bg-[var(--background-secondary)] sticky top-0">
-                                {region}
-                            </div>
-                            {stations.map((station) => {
-                                const isDisabled = otherStation?.id === station.id;
-                                return (
-                                    <button
-                                        key={station.id}
-                                        type="button"
-                                        disabled={isDisabled}
-                                        onClick={() => {
-                                            setStation(station);
-                                            setIsOpen(false);
-                                        }}
-                                        className={`w-full px-3 py-2 flex items-center gap-2 text-left text-sm
-                                            ${isDisabled
-                                                ? 'opacity-30 cursor-not-allowed bg-gray-50'
-                                                : 'hover:bg-[var(--background-secondary)]'
-                                            }
-                                            ${station.isMajor ? 'font-medium' : ''}
-                                        `}
-                                    >
-                                        <MapPin className={`w-3 h-3 ${station.isMajor ? 'text-[var(--primary)]' : 'text-[var(--muted)]'}`} />
-                                        <span className={station.isMajor ? 'font-bold' : ''}>{station.name}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
 
     // 🆕 バリデーション：日付が範囲内か
     const isDateValid = (dateStr: string) => {
@@ -193,6 +111,9 @@ export function SearchForm({
                     setIsOpen={setIsDepartureOpen}
                     setStation={setDepartureStation}
                     otherStation={arrivalStation}
+                    query={depQuery}
+                    setQuery={setDepQuery}
+                    onInteract={() => setIsArrivalOpen(false)}
                 />
 
                 <div className="hidden md:flex items-center justify-center py-0.5 z-10 md:my-0 md:pb-3">
@@ -206,6 +127,9 @@ export function SearchForm({
                     setIsOpen={setIsArrivalOpen}
                     setStation={setArrivalStation}
                     otherStation={departureStation}
+                    query={arrQuery}
+                    setQuery={setArrQuery}
+                    onInteract={() => setIsDepartureOpen(false)}
                 />
             </div>
 

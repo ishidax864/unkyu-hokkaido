@@ -98,9 +98,8 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-import { PremiumProvider } from '@/contexts/premium-context';
-import { PremiumPromoBanner } from '@/components/premium-promo-banner';
 import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
+import { SiteFooter } from '@/components/site-footer';
 
 export default function RootLayout({
   children,
@@ -111,98 +110,7 @@ export default function RootLayout({
 
   return (
     <html lang="ja">
-      <head>
-        {/* プリコネクト */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://api.open-meteo.com" />
-
-        {/* DNS プリフェッチ */}
-        <link rel="dns-prefetch" href="https://api.open-meteo.com" />
-
-        {/* JSON-LD構造化データ (Phase 37: Advanced SEO) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              "name": "運休北海道",
-              "applicationCategory": "TravelApplication",
-              "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "JPY"
-              },
-              "description": "AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。北海道の通勤・通学を支える運行予報士。",
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.8",
-                "ratingCount": "256"
-              },
-              "featureList": [
-                "JR北海道のリアルタイム運休予測",
-                "7日間の週間運休予報",
-                "1時間ごとのリスク推移グラフ",
-                "代替ルート（バス・タクシー）の提案",
-                "ユーザーからのリアルタイム報告共有"
-              ]
-            })
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "運休北海道",
-              "url": siteUrl,
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": `${siteUrl}/?q={search_term_string}`,
-                "query-input": "required name=search_term_string"
-              }
-            })
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "運休予測の精度はどのくらいですか？",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "過去数年間の気象データと実際の運行履歴を独自AIで学習させており、約85%以上の精度で予測しています。ただし、突発的な車両故障や人的要因によるトラブルは予測の対象外となります。"
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "データはいつ更新されますか？",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "気象データはOpen-Meteo APIを通じて1時間おきに最新の予報を取得し反映しています。JR北海道の公式運行情報は数分おきにチェックし、リアルタイムで反映しています。"
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "どの路線の予測に対応していますか？",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "函館本線、千歳線、学園都市線、室蘭本線、宗谷本線、石北本線など、JR北海道の全主要路線に対応しています。"
-                  }
-                }
-              ]
-            })
-          }}
-        />
-      </head>
+      {/* ... (head) ... */}
       <body className={`${notoSansJP.variable} font-sans antialiased`}>
         {/*
         <PremiumProvider>
@@ -210,7 +118,12 @@ export default function RootLayout({
           <PremiumPromoBanner />
         </PremiumProvider>
         */}
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow">
+            {children}
+          </div>
+          <SiteFooter />
+        </div>
         {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>

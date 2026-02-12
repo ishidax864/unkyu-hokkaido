@@ -120,7 +120,7 @@ export function useRouteSearch() {
                     matchingStatus = data.items.find((item: JRStatusItem) => item.routeName === 'JR北海道');
                 }
 
-                if (isToday && data.hasAlerts && matchingStatus && matchingStatus.status !== 'normal') {
+                if (isToday && matchingStatus) {
                     jrStatus = {
                         routeId: routeId,
                         routeName: primaryRoute?.name || matchingStatus.routeName,

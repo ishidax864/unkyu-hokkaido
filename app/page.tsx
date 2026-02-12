@@ -3,17 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SearchForm } from '@/components/search-form';
-import { PredictionResultCard } from '@/components/prediction-result';
-import { ReportButtons } from '@/components/report-buttons';
-import { AlternativeRoutes } from '@/components/alternative-routes';
-import { DonationButton } from "@/components/donation-button";
-import { WeeklyForecastChart } from '@/components/weekly-forecast';
-import { ShareCard } from '@/components/share-card';
-import { WeatherWarningList } from '@/components/weather-warning-list'; // 🆕
-import { HourlyRiskChart } from '@/components/hourly-risk-chart'; // 🆕
-import { ProgressiveLoading } from '@/components/progressive-loading'; // 🆕 Phase 27
-import { HeadlineStatus } from '@/components/headline-status'; // 🆕 Phase 27
-import { ServiceFeatures } from '@/components/service-features'; // 🆕
+import { ServiceFeatures } from '@/components/service-features';
+import { PredictionResults } from '@/components/prediction-results';
+import { WeatherWarningList } from '@/components/weather-warning-list';
+import { ProgressiveLoading } from '@/components/progressive-loading';
+import { HeadlineStatus } from '@/components/headline-status';
 import { getRouteById, getStationById, getCommonLines, getJRStatusUrl, Station } from '@/lib/hokkaido-data';
 // unused imports removed
 import { useAppInit } from '@/hooks/useAppInit'; // 🆕
@@ -228,124 +222,33 @@ export default function Home() {
           </div>
         </section>
 
+
+        {/* 運行状況詳細・警報 */}
+        {!isLoading && (
+          <WeatherWarningList warnings={warnings} />
+        )}
+
         {/* Progressive Loading (Phase 27) */}
         {isLoading && <ProgressiveLoading isLoading={isLoading} />}
 
-        {/* 予測結果 */}
-        {prediction && selectedRouteId && (
-          <section className="space-y-3" aria-labelledby="result-section-title">
-            <h2 id="result-section-title" className="section-label">予測結果</h2>
-
-            {/* 区間表示 & お気に入り登録 */}
-            {depStation && arrStation && (
-              <div className="card p-3 flex items-center justify-between gap-3 font-medium">
-                {/* 左側：区間名 */}
-                <div className="flex items-center gap-3 pl-1">
-                  <span>{depStation.name}</span>
-                  <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
-                  <span>{arrStation.name}</span>
-                </div>
-
-                {/* 右側：お気に入りボタン（ラベル付き） */}
-                <button
-                  onClick={() => {
-                    if (isFavorite(depStation.id, arrStation.id)) {
-                      sendGAEvent('event', 'favorite_remove', { route: `${depStation.name}-${arrStation.name}` });
-                      const id = `${depStation.id}-${arrStation.id}`;
-                      removeFavorite(id);
-                    } else {
-                      sendGAEvent('event', 'favorite_add', { route: `${depStation.name}-${arrStation.name}` });
-                      addFavorite(depStation.id, arrStation.id, depStation.name, arrStation.name);
-                    }
-                  }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
-                    ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                    : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
-                    }`}
-                  aria-label={isFavorite(depStation.id, arrStation.id) ? "お気に入りから削除" : "お気に入りに追加"}
-                >
-                  {isFavorite(depStation.id, arrStation.id) ? (
-                    <>
-                      <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" role="presentation" />
-                      登録済み
-                    </>
-                  ) : (
-                    <>
-                      <Star className="w-3.5 h-3.5" role="presentation" />
-                      登録
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-
-            <PredictionResultCard
-              result={prediction}
-              route={getRouteById(selectedRouteId)!}
-              targetDate={date}
-            />
-
-            {/* SNSシェア (重要度が高いため、結果のすぐ下に移動) */}
-            {depStation && arrStation && (
-              <ShareCard
-                prediction={prediction}
-                routeName={getRouteById(selectedRouteId)?.name || ''}
-                departureStation={depStation.name}
-                arrivalStation={arrStation.name}
-              />
-            )}
-
-            {/* 時間帯別リスク推移 (追加) */}
-            {riskTrend && riskTrend.length > 0 && (
-              <HourlyRiskChart data={riskTrend} />
-            )}
-
-            {/* 状況報告（当日のみ表示） */}
-            {date === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date()) && (
-              <ReportButtons
-                routeId={selectedRouteId}
-                routeName={getRouteById(selectedRouteId)?.name || ''}
-                onReport={handleReport}
-                counts={realtimeStatus?.last15minCounts ? {
-                  stopped: realtimeStatus.last15minCounts.stopped,
-                  delayed: realtimeStatus.last15minCounts.delayed, // 🆕
-                  crowded: realtimeStatus.last15minCounts.crowded, // 🆕
-                  resumed: realtimeStatus.last15minCounts.resumed
-                } : undefined}
-              />
-            )}
-
-            {/* 代替ルート提案 */}
-            {prediction.probability >= 30 && (
-              <AlternativeRoutes
-                originalRoute={getRouteById(selectedRouteId)!}
-                predictionResult={prediction}
-                departureStation={depStation || undefined}
-                arrivalStation={arrStation || undefined}
-                timeShiftSuggestion={timeShiftSuggestion}
-                futureRisks={riskTrend} // 🆕 未来のリスク推移を渡す
-                onSelect={(selection) => {
-                  // console.log('Alternative selected:', selection);
-                }}
-              />
-            )}
-
-
-
-
-
-            {/* 週間予測グラフ */}
-            {weeklyPredictions.length > 0 && (
-              <WeeklyForecastChart
-                predictions={weeklyPredictions}
-                weather={weather}
-              />
-            )}
-
-
-
-
-          </section>
+        {/* 予測結果セクション */}
+        {prediction && (
+          <PredictionResults
+            prediction={prediction}
+            selectedRouteId={selectedRouteId}
+            date={date}
+            depStation={departureStation}
+            arrStation={arrivalStation}
+            riskTrend={riskTrend}
+            realtimeStatus={realtimeStatus}
+            timeShiftSuggestion={timeShiftSuggestion}
+            weeklyPredictions={weeklyPredictions}
+            weather={weather}
+            handleReport={handleReport}
+            isFavorite={isFavorite}
+            addFavorite={addFavorite}
+            removeFavorite={removeFavorite}
+          />
         )}
 
         {/* Pro誘導バナー - 後で機能追加予定（現在非公開）
@@ -365,34 +268,6 @@ export default function Home() {
         <ServiceFeatures />
 
         {/* フッター */}
-        <footer className="mt-8 text-center pb-8 border-t border-[var(--border)] pt-8">
-          <p className="text-[10px] text-[var(--muted)] mb-4">
-            ※本サービスは予測に基づく参考情報です。<br />
-            実際の運行状況は必ずJR北海道公式サイトをご確認ください。
-          </p>
-
-          {/* Donation Button (Dev Only) */}
-          {process.env.NODE_ENV === 'development' && (
-            <DonationButton />
-          )}
-
-          <div className="mt-8 text-[10px] text-[var(--muted)] opacity-70 space-y-2">
-            <div>
-              <p>運営: 株式会社アンドアール</p>
-              <div className="flex justify-center gap-4 my-2">
-                <Link href="/terms" className="hover:text-[var(--primary)] transition-colors">利用規約</Link>
-                <Link href="/privacy" className="hover:text-[var(--primary)] transition-colors">プライバシーポリシー</Link>
-              </div>
-              <a href="mailto:info@andr.ltd" className="hover:text-[var(--primary)] transition-colors">
-                お問い合わせ: info@andr.ltd
-              </a>
-            </div>
-            <div>
-              <p className="mb-0.5">天気データ: Open-Meteo API</p>
-              <p>&copy; 2026 運休北海道 - Unkyu Hokkaido AI</p>
-            </div>
-          </div>
-        </footer>
       </div>
     </main>
   );

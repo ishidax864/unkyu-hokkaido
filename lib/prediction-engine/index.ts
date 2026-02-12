@@ -33,7 +33,8 @@ import {
 
 import {
     MAX_DISPLAY_REASONS,
-    COMPOUND_RISK_MULTIPLIER
+    COMPOUND_RISK_MULTIPLIER,
+    MAX_PREDICTION_WITH_NORMAL_DATA // 🆕
 } from './constants';
 
 import { analyzeWeatherTrend } from '../recovery-prediction';
@@ -128,17 +129,32 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             totalScore,
             windSpeed: input.weather.windSpeed || 0,
             windGust: input.weather.windGust || 0,
-            snowfall: input.weather.snowfall || 0
+            snowfall: input.weather.snowfall || 0,
+            jrStatus: input.jrStatus?.status // 🆕 公式情報をフィルターに渡す
         });
 
         if (filterResult.wasFiltered) {
             probability = filterResult.filteredProbability;
+            if (filterResult.reason) {
+                reasonsWithPriority.push({
+                    reason: `【予測補正】${filterResult.reason}`,
+                    priority: 20
+                });
+            }
             logger.debug('Confidence Filter Applied', {
                 original: totalScore,
                 filtered: probability,
                 reason: filterResult.reason
             });
         }
+    }
+
+    // 🆕 公式情報によるキャップが適用された場合の理由追加
+    if (probability === MAX_PREDICTION_WITH_NORMAL_DATA && input.jrStatus?.status === 'normal') {
+        reasonsWithPriority.push({
+            reason: '【公式情報】JR北海道より通常運行が発表されているため、予測リスクを抑制しています',
+            priority: 0 // 最優先で表示
+        });
     }
 
     // 6. 履歴データによる補正

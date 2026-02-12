@@ -69,7 +69,15 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
 
                 {/* Action Button (Fake for MVP) */}
                 {status === 'critical' && (
-                    <button className="mt-4 bg-[var(--status-suspended)] hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 w-full justify-center transition-all shadow-md active:scale-[0.98]">
+                    <button
+                        onClick={() => {
+                            const element = document.getElementById('hotel-suggestions-section');
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }}
+                        className="mt-4 bg-[var(--status-suspended)] hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 w-full justify-center transition-all shadow-md active:scale-[0.98]"
+                    >
                         <Hotel className="w-4 h-4" />
                         <span>近くのホテルを探す</span>
                         <ArrowRight className="w-3 h-3 ml-1 opacity-70" />
