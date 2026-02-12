@@ -1,8 +1,7 @@
-/// <reference lib="webworker" />
 
-const CACHE_NAME = 'unkyu-ai-v1';
-const STATIC_CACHE_NAME = 'unkyu-ai-static-v1';
-const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v1';
+const CACHE_NAME = 'unkyu-ai-v2';
+const STATIC_CACHE_NAME = 'unkyu-ai-static-v2';
+const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v2';
 
 // 静的アセット（常にキャッシュ）
 const STATIC_ASSETS = [
@@ -21,8 +20,6 @@ const NO_CACHE_PATTERNS = [
     /\/_next\/webpack-hmr/,
     /\/api\/(?!health)/,
 ];
-
-declare const self: ServiceWorkerGlobalScope;
 
 // インストール時に静的アセットをキャッシュ
 self.addEventListener('install', (event) => {
@@ -61,7 +58,7 @@ self.addEventListener('fetch', (event) => {
     if (event.request.mode === 'navigate') {
         event.respondWith(
             fetch(event.request)
-                .catch(() => caches.match('/') as Promise<Response>)
+                .catch(() => caches.match('/'))
         );
         return;
     }
@@ -89,7 +86,7 @@ self.addEventListener('fetch', (event) => {
                     caches.open(DYNAMIC_CACHE_NAME).then((cache) => cache.put(event.request, clone));
                     return response;
                 })
-                .catch(() => caches.match(event.request) as Promise<Response>)
+                .catch(() => caches.match(event.request))
         );
         return;
     }
@@ -112,7 +109,7 @@ self.addEventListener('push', (event) => {
     if (!event.data) return;
 
     const data = event.data.json();
-    const options: NotificationOptions = {
+    const options = {
         body: data.body || '運休リスクが高まっています',
         icon: '/icons/icon-192.png',
         badge: '/icons/icon-192.png',
@@ -141,5 +138,3 @@ self.addEventListener('notificationclick', (event) => {
         })
     );
 });
-
-export { };
