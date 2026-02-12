@@ -101,11 +101,6 @@ export function PredictionResults({
                 arrivalStation={arrStation.name}
             />
 
-            {/* 時間帯別リスク推移 */}
-            {riskTrend && riskTrend.length > 0 && (
-                <HourlyRiskChart data={riskTrend} />
-            )}
-
             {/* 状況報告（当日のみ） */}
             {isToday && (
                 <ReportButtons
@@ -144,6 +139,11 @@ export function PredictionResults({
                     hotels={getHotelsForStation(arrStation.id)}
                     arrivalStationName={arrStation.name}
                 />
+            )}
+
+            {/* 時間帯別リスク推移 */}
+            {riskTrend && riskTrend.length > 0 && (
+                <HourlyRiskChart data={riskTrend} />
             )}
 
             {/* 週間予測 */}
