@@ -22,7 +22,7 @@ export default function LegalNotation() {
 
                     <section>
                         <h2 className="text-lg font-bold mb-3 border-b pb-1">代表責任者</h2>
-                        <p>上江洌 聖（Shota Mezu）</p>
+                        <p>石田 奨太</p>
                     </section>
 
                     <section>

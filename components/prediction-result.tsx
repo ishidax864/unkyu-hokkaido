@@ -256,85 +256,87 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                 )
             }
 
-            {/* 確率表示 */}
-            <div className="mb-5">
-                <div className="flex items-end justify-between mb-1">
-                    <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">運休リスク</span>
-                    <div className="flex items-baseline gap-0.5">
-                        <span className={cn("text-5xl font-black leading-none", getProbabilityTextColor())}>
-                            {result.probability}
-                        </span>
-                        <span className={cn("text-base font-bold", getProbabilityTextColor())}>%</span>
-                    </div>
+            {/* 確率表示 (Hero Metric) */}
+            <div className="mb-6 text-center">
+                <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest mb-1">
+                    運休リスク予測
+                </div>
+                <div className="flex items-baseline justify-center gap-1 mb-2">
+                    <span className={cn("text-6xl md:text-7xl font-black leading-none tracking-tighter", getProbabilityTextColor())}>
+                        {result.probability}
+                    </span>
+                    <span className={cn("text-2xl font-black", getProbabilityTextColor())}>%</span>
                 </div>
 
-                {/* 🆕 予測結果の明示的表示 (ユーザーにとっての結論) */}
-                <div className={`text-center py-2.5 px-4 rounded-lg font-black text-xl mb-4 ${result.probability >= 70 ? 'bg-red-100 text-red-800 border-2 border-red-200' :
-                    result.probability >= 40 ? 'bg-orange-100 text-orange-800 border-2 border-orange-200' :
-                        result.probability >= 20 ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-200' :
-                            'bg-blue-50 text-blue-800 border-2 border-blue-100'
+                {/* 🆕 予測結果の明示的表示 (結論) */}
+                <div className={`inline-block py-1.5 px-4 rounded-full font-bold text-sm mb-4 ${result.probability >= 70 ? 'bg-red-100 text-red-700 border border-red-200' :
+                    result.probability >= 40 ? 'bg-orange-100 text-orange-800 border border-orange-200' :
+                        result.probability >= 20 ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                            'bg-blue-50 text-blue-700 border border-blue-100'
                     }`}>
                     {
-                        result.probability >= 70 ? '運休見込み' :
-                            result.probability >= 40 ? '遅延見込み' :
-                                result.probability >= 20 ? '軽微な影響見込み' :
-                                    '通常運行見込み'
+                        result.probability >= 70 ? '運休の可能性が高い' :
+                            result.probability >= 40 ? '遅延・運休に注意' :
+                                result.probability >= 20 ? '多少の影響あり' :
+                                    '通常運行の見込み'
                     }
                 </div>
 
                 {/* プログレスバー */}
-                <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
                     <div
-                        className={cn('h-full rounded-full transition-all duration-500', getProgressColor())}
+                        className={cn('h-full rounded-full transition-all duration-1000 ease-out', getProgressColor())}
                         style={{ width: `${result.probability}%` }}
                     />
                 </div>
             </div>
 
-
-
             {/* 理由リスト */}
-            <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-[var(--muted)]">
-                    <Info className="w-4 h-4" />
-                    予測根拠
+            <div className="bg-gray-50/50 rounded-lg p-4 mb-4 border border-gray-100">
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+                    <Info className="w-3.5 h-3.5" />
+                    予測の根拠
                 </div>
-                <ul className="space-y-1.5 opacity-90">
+                <ul className="space-y-2">
                     {result.reasons.map((reason, index) => (
                         <li
                             key={index}
-                            className="flex items-start gap-2 text-xs"
+                            className="flex items-start gap-2 text-sm text-[var(--foreground)] leading-relaxed"
                         >
-                            <span className="text-[var(--primary)] mt-1">•</span>
+                            <span className={cn("mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0", getProgressColor())} />
                             {reason}
                         </li>
                     ))}
                 </ul>
             </div>
 
-            {/* 信頼度・影響度 */}
-            <div className="flex items-center gap-4 pt-3 border-t border-[var(--border)]">
-                <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    予測信頼度:
-                    <span className={cn(
-                        'font-bold',
-                        result.confidence === 'high' ? 'text-[var(--status-normal)]' :
-                            result.confidence === 'medium' ? 'text-[var(--status-warning)]' : 'text-[var(--muted)]'
-                    )}>
-                        {result.confidence === 'high' ? '高' : result.confidence === 'medium' ? '中' : '低'}
-                    </span>
+            {/* 信頼度・影響度・メタデータ */}
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-dashed border-gray-200">
+                <div className="flex flex-col items-center justify-center p-2 rounded bg-gray-50">
+                    <span className="text-[10px] text-[var(--muted)] font-bold uppercase">予測信頼度</span>
+                    <div className="flex items-center gap-1 mt-0.5">
+                        <TrendingUp className="w-3.5 h-3.5 text-[var(--muted)]" />
+                        <span className={cn(
+                            'font-bold text-sm',
+                            result.confidence === 'high' ? 'text-[var(--status-normal)]' :
+                                result.confidence === 'medium' ? 'text-[var(--status-warning)]' : 'text-[var(--muted)]'
+                        )}>
+                            {result.confidence === 'high' ? '高い' : result.confidence === 'medium' ? '標準' : '低い'}
+                        </span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-                    天気影響:
-                    <span className={cn(
-                        'font-bold',
-                        result.weatherImpact === '重大' ? 'text-[var(--status-suspended)]' :
-                            result.weatherImpact === '中程度' ? 'text-orange-500' :
-                                result.weatherImpact === '軽微' ? 'text-[var(--status-warning)]' : 'text-[var(--muted)]'
-                    )}>
-                        {result.weatherImpact}
-                    </span>
+                <div className="flex flex-col items-center justify-center p-2 rounded bg-gray-50">
+                    <span className="text-[10px] text-[var(--muted)] font-bold uppercase">天気の影響</span>
+                    <div className="mt-0.5">
+                        <span className={cn(
+                            'font-bold text-sm',
+                            result.weatherImpact === '重大' ? 'text-[var(--status-suspended)]' :
+                                result.weatherImpact === '中程度' ? 'text-orange-500' :
+                                    result.weatherImpact === '軽微' ? 'text-[var(--status-warning)]' : 'text-[var(--status-normal)]'
+                        )}>
+                            {result.weatherImpact}
+                        </span>
+                    </div>
                 </div>
             </div>
 

@@ -4,6 +4,7 @@ import { PredictionResult } from '@/lib/types';
 import { WeatherForecast } from '@/lib/types';
 import { TrendingUp } from 'lucide-react';
 import { getWeatherIcon } from '@/lib/weather-utils';
+import { cn } from '@/lib/utils';
 
 interface WeeklyForecastChartProps {
     predictions: PredictionResult[];
@@ -62,53 +63,59 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
     };
 
     return (
-        <section className="card p-4" aria-labelledby="weekly-forecast-title">
+        <section className="card p-5" aria-labelledby="weekly-forecast-title">
             <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-4 h-4 text-[var(--primary)]" />
-                <h3 id="weekly-forecast-title" className="text-sm font-bold">週間運休リスク予測</h3>
+                <TrendingUp className="w-4 h-4 text-gray-500" />
+                <h3 id="weekly-forecast-title" className="text-sm font-bold text-gray-700">週間運休リスク予測</h3>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {predictions.slice(0, 5).map((pred, index) => {
                     const dayWeather = weather.find(w => w.date === pred.targetDate);
-                    const barHeight = Math.max((pred.probability / maxProb) * 100, 8);
 
                     return (
-                        <div key={pred.targetDate} className="flex items-center gap-3">
+                        <div key={pred.targetDate} className="flex items-center gap-4">
                             {/* 日付 */}
-                            <div className="w-16 text-xs text-[var(--muted)]">
-                                <div className="font-medium">{formatDate(pred.targetDate)}</div>
+                            <div className="w-14 flex-shrink-0 text-xs text-gray-500 text-center">
+                                <div className="font-bold text-gray-700 text-sm">{formatDate(pred.targetDate).split('(')[0]}</div>
+                                <div className="scale-90 opacity-80">({formatDate(pred.targetDate).split('(')[1]}</div>
                             </div>
 
                             {/* 天気アイコン */}
-                            <div className="w-8 text-center text-lg">
+                            <div className="w-8 flex-shrink-0 text-center text-xl grayscale opacity-80">
                                 {dayWeather ? getWeatherIcon(dayWeather.weather) : ''}
                             </div>
 
-                            {/* プログレスバー */}
-                            <div className="flex-1 h-6 bg-gray-100 rounded-md overflow-hidden relative">
-                                <div
-                                    className={`h-full rounded-md transition-all duration-500 ${getRiskColor(pred.probability)}`}
-                                    style={{ width: `${barHeight}%` }}
-                                />
-                                {/* パーセンテージ */}
-                                <div className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold ${pred.probability > 50 ? 'text-white' : getRiskTextColor(pred.probability)}`}>
-                                    {pred.probability}%
+                            {/* プログレスバーエリア */}
+                            <div className="flex-1 relative">
+                                <div className="flex items-end justify-between mb-1">
+                                    <span className="text-[10px] text-gray-400 font-medium">リスク</span>
+                                    <span className={cn("text-xs font-bold", getRiskTextColor(pred.probability))}>
+                                        {pred.probability}%
+                                    </span>
+                                </div>
+                                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className={cn('h-full rounded-full transition-all duration-500', getRiskColor(pred.probability))}
+                                        style={{ width: `${Math.max(pred.probability, 5)}%` }}
+                                    />
                                 </div>
                             </div>
 
-                            {/* 天気情報 */}
-                            <div className="w-20 text-right">
+                            {/* 天気詳細 info */}
+                            <div className="w-20 text-right flex-shrink-0">
                                 {dayWeather && (
-                                    <div className="text-xs text-[var(--muted)]">
-                                        {dayWeather.windSpeed >= 15 && (
-                                            <span className="text-orange-500">💨{dayWeather.windSpeed}m/s</span>
+                                    <div className="text-[10px] text-gray-400 font-medium space-y-0.5">
+                                        <div className={cn(dayWeather.windSpeed >= 15 ? "text-orange-500 font-bold" : "")}>
+                                            💨 {dayWeather.windSpeed}m/s
+                                        </div>
+                                        {(dayWeather.snowfall ?? 0) > 0 && (
+                                            <div className={cn((dayWeather.snowfall ?? 0) >= 10 ? "text-blue-500 font-bold" : "")}>
+                                                ❄️ {dayWeather.snowfall}cm
+                                            </div>
                                         )}
-                                        {(dayWeather.snowfall ?? 0) >= 10 && (
-                                            <span className="text-blue-500 ml-1">❄️{dayWeather.snowfall}cm</span>
-                                        )}
-                                        {dayWeather.windSpeed < 15 && (dayWeather.snowfall ?? 0) < 10 && (
-                                            <span>{dayWeather.tempMax}°/{dayWeather.tempMin}°</span>
+                                        {dayWeather.windSpeed < 15 && (dayWeather.snowfall ?? 0) === 0 && (
+                                            <div className="opacity-80">{dayWeather.tempMax}° / {dayWeather.tempMin}°</div>
                                         )}
                                     </div>
                                 )}
@@ -119,18 +126,18 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
             </div>
 
             {/* 凡例 */}
-            <div className="flex items-center justify-center gap-4 mt-4 pt-3 border-t border-[var(--border)]">
-                <div className="flex items-center gap-1 text-xs">
-                    <div className="w-3 h-3 rounded bg-[var(--status-normal)]" />
-                    <span className="text-[var(--muted)]">低リスク</span>
+            <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-dashed border-gray-200">
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
+                    <div className="w-2 h-2 rounded-full bg-[var(--status-normal)]" />
+                    <span>低リスク</span>
                 </div>
-                <div className="flex items-center gap-1 text-xs">
-                    <div className="w-3 h-3 rounded bg-[var(--status-warning)]" />
-                    <span className="text-[var(--muted)]">中リスク</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
+                    <div className="w-2 h-2 rounded-full bg-[var(--status-warning)]" />
+                    <span>中リスク</span>
                 </div>
-                <div className="flex items-center gap-1 text-xs">
-                    <div className="w-3 h-3 rounded bg-[var(--status-suspended)]" />
-                    <span className="text-[var(--muted)]">高リスク</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
+                    <div className="w-2 h-2 rounded-full bg-[var(--status-suspended)]" />
+                    <span>高リスク</span>
                 </div>
             </div>
         </section>

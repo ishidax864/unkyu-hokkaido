@@ -93,17 +93,17 @@ export function UnifiedAlternativesCard({
     const rentalAffiliate = RENTAL_CAR_AFFILIATES[0];
 
     return (
-        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-white/20 shadow-sm mb-4">
-            <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                <span className="bg-blue-100 p-1 rounded text-blue-600">🚌</span>
+        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-5 border border-white/20 shadow-sm mb-4">
+            <h3 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                <span className="bg-blue-100 p-1.5 rounded-md text-blue-600">🚌</span>
                 代替手段・手配
-                <span className="text-xs font-normal text-gray-500">（{departureStation.name}発）</span>
+                <span className="text-xs font-medium text-gray-400 ml-auto">（{departureStation.name}発）</span>
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {/* 0. 時間変更提案（早い列車に変更） */}
                 {timeShiftSuggestion && timeShiftSuggestion.difference >= 15 && (
-                    <div className="card p-4 border-l-4 border-l-[var(--status-normal)] relative overflow-hidden">
+                    <div className="card p-4 border-l-4 border-l-[var(--status-normal)] relative overflow-hidden group hover:shadow-md transition-all">
                         <div className="flex items-center justify-between relative z-10">
                             <div className="flex items-center gap-2">
                                 <Clock className="w-5 h-5 text-[var(--status-normal)]" />
@@ -115,14 +115,14 @@ export function UnifiedAlternativesCard({
                                 {timeShiftSuggestion.time}発
                             </span>
                         </div>
-                        <div className="mt-2 text-xs text-[var(--muted)] relative z-10">
-                            運休リスク <span className="text-[var(--status-normal)] font-black">{timeShiftSuggestion.risk}%</span>（通常より{timeShiftSuggestion.difference}%低い）
+                        <div className="mt-2 text-xs text-[var(--muted)] relative z-10 flex items-center gap-1">
+                            運休リスク <span className="text-[var(--status-normal)] font-black text-sm">{timeShiftSuggestion.risk}%</span>（通常より{timeShiftSuggestion.difference}%低い）
                         </div>
                     </div>
                 )}
 
                 {/* 1. 推奨ルート・バス（アフィリエイト含む） */}
-                <div className="space-y-3">
+                <div className="space-y-4">
                     {recommendedRoutes
                         .filter(route => showHeavyTransport || route.type === 'subway') // 短時間ならバス・レンタカーを除外（地下鉄は残す）
                         .map((route, idx) => (
@@ -133,37 +133,37 @@ export function UnifiedAlternativesCard({
                                 rel="noopener noreferrer"
                                 onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
                                 className={cn(
-                                    "block p-4 card border-l-4 transition-all hover:bg-gray-50 active:scale-[0.98]",
+                                    "block p-4 card border-l-4 transition-all hover:bg-white hover:shadow-md active:scale-[0.99] group",
                                     route.type === 'subway' ? "border-l-[var(--status-normal)]" :
                                         busRisk === 'low' ? "border-l-[var(--accent)]" :
                                             busRisk === 'medium' ? "border-l-[var(--status-warning)]" :
                                                 "border-l-[var(--status-suspended)]"
                                 )}
                             >
-                                <div className="flex items-start gap-3">
+                                <div className="flex items-start gap-4">
                                     <div className={cn(
-                                        "p-2 rounded-full",
+                                        "p-2.5 rounded-full flex-shrink-0",
                                         route.type === 'subway' ? "bg-green-50 text-[var(--status-normal)]" :
                                             busRisk === 'low' ? "bg-blue-50 text-[var(--accent)]" :
                                                 busRisk === 'medium' ? "bg-orange-50 text-[var(--status-warning)]" :
                                                     "bg-red-50 text-[var(--status-suspended)]"
                                     )}>
                                         {route.type === 'bus' ? (
-                                            <Bus className="w-4 h-4" />
+                                            <Bus className="w-5 h-5" />
                                         ) : route.type === 'subway' ? (
-                                            <Train className="w-4 h-4" />
+                                            <Train className="w-5 h-5" />
                                         ) : (
-                                            <Car className="w-4 h-4" />
+                                            <Car className="w-5 h-5" />
                                         )}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-bold text-sm text-[var(--foreground)]">{route.name}</span>
-                                            <span className="text-xs font-black text-[var(--foreground)]">{route.time}</span>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="font-bold text-sm text-gray-800">{route.name}</span>
+                                            <span className="text-xs font-black text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{route.time}</span>
                                         </div>
-                                        <div className="text-xs text-[var(--muted)] mt-1 leading-relaxed">{route.details}</div>
+                                        <div className="text-xs text-gray-500 leading-relaxed">{route.details}</div>
                                     </div>
-                                    <ExternalLink className="w-4 h-4 text-gray-300 ml-1" />
+                                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-400 transition-colors mt-1" />
                                 </div>
                             </a>
                         ))}
@@ -175,27 +175,27 @@ export function UnifiedAlternativesCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'bus', provider: busAffiliate.name })}
-                            className="block p-4 card border-l-4 border-l-blue-400 hover:bg-blue-50/30 transition-all active:scale-[0.98] relative"
+                            className="block p-4 card border-l-4 border-l-blue-400 hover:bg-blue-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative"
                         >
-                            <div className="absolute top-2 right-2 flex items-center gap-1">
-                                <span className="text-[9px] font-black text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter">{PR_LABEL}</span>
-                                <ExternalLink className="w-3 h-3 text-blue-300" />
+                            <div className="absolute top-3 right-3 flex items-center gap-1">
+                                <span className="text-[9px] font-black text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-blue-50 rounded-full text-blue-500">
-                                    <Bus className="w-4 h-4" />
+                            <div className="flex items-center gap-4">
+                                <div className="p-2.5 bg-blue-50 rounded-full text-blue-500 flex-shrink-0">
+                                    <Bus className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <div className="text-sm font-bold text-[var(--foreground)]">高速・路線バス予約</div>
-                                    <div className="text-[10px] text-blue-500 font-medium">{busAffiliate.name}</div>
+                                    <div className="text-sm font-bold text-gray-800 mb-0.5">高速・路線バス予約</div>
+                                    <div className="text-xs text-blue-500 font-medium">{busAffiliate.name}</div>
                                 </div>
+                                <ExternalLink className="w-4 h-4 text-blue-200 group-hover:text-blue-400 transition-colors ml-auto mr-12" />
                             </div>
                         </a>
                     )}
                 </div>
 
                 {/* 2. タクシー・レンタカー（アフィリエイト統合） */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                     {/* タクシー（常時表示、ただし短期・長期どちらも有用） */}
                     {facilities?.hasTaxi && (
                         <a
@@ -203,23 +203,27 @@ export function UnifiedAlternativesCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: taxiAffiliate?.name })}
-                            className="block p-4 card border-l-4 border-l-[var(--status-warning)] hover:bg-gray-50 transition-all active:scale-[0.98] relative"
+                            className="block p-4 card border-l-4 border-l-[var(--status-warning)] hover:bg-orange-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative flex flex-col h-full"
                         >
                             <div className="absolute top-2 right-2">
-                                <span className="text-[9px] font-black text-orange-400 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100 uppercase tracking-tighter">{PR_LABEL}</span>
+                                <span className="text-[9px] font-black text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
                             </div>
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 mb-3">
                                 <Car className="w-4 h-4 text-[var(--status-warning)]" />
-                                <span className="font-bold text-sm text-[var(--foreground)]">タクシー</span>
+                                <span className="font-bold text-sm text-gray-800">タクシー</span>
                             </div>
                             {taxiInfo && (
-                                <div className="text-[11px] text-[var(--muted)] leading-tight space-y-1">
-                                    <div className="flex items-center justify-between"><span>概算</span><span className="font-bold text-[var(--foreground)]">¥{taxiInfo.fare.toLocaleString()}〜</span></div>
-                                    <div className="flex items-center justify-between"><span>目安</span><span className="font-bold text-[var(--foreground)]">約{taxiInfo.time}分</span></div>
+                                <div className="text-[11px] text-[var(--muted)] leading-tight space-y-2 mb-auto">
+                                    <div className="flex items-center justify-between border-b border-dashed border-gray-100 pb-1">
+                                        <span>概算</span><span className="font-bold text-gray-700">¥{taxiInfo.fare.toLocaleString()}〜</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span>目安</span><span className="font-bold text-gray-700">約{taxiInfo.time}分</span>
+                                    </div>
                                 </div>
                             )}
-                            <div className="mt-3 text-[10px] text-[var(--status-warning)] font-bold border-t border-orange-50 pt-2 flex items-center justify-between">
-                                今すぐ手配 <ExternalLink className="w-3 h-3" />
+                            <div className="mt-4 text-[10px] text-[var(--status-warning)] font-bold border-t border-orange-100 pt-2 flex items-center justify-between">
+                                今すぐ手配 <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                             </div>
                         </a>
                     )}
@@ -231,20 +235,21 @@ export function UnifiedAlternativesCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'rental', provider: rentalAffiliate?.name })}
-                            className="block p-4 card border-l-4 border-l-purple-400 hover:bg-gray-50 transition-all active:scale-[0.98] relative"
+                            className="block p-4 card border-l-4 border-l-purple-400 hover:bg-purple-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative flex flex-col h-full"
                         >
                             <div className="absolute top-2 right-2">
-                                <span className="text-[9px] font-black text-purple-400 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 uppercase tracking-tighter">{PR_LABEL}</span>
+                                <span className="text-[9px] font-black text-purple-500 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
                             </div>
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 mb-3">
                                 <Car className="w-4 h-4 text-purple-600" />
-                                <span className="font-bold text-sm text-[var(--foreground)]">レンタカー</span>
+                                <span className="font-bold text-sm text-gray-800">レンタカー</span>
                             </div>
-                            <div className="text-[11px] text-[var(--muted)] leading-tight">
-                                駅周辺に店舗あり
+                            <div className="text-[11px] text-[var(--muted)] leading-relaxed mb-auto">
+                                駅周辺の店舗を表示。<br />
+                                自分のペースで移動可能。
                             </div>
-                            <div className="mt-3 text-[10px] text-purple-600 font-bold border-t border-purple-50 pt-2 flex items-center justify-between">
-                                空き状況 <ExternalLink className="w-3 h-3" />
+                            <div className="mt-4 text-[10px] text-purple-600 font-bold border-t border-purple-100 pt-2 flex items-center justify-between">
+                                空き状況を見る <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                             </div>
                         </a>
                     )}
@@ -252,14 +257,14 @@ export function UnifiedAlternativesCard({
 
                 {/* 3. 地下鉄（常時表示） */}
                 {facilities?.hasSubway && facilities.subwayLines && (
-                    <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/10">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-50 rounded-full text-[var(--status-normal)]">
-                                <Train className="w-4 h-4" />
+                    <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/20">
+                        <div className="flex items-center gap-4">
+                            <div className="p-2.5 bg-green-100 rounded-full text-[var(--status-normal)] flex-shrink-0">
+                                <Train className="w-5 h-5" />
                             </div>
                             <div>
-                                <div className="font-bold text-sm text-[var(--foreground)]">地下鉄（{facilities.subwayLines.join('・')}）</div>
-                                <div className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed">
+                                <div className="font-bold text-sm text-gray-800">地下鉄（{facilities.subwayLines.join('・')}）</div>
+                                <div className="mt-1 text-xs text-gray-600 leading-relaxed font-medium">
                                     雪・風の影響なし。市内移動は最も確実
                                 </div>
                             </div>
@@ -269,12 +274,12 @@ export function UnifiedAlternativesCard({
 
                 {/* 4. 滞在・待機施設（状況に応じて切り替え） */}
                 {(showLongStayOptions || showShortStayOptions) && (
-                    <div className="pt-4 border-t border-gray-100">
-                        <div className="text-[10px] font-black text-[var(--muted)] mb-3 flex items-center gap-1.5 uppercase tracking-widest">
+                    <div className="pt-6 border-t border-dashed border-gray-200">
+                        <div className="text-[10px] font-bold text-gray-400 mb-4 flex items-center gap-1.5 uppercase tracking-widest justify-center">
                             <Clock className="w-3 h-3" />
                             {showLongStayOptions ? '長期見合わせ時の滞在・宿泊' : '運転再開までの待機場所'}
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-4">
                             {/* ホテル（長期時のみ） */}
                             {showLongStayOptions && facilities?.hasHotel && (
                                 <a
@@ -282,16 +287,16 @@ export function UnifiedAlternativesCard({
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'hotel_search', station: departureStation.name })}
-                                    className="block p-3 card border-l-4 border-l-pink-400 flex items-center gap-3 hover:bg-pink-50/50 transition-all active:scale-[0.98]"
+                                    className="block p-4 card border-l-4 border-l-pink-400 flex flex-col justify-center items-center gap-3 hover:bg-pink-50/20 hover:shadow-md transition-all active:scale-[0.99] text-center h-full group"
                                 >
-                                    <div className="p-1.5 bg-pink-50 rounded-full text-pink-500">
-                                        <Hotel className="w-3.5 h-3.5" />
+                                    <div className="p-3 bg-pink-50 rounded-full text-pink-500 mb-1 group-hover:scale-110 transition-transform">
+                                        <Hotel className="w-5 h-5" />
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="text-xs font-bold text-[var(--foreground)]">ホテルを探す</div>
-                                        <div className="text-[10px] text-[var(--muted)]">周辺の宿泊施設を検索</div>
+                                    <div className="w-full">
+                                        <div className="text-sm font-bold text-gray-800">ホテルを検索</div>
+                                        <div className="text-[10px] text-gray-500 mt-1">周辺の宿泊施設を探す</div>
                                     </div>
-                                    <ExternalLink className="w-3 h-3 text-pink-300" />
+                                    <ExternalLink className="w-3 h-3 text-pink-300 absolute top-3 right-3" />
                                 </a>
                             )}
 
@@ -302,16 +307,16 @@ export function UnifiedAlternativesCard({
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'cafe_search', station: departureStation.name })}
-                                    className="block p-3 card border-l-4 border-l-orange-400 flex items-center gap-3 hover:bg-orange-50/50 transition-all active:scale-[0.98]"
+                                    className="block p-4 card border-l-4 border-l-orange-400 flex flex-col justify-center items-center gap-3 hover:bg-orange-50/20 hover:shadow-md transition-all active:scale-[0.99] text-center h-full group"
                                 >
-                                    <div className="p-1.5 bg-orange-50 rounded-full text-orange-500">
-                                        <Coffee className="w-3.5 h-3.5" />
+                                    <div className="p-3 bg-orange-50 rounded-full text-orange-500 mb-1 group-hover:scale-110 transition-transform">
+                                        <Coffee className="w-5 h-5" />
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="text-xs font-bold text-[var(--foreground)]">カフェを探す</div>
-                                        <div className="text-[10px] text-[var(--muted)]">電源・Wi-Fi利用可の場所</div>
+                                    <div className="w-full">
+                                        <div className="text-sm font-bold text-gray-800">カフェを検索</div>
+                                        <div className="text-[10px] text-gray-500 mt-1">電源・Wi-Fiのある場所</div>
                                     </div>
-                                    <ExternalLink className="w-3 h-3 text-orange-300" />
+                                    <ExternalLink className="w-3 h-3 text-orange-300 absolute top-3 right-3" />
                                 </a>
                             )}
                         </div>
