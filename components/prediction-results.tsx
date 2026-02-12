@@ -112,9 +112,6 @@ export function PredictionResults({
             )}
 
 
-            {/* 帰宅アドバイザー */}
-            <ReturnTripAdvisor prediction={prediction} />
-
             {/* 代替ルート提案 */}
             {prediction.probability >= 30 && (
                 <AlternativeRoutes
@@ -128,10 +125,7 @@ export function PredictionResults({
                 />
             )}
 
-            {/* 交通手段アフィリエイト */}
-            {prediction.probability >= 30 && (
-                <TransportAffiliates />
-            )}
+            {/* 宿泊提案 */}
 
             {/* 宿泊提案 */}
             {prediction.probability >= 30 && (
