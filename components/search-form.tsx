@@ -1,6 +1,8 @@
-'use client';
-
-import { StationSelector } from './station-selector'; // 🆕
+import { useState } from 'react';
+import { sendGAEvent } from '@next/third-parties/google';
+import { Search, MapPin, ArrowRight, Calendar, Clock, AlertTriangle, Loader2, PlayCircle, Timer } from 'lucide-react';
+import { Station } from '@/lib/hokkaido-data';
+import { StationSelector } from './station-selector';
 
 interface SearchFormProps {
     onSearch: (

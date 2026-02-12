@@ -49,6 +49,7 @@ export function PredictionResults({
     removeFavorite
 }: PredictionResultsProps) {
     const isToday = date === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date());
+    if (!selectedRouteId) return null;
     const route = getRouteById(selectedRouteId);
 
     if (!route || !depStation || !arrStation) return null;
