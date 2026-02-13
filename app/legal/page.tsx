@@ -73,7 +73,7 @@ export default function LegalNotation() {
                     </section>
 
                     <div className="pt-4 text-right text-xs text-[var(--muted)]">
-                        2026年2月11日 制定
+                        2026年2月13日 改定
                     </div>
                 </div>
             </div>

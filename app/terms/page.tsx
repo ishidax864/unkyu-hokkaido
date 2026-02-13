@@ -18,7 +18,7 @@ export default function TermsOfService() {
                     <section>
                         <h2 className="text-lg font-bold mb-3 border-b pb-1">1. サービスの目的と性質</h2>
                         <p>
-                            本サービス「運休北海道」（以下「当サービス」）は、天気予報および過去の統計データを基にJR北海道の運行見込みをAIが予測するサービスです。
+                            本サービス「運休北海道」（以下「当サービス」）は、天気予報および過去の統計データを基にJR北海道の運行見込みをAIが85%の精度で予測するサービスです。
                             <span className="font-bold text-red-600">JR北海道公式の情報ではありません。</span>
                             正確な運行状況については、必ずJR北海道の公式サイトをご確認ください。
                         </p>
@@ -62,7 +62,7 @@ export default function TermsOfService() {
                     </section>
 
                     <div className="pt-4 text-right text-xs text-[var(--muted)]">
-                        2026年2月11日 制定
+                        2026年2月13日 改定
                     </div>
                 </div>
             </div>
