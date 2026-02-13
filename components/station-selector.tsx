@@ -88,7 +88,7 @@ export function StationSelector({
 
                 <input
                     type="text"
-                    placeholder={selectedStation ? selectedStation.name : "駅名を入力... (例: さっぽろ)"}
+                    placeholder={selectedStation ? selectedStation.name : "駅名を入力"}
                     value={query || (selectedStation ? selectedStation.name : '')}
                     onChange={(e) => {
                         setQuery(e.target.value);
