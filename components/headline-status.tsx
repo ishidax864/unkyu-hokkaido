@@ -6,12 +6,27 @@ import { WeatherWarning } from '@/lib/types';
 interface HeadlineStatusProps {
     warnings: WeatherWarning[];
     weatherCondition: string;
+    isLoading?: boolean;
 }
 
 /**
  * ページ上部に表示する今日の全体的な運行予報サマリー
  */
-export function HeadlineStatus({ warnings, weatherCondition }: HeadlineStatusProps) {
+export function HeadlineStatus({ warnings, weatherCondition, isLoading }: HeadlineStatusProps) {
+    if (isLoading) {
+        return (
+            <div className="card p-4 mb-4 border-2 bg-gray-50 border-gray-100 animate-pulse">
+                <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-gray-200 rounded-full flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                        <div className="h-6 bg-gray-200 rounded w-3/4 mb-1.5" />
+                        <div className="h-3 bg-gray-200 rounded w-1/2" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // 警報の重要度判定
     const hasCriticalWarnings = warnings.some(w =>
         ['暴風雪警報', '暴風警報', '大雪警報'].includes(w.type)

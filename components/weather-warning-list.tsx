@@ -9,10 +9,25 @@ interface WarningGroup {
 
 interface WeatherWarningListProps {
     warnings: WarningGroup[];
+    isLoading?: boolean;
 }
 
-export function WeatherWarningList({ warnings }: WeatherWarningListProps) {
+export function WeatherWarningList({ warnings, isLoading }: WeatherWarningListProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    if (isLoading) {
+        return (
+            <div className="bg-gray-100 p-3 rounded-md mb-4 animate-pulse h-[52px]">
+                <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-gray-200 rounded-full shrink-0" />
+                    <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                        <div className="h-2 bg-gray-200 rounded w-1/4" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!warnings || warnings.length === 0) return null;
 
