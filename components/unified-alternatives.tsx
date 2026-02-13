@@ -116,230 +116,180 @@ export function UnifiedAlternativesCard({
     const rentalAffiliate = RENTAL_CAR_AFFILIATES[0];
 
     return (
-        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-5 border border-white/20 shadow-sm mb-4">
-            <h3 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
-                <span className="bg-blue-100 p-1.5 rounded-md text-blue-600">🚌</span>
-                代替手段・手配
-                <span className="text-xs font-medium text-gray-400 ml-auto">（{departureStation.name}発）</span>
+        <div className="bg-gradient-to-br from-white to-blue-50/30 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-white/40 mb-6">
+            <h3 className="text-base font-bold text-gray-800 mb-6 flex items-center gap-2.5">
+                <span className="bg-blue-600 text-white p-1.5 rounded-lg shadow-sm">
+                    <Bus className="w-4 h-4" />
+                </span>
+                この後のアクション
+                <span className="text-xs font-medium text-gray-500 ml-auto bg-white/50 px-3 py-1 rounded-full border border-white/40">
+                    Taking action from {departureStation.name}
+                </span>
             </h3>
 
-            <div className="space-y-4">
-                {/* 0. 時間変更提案（早い列車に変更） */}
+            <div className="space-y-6">
+                {/* 0. 時間変更提案（早めの移動） */}
                 {timeShiftSuggestion && timeShiftSuggestion.difference >= 15 && (
-                    <div className="card p-4 border-l-4 border-l-[var(--status-normal)] relative overflow-hidden group hover:shadow-md transition-all">
-                        <div className="flex items-center justify-between relative z-10">
-                            <div className="flex items-center gap-2">
-                                <Clock className="w-5 h-5 text-[var(--status-normal)]" />
-                                <span className="font-bold text-sm text-[var(--foreground)]">
-                                    🚃 {timeShiftSuggestion.isEarlier ? '早い時間' : '遅い時間'}の列車に変更
+                    <div className="relative group overflow-hidden rounded-xl bg-white border border-green-100 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-green-500/80"></div>
+                        <div className="p-5 pl-6">
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                    <Clock className="w-5 h-5 text-green-600" />
+                                    <span className="font-bold text-gray-800 text-lg">早めの移動で回避する</span>
+                                </div>
+                                <span className="text-sm font-bold text-green-700 bg-green-50 px-3 py-1 rounded-lg">
+                                    {timeShiftSuggestion.time} 発
                                 </span>
                             </div>
-                            <span className="text-xs bg-green-50 text-[var(--status-normal)] px-2 py-0.5 rounded-full font-bold border border-green-100">
-                                {timeShiftSuggestion.time}発
-                            </span>
-                        </div>
-                        <div className="mt-2 text-xs text-[var(--muted)] relative z-10 flex items-center gap-1">
-                            運休リスク <span className="text-[var(--status-normal)] font-black text-sm">{timeShiftSuggestion.risk}%</span>（通常より{timeShiftSuggestion.difference}%低い）
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                                この時間の列車なら、運休リスクを <span className="font-bold text-green-600">{timeShiftSuggestion.risk}%</span> まで抑えられます（通常より{timeShiftSuggestion.difference}%安全）。
+                            </p>
                         </div>
                     </div>
                 )}
 
-                {/* 1. 推奨ルート・バス（アフィリエイト含む） */}
-                <div className="space-y-4">
-                    {recommendedRoutes
-                        .filter(route => showHeavyTransport || route.type === 'subway') // 短時間ならバス・レンタカーを除外（地下鉄は残す）
-                        .map((route, idx) => (
-                            <a
-                                key={idx}
-                                href={route.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
-                                className={cn(
-                                    "block p-4 card border-l-4 transition-all hover:bg-white hover:shadow-md active:scale-[0.99] group",
-                                    route.type === 'subway' ? "border-l-[var(--status-normal)]" :
-                                        busRisk === 'low' ? "border-l-[var(--accent)]" :
-                                            busRisk === 'medium' ? "border-l-[var(--status-warning)]" :
-                                                "border-l-[var(--status-suspended)]"
-                                )}
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className={cn(
-                                        "p-2.5 rounded-full flex-shrink-0",
-                                        route.type === 'subway' ? "bg-green-50 text-[var(--status-normal)]" :
-                                            busRisk === 'low' ? "bg-blue-50 text-[var(--accent)]" :
-                                                busRisk === 'medium' ? "bg-orange-50 text-[var(--status-warning)]" :
-                                                    "bg-red-50 text-[var(--status-suspended)]"
-                                    )}>
-                                        {route.type === 'bus' ? (
-                                            <Bus className="w-5 h-5" />
-                                        ) : route.type === 'subway' ? (
-                                            <Train className="w-5 h-5" />
-                                        ) : (
-                                            <Car className="w-5 h-5" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="font-bold text-sm text-gray-800">{route.name}</span>
-                                            <span className="text-xs font-black text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{route.time}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-500 leading-relaxed">{route.details}</div>
-                                    </div>
-                                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-400 transition-colors mt-1" />
-                                </div>
-                            </a>
-                        ))}
-
-                    {/* PR: 高速バス・路線バス予約（推奨ルートがある場合 かつ 長期遅延時のみ表示） */}
-                    {showHeavyTransport && recommendedRoutes.length > 0 && busAffiliate && (
-                        <a
-                            href={busAffiliate.webUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'bus', provider: busAffiliate.name })}
-                            className="block p-4 card border-l-4 border-l-blue-400 hover:bg-blue-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative"
-                        >
-                            <div className="absolute top-3 right-3 flex items-center gap-1">
-                                <span className="text-[9px] font-black text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="p-2.5 bg-blue-50 rounded-full text-blue-500 flex-shrink-0">
-                                    <Bus className="w-5 h-5" />
-                                </div>
-                                <div>
-                                    <div className="text-sm font-bold text-gray-800 mb-0.5">高速・路線バス予約</div>
-                                    <div className="text-xs text-blue-500 font-medium">{busAffiliate.name}</div>
-                                </div>
-                                <ExternalLink className="w-4 h-4 text-blue-200 group-hover:text-blue-400 transition-colors ml-auto mr-12" />
-                            </div>
-                        </a>
-                    )}
-                </div>
-
-                {/* 2. タクシー・レンタカー（アフィリエイト統合） */}
-                <div className="grid grid-cols-2 gap-4">
-                    {/* タクシー（常時表示、ただし短期・長期どちらも有用） */}
-                    {facilities?.hasTaxi && (
-                        <a
-                            href={taxiAffiliate?.webUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: taxiAffiliate?.name })}
-                            className="block p-4 card border-l-4 border-l-[var(--status-warning)] hover:bg-orange-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative flex flex-col h-full"
-                        >
-                            <div className="absolute top-2 right-2">
-                                <span className="text-[9px] font-black text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                                <Car className="w-4 h-4 text-[var(--status-warning)]" />
-                                <span className="font-bold text-sm text-gray-800">タクシー</span>
-                            </div>
-                            {taxiInfo && (
-                                <div className="text-[11px] text-[var(--muted)] leading-tight space-y-2 mb-auto">
-                                    <div className="flex items-center justify-between border-b border-dashed border-gray-100 pb-1">
-                                        <span>概算</span><span className="font-bold text-gray-700">¥{taxiInfo.fare.toLocaleString()}〜</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span>目安</span><span className="font-bold text-gray-700">約{taxiInfo.time}分</span>
-                                    </div>
-                                </div>
-                            )}
-                            <div className="mt-4 text-[10px] text-[var(--status-warning)] font-bold border-t border-orange-100 pt-2 flex items-center justify-between">
-                                今すぐ手配 <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                            </div>
-                        </a>
-                    )}
-
-                    {/* レンタカー（長期遅延時のみ） */}
-                    {showHeavyTransport && facilities?.hasRentalCar && (
-                        <a
-                            href={rentalAffiliate?.webUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'rental', provider: rentalAffiliate?.name })}
-                            className="block p-4 card border-l-4 border-l-purple-400 hover:bg-purple-50/10 hover:shadow-md transition-all active:scale-[0.99] group relative flex flex-col h-full"
-                        >
-                            <div className="absolute top-2 right-2">
-                                <span className="text-[9px] font-black text-purple-500 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 uppercase tracking-tighter shadow-sm">{PR_LABEL}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                                <Car className="w-4 h-4 text-purple-600" />
-                                <span className="font-bold text-sm text-gray-800">レンタカー</span>
-                            </div>
-                            <div className="text-[11px] text-[var(--muted)] leading-relaxed mb-auto">
-                                駅周辺の店舗を表示。<br />
-                                自分のペースで移動可能。
-                            </div>
-                            <div className="mt-4 text-[10px] text-purple-600 font-bold border-t border-purple-100 pt-2 flex items-center justify-between">
-                                空き状況を見る <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                            </div>
-                        </a>
-                    )}
-                </div>
-
-                {/* 3. 地下鉄（常時表示） */}
+                {/* 1. 地下鉄（最強の解決策） */}
                 {showGenericSubway && facilities?.subwayLines && (
-                    <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/20">
-                        <div className="flex items-center gap-4">
-                            <div className="p-2.5 bg-green-100 rounded-full text-[var(--status-normal)] flex-shrink-0">
-                                <Train className="w-5 h-5" />
-                            </div>
-                            <div>
-                                <div className="font-bold text-sm text-gray-800">地下鉄（{facilities.subwayLines.join('・')}）</div>
-                                <div className="mt-1 text-xs text-gray-600 leading-relaxed font-medium">
-                                    雪・風の影響なし。市内移動は最も確実
-                                </div>
-                            </div>
+                    <div className="rounded-xl bg-white border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 flex items-start gap-4">
+                        <div className="p-3 bg-green-50 rounded-xl text-green-600 flex-shrink-0">
+                            <Train className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-gray-800 text-base mb-1">雪に強い地下鉄ルート</h4>
+                            <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                                地下鉄（{facilities.subwayLines.join('・')}）は天候の影響を受けません。市内移動はこれが確実です。
+                            </p>
                         </div>
                     </div>
                 )}
 
-                {/* 4. 滞在・待機施設（状況に応じて切り替え） */}
-                {(showLongStayOptions || showShortStayOptions) && (
-                    <div className="pt-6 border-t border-dashed border-gray-200">
-                        <div className="text-[10px] font-bold text-gray-400 mb-4 flex items-center gap-1.5 uppercase tracking-widest justify-center">
-                            <Clock className="w-3 h-3" />
-                            {showLongStayOptions ? '長期見合わせ時の滞在・宿泊' : '運転再開までの待機場所'}
+                {/* 2. 推奨ルート（バスなど） */}
+                {recommendedRoutes
+                    .filter(route => showHeavyTransport || route.type === 'subway')
+                    .map((route, idx) => (
+                        <a
+                            key={idx}
+                            href={route.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
+                            className="block group rounded-xl bg-white border border-gray-100 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className={cn(
+                                    "p-3 rounded-xl flex-shrink-0 transition-colors",
+                                    route.type === 'subway' ? "bg-green-50 text-green-600" :
+                                        busRisk === 'low' ? "bg-blue-50 text-blue-600" :
+                                            busRisk === 'medium' ? "bg-orange-50 text-orange-600" :
+                                                "bg-red-50 text-red-600"
+                                )}>
+                                    {route.type === 'bus' ? <Bus className="w-6 h-6" /> :
+                                        route.type === 'subway' ? <Train className="w-6 h-6" /> :
+                                            <Car className="w-6 h-6" />}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-bold text-gray-800 text-base group-hover:text-blue-600 transition-colors">
+                                            {route.name}
+                                        </span>
+                                        <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                            {route.time}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 leading-relaxed">
+                                        {route.details}
+                                    </p>
+                                </div>
+                                <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-600 transition-colors mt-1" />
+                            </div>
+                        </a>
+                    ))}
+
+                {/* 3. タクシー（プレミアムな選択肢） */}
+                {facilities?.hasTaxi && (
+                    <a
+                        href={taxiAffiliate?.webUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: taxiAffiliate?.name })}
+                        className="block group rounded-xl bg-white border border-orange-100 p-1 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden"
+                    >
+                        <div className="absolute top-3 right-3 z-10">
+                            <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100">Recommended</span>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* ホテル（長期時のみ） */}
+                        <div className="p-4 flex items-center gap-4">
+                            <div className="p-3 bg-orange-50 rounded-xl text-orange-600">
+                                <Car className="w-6 h-6" />
+                            </div>
+                            <div className="flex-1">
+                                <div className="font-bold text-gray-800 text-base mb-1">混雑回避・直行（タクシー）</div>
+                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    {taxiInfo && (
+                                        <>
+                                            <span>約{taxiInfo.time}分</span>
+                                            <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                            <span>¥{taxiInfo.fare.toLocaleString()}〜</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1 text-sm font-bold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-lg group-hover:bg-orange-600 group-hover:text-white transition-all">
+                                手配する <ExternalLink className="w-3 h-3" />
+                            </div>
+                        </div>
+                    </a>
+                )}
+
+                {/* 4. 待機・滞在（Safety Net） */}
+                {(showLongStayOptions || showShortStayOptions) && (
+                    <div className="pt-6 mt-2">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="h-px flex-1 bg-gray-200"></div>
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                安全な場所で待機する
+                            </span>
+                            <div className="h-px flex-1 bg-gray-200"></div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* ホテル */}
                             {showLongStayOptions && facilities?.hasHotel && (
                                 <a
                                     href={`https://search.travel.rakuten.co.jp/ds/hotel/search?f_keyword=${encodeURIComponent(departureStation.name + '駅')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'hotel_search', station: departureStation.name })}
-                                    className="block p-4 card border-l-4 border-l-pink-400 flex flex-col justify-center items-center gap-3 hover:bg-pink-50/20 hover:shadow-md transition-all active:scale-[0.99] text-center h-full group"
+                                    className="group rounded-xl bg-white border border-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3"
                                 >
-                                    <div className="p-3 bg-pink-50 rounded-full text-pink-500 mb-1 group-hover:scale-110 transition-transform">
+                                    <div className="p-2.5 bg-pink-50 rounded-lg text-pink-500 group-hover:scale-110 transition-transform">
                                         <Hotel className="w-5 h-5" />
                                     </div>
-                                    <div className="w-full">
-                                        <div className="text-sm font-bold text-gray-800">ホテルを検索</div>
-                                        <div className="text-[10px] text-gray-500 mt-1">周辺の宿泊施設を探す</div>
+                                    <div className="flex-1">
+                                        <div className="font-bold text-gray-800 text-sm">ホテルを確保</div>
+                                        <div className="text-xs text-gray-500">今夜の宿を探す</div>
                                     </div>
-                                    <ExternalLink className="w-3 h-3 text-pink-300 absolute top-3 right-3" />
+                                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-pink-400" />
                                 </a>
                             )}
 
-                            {/* カフェ（短期時のみ、または長期時でホテルがない場合） */}
+                            {/* カフェ */}
                             {(showShortStayOptions || (showLongStayOptions && !facilities?.hasHotel)) && facilities?.hasCafe && (
                                 <a
                                     href={`https://www.google.com/maps/search/カフェ+${encodeURIComponent(departureStation.name + '駅')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'cafe_search', station: departureStation.name })}
-                                    className="block p-4 card border-l-4 border-l-orange-400 flex flex-col justify-center items-center gap-3 hover:bg-orange-50/20 hover:shadow-md transition-all active:scale-[0.99] text-center h-full group"
+                                    className="group rounded-xl bg-white border border-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3"
                                 >
-                                    <div className="p-3 bg-orange-50 rounded-full text-orange-500 mb-1 group-hover:scale-110 transition-transform">
+                                    <div className="p-2.5 bg-yellow-50 rounded-lg text-yellow-600 group-hover:scale-110 transition-transform">
                                         <Coffee className="w-5 h-5" />
                                     </div>
-                                    <div className="w-full">
-                                        <div className="text-sm font-bold text-gray-800">カフェを検索</div>
-                                        <div className="text-[10px] text-gray-500 mt-1">電源・Wi-Fiのある場所</div>
+                                    <div className="flex-1">
+                                        <div className="font-bold text-gray-800 text-sm">カフェで待機</div>
+                                        <div className="text-xs text-gray-500">Wi-Fi / 電源</div>
                                     </div>
-                                    <ExternalLink className="w-3 h-3 text-orange-300 absolute top-3 right-3" />
+                                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-yellow-500" />
                                 </a>
                             )}
                         </div>
