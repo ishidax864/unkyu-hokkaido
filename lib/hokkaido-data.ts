@@ -119,7 +119,6 @@ export const HOKKAIDO_STATIONS: Station[] = [
     { id: 'otaru-chikko', name: '小樽築港', kana: 'おたるちっこう', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1818, lon: 141.0269 },
     { id: 'zenibako', name: '銭函', kana: 'ぜにばこ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1438, lon: 141.1594 },
     { id: 'yoichi', name: '余市', kana: 'よいち', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1878, lon: 140.7847 },
-    { id: 'hosui-susukino', name: '豊水すすきの', kana: 'ほうすいすすきの', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0555, lon: 141.3555 }, // 便宜上
     { id: 'hassamu-chuo', name: '発寒中央', kana: 'はっさむちゅうおう', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0918, lon: 141.2864 },
     { id: 'hassamu', name: '発寒', kana: 'はっさむ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1018, lon: 141.2664 },
     { id: 'teine', name: '手稲', kana: 'ていね', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1118, lon: 141.2464 },
