@@ -106,22 +106,38 @@ export const HOKKAIDO_STATIONS: Station[] = [
     { id: 'shin-chitose-airport', name: '新千歳空港', kana: 'しんちとせくうこう', lines: ['jr-hokkaido.chitose'], region: '道央', isMajor: true, lat: 42.7877, lon: 141.6795 },
     { id: 'minami-chitose', name: '南千歳', kana: 'みなみちとせ', lines: ['jr-hokkaido.chitose', 'jr-hokkaido.sekihoku-main'], region: '道央', isMajor: true, lat: 42.8091, lon: 141.6748 },
     { id: 'chitose', name: '千歳', kana: 'ちとせ', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.8282, lon: 141.6521 },
+    { id: 'osatsu', name: '長都', kana: 'おさつ', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.8532, lon: 141.6136 },
+    { id: 'sapporo-beer-teien', name: 'サッポロビール庭園', kana: 'さっぽろびーるていえん', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.8632, lon: 141.5936 },
     { id: 'eniwa', name: '恵庭', kana: 'えにわ', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.8832, lon: 141.5836 },
+    { id: 'megumino', name: '恵み野', kana: 'めぐみの', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.8932, lon: 141.5736 },
+    { id: 'shimamatsu', name: '島松', kana: 'しままつ', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.9032, lon: 141.5636 },
     { id: 'kitahiroshima', name: '北広島', kana: 'きたひろしま', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 42.9806, lon: 141.5649 },
+    { id: 'kaminopporo', name: '上野幌', kana: 'かみのっぽろ', lines: ['jr-hokkaido.chitose'], region: '道央', lat: 43.0188, lon: 141.4933 },
 
     // 道央圏 - 函館本線（札幌〜小樽・余市）
     { id: 'otaru', name: '小樽', kana: 'おたる', lines: ['jr-hokkaido.hakodate-main'], region: '道央', isMajor: true, lat: 43.1977, lon: 140.9937 },
     { id: 'otaru-chikko', name: '小樽築港', kana: 'おたるちっこう', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1818, lon: 141.0269 },
     { id: 'zenibako', name: '銭函', kana: 'ぜにばこ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1438, lon: 141.1594 },
     { id: 'yoichi', name: '余市', kana: 'よいち', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1878, lon: 140.7847 },
+    { id: 'hosui-susukino', name: '豊水すすきの', kana: 'ほうすいすすきの', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0555, lon: 141.3555 }, // 便宜上
+    { id: 'hassamu-chuo', name: '発寒中央', kana: 'はっさむちゅうおう', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0918, lon: 141.2864 },
+    { id: 'hassamu', name: '発寒', kana: 'はっさむ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1018, lon: 141.2664 },
     { id: 'teine', name: '手稲', kana: 'ていね', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1118, lon: 141.2464 },
     { id: 'kotoni', name: '琴似', kana: 'ことに', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0815, lon: 141.3060 },
+    { id: 'naebo', name: '苗穂', kana: 'なえぼ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0685, lon: 141.3800 },
+    { id: 'shiroishi', name: '白石', kana: 'しろいし', lines: ['jr-hokkaido.hakodate-main', 'jr-hokkaido.chitose'], region: '道央', lat: 43.0545, lon: 141.4135 },
+    { id: 'atsubetsu', name: '厚別', kana: 'あつべつ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0450, lon: 141.4550 },
+    { id: 'oochi', name: '大麻', kana: 'おおち', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0700, lon: 141.5000 },
+    { id: 'nopporo', name: '野幌', kana: 'のっぽろ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.0900, lon: 141.5300 },
+    { id: 'ebetsu', name: '江別', kana: 'えべつ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.1100, lon: 141.5500 },
 
     // 道央圏 - 函館本線（札幌〜旭川）
     { id: 'iwamizawa', name: '岩見沢', kana: 'いわみざわ', lines: ['jr-hokkaido.hakodate-main', 'jr-hokkaido.muroran-main'], region: '道央', isMajor: true, lat: 43.2042, lon: 141.7596 },
     { id: 'bibai', name: '美唄', kana: 'びばい', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.2977, lon: 141.8617 },
+    { id: 'naie', name: '奈井江', kana: 'ないえ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.4200, lon: 141.8900 },
     { id: 'sunagawa', name: '砂川', kana: 'すながわ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.4934, lon: 141.9083 },
     { id: 'takikawa', name: '滝川', kana: 'たきかわ', lines: ['jr-hokkaido.hakodate-main', 'jr-hokkaido.nemuro-main'], region: '道央', lat: 43.5552, lon: 141.9080 },
+    { id: 'osamunai', name: '納内', kana: 'おさむない', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.6800, lon: 142.0000 },
     { id: 'fukagawa', name: '深川', kana: 'ふかがわ', lines: ['jr-hokkaido.hakodate-main'], region: '道央', lat: 43.7212, lon: 142.0416 },
     { id: 'asahikawa', name: '旭川', kana: 'あさひかわ', lines: ['jr-hokkaido.hakodate-main', 'jr-hokkaido.soya-main', 'jr-hokkaido.sekihoku-main'], region: '道央', isMajor: true, lat: 43.7628, lon: 142.3587 },
 
@@ -138,8 +154,13 @@ export const HOKKAIDO_STATIONS: Station[] = [
     { id: 'muroran', name: '室蘭', kana: 'むろらん', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 42.3152, lon: 140.9753 },
     { id: 'datemombetsu', name: '伊達紋別', kana: 'だてもんべつ', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 42.4697, lon: 140.8542 },
     { id: 'toya', name: '洞爺', kana: 'とうや', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 42.5592, lon: 140.7589 },
+    { id: 'kuriyama', name: '栗山', kana: 'くりやま', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 43.0589, lon: 141.7761 },
+    { id: 'yuni', name: '由仁', kana: 'ゆに', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 43.0039, lon: 141.7850 },
+    { id: 'abira', name: '安平', kana: 'あびら', lines: ['jr-hokkaido.muroran-main'], region: '道央', lat: 42.8767, lon: 141.7633 },
+    { id: 'oizawake', name: '追分', kana: 'おいざわけ', lines: ['jr-hokkaido.muroran-main', 'jr-hokkaido.sekisho'], region: '道央', lat: 42.8731, lon: 141.8106 },
 
-    // 石勝線（トマム）
+    // 石勝線（トマム・占冠）
+    { id: 'shimukappu', name: '占冠', kana: 'しむかっぷ', lines: ['jr-hokkaido.sekisho'], region: '道央', lat: 42.9900, lon: 142.3900 },
     { id: 'tomamu', name: 'トマム', kana: 'とまむ', lines: ['jr-hokkaido.sekisho'], region: '道東', isMajor: true, lat: 43.0558, lon: 142.6122 },
 
     // 道北（富良野線含む）
@@ -147,7 +168,10 @@ export const HOKKAIDO_STATIONS: Station[] = [
     { id: 'biei', name: '美瑛', kana: 'びえい', lines: ['jr-hokkaido.furano'], region: '道北', lat: 43.5908, lon: 142.4628 },
     { id: 'wakkanai', name: '稚内', kana: 'わっかない', lines: ['jr-hokkaido.soya-main'], region: '道北', isMajor: true, lat: 45.4162, lon: 141.6734 },
     { id: 'shibetsu', name: '士別', kana: 'しべつ', lines: ['jr-hokkaido.soya-main'], region: '道北', lat: 44.1794, lon: 142.3969 },
+    { id: 'wassamu', name: '和寒', kana: 'わっさむ', lines: ['jr-hokkaido.soya-main'], region: '道北', lat: 44.0200, lon: 142.4200 },
+    { id: 'kenbuchi', name: '剣淵', kana: 'けんぶち', lines: ['jr-hokkaido.soya-main'], region: '道北', lat: 44.1000, lon: 142.4200 },
     { id: 'nayoro', name: '名寄', kana: 'なよろ', lines: ['jr-hokkaido.soya-main'], region: '道北', lat: 44.3562, lon: 142.4641 },
+    { id: 'bifuka', name: '美深', kana: 'びふか', lines: ['jr-hokkaido.soya-main'], region: '道北', lat: 44.4800, lon: 142.3500 },
     { id: 'kamikawa', name: '上川', kana: 'かみかわ', lines: ['jr-hokkaido.sekihoku-main'], region: '道北', lat: 43.8483, lon: 142.7725 },
     { id: 'engaru', name: '遠軽', kana: 'えんがる', lines: ['jr-hokkaido.sekihoku-main'], region: '道北', lat: 44.0617, lon: 143.5283 },
     { id: 'abashiri', name: '網走', kana: 'あばしり', lines: ['jr-hokkaido.sekihoku-main', 'jr-hokkaido.senmo-main'], region: '道北', isMajor: true, lat: 44.0202, lon: 144.2547 },
