@@ -43,7 +43,7 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
         hasDeerRisk: false,
         safeWindDirections: [[350, 360], [0, 10]], // 北風は影響少なめ
     },
-    'jr-hokkaido.gakuentoshi': {
+    'jr-hokkaido.sassho': {
         windThreshold: 15,
         snowThreshold: 4,
         vulnerabilityScore: 1.1,
@@ -52,11 +52,11 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
     },
 
     // ===== 海沿い路線（強風リスク高） =====
-    'jr-hokkaido.muroran': {
+    'jr-hokkaido.muroran-main': {
         windThreshold: 16,
         snowThreshold: 4,
         vulnerabilityScore: 1.3,
-        description: '海沿い区間で強風の影響受けやすい',
+        description: '海沿い区場で強風の影響受けやすい',
         hasDeerRisk: true,
     },
     'jr-hokkaido.hidaka': {
@@ -75,7 +75,7 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
     },
 
     // ===== 山間部路線（積雪リスク高） =====
-    'jr-hokkaido.sekihoku': {
+    'jr-hokkaido.sekihoku-main': {
         windThreshold: 20,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
@@ -98,26 +98,33 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
     },
 
     // ===== 長距離ローカル線 =====
-    'jr-hokkaido.soya': {
+    'jr-hokkaido.soya-main': {
         windThreshold: 20,
         snowThreshold: 3,
         vulnerabilityScore: 1.8,
         description: '最北端路線、厳寒期は運休多い',
         hasDeerRisk: true,
     },
-    'jr-hokkaido.nemuro': {
+    'jr-hokkaido.nemuro-main': {
         windThreshold: 20,
         snowThreshold: 3,
         vulnerabilityScore: 1.5,
         description: '長距離路線、部分運休が発生しやすい',
         hasDeerRisk: true,
     },
-    'jr-hokkaido.senmo': {
+    'jr-hokkaido.senmo-main': {
         windThreshold: 14,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '観光路線、冬季は運休しやすい',
         hasDeerRisk: true,
+    },
+    'jr-hokkaido.hakodate-south': {
+        windThreshold: 18,
+        snowThreshold: 4,
+        vulnerabilityScore: 1.4,
+        description: '道南エリア、強風の影響あり',
+        hasDeerRisk: false,
     },
 };
 

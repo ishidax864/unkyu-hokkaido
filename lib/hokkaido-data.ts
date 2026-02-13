@@ -369,14 +369,18 @@ export interface AlternativeRouteOption {
     url?: string; // 公式サイトがあれば
 }
 
-const SAPPORO_AREA = ['sapporo', 'shin-sapporo', 'kotoni', 'teine'];
-const OTARU_AREA = ['otaru', 'otaru-chikko', 'zenibako', 'yoichi'];
-const ASAHIKAWA_AREA = ['asahikawa', 'fukagawa', 'takikawa', 'sunagawa', 'bibai', 'iwamizawa'];
-const MURORAN_AREA = ['tomakomai', 'shiraoi', 'noboribetsu', 'higashi-muroran', 'muroran', 'datemombetsu', 'toya'];
-const HAKODATE_AREA = ['hakodate', 'shin-hakodate-hokuto', 'mori', 'yakumo', 'oshamambe'];
-const OBIHIRO_KUSHIRO_AREA = ['tomamu', 'shintoku', 'obihiro', 'ikeda', 'atsukeshi', 'kushiro', 'nemuro'];
-const SAKHALIN_AREA = ['wakkanai', 'shibetsu', 'nayoro'];
-const ABASHIRI_AREA = ['kamikawa', 'engaru', 'bihoro', 'kitami', 'abashiri', 'shiretoko-shari'];
+const SAPPORO_AREA = [
+    'sapporo', 'shin-sapporo', 'kotoni', 'teine', 'naebo', 'shiroishi', 'atsubetsu', 'oochi', 'nopporo', 'ebetsu',
+    'soen', 'hassamu', 'hassamu-chuo', 'inazumi-koen', 'inaho', 'hoshimi', 'kitahiroshima', 'kaminopporo', 'heiwa',
+    'shin-kotoni', 'shinkawa', 'hachiken', 'taihei', 'yurigahara', 'shinoro', 'takuhoku', 'ainosato-kyoiku-dai', 'ainosato-koen'
+];
+const OTARU_AREA = ['otaru', 'otaru-chikko', 'zenibako', 'asari', 'minami-otaru', 'yoichi', 'niki', 'kozawa', 'kutchan', 'niseko', 'rankoshi', 'kuromatsunai'];
+const ASAHIKAWA_AREA = ['asahikawa', 'fukagawa', 'takikawa', 'sunagawa', 'bibai', 'iwamizawa', 'naie', 'ebeotsu', 'moseushi', 'osamunai', 'toyohoro', 'horomui', 'kamishunai', 'nagayama', 'pippu', 'ranru'];
+const MURORAN_AREA = ['tomakomai', 'shiraoi', 'noboribetsu', 'higashi-muroran', 'muroran', 'datemombetsu', 'toya', 'kuriyama', 'yuni', 'abira', 'oizawake', 'shimukappu', 'mukawa'];
+const HAKODATE_AREA = ['hakodate', 'shin-hakodate-hokuto', 'mori', 'yakumo', 'oshamambe', 'nanae', 'onuma', 'onuma-koen'];
+const OBIHIRO_KUSHIRO_AREA = ['tomamu', 'shintoku', 'obihiro', 'ikeda', 'atsukeshi', 'kushiro', 'nemuro', 'shiranuka', 'hamanaka', 'attoko'];
+const SAKHALIN_AREA = ['wakkanai', 'shibetsu', 'nayoro', 'wassamu', 'kenbuchi', 'bifuka', 'otoineppu', 'teshio-nakagawa'];
+const ABASHIRI_AREA = ['kamikawa', 'engaru', 'bihoro', 'kitami', 'abashiri', 'shiretoko-shari', 'memambetsu', 'rubeshibe', 'tanno', 'aibetsu', 'shirataki', 'maruseppu', 'ikutahara', 'antaroma'];
 
 export const ALTERNATIVE_ROUTE_MAPPING: {
     match: (depId: string, arrId: string) => boolean;
