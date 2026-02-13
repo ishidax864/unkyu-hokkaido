@@ -174,6 +174,8 @@ export const HOKKAIDO_STATIONS: Station[] = [
     { id: 'ainosato-kyoiku-dai', name: 'あいの里教育大', kana: 'あいのさときょういくだい', lines: ['jr-hokkaido.sassho'], region: '道央', lat: 43.1554, lon: 141.4011 },
     { id: 'ainosato-koen', name: 'あいの里公園', kana: 'あいのさとこうえん', lines: ['jr-hokkaido.sassho'], region: '道央', lat: 43.1650, lon: 141.4250 },
     { id: 'ishikari-futomi', name: '石狩太美', kana: 'いしかりふとみ', lines: ['jr-hokkaido.sassho'], region: '道央', lat: 43.1950, lon: 141.4650 },
+    { id: 'ishikari-tobetsu', name: '石狩当別', kana: 'いしかりとうべつ', lines: ['jr-hokkaido.sassho'], region: '道央', lat: 43.2208, lon: 141.5126 },
+    { id: 'hokkaido-iryo-daigaku', name: '北海道医療大学', kana: 'ほっかいどういりょうだいがく', lines: ['jr-hokkaido.sassho'], region: '道央', lat: 43.2384, lon: 141.5422 },
 
     // 道央圏 - 室蘭本線・石勝線
     { id: 'tomakomai', name: '苫小牧', kana: 'とまこまい', lines: ['jr-hokkaido.muroran-main', 'jr-hokkaido.chitose'], region: '道央', isMajor: true, lat: 42.6416, lon: 141.5973 },
