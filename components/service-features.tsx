@@ -11,7 +11,7 @@ export function ServiceFeatures() {
                     もう、雪の駅で<br className="md:hidden" />待ちぼうけはしない。
                 </h2>
                 <p className="text-[var(--muted)] text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-                    84%の精度でJR北海道の運休を予測。<br className="hidden md:block" />
+                    85%の精度でJR北海道の運休を予測。<br className="hidden md:block" />
                     寒い駅で待つ時間を減らし、代替手段を事前に検討できます。
                 </p>
             </div>
@@ -63,7 +63,7 @@ export function ServiceFeatures() {
                             <h3 className="font-bold text-base md:text-lg">予測精度の実績</h3>
                         </div>
                         <p className="text-xs md:text-sm text-[var(--muted)] leading-relaxed">
-                            過去300件以上の災害級事例を用いたバックテストにおいて、正解率84%超を達成。<br />
+                            過去500件以上の災害級・大雪事例を用いたバックテストにおいて、正解率85%超を達成。<br />
                             <span className="text-[10px] opacity-80">※安全最優先のため、悪天候でも運行できた稀な例外（外れ値）を除外し、厳しめに判定しています。</span>
                         </p>
                     </div>
@@ -71,7 +71,7 @@ export function ServiceFeatures() {
                         <div className="flex items-center justify-center bg-white px-6 py-4 rounded-lg border border-gray-200 shadow-sm">
                             <div className="text-center">
                                 <div className="text-[10px] text-[var(--muted)] mb-0.5">正解率</div>
-                                <div className="text-2xl font-bold text-blue-600">84<span className="text-sm font-normal ml-0.5">%超</span></div>
+                                <div className="text-2xl font-bold text-blue-600">85<span className="text-sm font-normal ml-0.5">%超</span></div>
                             </div>
                         </div>
                     </div>
