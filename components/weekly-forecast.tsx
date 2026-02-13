@@ -66,19 +66,24 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
         <section className="card p-5" aria-labelledby="weekly-forecast-title">
             <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4 text-gray-500" />
-                <h3 id="weekly-forecast-title" className="text-sm font-bold text-gray-700">週間運休リスク予測</h3>
+                <h3 id="weekly-forecast-title" className="text-sm font-bold text-gray-700">向こう5日間の運休リスク予測</h3>
             </div>
 
             <div className="space-y-4">
                 {predictions.slice(0, 5).map((pred, index) => {
                     const dayWeather = weather.find(w => w.date === pred.targetDate);
+                    const dateText = formatDate(pred.targetDate);
+                    // '今日'や'明日'の場合はそのまま、それ以外は日付と曜日(カッコ内)を分割
+                    const hasParen = dateText.includes('(');
+                    const mainDate = hasParen ? dateText.split('(')[0] : dateText;
+                    const subDate = hasParen ? `(${dateText.split('(')[1]}` : '';
 
                     return (
                         <div key={pred.targetDate} className="flex items-center gap-4">
                             {/* 日付 */}
                             <div className="w-14 flex-shrink-0 text-xs text-gray-500 text-center">
-                                <div className="font-bold text-gray-700 text-sm">{formatDate(pred.targetDate).split('(')[0]}</div>
-                                <div className="scale-90 opacity-80">({formatDate(pred.targetDate).split('(')[1]}</div>
+                                <div className="font-bold text-gray-700 text-sm">{mainDate}</div>
+                                <div className="scale-90 opacity-80">{subDate}</div>
                             </div>
 
                             {/* 天気アイコン */}

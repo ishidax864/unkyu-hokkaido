@@ -278,7 +278,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                         result.probability >= 70 ? '運休の可能性が高い' :
                             result.probability >= 40 ? '遅延・運休に注意' :
                                 result.probability >= 20 ? '多少の影響あり' :
-                                    '通常運行の見込み'
+                                    `${route.name}は通常運行の見込み`
                     }
                 </div>
 
@@ -309,6 +309,22 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                     ))}
                 </ul>
             </div>
+
+            {/* 公式情報へのリンク促進 (Normal Mode) */}
+            <a
+                href={getJRStatusUrl(route.id).url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm hover:bg-gray-100 transition-colors mb-4"
+            >
+                <div className="flex items-center gap-2 text-gray-600 font-medium justify-center">
+                    <div className="flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-gray-400" />
+                        JR公式発表を確認する
+                    </div>
+                    <ExternalLink className="w-3 h-3 opacity-70" />
+                </div>
+            </a>
 
             {/* 信頼度・影響度・メタデータ */}
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-dashed border-gray-200">

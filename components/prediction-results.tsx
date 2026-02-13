@@ -60,7 +60,7 @@ export function PredictionResults({
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none">RESULT</span>
-                    <h2 className="text-sm font-black text-gray-900 leading-none">
+                    <h2 className="text-lg font-black text-gray-900 leading-none">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>
