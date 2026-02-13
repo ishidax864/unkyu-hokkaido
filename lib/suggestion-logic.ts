@@ -212,3 +212,37 @@ export function checkAlternativeAvailability(
                 : null
     };
 }
+
+/**
+ * 汎用的な地下鉄提案を表示すべきか判定
+ * 条件: 出発・到着ともに地下鉄エリア、かつSpecific推奨に含まれていない
+ */
+export function shouldShowGenericSubway(
+    hasDepSubway: boolean,
+    hasArrSubway: boolean,
+    hasSpecificSubway: boolean
+): boolean {
+    if (!hasDepSubway) return false;
+    if (hasSpecificSubway) return false; // 重複防止
+    if (hasArrSubway) return true; // 到着地も地下鉄エリアならOK
+
+    // 将来的には「札幌駅発」などの特例を追加可能
+    return false;
+}
+
+/**
+ * 復旧時間と現在時刻から、表示用メッセージを生成
+ */
+export function getRecoveryMessage(recoveryHours: number, currentTimeStr: string): string {
+    const currentHour = parseInt(currentTimeStr.split(':')[0]);
+    const remainingHours = 24 - currentHour;
+
+    if (recoveryHours >= remainingHours || recoveryHours > 10) {
+        return '終日運休の恐れあり';
+    } else if (recoveryHours > 0) {
+        const h = Math.round(recoveryHours);
+        return `${h}時間後に運転再開の見込み`;
+    } else {
+        return 'まもなく運転再開の見込み';
+    }
+}

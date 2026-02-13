@@ -1,9 +1,10 @@
+
 // =====================
 // 運休AI 型定義
 // =====================
 
 // 運行状況レベル
-export type OperationStatus = '平常運転' | '遅延' | '運転見合わせ' | '運休' | '運休中';
+export type OperationStatus = '平常運転' | '遅延' | '運転見合わせ' | '運休' | '運休中' | 'normal' | 'delayed' | 'suspended' | 'cancelled';
 
 // 予測信頼度
 export type ConfidenceLevel = 'high' | 'medium' | 'low';
@@ -53,6 +54,7 @@ export interface WeatherWarning {
 export interface WeatherForecast {
   date: string;
   weather: string;
+  temperature?: number; // 🆕 現在気温(時間単位用)
   tempMax: number;
   tempMin: number;
   precipitation: number;
@@ -62,6 +64,7 @@ export interface WeatherForecast {
   snowDepth?: number;
   snowDepthChange?: number; // 🆕 前時間からの積雪増加量(cm)
   windGust?: number;
+  pressure?: number; // 🆕 気圧 (hPa)
   weatherCode?: number;
   warnings: WeatherWarning[];
   targetTime?: string; // HH:MM
@@ -78,6 +81,7 @@ export interface PredictionResult {
   probability: number;
   status: OperationStatus;
   confidence: ConfidenceLevel;
+  level?: ConfidenceLevel; // API V2 compatibility
   reasons: string[];
   weatherImpact: WeatherImpact;
   updatedAt: string;

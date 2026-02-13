@@ -337,7 +337,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                             result.confidence === 'high' ? 'text-[var(--status-normal)]' :
                                 result.confidence === 'medium' ? 'text-[var(--status-warning)]' : 'text-[var(--muted)]'
                         )}>
-                            {result.confidence === 'high' ? '高い' : result.confidence === 'medium' ? '標準' : '低い'}
+                            {result.confidence === 'high' ? '高い' : result.confidence === 'medium' ? '中' : '低い'}
                         </span>
                     </div>
                 </div>

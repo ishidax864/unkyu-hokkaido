@@ -153,20 +153,84 @@ export function useRouteSearch() {
             }
         }
 
-        // Calculate Risk
-        const result = calculateSuspensionRisk({
-            weather: targetWeather,
-            routeId: routeId,
-            routeName: primaryRoute?.name || '',
-            targetDate: searchDate,
-            targetTime: targetTimeStr, // Use timetable departure time
-            historicalData,
-            jrStatus,
-            crowdsourcedStatus, // Logic uses this for RISK calculation (only if isToday)
-            timetableTrain: timetableTrain || undefined
-        });
+        // ML Prediction (Server-side)
+        let finalPrediction: PredictionResult | null = null;
 
-        setPrediction(result);
+        try {
+            const apiRes = await fetch('/api/prediction/v2/route', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    routeId,
+                    date: searchDate,
+                    time: targetTimeStr
+                })
+            });
+
+            if (apiRes.ok) {
+                const mlResult: PredictionResult = await apiRes.json();
+
+                // Merge with client-side context (e.g. JR Status, Crowdsourced) if needed,
+                // but for now trust the Server ML + UI augmentation.
+                // The server returns a simplified result. 
+                // We might want to overlay JR Status text if available.
+
+                if (jrStatus) {
+                    // Overlay JR Status info (Realtime override)
+                    // If JR says "Suspended", we should probably show that regardless of ML?
+                    // Or let ML handle it if we fed JR status to ML? 
+                    // Current ML only knows weather. 
+                    // So we should adhere to "Official Info Priority" rule.
+                    if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
+                        mlResult.probability = 100;
+                        mlResult.level = 'high';
+                        mlResult.status = 'suspended';
+                        mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
+                        mlResult.isOfficialOverride = true;
+                    } else if (jrStatus.status === 'delay') {
+                        if (mlResult.probability < 50) mlResult.probability = 50;
+                        mlResult.level = mlResult.probability >= 70 ? 'high' : 'medium';
+                        mlResult.status = 'delayed';
+                        mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
+                    }
+                }
+
+                setPrediction(mlResult);
+                finalPrediction = mlResult;
+            } else {
+                // Fallback to local calculation if API fails
+                logger.error('ML API failed, falling back to local');
+                const result = calculateSuspensionRisk({
+                    weather: targetWeather,
+                    routeId: routeId,
+                    routeName: primaryRoute?.name || '',
+                    targetDate: searchDate,
+                    targetTime: targetTimeStr,
+                    historicalData,
+                    jrStatus,
+                    crowdsourcedStatus,
+                    timetableTrain: timetableTrain || undefined
+                });
+                setPrediction(result);
+                finalPrediction = result;
+            }
+        } catch (e) {
+            logger.error('ML API error', e);
+            // Fallback
+            const result = calculateSuspensionRisk({
+                weather: targetWeather,
+                routeId: routeId,
+                routeName: primaryRoute?.name || '',
+                targetDate: searchDate,
+                targetTime: targetTimeStr,
+                historicalData,
+                jrStatus,
+                crowdsourcedStatus,
+                timetableTrain: timetableTrain || undefined
+            });
+            setPrediction(result);
+            finalPrediction = result;
+        }
 
         // 🆕 Always set realtime status for UI display (badges), regardless of search date
         if (routeId) {
@@ -189,7 +253,7 @@ export function useRouteSearch() {
 
         // Helper: Time Shift & Risk Trend
         // 🆕 終日運休等の場合は時間変更提案をしない
-        const isAllDaySuspension = result.estimatedRecoveryTime === '終日運休' || result.isOfficialOverride;
+        const isAllDaySuspension = finalPrediction ? (finalPrediction.estimatedRecoveryTime === '終日運休' || finalPrediction.isOfficialOverride) : false;
 
         // Calculate risk trend always
         const trendData: HourlyRiskData[] = [];
@@ -246,8 +310,8 @@ export function useRouteSearch() {
             });
 
             // Calculate best shift if high risk
-            if (result.probability >= 30 && !isAllDaySuspension && offset !== 0) {
-                const diff = result.probability - r.probability;
+            if (finalPrediction && finalPrediction.probability >= 30 && !isAllDaySuspension && offset !== 0) {
+                const diff = finalPrediction.probability - r.probability;
                 // 🆕 過去の時間は提案しない (Simple check)
                 const isPast = isToday && (h < new Date().getHours());
 

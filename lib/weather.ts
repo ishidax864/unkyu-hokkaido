@@ -108,6 +108,7 @@ interface OpenMeteoHourlyResponse {
         weather_code: number[];
         snowfall?: number[];
         winddirection_10m: number[]; // 🆕
+        pressure_msl?: number[]; // 🆕
     };
 }
 
@@ -192,7 +193,7 @@ export async function fetchHourlyWeatherForecast(
         const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?` +
             `latitude=${lat}&longitude=${lon}` +
-            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m` +
+            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl` +
             `&timezone=Asia/Tokyo` +
             `&forecast_days=7`,
             { next: { revalidate: 3600 } } // 1時間ごとに更新
@@ -242,6 +243,7 @@ export async function fetchHourlyWeatherForecast(
             snowfall: data.hourly.snowfall ? data.hourly.snowfall[closestIndex] : 0,
             weatherCode: data.hourly.weather_code[closestIndex],
             windDirection: data.hourly.winddirection_10m[closestIndex], // 🆕
+            pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[closestIndex] : 1013, // 🆕
         };
 
         const warnings = generateWarningsFromHourly(
@@ -288,6 +290,7 @@ export async function fetchHourlyWeatherForecast(
         return {
             date: targetDate,
             weather: getWeatherName(currentHourData.weatherCode),
+            temperature: currentHourData.temp, // 🆕
             tempMax: currentHourData.temp + 2,
             tempMin: currentHourData.temp - 2,
             precipitation: currentHourData.precipitation,
@@ -296,6 +299,7 @@ export async function fetchHourlyWeatherForecast(
             windGust: currentHourData.windGust,
             weatherCode: currentHourData.weatherCode,
             windDirection: currentHourData.windDirection, // 🆕
+            pressure: currentHourData.pressure, // 🆕
             warnings,
             surroundingHours, // 追加
         };

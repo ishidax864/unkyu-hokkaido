@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { Bus, Car, Train, Coffee, Hotel, ExternalLink, Clock } from 'lucide-react';
 import { Station, getAlternativeRoutes, AlternativeRouteOption, estimateTaxiFare } from '@/lib/hokkaido-data';
 import { getStationFacilities } from '@/lib/alternative-options';
+import { getRecoveryMessage, shouldShowGenericSubway } from '@/lib/suggestion-logic';
 import { cn } from '@/lib/utils';
 import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
@@ -61,11 +62,33 @@ export function UnifiedAlternativesCard({
         const fare = estimateTaxiFare(departureStation.id, arrivalStation.id);
         if (!fare) return null;
 
-        // 距離から所要時間を概算（平均24km/h）
-        const distanceKm = fare / 400; // 概算
+        // Distance estimation
+        const distanceKm = fare / 400;
         const timeMin = Math.round(distanceKm * 2.5);
         return { fare, time: timeMin };
     }, [departureStation, arrivalStation]);
+
+    // 到着駅の施設情報 (地下鉄判定用)
+    const arrivalFacilities = useMemo(() => {
+        if (!arrivalStation) return null;
+        return getStationFacilities(arrivalStation.id);
+    }, [arrivalStation]);
+
+    // 地下鉄を推奨すべきか？ (出発・到着ともに地下鉄エリア、かつSpecific推奨に含まれていない)
+    const showGenericSubway = useMemo(() => {
+        if (!facilities?.hasSubway || !facilities.subwayLines) return false;
+
+        // 推奨ルートに既にSubwayが含まれているなら重複表示しない
+        const hasSpecificSubway = recommendedRoutes.some(r => r.type === 'subway');
+        if (hasSpecificSubway) return false;
+
+        // 到着駅も地下鉄エリアか？ (例: 札幌 -> 琴似)
+        if (arrivalFacilities?.hasSubway) return true;
+
+        // 特例: 札幌駅発で、到着地が特定の近距離エリアなら表示する？ 
+        // いったん「到着地も地下鉄あり」に限定することで「地下鉄がないエリアで出る」を防ぐ
+        return false;
+    }, [facilities, arrivalFacilities, recommendedRoutes]);
 
     // バスの運行リスク計算
     const busRisk = useMemo(() => {
@@ -256,7 +279,7 @@ export function UnifiedAlternativesCard({
                 </div>
 
                 {/* 3. 地下鉄（常時表示） */}
-                {facilities?.hasSubway && facilities.subwayLines && (
+                {showGenericSubway && facilities?.subwayLines && (
                     <div className="p-4 card border-l-4 border-l-[var(--status-normal)] bg-green-50/20">
                         <div className="flex items-center gap-4">
                             <div className="p-2.5 bg-green-100 rounded-full text-[var(--status-normal)] flex-shrink-0">
