@@ -375,4 +375,73 @@ export async function getReportStats(routeId: string): Promise<DbResult<{
             error: error instanceof Error ? error.message : 'Unknown error'
         };
     }
+
+}
+
+// 🆕 監視ログ（AI vs 実績）
+export interface MonitoringLogDB {
+    id?: string;
+    route_id: string;
+    route_name: string;
+    predicted_status: string;
+    predicted_probability: number;
+    actual_status: string;
+    actual_status_text?: string;
+    is_match: boolean;
+    weather_summary?: string; // e.g. "Wind: 15m/s, Snow: 0cm"
+    created_at?: string;
+}
+
+// 監視ログの保存（リトライ対応）
+export async function saveMonitoringLog(log: MonitoringLogDB): Promise<DbResult<boolean>> {
+    const client = getSupabaseClient();
+    if (!client) {
+        // Fallback to console if no DB
+        logger.info('[MONITORING] (No DB) ' + JSON.stringify(log));
+        return { success: true, data: true };
+    }
+
+    try {
+        const result = await withRetry(
+            async () => {
+                const { error } = await client
+                    .from('monitoring_logs')
+                    .insert({
+                        route_id: log.route_id,
+                        route_name: log.route_name,
+                        predicted_status: log.predicted_status,
+                        predicted_probability: log.predicted_probability,
+                        actual_status: log.actual_status,
+                        actual_status_text: log.actual_status_text,
+                        is_match: log.is_match,
+                        weather_summary: log.weather_summary
+                    });
+
+                if (error) {
+                    // Table might not exist yet, log warning and return success to not block API
+                    if (error.code === '42P01') { // undefined_table
+                        logger.warn('Monitoring table missing', { error });
+                        return true;
+                    }
+                    throw new DatabaseError(
+                        `Failed to save monitoring log: ${error.message}`,
+                        'write',
+                        { code: error.code }
+                    );
+                }
+
+                return true;
+            },
+            { maxRetries: 1, initialDelay: 500 }
+        );
+
+        logger.info('Monitoring log saved', { routeId: log.route_id, match: log.is_match });
+        return { success: true, data: result };
+    } catch (error) {
+        logger.error('Failed to save monitoring log', { error, log });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
 }
