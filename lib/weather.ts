@@ -519,6 +519,6 @@ export async function fetchAllHokkaidoWarnings(): Promise<Array<{ area: string; 
 }
 
 // 互換性のため（既存コードで使用）
-export async function fetchRealWeatherForecast(routeId?: string): Promise<WeatherForecast[]> {
-    return fetchDailyWeatherForecast(routeId);
+export async function fetchRealWeatherForecast(routeId?: string, coordinates?: { lat: number; lon: number }): Promise<WeatherForecast[]> {
+    return fetchDailyWeatherForecast(routeId, coordinates);
 }

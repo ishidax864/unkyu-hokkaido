@@ -92,14 +92,22 @@ export function useRouteSearch() {
         let targetWeather: WeatherForecast | null = null;
         let weeklyWeather: WeatherForecast[] = [];
 
+        // 駅の座標から中間地点を計算（ルート代表座標より正確）
+        const stationCoordinates = (depStation && arrStation && depStation.lat != null && depStation.lon != null && arrStation.lat != null && arrStation.lon != null)
+            ? {
+                lat: (depStation.lat + arrStation.lat) / 2,
+                lon: (depStation.lon + arrStation.lon) / 2,
+            }
+            : undefined;
+
         try {
-            targetWeather = await fetchHourlyWeatherForecast(routeId, targetDateTime);
+            targetWeather = await fetchHourlyWeatherForecast(routeId, targetDateTime, stationCoordinates);
         } catch (error) {
             logger.error('Hourly weather fetch failed', error);
         }
 
         try {
-            weeklyWeather = await fetchRealWeatherForecast(routeId);
+            weeklyWeather = await fetchRealWeatherForecast(routeId, stationCoordinates);
         } catch (error) {
             logger.error('Weekly weather fetch failed', error);
         }
