@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
         });
 
         if (!result.success) {
+            logger.error('Feedback save failed', { error: result.error });
             return NextResponse.json(
                 { error: 'フィードバックの送信に失敗しました。', details: result.error },
                 { status: 500 }
