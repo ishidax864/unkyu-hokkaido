@@ -33,41 +33,38 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
     if (status === 'safe' && !isEveningSoon) return null; // Don't show "Safe" during morning commute? Maybe show small reassurance.
 
     return (
-        <div className={cn(
-            "mt-4 mb-2 p-4 card-elevated border-l-4 flex items-start gap-4",
-            status === 'critical' ? 'border-l-[var(--status-suspended)] bg-red-50/5' :
-                status === 'warning' ? 'border-l-[var(--status-warning)] bg-orange-50/5' :
-                    'border-l-[var(--status-normal)] bg-green-50/5'
-        )}>
-            <div className={cn(
-                "mt-1 shrink-0 p-3 rounded-full shadow-sm",
-                status === 'critical' ? 'bg-red-50 text-[var(--status-suspended)]' :
-                    status === 'warning' ? 'bg-orange-50 text-[var(--status-warning)]' :
-                        'bg-green-50 text-[var(--status-normal)]'
-            )}>
-                {status === 'critical' ? <Hotel className="w-6 h-6" /> :
-                    status === 'warning' ? <Home className="w-6 h-6" /> :
-                        <Coffee className="w-6 h-6" />}
+    return (
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
+            <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <div className={cn(
+                        "p-1.5 rounded-md",
+                        status === 'critical' ? 'bg-red-100 text-red-600' :
+                            status === 'warning' ? 'bg-orange-100 text-orange-600' :
+                                'bg-green-100 text-green-600'
+                    )}>
+                        {status === 'critical' ? <Hotel className="w-4 h-4" /> :
+                            status === 'warning' ? <Home className="w-4 h-4" /> :
+                                <Coffee className="w-4 h-4" />}
+                    </div>
+                    <span className="text-sm font-bold text-gray-700">帰宅サバイバル判定</span>
+                </div>
+                <div className={cn(
+                    "text-xs font-bold px-2 py-1 rounded",
+                    status === 'critical' ? 'bg-red-50 text-red-700 border border-red-100' :
+                        status === 'warning' ? 'bg-orange-50 text-orange-700 border border-orange-100' :
+                            'bg-green-50 text-green-700 border border-green-100'
+                )}>
+                    {status === 'critical' ? '帰宅困難' : status === 'warning' ? '要注意' : '安全圏'}
+                </div>
             </div>
-            <div className="flex-1">
-                <h3 className={cn(
-                    "font-bold text-sm",
-                    status === 'critical' ? 'text-red-950' :
-                        status === 'warning' ? 'text-orange-950' :
-                            'text-green-950'
-                )}>
-                    帰宅サバイバル判定
-                </h3>
-                <p className={cn(
-                    "text-sm mt-1.5 leading-relaxed",
-                    status === 'critical' ? 'text-red-900' :
-                        status === 'warning' ? 'text-orange-900' :
-                            'text-green-900'
-                )}>
+
+            <div className="p-4">
+                <p className="text-sm text-gray-700 leading-relaxed mb-4">
                     {message}
                 </p>
 
-                {/* Action Button (Fake for MVP) */}
+                {/* Action Button */}
                 {status === 'critical' && (
                     <button
                         onClick={() => {
@@ -76,14 +73,15 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
                                 element.scrollIntoView({ behavior: 'smooth' });
                             }
                         }}
-                        className="mt-4 bg-[var(--status-suspended)] hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 w-full justify-center transition-all shadow-md active:scale-[0.98]"
+                        className="w-full bg-[var(--status-suspended)] hover:bg-red-700 text-white text-sm font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98]"
                     >
                         <Hotel className="w-4 h-4" />
                         <span>近くのホテルを探す</span>
-                        <ArrowRight className="w-3 h-3 ml-1 opacity-70" />
+                        <ArrowRight className="w-4 h-4 opacity-80" />
                     </button>
                 )}
             </div>
         </div>
+    );
     );
 }

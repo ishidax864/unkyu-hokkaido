@@ -166,7 +166,7 @@ export function UnifiedAlternativesCard({
             ) : null}
 
             {/* 1. Other Options List (Table Style) */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                 <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200">
                     その他の選択肢
                 </div>

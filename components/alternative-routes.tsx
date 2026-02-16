@@ -105,40 +105,40 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
     };
 
     return (
-        <section className="card p-4" aria-labelledby="alternative-routes-title">
-            <div className="flex items-center gap-2 mb-4">
+    return (
+        <section aria-labelledby="alternative-routes-title">
+            <div className="flex items-center gap-2 mb-4 px-1">
                 <Train className="w-4 h-4 text-[var(--primary)]" />
-                <h3 id="alternative-routes-title" className="text-sm font-bold">代替ルート・行動提案</h3>
+                <h3 id="alternative-routes-title" className="text-sm font-bold text-gray-700">代替ルート・行動提案</h3>
             </div>
 
             {/* 戦略的アドバイスの表示 - 統合カードの上に移動 */}
             {advice && (
-                <div className={cn(
-                    "mb-4 p-4 card-elevated border-l-4 text-sm flex items-start gap-3",
-                    advice.type === 'critical' ? "border-l-[var(--status-suspended)]" :
-                        advice.type === 'warning' ? "border-l-[var(--status-warning)]" :
-                            "border-l-[var(--primary)]"
-                )}>
-                    <div className={cn(
-                        "mt-1 p-2 rounded-full",
-                        advice.type === 'critical' ? "bg-red-50 text-[var(--status-suspended)]" :
-                            advice.type === 'warning' ? "bg-orange-50 text-[var(--status-warning)]" :
-                                "bg-green-50 text-[var(--primary)]"
-                    )}>
-                        {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
-                            advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
-                                <Train className="w-4 h-4" />}
-                    </div>
-                    <div className="flex-1">
+                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
+                    <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2">
                         <div className={cn(
-                            "font-bold mb-1",
-                            advice.type === 'critical' ? "text-red-950" :
-                                advice.type === 'warning' ? "text-orange-950" :
-                                    "text-green-950"
+                            "p-1.5 rounded-md",
+                            advice.type === 'critical' ? "bg-red-100 text-red-600" :
+                                advice.type === 'warning' ? "bg-orange-100 text-orange-600" :
+                                    "bg-green-100 text-green-600"
+                        )}>
+                            {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
+                                advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
+                                    <Train className="w-4 h-4" />}
+                        </div>
+                        <span className="text-sm font-bold text-gray-700">AIアドバイザー</span>
+                    </div>
+
+                    <div className="p-4">
+                        <h4 className={cn(
+                            "font-bold text-base mb-2",
+                            advice.type === 'critical' ? "text-red-800" :
+                                advice.type === 'warning' ? "text-orange-800" :
+                                    "text-green-800"
                         )}>
                             {advice.title}
-                        </div>
-                        <div className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                        </h4>
+                        <div className="text-sm text-gray-700 leading-relaxed">
                             {advice.message}
                         </div>
 
@@ -148,9 +148,9 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                                 href={(advice as any).actionLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--primary)] bg-green-50/50 px-3 py-1.5 rounded-lg border border-green-100 hover:bg-green-100 transition-colors"
+                                className="mt-4 flex items-center justify-center gap-2 text-sm font-bold text-white bg-[var(--primary)] hover:bg-blue-700 px-4 py-3 rounded-lg transition-colors shadow-sm"
                             >
-                                {(advice as any).actionLabel || '詳細を見る'} <ExternalLink className="w-3 h-3" />
+                                {(advice as any).actionLabel || '詳細を見る'} <ExternalLink className="w-4 h-4" />
                             </a>
                         )}
                     </div>
