@@ -7,23 +7,23 @@ import { logger } from './logger';
 // 路線別の代表座標（最も影響を受けやすい地点）
 export const ROUTE_COORDINATES: Record<string, { lat: number; lon: number; name: string }> = {
     // 札幌近郊
-    'jr-hokkaido.hakodate-main': { lat: 43.0621, lon: 141.3544, name: '札幌' },
+    'jr-hokkaido.hakodate-main': { lat: 43.0621, lon: 141.3544, name: '札幌（函館本線）' },
     'jr-hokkaido.chitose': { lat: 42.7752, lon: 141.6922, name: '千歳' },
-    'jr-hokkaido.gakuentoshi': { lat: 43.2167, lon: 141.3500, name: '石狩当別' },
+    'jr-hokkaido.sassho': { lat: 43.2167, lon: 141.3500, name: '石狩当別（学園都市線）' },
     // 道央
-    'jr-hokkaido.muroran': { lat: 42.3150, lon: 140.9736, name: '室蘭' },
+    'jr-hokkaido.muroran-main': { lat: 42.3150, lon: 140.9736, name: '室蘭' },
     'jr-hokkaido.hidaka': { lat: 42.4833, lon: 142.0500, name: '日高門別' },
     // 道南
-    'jr-hokkaido.hakodate': { lat: 41.7686, lon: 140.7289, name: '函館' },
+    'jr-hokkaido.hakodate-south': { lat: 41.7686, lon: 140.7289, name: '函館' },
     // 道北
-    'jr-hokkaido.soya': { lat: 44.9167, lon: 142.0333, name: '稚内' },
+    'jr-hokkaido.soya-main': { lat: 44.9167, lon: 142.0333, name: '稚内（宗谷本線）' },
     'jr-hokkaido.rumoi': { lat: 43.9500, lon: 141.6333, name: '留萌' },
     // 道東
-    'jr-hokkaido.sekihoku': { lat: 43.7706, lon: 143.8964, name: '北見' },
-    'jr-hokkaido.senmo': { lat: 43.3333, lon: 145.5833, name: '網走・釧路' },
-    'jr-hokkaido.nemuro': { lat: 43.0167, lon: 144.3833, name: '釧路' },
+    'jr-hokkaido.sekihoku-main': { lat: 43.7706, lon: 143.8964, name: '北見（石北本線）' },
+    'jr-hokkaido.senmo-main': { lat: 43.3333, lon: 145.5833, name: '網走・釧路（釧網本線）' },
+    'jr-hokkaido.nemuro-main': { lat: 43.0167, lon: 144.3833, name: '釧路（根室本線）' },
     'jr-hokkaido.furano': { lat: 43.3500, lon: 142.3833, name: '富良野' },
-    'jr-hokkaido.sekisho': { lat: 43.0621, lon: 142.7500, name: '占冠' },
+    'jr-hokkaido.sekisho': { lat: 43.0621, lon: 142.7500, name: '占冠（石勝線）' },
 };
 
 // デフォルト座標（札幌）
