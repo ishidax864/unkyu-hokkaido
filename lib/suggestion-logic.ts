@@ -1,5 +1,5 @@
 import { PredictionResult, HourlyRiskData } from '@/lib/types';
-import { CAFE_AFFILIATES } from '@/lib/user-reports';
+import { getAffiliatesByType } from '@/lib/affiliates';
 
 // アドバイスの型定義
 export interface Advice {
@@ -31,7 +31,7 @@ export function generateStrategicAdvice(
     futureRisks: HourlyRiskData[] = [],
     currentTimeShiftTime: string = '00:00' // timeShiftSuggestion.time
 ): Advice | null {
-    const { probability, status, estimatedRecoveryHours, reasons } = predictionResult;
+    const { probability, status, estimatedRecoveryHours } = predictionResult;
     const isSuspended = status === '運休' || status === '運休中' || status === '運転見合わせ' || estimatedRecoveryHours === '終日運休';
 
     // 未来のリスク評価 (今後3時間)
@@ -80,7 +80,7 @@ export function generateStrategicAdvice(
             }
 
             // 30分〜4時間なら「カフェ」
-            const cafeUrl = CAFE_AFFILIATES[0]?.webUrl;
+            const cafeUrl = getAffiliatesByType('cafe')[0]?.webUrl;
             const recoveryTimeStr = recoveryHours < 1
                 ? `${Math.round(recoveryHours * 60)}分後`
                 : `${Math.round(recoveryHours * 10) / 10}時間後`;
@@ -122,7 +122,7 @@ export function generateStrategicAdvice(
         const shortSuspensionLikely = recoveryHours > 0 && recoveryHours <= 2;
 
         if (shortSuspensionLikely) {
-            const cafeUrl = CAFE_AFFILIATES[0]?.webUrl;
+            const cafeUrl = getAffiliatesByType('cafe')[0]?.webUrl;
             return {
                 type: 'warning',
                 title: '短時間の運休・遅延に注意',

@@ -43,6 +43,7 @@ export async function validateApiKey(apiKey: string | null) {
 
     return {
         authorized: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         partner: data.partners as any,
         rateLimit: data.rate_limit_per_min
     };

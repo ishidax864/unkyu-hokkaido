@@ -21,6 +21,7 @@ export function useFavorites() {
             try {
                 const stored = localStorage.getItem(STORAGE_KEY);
                 if (stored) {
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
                     setFavorites(JSON.parse(stored));
                 }
             } catch (error) {

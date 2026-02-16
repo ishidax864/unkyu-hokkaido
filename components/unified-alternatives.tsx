@@ -8,7 +8,8 @@ import { getRecoveryMessage, shouldShowGenericSubway } from '@/lib/suggestion-lo
 import { cn } from '@/lib/utils';
 import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
-import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES, PR_LABEL } from '@/lib/user-reports';
+import { PR_LABEL } from '@/lib/user-reports';
+import { getAffiliatesByType } from '@/lib/affiliates';
 
 interface TimeShiftData {
     time: string;
@@ -65,7 +66,10 @@ export function UnifiedAlternativesCard({
         // Distance estimation
         const distanceKm = fare / 400;
         const timeMin = Math.round(distanceKm * 2.5);
-        return { fare, time: timeMin };
+        // User feedback: Taxi is too expensive for long distances (e.g. Asahikawa -> Sapporo)
+        // Mark as "high cost" if fare exceeds ~25,000 JPY
+        const isHighCost = fare > 25000;
+        return { fare, time: timeMin, isHighCost };
     }, [departureStation, arrivalStation]);
 
     // 到着駅の施設情報 (地下鉄判定用)
@@ -111,9 +115,9 @@ export function UnifiedAlternativesCard({
     const showShortStayOptions = isModerate; // カフェ
     const showHeavyTransport = isSevere; // 高速バス・レンタカー
 
-    const taxiAffiliate = TAXI_AFFILIATES[0];
-    const busAffiliate = BUS_AFFILIATES[0];
-    const rentalAffiliate = RENTAL_CAR_AFFILIATES[0];
+    const taxiAffiliates = getAffiliatesByType('taxi').slice(0, 2); // Show up to 2 (Didi and GO)
+    const busAffiliate = getAffiliatesByType('bus')[0];
+    const rentalAffiliate = getAffiliatesByType('rental')[0];
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
@@ -221,32 +225,51 @@ export function UnifiedAlternativesCard({
                                 </a>
                             ))}
 
-                        {/* Taxi Row */}
-                        {facilities?.hasTaxi && (
-                            <a
-                                href={taxiAffiliate?.webUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: taxiAffiliate?.name })}
-                                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className="text-gray-400 group-hover:text-gray-600">
-                                        <Car className="w-5 h-5" />
+                        {/* Taxi Rows */}
+                        {facilities?.hasTaxi && taxiAffiliates.map((affiliate) => {
+                            // If taxi is very expensive, maybe don't highlight it as much or show warning
+                            // But for now, we just show the estimate.
+                            // If high cost, add a badge.
+                            return (
+                                <a
+                                    key={affiliate.id}
+                                    href={affiliate.webUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: affiliate.name })}
+                                    className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-gray-400 group-hover:text-gray-600">
+                                            <Car className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-gray-700 text-sm flex items-center gap-2">
+                                                タクシー手配 ({affiliate.name})
+                                                {taxiInfo?.isHighCost && (
+                                                    <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded border border-red-200">
+                                                        高額注意
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-[10px] text-gray-500">{affiliate.description}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="font-bold text-gray-700 text-sm">タクシー手配</div>
-                                        <div className="text-xs text-gray-500">{taxiInfo ? `約${taxiInfo.time}分` : '直行・混雑回避'}</div>
+                                    <div className="text-right">
+                                        <div className={cn(
+                                            "text-xs font-mono",
+                                            taxiInfo?.isHighCost ? "text-red-600 font-bold" : "text-gray-600"
+                                        )}>
+                                            {taxiInfo ? `¥${taxiInfo.fare.toLocaleString()}~` : 'ESTIMATE'}
+                                        </div>
+                                        {taxiInfo?.isHighCost && (
+                                            <div className="text-[9px] text-gray-400">長距離のため高額</div>
+                                        )}
                                     </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-xs font-mono text-gray-600">
-                                        {taxiInfo ? `¥${taxiInfo.fare.toLocaleString()}~` : 'ESTIMATE'}
-                                    </div>
-                                </div>
-                                <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
-                            </a>
-                        )}
+                                    <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
+                                </a>
+                            );
+                        })}
 
                         {/* Hotel / Cafe (Wait options) */}
                         {(showLongStayOptions || showShortStayOptions) && (
@@ -261,7 +284,7 @@ export function UnifiedAlternativesCard({
                                             rel="noopener noreferrer"
                                             className="px-3 py-2 bg-white border border-gray-200 rounded text-sm font-medium text-gray-700 hover:border-pink-300 hover:text-pink-600 transition-colors flex items-center justify-center gap-2"
                                         >
-                                            <Hotel className="w-4 h-4" /> ホテル検索
+                                            <Hotel className="w-4 h-4" /> {departureStation.name}周辺のホテル
                                         </a>
                                     )}
                                     {/* Cafe */}

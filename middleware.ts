@@ -100,6 +100,37 @@ function isSuspiciousRequest(request: NextRequest): boolean {
 // =====================
 
 export function middleware(request: NextRequest) {
+    const url = request.nextUrl;
+
+    // 🆕 Admin routes protection
+    if (url.pathname.startsWith('/admin')) {
+        const authHeader = request.headers.get('authorization');
+
+        if (!authHeader) {
+            return new NextResponse('Authentication required', {
+                status: 401,
+                headers: { 'WWW-Authenticate': 'Basic realm="Admin Access"' },
+            });
+        }
+
+        try {
+            const authValue = authHeader.split(' ')[1];
+            const [user, pwd] = atob(authValue).split(':');
+
+            const adminUser = process.env.ADMIN_USER || 'admin';
+            const adminPass = process.env.ADMIN_PASSWORD || 'unkyu-ai-2026';
+
+            if (user !== adminUser || pwd !== adminPass) {
+                return new NextResponse('Unauthorized', {
+                    status: 401,
+                    headers: { 'WWW-Authenticate': 'Basic realm="Admin Access"' },
+                });
+            }
+        } catch (e) {
+            return new NextResponse('Bad Request', { status: 400 });
+        }
+    }
+
     const response = NextResponse.next();
     const ip = getClientIP(request);
 
@@ -150,6 +181,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
+        '/admin/:path*',
+        '/api/admin/:path*',
         // 静的ファイル・ヘルスチェック以外に適用
         '/((?!_next/static|_next/image|favicon.ico|.*\\..*|api/health).*)',
     ],

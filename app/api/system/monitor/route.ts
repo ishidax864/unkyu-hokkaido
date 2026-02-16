@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
             let normalizedActual = actualStatus;
             if (actualStatus === 'cancelled') normalizedActual = 'suspended';
 
-            let normalizedPred = prediction.status;
+            const normalizedPred = prediction.status;
             // ML returns 'suspended' | 'delayed' | 'normal'
 
             const isMatch = normalizedActual === normalizedPred;

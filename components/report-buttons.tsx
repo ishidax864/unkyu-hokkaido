@@ -82,52 +82,57 @@ export function ReportButtons({ routeId, routeName, onReport, counts }: ReportBu
             </div>
 
             {/* 報告ボタン群 */}
-            <div className="grid grid-cols-2 gap-2 mb-3">
-                {REPORT_OPTIONS.map((option) => {
-                    const Icon = option.icon;
-                    const isSelected = selectedType === option.type;
+            <div className="bg-blue-50/50 rounded-lg p-3 border border-blue-100">
+                <div className="text-xs font-bold text-blue-800 mb-2 text-center">
+                    今の状況をみんなにシェアしよう！
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    {REPORT_OPTIONS.map((option) => {
+                        const Icon = option.icon;
+                        const isSelected = selectedType === option.type;
 
-                    // バッジ表示用のカウントを取得
-                    let count = 0;
-                    if (counts) {
-                        if (option.type === 'stopped') count = counts.stopped;
-                        if (option.type === 'delayed') count = counts.delayed;
-                        if (option.type === 'crowded') count = counts.crowded;
-                        if (option.type === 'normal') count = counts.resumed;
-                    }
+                        // バッジ表示用のカウントを取得
+                        let count = 0;
+                        if (counts) {
+                            if (option.type === 'stopped') count = counts.stopped;
+                            if (option.type === 'delayed') count = counts.delayed;
+                            if (option.type === 'crowded') count = counts.crowded;
+                            if (option.type === 'normal') count = counts.resumed;
+                        }
 
-                    return (
-                        <button
-                            key={option.type}
-                            onClick={() => handleTypeSelect(option.type)}
-                            disabled={isSubmitting || submitted}
-                            className={cn(
-                                'relative flex items-center justify-center gap-2 px-3 py-2.5 rounded-md border transition-colors text-sm font-medium',
-                                isSelected
-                                    ? option.className
-                                    : 'bg-white border-[var(--border)] text-[var(--muted)] hover:bg-[var(--background-secondary)]',
-                                (isSubmitting || submitted) && 'opacity-60 cursor-not-allowed'
-                            )}
-                        >
-                            <Icon className="w-4 h-4" />
-                            {option.label}
+                        return (
+                            <button
+                                key={option.type}
+                                onClick={() => handleTypeSelect(option.type)}
+                                disabled={isSubmitting || submitted}
+                                className={cn(
+                                    'relative flex items-center justify-center gap-2 px-3 py-3 rounded-md border transition-all text-sm font-bold shadow-sm',
+                                    isSelected
+                                        ? option.className
+                                        : 'bg-white border-gray-200 text-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 hover:shadow-md',
+                                    (isSubmitting || submitted) && 'opacity-60 cursor-not-allowed'
+                                )}
+                            >
+                                <Icon className={cn("w-4 h-4", isSelected ? "" : "text-gray-400")} />
+                                {option.label}
 
-                            {/* カウントバッジ */}
-                            {count > 0 && (
-                                <span className={cn(
-                                    "absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border shadow-sm px-1",
-                                    option.type === 'stopped' ? "bg-red-500 text-white border-red-600" :
-                                        option.type === 'delayed' ? "bg-yellow-500 text-white border-yellow-600" :
-                                            option.type === 'crowded' ? "bg-orange-500 text-white border-orange-600" :
-                                                option.type === 'normal' ? "bg-green-500 text-white border-green-600" :
-                                                    "bg-gray-500 text-white"
-                                )}>
-                                    {count}
-                                </span>
-                            )}
-                        </button>
-                    );
-                })}
+                                {/* カウントバッジ */}
+                                {count > 0 && (
+                                    <span className={cn(
+                                        "absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] flex items-center justify-center text-[10px] font-bold rounded-full border shadow-sm px-1 z-10",
+                                        option.type === 'stopped' ? "bg-red-500 text-white border-red-600" :
+                                            option.type === 'delayed' ? "bg-yellow-500 text-white border-yellow-600" :
+                                                option.type === 'crowded' ? "bg-orange-500 text-white border-orange-600" :
+                                                    option.type === 'normal' ? "bg-green-500 text-white border-green-600" :
+                                                        "bg-gray-500 text-white"
+                                    )}>
+                                        {count}
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* 報告完了メッセージ */}

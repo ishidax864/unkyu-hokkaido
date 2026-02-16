@@ -117,5 +117,30 @@ ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
 ALTER TABLE api_keys ENABLE ROW LEVEL SECURITY;
 
 -- 開発用: 特定のロールを持つユーザーのみアクセス可能にするのが一般的だが
--- ここでは一旦、Adminダッシュボードからのアクセスを想定してポリシーを空にするか
--- サービスロールでの操作を前提とする。
+-- フィードバック・収集提案テーブル
+CREATE TABLE IF NOT EXISTS user_feedback (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    type TEXT NOT NULL CHECK (type IN ('bug', 'improvement', 'other')),
+    content TEXT NOT NULL,
+    email TEXT,
+    page_url TEXT,
+    ua_info TEXT,
+    ip_hash TEXT,
+    status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'closed')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- インデックス
+CREATE INDEX IF NOT EXISTS idx_user_feedback_created_at ON user_feedback(created_at);
+
+-- RLS
+ALTER TABLE user_feedback ENABLE ROW LEVEL SECURITY;
+
+-- 匿名ユーザーは挿入のみ許可
+CREATE POLICY "Allow anonymous insert feedback" ON user_feedback
+    FOR INSERT
+    TO anon
+    WITH CHECK (true);
+
+-- 管理者のみ読み取り可能
+-- (実際にはサービスロールで閲覧するか、認証されたユーザーのみに許可する)

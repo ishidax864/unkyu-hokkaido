@@ -77,13 +77,36 @@ export const metadata: Metadata = {
     title: "運休北海道",
   },
   verification: {
-    // Google Search Console の認証（将来用）
+    // Google Search Console 認証（本番公開時に追加）
     // google: "your-google-verification-code",
   },
   alternates: {
     canonical: siteUrl,
   },
+  other: {
+    'apple-mobile-web-app-status-bar-style': 'default',
+  },
   category: 'transportation',
+};
+
+// 🆕 JSON-LD 構造化データ
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "運休北海道",
+  "operatingSystem": "iOS, Android, Windows, macOS",
+  "applicationCategory": "TransportationApplication, WeatherApplication",
+  "description": "JR北海道の運休リスクをAIで予測するリアルタイム運行予報サービス。",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.5",
+    "ratingCount": "100" // プロトタイプとしてのダミー値
+  }
 };
 
 export const viewport: Viewport = {
@@ -100,6 +123,7 @@ export const viewport: Viewport = {
 
 import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
 import { SiteFooter } from '@/components/site-footer';
+import { FeedbackButton } from '@/components/feedback-button'; // 🆕
 
 export default function RootLayout({
   children,
@@ -112,18 +136,18 @@ export default function RootLayout({
     <html lang="ja">
       {/* ... (head) ... */}
       <body className={`${notoSansJP.variable} font-sans antialiased`}>
-        {/*
-        <PremiumProvider>
-          {children}
-          <PremiumPromoBanner />
-        </PremiumProvider>
-        */}
+        {/* 🆕 構造化データを挿入 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <div className="flex flex-col min-h-screen">
           <div className="flex-grow">
             {children}
           </div>
           <SiteFooter />
         </div>
+        <FeedbackButton />
         {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>

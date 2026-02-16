@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Route, PredictionResult } from '@/lib/types';
-import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES, CAFE_AFFILIATES } from '@/lib/user-reports';
+// import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES, CAFE_AFFILIATES } from '@/lib/user-reports';
 import { Station, estimateTaxiFare, getAlternativeRoutes, AlternativeRouteOption } from '@/lib/hokkaido-data';
 import { HourlyRiskData, OperationStatus } from '@/lib/types';
 import { generateStrategicAdvice, calculateTrafficRisk, checkAlternativeAvailability } from '@/lib/suggestion-logic';

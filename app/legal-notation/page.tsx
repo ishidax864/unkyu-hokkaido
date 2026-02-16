@@ -1,5 +1,11 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+    title: '特定商取引法に基づく表記 | 運休北海道 - JR北海道の運行・運休予報',
+    description: '運休北海道の特定商取引法に基づく表記です。運営者情報（株式会社アンドアール）、お問い合わせ先、寄付の取り扱いについてご確認いただけます。',
+};
 
 export default function LegalNotation() {
     return (

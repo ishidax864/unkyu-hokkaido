@@ -6,8 +6,9 @@ import { logger } from './logger';
 // 環境変数
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // 🆕 サーバーサイド専用
 
-// データベース型定義（将来的にSupabase CLIで自動生成可能）
+// データベース型定義
 export interface Database {
     public: {
         Tables: {
@@ -21,13 +22,27 @@ export interface Database {
                 Insert: Omit<PredictionHistoryDB, 'id' | 'created_at'>;
                 Update: Partial<Omit<PredictionHistoryDB, 'id' | 'created_at'>>;
             };
+            monitoring_logs: {
+                Row: MonitoringLogDB;
+                Insert: Omit<MonitoringLogDB, 'id' | 'created_at'>;
+                Update: Partial<Omit<MonitoringLogDB, 'id' | 'created_at'>>;
+            };
+            user_feedback: {
+                Row: UserFeedbackDB;
+                Insert: Omit<UserFeedbackDB, 'id' | 'created_at'>;
+                Update: Partial<Omit<UserFeedbackDB, 'id' | 'created_at'>>;
+            };
         };
     };
 }
 
-// クライアント生成（遅延初期化、型付きクライアント）
+// クライアント保持用
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let supabaseClient: SupabaseClient<any> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let adminSupabaseClient: SupabaseClient<any> | null = null;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSupabaseClient(): SupabaseClient<any> | null {
     if (!supabaseUrl || !supabaseAnonKey) {
         logger.warn('Supabase credentials not configured');
@@ -36,10 +51,9 @@ export function getSupabaseClient(): SupabaseClient<any> | null {
 
     if (!supabaseClient) {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             supabaseClient = createClient<any>(supabaseUrl, supabaseAnonKey, {
-                auth: {
-                    persistSession: false,
-                },
+                auth: { persistSession: false },
             });
             logger.debug('Supabase client initialized');
         } catch (error) {
@@ -47,8 +61,33 @@ export function getSupabaseClient(): SupabaseClient<any> | null {
             return null;
         }
     }
-
     return supabaseClient;
+}
+
+/**
+ * 🆕 管理者用クライアント取得（SERVICE_ROLE_KEYを使用）
+ * RLSをバイパスするため、サーバーサイドでのみ使用すること
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getAdminSupabaseClient(): SupabaseClient<any> | null {
+    if (!supabaseUrl || !supabaseServiceKey) {
+        // クライアントサイドや未設定時はnull
+        return null;
+    }
+
+    if (!adminSupabaseClient) {
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            adminSupabaseClient = createClient<any>(supabaseUrl, supabaseServiceKey, {
+                auth: { persistSession: false },
+            });
+            logger.debug('Supabase ADMIN client initialized');
+        } catch (error) {
+            logger.error('Failed to initialize Supabase admin client', { error });
+            return null;
+        }
+    }
+    return adminSupabaseClient;
 }
 
 // Supabaseが利用可能かチェック
@@ -73,6 +112,18 @@ export interface PredictionHistoryDB {
     probability: number;
     status: string;
     weather_factors: string[];
+    created_at?: string;
+}
+
+export interface UserFeedbackDB {
+    id?: string;
+    type: 'bug' | 'improvement' | 'other';
+    content: string;
+    email?: string;
+    page_url?: string;
+    ua_info?: string;
+    ip_hash?: string;
+    status?: 'open' | 'in_progress' | 'closed';
     created_at?: string;
 }
 
@@ -439,6 +490,171 @@ export async function saveMonitoringLog(log: MonitoringLogDB): Promise<DbResult<
         return { success: true, data: result };
     } catch (error) {
         logger.error('Failed to save monitoring log', { error, log });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}
+
+// 🆕 フィードバックの保存
+export async function saveFeedback(feedback: UserFeedbackDB): Promise<DbResult<boolean>> {
+    const client = getSupabaseClient();
+    if (!client) {
+        return { success: false, error: 'Supabase not configured' };
+    }
+
+    try {
+        const { error } = await client
+            .from('user_feedback')
+            .insert({
+                type: feedback.type,
+                content: feedback.content,
+                email: feedback.email,
+                page_url: feedback.page_url,
+                ua_info: feedback.ua_info,
+                ip_hash: feedback.ip_hash
+            });
+
+        if (error) {
+            throw new DatabaseError(`Failed to save feedback: ${error.message}`, 'write', { code: error.code });
+        }
+
+        return { success: true, data: true };
+    } catch (error) {
+        logger.error('Failed to save feedback', { error, feedback });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}
+
+// 🆕 フィードバックの一覧取得（管理者用）
+export async function getFeedbackList(limit: number = 50): Promise<DbResult<UserFeedbackDB[]>> {
+    const client = getSupabaseClient();
+    if (!client) {
+        return { success: false, error: 'Supabase not configured' };
+    }
+
+    try {
+        const { data, error } = await client
+            .from('user_feedback')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            throw new DatabaseError(`Failed to fetch feedback: ${error.message}`, 'read', { code: error.code });
+        }
+
+        return { success: true, data: data || [] };
+    } catch (error) {
+        logger.error('Failed to fetch feedback list', { error });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}
+
+// 🆕 管理用グローバル統計
+export async function getGlobalStats(): Promise<DbResult<{
+    reportCount: number;
+    recentReportCount: number;
+    feedbackCount: number;
+    partnerCount: number;
+}>> {
+    const client = getSupabaseClient();
+    if (!client) {
+        return { success: false, error: 'Supabase not configured' };
+    }
+
+    try {
+        const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+        const [
+            { count: reportCount, error: rErr },
+            { count: recentReportCount, error: rrErr },
+            { count: feedbackCount, error: fErr },
+            { count: partnerCount, error: pErr }
+        ] = await Promise.all([
+            client.from('user_reports').select('*', { count: 'exact', head: true }),
+            client.from('user_reports').select('*', { count: 'exact', head: true }).gte('created_at', since24h),
+            client.from('user_feedback').select('*', { count: 'exact', head: true }).eq('status', 'open'),
+            client.from('partners').select('*', { count: 'exact', head: true })
+        ]);
+
+        if (rErr || rrErr || fErr || pErr) {
+            throw new DatabaseError('Failed to fetch global stats', 'read');
+        }
+
+        return {
+            success: true,
+            data: {
+                reportCount: reportCount || 0,
+                recentReportCount: recentReportCount || 0,
+                feedbackCount: feedbackCount || 0,
+                partnerCount: partnerCount || 0
+            }
+        };
+    } catch (error) {
+        logger.error('Failed to calculate global stats', { error });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}
+
+// 🆕 フィードバックのステータス更新（管理者用）
+export async function updateFeedbackStatus(id: string, status: 'open' | 'in_progress' | 'closed'): Promise<DbResult<boolean>> {
+    const client = getAdminSupabaseClient() || getSupabaseClient();
+    if (!client) {
+        return { success: false, error: 'Supabase not configured' };
+    }
+
+    try {
+        const { error } = await client
+            .from('user_feedback')
+            .update({ status })
+            .eq('id', id);
+
+        if (error) {
+            throw new DatabaseError(`Failed to update feedback status: ${error.message}`, 'write', { code: error.code });
+        }
+
+        return { success: true, data: true };
+    } catch (error) {
+        logger.error('Failed to update feedback status', { error, id, status });
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+}
+
+// 🆕 ユーザー報告の一覧取得（管理者用）
+export async function getReportsList(limit: number = 50): Promise<DbResult<UserReportDB[]>> {
+    const client = getAdminSupabaseClient() || getSupabaseClient();
+    if (!client) {
+        return { success: false, error: 'Supabase not configured' };
+    }
+
+    try {
+        const { data, error } = await client
+            .from('user_reports')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            throw new DatabaseError(`Failed to fetch reports: ${error.message}`, 'read', { code: error.code });
+        }
+
+        return { success: true, data: data || [] };
+    } catch (error) {
+        logger.error('Failed to fetch reports list', { error });
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error'

@@ -1,5 +1,11 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+    title: 'プライバシーポリシー | 運休北海道 - JR北海道の運行・運休予報',
+    description: '運休北海道のプライバシーポリシーです。個人情報の取り扱い方針やアクセス解析、Cookieの使用についてご確認いただけます。',
+};
 
 export default function PrivacyPolicy() {
     return (

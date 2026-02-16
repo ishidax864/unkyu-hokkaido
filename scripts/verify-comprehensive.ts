@@ -114,7 +114,7 @@ async function runVerification() {
 
     // 3. Run Predictions & Verify Advice
     const results = [];
-    let stats = {
+    const stats = {
         total: 0,
         suspended: 0,
         delayed: 0,

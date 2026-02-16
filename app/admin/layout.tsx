@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutDashboard, Users, MessageSquare, BarChart3, Settings, LogOut, Train } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, LogOut, Train } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -14,9 +14,7 @@ export default function AdminLayout({
 
     const navItems = [
         { href: '/admin', label: 'ダッシュボード', icon: LayoutDashboard },
-        { href: '/admin/partners', label: 'パートナー管理', icon: Users },
         { href: '/admin/reports', label: '報告管理', icon: MessageSquare },
-        { href: '/admin/analytics', label: 'アナリティクス', icon: BarChart3 },
     ];
 
     return (

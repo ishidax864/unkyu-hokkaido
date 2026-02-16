@@ -77,59 +77,7 @@ export interface AffiliateProvider {
 // PR表記用の定数
 export const PR_LABEL = "PR";
 
-export const TAXI_AFFILIATES: AffiliateProvider[] = [
-    {
-        id: 'nearme',
-        name: 'NearMe (スマートシャトル)',
-        type: 'taxi', // 相乗りタクシー
-        logoUrl: '/affiliates/nearme.png', // 仮
-        deepLink: '',
-        webUrl: 'https://px.a8.net/svt/ejp?a8mat=4AX4SE+16VZM+4Q64+5YJRM',
-        affiliateTag: 'a8',
-        enabled: true,
-    },
-];
-
-export const RENTAL_CAR_AFFILIATES: AffiliateProvider[] = [
-    {
-        id: 'airtrip-rental',
-        name: 'エアトリレンタカー',
-        type: 'hotel', //便宜上 string
-        logoUrl: '/affiliates/airtrip.png',
-        deepLink: '',
-        webUrl: 'https://px.a8.net/svt/ejp?a8mat=4AX4SE+A4E2A+AD2+2TB4AP',
-        affiliateTag: 'a8',
-        enabled: true,
-    },
-];
-
-export const BUS_AFFILIATES: AffiliateProvider[] = [
-    {
-        id: 'airtrip-bus',
-        name: 'エアトリバス',
-        type: 'taxi', // 便宜上
-        logoUrl: '/affiliates/airtrip.png',
-        deepLink: '',
-        webUrl: 'https://www.airtrip.jp/bus/', // 仮のトップページ（テキストリンクが未発行のため）
-        affiliateTag: 'a8',
-        enabled: true,
-    }
-];
-
-export const CAFE_AFFILIATES: AffiliateProvider[] = [
-    {
-        id: 'hotpepper-cafe',
-        name: 'ホットペッパーグルメ（カフェ検索）',
-        type: 'cafe',
-        logoUrl: '',
-        deepLink: '',
-        webUrl: 'https://www.hotpepper.jp/SA30/XY00/G014/', // 仮: アフィリエイトリンクに差し替え予定
-        affiliateTag: 'a8',
-        enabled: true,
-    }
-];
-
-// ストレージキー
+// Note: Affiliate link arrays (TAXI_AFFILIATES, etc.) have been moved to lib/affiliates.ts
 const REPORTS_STORAGE_KEY = 'unkyu-ai-user-reports';
 
 // 簡易的なIPハッシュ生成（プライバシー保護）
@@ -144,7 +92,7 @@ function generateReportId(): string {
     return `report-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
-// ユーザー報告を保存（Supabase優先、フォールバックでLocalStorage）
+// ユーザー報告を保存（API経由）
 export async function saveUserReport(report: Omit<UserReport, 'id' | 'expiresAt' | 'upvotes'>): Promise<UserReport> {
     const newReport: UserReport = {
         ...report,
@@ -153,26 +101,31 @@ export async function saveUserReport(report: Omit<UserReport, 'id' | 'expiresAt'
         upvotes: 0,
     };
 
-    // Supabaseに保存を試行
-    if (isSupabaseAvailable()) {
-        const dbReport: UserReportDB = {
-            route_id: report.routeId,
-            report_type: report.reportType as UserReportDB['report_type'],
-            comment: report.comment,
-            ip_hash: generateIpHash(),
-        };
+    try {
+        const response = await fetch('/api/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                routeId: report.routeId,
+                reportType: report.reportType,
+                comment: report.comment
+            }),
+        });
 
-        const saved = await saveReportToSupabase(dbReport);
-        if (saved.success && saved.data) {
-            // ローカルにもキャッシュとして保存
-            saveToLocalStorage(newReport);
-            return newReport;
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Failed to submit report via API');
         }
-    }
 
-    // フォールバック: ローカルストレージに保存
-    saveToLocalStorage(newReport);
-    return newReport;
+        // 成功したらローカルにもキャッシュとして保存
+        saveToLocalStorage(newReport);
+        return newReport;
+    } catch (error) {
+        logger.error('Report API submission failed, falling back to LocalStorage', { error });
+        // フォールバック: ローカルストレージに保存
+        saveToLocalStorage(newReport);
+        return newReport;
+    }
 }
 
 // ローカルストレージへの保存

@@ -1,8 +1,9 @@
 'use client';
 
-import { Car, Hotel, Plane, Clock, ArrowRight } from 'lucide-react';
+import { Car, Hotel, Plane, Clock, ArrowRight, Bus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { getAffiliatesByType, getAffiliateById } from '@/lib/affiliates';
 
 type AffiliateContext = 'commute_risk' | 'night_stay' | 'airport_access' | 'normal';
 
@@ -39,30 +40,35 @@ export function SmartAffiliateCard({ prediction, routeId, className }: SmartAffi
             </div>
 
             {context === 'commute_risk' && (
-                <a
-                    href="https://go.mo-t.com/" // Example: GO Taxi
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
-                >
-                    <div className="absolute top-0 right-0 p-2 opacity-10">
-                        <Car className="w-24 h-24 text-blue-600 transform rotate-12 translate-x-4 -translate-y-4" />
-                    </div>
-                    <div className="relative z-10 flex items-center gap-4">
-                        <div className="bg-blue-50 p-3 rounded-lg text-blue-600">
-                            <Car className="w-6 h-6" />
-                        </div>
-                        <div className="flex-1">
-                            <div className="font-bold text-gray-800 text-sm mb-0.5 group-hover:text-blue-600 transition-colors">
-                                タクシーで確実に移動する
+                <div className="space-y-2">
+                    {getAffiliatesByType('taxi').map(affiliate => (
+                        <a
+                            key={affiliate.id}
+                            href={affiliate.webUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-2 opacity-10">
+                                <Car className="w-24 h-24 text-blue-600 transform rotate-12 translate-x-4 -translate-y-4" />
                             </div>
-                            <div className="text-[10px] text-gray-500">
-                                アプリなら一番近くの車がすぐ来る。クーポン配布中。
+                            <div className="relative z-10 flex items-center gap-4">
+                                <div className="bg-blue-50 p-3 rounded-lg text-blue-600">
+                                    <Car className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="font-bold text-gray-800 text-sm mb-0.5 group-hover:text-blue-600 transition-colors">
+                                        {affiliate.name}でタクシーを呼ぶ
+                                    </div>
+                                    <div className="text-[10px] text-gray-500">
+                                        {affiliate.description}
+                                    </div>
+                                </div>
+                                <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
                             </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors" />
-                    </div>
-                </a>
+                        </a>
+                    ))}
+                </div>
             )}
 
             {context === 'night_stay' && (
@@ -93,30 +99,35 @@ export function SmartAffiliateCard({ prediction, routeId, className }: SmartAffi
             )}
 
             {context === 'airport_access' && (
-                <a
-                    href="https://app.nearme.jp/" // Example: NearMe
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block bg-white border border-teal-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
-                >
-                    <div className="absolute top-0 right-0 p-2 opacity-10">
-                        <Plane className="w-24 h-24 text-teal-600 transform rotate-12 translate-x-4 -translate-y-4" />
-                    </div>
-                    <div className="relative z-10 flex items-center gap-4">
-                        <div className="bg-teal-50 p-3 rounded-lg text-teal-600">
-                            <Plane className="w-6 h-6" />
-                        </div>
-                        <div className="flex-1">
-                            <div className="font-bold text-gray-800 text-sm mb-0.5 group-hover:text-teal-600 transition-colors">
-                                空港定額シャトルを予約
+                <div className="space-y-2">
+                    {getAffiliatesByType('shuttle').map(affiliate => (
+                        <a
+                            key={affiliate.id}
+                            href={affiliate.webUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-white border border-teal-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-2 opacity-10">
+                                <Plane className="w-24 h-24 text-teal-600 transform rotate-12 translate-x-4 -translate-y-4" />
                             </div>
-                            <div className="text-[10px] text-gray-500">
-                                前日予約で確実なフライトを。自宅から空港へ直行。
+                            <div className="relative z-10 flex items-center gap-4">
+                                <div className="bg-teal-50 p-3 rounded-lg text-teal-600">
+                                    <Plane className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="font-bold text-gray-800 text-sm mb-0.5 group-hover:text-teal-600 transition-colors">
+                                        {affiliate.name}
+                                    </div>
+                                    <div className="text-[10px] text-gray-500">
+                                        {affiliate.description}
+                                    </div>
+                                </div>
+                                <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-teal-500 transition-colors" />
                             </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-teal-500 transition-colors" />
-                    </div>
-                </a>
+                        </a>
+                    ))}
+                </div>
             )}
         </div>
     );

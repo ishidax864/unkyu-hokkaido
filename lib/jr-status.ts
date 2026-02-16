@@ -60,7 +60,8 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
 
                     const text = await res.text();
                     const cleanJson = text.replace(/^\uFEFF/, '');
-                    const data = JSON.parse(cleanJson);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const data = JSON.parse(cleanJson) as any;
                     return { area: area.area, data };
                 } catch (e) {
                     logger.error(`Area ${area.area} fetch error:`, e);
@@ -74,6 +75,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
             const { area, data } = result;
 
             // 概況テキストから運休・遅延を判定
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const gaikyoText = data.today?.gaikyo?.map((g: any) => g.honbun).join(' ') || '';
             const cleanGaikyo = gaikyoText.replace(/<[^>]*>/g, ' ');
 

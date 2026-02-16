@@ -44,6 +44,7 @@ export function SearchForm({
     const [isArrivalOpen, setIsArrivalOpen] = useState(false);
     const [depQuery, setDepQuery] = useState('');
     const [arrQuery, setArrQuery] = useState('');
+    const [showError, setShowError] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -85,6 +86,10 @@ export function SearchForm({
                 trigger: 'current_btn'
             });
             onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr, 'departure');
+            setShowError(false);
+        } else {
+            setShowError(true);
+            setTimeout(() => setShowError(false), 3000);
         }
     };
 
@@ -200,6 +205,11 @@ export function SearchForm({
                 >
                     📍 現在の日時で検索
                 </button>
+                {showError && (
+                    <p className="text-[10px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
+                        ※出発駅と到着駅を選択してください
+                    </p>
+                )}
             </div>
 
             {/* 予測ボタン */}

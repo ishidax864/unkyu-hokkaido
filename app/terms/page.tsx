@@ -1,5 +1,11 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+    title: '利用規約 | 運休北海道 - JR北海道の運行・運休予報',
+    description: '運休北海道の利用規約です。本サービス（AIによるJR北海道の運休予測）のご利用にあたっての注意事項や免責事項についてご確認いただけます。',
+};
 
 export default function TermsOfService() {
     return (

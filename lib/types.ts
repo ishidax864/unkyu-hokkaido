@@ -214,7 +214,9 @@ export interface PredictionInput {
     recentTrend: 'increasing' | 'decreasing' | 'stable';
     totalReports: number;
   } | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   historicalMatch?: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   timetableTrain?: any;
 }
 

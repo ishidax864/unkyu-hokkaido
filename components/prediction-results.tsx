@@ -81,7 +81,7 @@ export function PredictionResults({
                         }`}
                 >
                     <Star className={`w-3.5 h-3.5 ${isFavorite(depStation.id, arrStation.id) ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-                    {isFavorite(depStation.id, arrStation.id) ? '登録済み' : '登録'}
+                    {isFavorite(depStation.id, arrStation.id) ? '登録済み' : 'お気に入り登録'}
                 </button>
             </div>
 

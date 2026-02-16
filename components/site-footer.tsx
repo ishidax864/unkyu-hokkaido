@@ -12,9 +12,9 @@ export function SiteFooter() {
                 <div>
                     <p>運営: 株式会社アンドアール</p>
                     <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 my-2">
-                        <Link href="/terms" className="hover:text-[var(--primary)] transition-colors underline decoration-dotted">利用規約</Link>
-                        <Link href="/privacy" className="hover:text-[var(--primary)] transition-colors underline decoration-dotted">プライバシーポリシー</Link>
-                        <Link href="/legal" className="text-[var(--foreground)] font-medium hover:text-[var(--primary)] transition-colors underline decoration-double">特定商取引法に基づく表記</Link>
+                        <Link href="/terms" className="hover:text-[var(--primary)] transition-colors underline decoration-dotted" aria-label="利用規約を確認する">利用規約</Link>
+                        <Link href="/privacy" className="hover:text-[var(--primary)] transition-colors underline decoration-dotted" aria-label="プライバシーポリシーを確認する">プライバシーポリシー</Link>
+                        <Link href="/legal-notation" className="text-[var(--foreground)] font-medium hover:text-[var(--primary)] transition-colors underline decoration-double" aria-label="特定商取引法に基づく表記を確認する">特定商取引法に基づく表記</Link>
                     </div>
                     <a href="mailto:info@andr.ltd" className="hover:text-[var(--primary)] transition-colors block mt-2">
                         お問い合わせ: info@andr.ltd

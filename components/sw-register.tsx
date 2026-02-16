@@ -47,7 +47,7 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
         const registration = await navigator.serviceWorker.ready;
 
         // 既存の購読を確認
-        let subscription = await registration.pushManager.getSubscription();
+        const subscription = await registration.pushManager.getSubscription();
 
         if (!subscription) {
             // 新規購読（VAPID公開鍵が必要）

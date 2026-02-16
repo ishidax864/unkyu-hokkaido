@@ -16,6 +16,7 @@ export function PremiumProvider({ children }: { children: React.ReactNode }) {
     // Mock persistence
     useEffect(() => {
         const saved = localStorage.getItem('unkyu_is_premium');
+        // eslint-disable-next-line
         if (saved === 'true') setIsPremium(true);
     }, []);
 

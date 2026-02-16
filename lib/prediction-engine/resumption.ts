@@ -73,7 +73,7 @@ export function calculateResumptionTime(
 
     // 4. Determine Maintenance Buffer (Dynamic & Granular)
     // Base Mobilization: 1.0h - 1.5h depending on peak intensity
-    let mobilization = (peakSnow > 2 || peakWind > 15) ? 1.5 : 1.0;
+    const mobilization = (peakSnow > 2 || peakWind > 15) ? 1.5 : 1.0;
 
     let buffer = mobilization;
     let reason = `安全確認・点検（${mobilization}時間）`;
@@ -161,7 +161,7 @@ export function calculateResumptionTime(
         // 微調整
         resumeHour = 5.5;
     } else if (resumeHour >= 24) {
-        let rolledDays = Math.floor(resumeHour / 24);
+        const rolledDays = Math.floor(resumeHour / 24);
         resumeHour = resumeHour % 24;
 
         const dayLabel = rolledDays === 1 ? '翌日' : `${rolledDays}日後`;
