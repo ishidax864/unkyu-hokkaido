@@ -271,52 +271,93 @@ export function getCommonLines(stationA: Station, stationB: Station): Route[] {
     return HOKKAIDO_ROUTES.filter(r => commonLineIds.includes(r.id));
 }
 
+// エリア定義（getConnectingRoute用）
+const SAPPORO_METRO_IDS = new Set([
+    'sapporo', 'shin-sapporo', 'kotoni', 'teine', 'naebo', 'shiroishi', 'atsubetsu', 'oochi', 'nopporo', 'ebetsu',
+    'soen', 'hassamu', 'hassamu-chuo', 'inazumi-koen', 'inaho', 'hoshimi', 'kitahiroshima', 'kaminopporo', 'heiwa',
+    'shin-kotoni', 'shinkawa', 'hachiken', 'taihei', 'yurigahara', 'shinoro', 'takuhoku', 'ainosato-kyoiku-dai', 'ainosato-koen',
+    'otaru', 'otaru-chikko', 'zenibako', 'asari', 'minami-otaru',
+    'chitose', 'shin-chitose-kuko', 'minami-chitose', 'eniwa', 'megumino', 'shimamatu', 'kita-hiroshima',
+]);
+const DOUTO_IDS = new Set([
+    'tomamu', 'shintoku', 'obihiro', 'ikeda', 'atsukeshi', 'kushiro', 'nemuro', 'shiranuka', 'hamanaka', 'attoko', 'shiretoko-shari',
+    'bihoro', 'kitami', 'abashiri', 'memambetsu', 'rubeshibe', 'tanno', 'aibetsu', 'shirataki', 'maruseppu', 'ikutahara', 'antaroma',
+]);
+const DONAN_IDS = new Set([
+    'hakodate', 'shin-hakodate-hokuto', 'mori', 'yakumo', 'oshamambe', 'nanae', 'onuma', 'onuma-koen',
+]);
+const DOHOKU_IDS = new Set([
+    'asahikawa', 'fukagawa', 'takikawa', 'sunagawa', 'bibai', 'iwamizawa', 'naie', 'ebeotsu',
+    'wakkanai', 'shibetsu', 'nayoro', 'wassamu', 'kenbuchi', 'bifuka', 'otoineppu', 'teshio-nakagawa',
+    'kamikawa', 'engaru', 'moseushi', 'osamunai', 'toyohoro', 'horomui', 'kamishunai', 'nagayama', 'pippu', 'ranru',
+]);
+const MURORAN_IDS = new Set([
+    'tomakomai', 'shiraoi', 'noboribetsu', 'higashi-muroran', 'muroran', 'datemombetsu', 'toya', 'kuriyama', 'yuni', 'abira', 'oizawake', 'shimukappu', 'mukawa',
+]);
+
+function eitherInArea(ids: string[], area: Set<string>): boolean {
+    return ids.some(id => area.has(id));
+}
+
 // 2駅間の「連絡ルート」を取得（直通がない場合の主要コリドー）
-// 例: 札幌〜帯広 -> 石勝・根室線ルート
+// 優先順位: 具体的なコリドーマッチ > エリア間マッチ > ユニバーサルフォールバック
 export function getConnectingRoute(stationA: Station, stationB: Station): Route | null {
     const ids = [stationA.id, stationB.id];
 
-    // 1. 札幌 ↔ 道東（帯広・釧路）
-    // 石勝線（峠越え）を主要リスク区間とする
-    if (ids.includes('sapporo') && (ids.includes('obihiro') || ids.includes('kushiro') || ids.includes('shiretoko-shari'))) {
+    // === 長距離コリドー（リスクの高い経由路線を指定） ===
+
+    // 1. 札幌圏 ↔ 道東（帯広・釧路・網走）→ 石勝線（峠越え）
+    if (eitherInArea(ids, SAPPORO_METRO_IDS) && eitherInArea(ids, DOUTO_IDS)) {
         return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekisho') || null;
     }
 
-    // 2. 札幌 ↔ 函館・道南
-    // 函館本線（山線）より室蘭本線（海線）が特急ルートだが、長万部〜札幌は室蘭本線or千歳線。
-    // 特急北斗は「千歳・室蘭・函館」を経由。
-    // 最も風に弱い「室蘭本線」をリスク指標とするのが安全
-    if (ids.includes('sapporo') && (ids.includes('hakodate') || ids.includes('shin-hakodate-hokuto') || ids.includes('oshamambe'))) {
+    // 2. 札幌圏 ↔ 道南（函館・新函館北斗）→ 室蘭本線（海線特急北斗ルート）
+    if (eitherInArea(ids, SAPPORO_METRO_IDS) && eitherInArea(ids, DONAN_IDS)) {
         return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.muroran-main') || null;
     }
 
-    // 3. 札幌 ↔ 稚内（宗谷本線）
-    // 宗谷本線をリスク指標とする
-    if (ids.includes('sapporo') && (ids.includes('wakkanai') || ids.includes('nayoro'))) {
-        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.soya-main') || null;
-    }
-
-    // 4. 札幌 ↔ 網走（石北本線）
-    // 石北本線をリスク指標とする
-    if (ids.includes('sapporo') && (ids.includes('abashiri') || ids.includes('kitami'))) {
-        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekihoku-main') || null;
-    }
-
-    // 5. 札幌圏内の異なる路線間（千歳線 ↔ 函館本線 ↔ 学園都市線）
-    // 乗り換えを伴うが、到着駅側の路線をリスク指標として返す
-    const sapporoAreaIds = [
-        'sapporo', 'shin-sapporo', 'kotoni', 'teine', 'naebo', 'shiroishi', 'atsubetsu', 'oochi', 'nopporo', 'ebetsu',
-        'soen', 'hassamu', 'hassamu-chuo', 'inazumi-koen', 'inaho', 'hoshimi', 'kitahiroshima', 'kaminopporo', 'heiwa',
-        'shin-kotoni', 'shinkawa', 'hachiken', 'taihei', 'yurigahara', 'shinoro', 'takuhoku', 'ainosato-kyoiku-dai', 'ainosato-koen',
-        'otaru', 'otaru-chikko', 'zenibako', 'asari', 'minami-otaru',
-        'chitose', 'shin-chitose-kuko', 'minami-chitose', 'eniwa', 'megumino', 'shimamatu', 'kita-hiroshima',
-    ];
-    if (sapporoAreaIds.includes(stationA.id) && sapporoAreaIds.includes(stationB.id)) {
-        // 到着駅（stationB）の路線をリスク指標にする
-        const arrivalLine = stationB.lines[0];
-        if (arrivalLine) {
-            return HOKKAIDO_ROUTES.find(r => r.id === arrivalLine) || null;
+    // 3. 札幌圏 ↔ 道北（旭川・稚内・名寄）→ 宗谷本線
+    if (eitherInArea(ids, SAPPORO_METRO_IDS) && eitherInArea(ids, DOHOKU_IDS)) {
+        // 旭川までなら函館本線、旭川より北なら宗谷本線がリスク高い
+        const soyaStations = ['wakkanai', 'shibetsu', 'nayoro', 'wassamu', 'kenbuchi', 'bifuka', 'otoineppu', 'teshio-nakagawa'];
+        if (ids.some(id => soyaStations.includes(id))) {
+            return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.soya-main') || null;
         }
+        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.hakodate-main') || null;
+    }
+
+    // 4. 札幌圏 ↔ 室蘭エリア（苫小牧・室蘭）→ 室蘭本線
+    if (eitherInArea(ids, SAPPORO_METRO_IDS) && eitherInArea(ids, MURORAN_IDS)) {
+        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.muroran-main') || null;
+    }
+
+    // === エリア間のクロスマッチ ===
+
+    // 5. 道北（旭川）↔ 道東（帯広・釧路・網走）→ 石北本線 or 石勝線
+    if (eitherInArea(ids, DOHOKU_IDS) && eitherInArea(ids, DOUTO_IDS)) {
+        const sekihokuStations = ['abashiri', 'kitami', 'bihoro', 'memambetsu', 'rubeshibe', 'tanno', 'aibetsu', 'shirataki', 'maruseppu', 'ikutahara', 'antaroma', 'engaru'];
+        if (ids.some(id => sekihokuStations.includes(id))) {
+            return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekihoku-main') || null;
+        }
+        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekisho') || null;
+    }
+
+    // 6. 室蘭エリア ↔ 道南（函館）→ 室蘭本線
+    if (eitherInArea(ids, MURORAN_IDS) && eitherInArea(ids, DONAN_IDS)) {
+        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.muroran-main') || null;
+    }
+
+    // 7. 室蘭エリア ↔ 道東 → 石勝線
+    if (eitherInArea(ids, MURORAN_IDS) && eitherInArea(ids, DOUTO_IDS)) {
+        return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekisho') || null;
+    }
+
+    // === ユニバーサルフォールバック ===
+    // 上記のどのパターンにも該当しない場合、到着駅（stationB）の路線を返す
+    // これにより、どの駅ペアでも必ず検索結果が表示される
+    const arrivalLine = stationB.lines[0];
+    if (arrivalLine) {
+        return HOKKAIDO_ROUTES.find(r => r.id === arrivalLine) || null;
     }
 
     return null;
