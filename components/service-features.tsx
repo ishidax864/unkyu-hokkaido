@@ -1,4 +1,4 @@
-import { BrainCircuit, Radio, Bus, CheckCircle2, TrendingUp, ShieldCheck } from 'lucide-react';
+import { BrainCircuit, Radio, Bus, TrendingUp } from 'lucide-react';
 
 export function ServiceFeatures() {
     return (

@@ -1,26 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { SearchForm } from '@/components/search-form';
 import { ServiceFeatures } from '@/components/service-features';
 import { PredictionResults } from '@/components/prediction-results';
 import { WeatherWarningList } from '@/components/weather-warning-list';
 import { ProgressiveLoading } from '@/components/progressive-loading';
 import { HeadlineStatus } from '@/components/headline-status';
-import { getRouteById, getStationById, getCommonLines, getJRStatusUrl, Station } from '@/lib/hokkaido-data';
-// unused imports removed
-import { useAppInit } from '@/hooks/useAppInit'; // 🆕
-import { findTrain } from '@/lib/timetable-data'; // 🆕
-import { JROperationStatus } from '@/lib/jr-status';
-import { saveUserReport, aggregateCrowdsourcedStatus } from '@/lib/user-reports';
-import { PredictionResult, WeatherForecast, WeatherWarning, HourlyRiskData } from '@/lib/types';
+import { getStationById } from '@/lib/hokkaido-data';
+import { useAppInit } from '@/hooks/useAppInit';
+import { saveUserReport } from '@/lib/user-reports';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useRouteSearch } from '@/hooks/useRouteSearch';
 import { FavoriteSelector } from '@/components/favorite-selector';
-import { Cloud, AlertTriangle, Train, ArrowRight, RefreshCw, Radio, ExternalLink, ChevronRight, MapPin, Star } from 'lucide-react';
-import { sendGAEvent } from '@next/third-parties/google'; // 🆕
-
+import { Cloud, Train, MapPin } from 'lucide-react';
+import { sendGAEvent } from '@next/third-parties/google';
 import { getWeatherIcon } from '@/lib/weather-utils';
 
 export default function Home() {
@@ -42,10 +35,11 @@ export default function Home() {
     refreshRealtimeStatus, // 🆕
   } = useRouteSearch();
 
-  const handleRefresh = () => {
+  const _handleRefresh = () => {
     sendGAEvent('event', 'refresh_status', { route: selectedRouteId });
     refreshRealtimeStatus();
   };
+  void _handleRefresh; // reserved for future use
 
   // 初期化ロジック（天気、現在地、警報、時刻）
   const {
@@ -96,11 +90,7 @@ export default function Home() {
   };
 
   const todayWeather = weather[0];
-  // const depStation = departureStationId ? getStationById(departureStationId) : null;
-  // const arrStation = arrivalStationId ? getStationById(arrivalStationId) : null;
-  // Use state from hook directly
-  const depStation = departureStation;
-  const arrStation = arrivalStation;
+  // Use state from hook directly (Station type via useRouteSearch)
 
   return (
     <main className="min-h-screen bg-[var(--background-secondary)]">
@@ -130,7 +120,7 @@ export default function Home() {
 
         {/* 天気サマリー */}
         {isWeatherLoading ? (
-          <section className="card p-3 mb-4 flex items-center justify-between animate-pulse h-[68px]">
+          <section className="card p-4 mb-4 flex items-center justify-between animate-pulse h-[72px]">
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 bg-gray-200 rounded-full" />
               <div>
@@ -141,7 +131,7 @@ export default function Home() {
             <div className="w-10 h-10 bg-gray-200 rounded-lg" />
           </section>
         ) : todayWeather ? (
-          <section className="card p-3 mb-4 flex items-center justify-between" aria-labelledby="weather-summary-title">
+          <section className="card p-4 mb-4 flex items-center justify-between" aria-labelledby="weather-summary-title">
             <div className="flex items-center gap-3">
               <Cloud className="w-5 h-5 text-[var(--muted)]" aria-hidden="true" />
               <div>

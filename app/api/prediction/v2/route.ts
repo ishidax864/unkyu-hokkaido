@@ -1,14 +1,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchRealWeatherForecast, fetchHourlyWeatherForecast } from '@/lib/weather';
+import { fetchHourlyWeatherForecast } from '@/lib/weather';
 import { predictWithML } from '@/lib/prediction-engine/ml-runner';
-import { aggregateCrowdsourcedStatus } from '@/lib/user-reports';
-import { JRStatusItem, JRStatusResponse } from '@/lib/types';
-import { getRouteById } from '@/lib/hokkaido-data';
+import { JRStatusItem } from '@/lib/types';
 import { getRecoveryMessage } from '@/lib/suggestion-logic';
 
 // Helper to fetch JR Status
-async function fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
+async function _fetchJRStatus(_routeId: string): Promise<JRStatusItem | null> {
     try {
         // Self-call or mocking internal logic? 
         // In Server Action/Route Handler, calling another API route via fetch(localhost) is efficient? 

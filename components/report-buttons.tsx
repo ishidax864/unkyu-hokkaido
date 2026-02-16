@@ -34,7 +34,7 @@ const REPORT_OPTIONS = [
     { type: 'normal' as const, label: '平常運転', icon: CheckCircle, className: 'status-normal' },
 ];
 
-export function ReportButtons({ routeId, routeName, onReport, counts }: ReportButtonsProps) {
+export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }: ReportButtonsProps) {
     const [selectedType, setSelectedType] = useState<ReportType | null>(null);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);

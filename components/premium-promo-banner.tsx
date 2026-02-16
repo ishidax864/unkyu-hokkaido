@@ -1,9 +1,8 @@
 'use client';
 
-import { Crown, Check, X } from 'lucide-react';
+import { Crown, X } from 'lucide-react';
 import { usePremium } from '@/contexts/premium-context';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 
 export function PremiumPromoBanner() {
     const { isPremium, upgrade } = usePremium();

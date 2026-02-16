@@ -114,7 +114,7 @@ export function calculateResumptionTime(
 
         // Calculate absolute elapsed hours from event start
         const referenceDate = eventStartDate || hourlyForecasts[0].date;
-        const [safetyH, safetyM] = safetyStartTime.split(':').map(Number);
+        const [safetyH, _safetyM] = safetyStartTime.split(':').map(Number);
         const safetyDate = hourlyForecasts[safetyStartIndex].date;
 
         let totalElapsed = safetyH;

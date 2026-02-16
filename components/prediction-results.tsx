@@ -8,10 +8,8 @@ import { ShareCard } from './share-card';
 import { HourlyRiskChart } from './hourly-risk-chart';
 import { ReportButtons } from './report-buttons';
 import { AlternativeRoutes } from './alternative-routes';
-import { TransportAffiliates } from './transport-affiliates';
 import { HotelSuggestions } from './hotel-suggestions';
 import { WeeklyForecastChart } from './weekly-forecast';
-import { ReturnTripAdvisor } from './return-trip-advisor';
 import { Star } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
 
@@ -22,10 +20,14 @@ interface PredictionResultsProps {
     depStation: Station | null;
     arrStation: Station | null;
     riskTrend: HourlyRiskData[] | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     realtimeStatus: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     timeShiftSuggestion: any;
     weeklyPredictions: PredictionResult[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     weather: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handleReport: (type: any, comment?: string) => void;
     isFavorite: (depId: string, arrId: string) => boolean;
     addFavorite: (depId: string, arrId: string, depName: string, arrName: string) => void;
@@ -60,7 +62,7 @@ export function PredictionResults({
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none">RESULT</span>
-                    <h2 className="text-lg font-black text-gray-900 leading-none">
+                    <h2 className="text-xl font-black text-gray-900 leading-none">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>

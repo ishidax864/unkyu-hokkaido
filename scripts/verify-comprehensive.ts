@@ -90,6 +90,7 @@ async function runVerification() {
 
     // 1. Load Ground Truth Routes (for variety)
     const groundTruthPath = path.join(process.cwd(), 'lib/backtest/ground-truth.json');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const groundTruth: any[] = JSON.parse(fs.readFileSync(groundTruthPath, 'utf-8'));
 
     // Unique Routes
@@ -114,6 +115,7 @@ async function runVerification() {
 
     // 3. Run Predictions & Verify Advice
     const results = [];
+
     const stats = {
         total: 0,
         suspended: 0,
@@ -162,8 +164,8 @@ async function runVerification() {
         ];
 
         const advice = generateStrategicAdvice(result, futureRisks);
-        const trafficRisk = calculateTrafficRisk(result);
-        const availability = checkAlternativeAvailability(scenario.routeId, result, false, scenario.routeId.includes('chitose')); // Mock IsSapporo logic
+        // const trafficRisk = calculateTrafficRisk(result); // Unused
+        // const availability = checkAlternativeAvailability(scenario.routeId, result, false, scenario.routeId.includes('chitose')); // Unused
 
         // Stats Aggregation
         stats.total++;

@@ -10,14 +10,25 @@ const COORDS = {
     CHITOSE: { lat: 42.793, lon: 141.693 }
 };
 
+// Define types
 interface GroundTruthItem {
-    date: string;
     routeId: string;
-    status: 'stopped' | 'delayed' | 'normal';
-    cause: string;
+    date: string;
+    status: string;
 }
 
-async function fetchHistoricalWeather(date: string, routeId: string) {
+interface HourlyWeather {
+    time: string;
+    windSpeed: number;
+    snowfall: number;
+    snowDepth: number;
+    precipitation: number;
+    windGust: number;
+    temperature: number;
+}
+
+// Fixed function
+async function fetchHistoricalWeather(date: string, routeId: string): Promise<HourlyWeather[]> {
     let lat = COORDS.SAPPORO.lat;
     let lon = COORDS.SAPPORO.lon;
     if (routeId.includes('hakodate-main')) { lat = COORDS.IWAMIZAWA.lat; lon = COORDS.IWAMIZAWA.lon; }
@@ -73,12 +84,12 @@ async function generateDataset() {
         // Since the ground truth `status` is usually "Day Level", mapping it to specific hours is tricky.
         // Let's stick to "Worst Case of the Day" features for now to predict the Day Status.
 
-        const maxWind = Math.max(...hourly.map((h: any) => h.windSpeed));
-        const maxGust = Math.max(...hourly.map((h: any) => h.windGust));
-        const maxSnow = Math.max(...hourly.map((h: any) => h.snowfall));
-        const maxDepth = Math.max(...hourly.map((h: any) => h.snowDepth)); // Already cm
-        const minTemp = Math.min(...hourly.map((h: any) => h.temperature));
-        const totalPrecip = hourly.reduce((sum: number, h: any) => sum + h.precipitation, 0);
+        const maxWind = Math.max(...hourly.map((h: HourlyWeather) => h.windSpeed));
+        const maxGust = Math.max(...hourly.map((h: HourlyWeather) => h.windGust));
+        const maxSnow = Math.max(...hourly.map((h: HourlyWeather) => h.snowfall));
+        const maxDepth = Math.max(...hourly.map((h: HourlyWeather) => h.snowDepth)); // Already cm
+        const minTemp = Math.min(...hourly.map((h: HourlyWeather) => h.temperature));
+        const totalPrecip = hourly.reduce((sum: number, h: HourlyWeather) => sum + h.precipitation, 0);
 
         const dateObj = new Date(item.date);
         const month = dateObj.getMonth() + 1;

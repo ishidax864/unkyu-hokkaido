@@ -14,8 +14,8 @@ interface ShareCardProps {
 
 export function ShareCard({ prediction, routeName, departureStation, arrivalStation }: ShareCardProps) {
     const [copied, setCopied] = useState(false);
-    const [showShare, setShowShare] = useState(false);
-    const cardRef = useRef<HTMLDivElement>(null);
+    const [_showShare, setShowShare] = useState(false);
+    const _cardRef = useRef<HTMLDivElement>(null);
 
     // シェアテキスト生成
     const getShareText = () => {

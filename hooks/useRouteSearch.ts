@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Station, getRouteById, getStationById, getCommonLines, getConnectingRoute } from '@/lib/hokkaido-data';
+import { Station, getStationById, getCommonLines, getConnectingRoute } from '@/lib/hokkaido-data';
 import { PredictionResult, WeatherForecast, HourlyRiskData } from '@/lib/types';
 import { findTrain } from '@/lib/timetable-data';
 import { fetchRealWeatherForecast, fetchHourlyWeatherForecast } from '@/lib/weather';

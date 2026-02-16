@@ -1,22 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Route, PredictionResult } from '@/lib/types';
-// import { TAXI_AFFILIATES, RENTAL_CAR_AFFILIATES, BUS_AFFILIATES, CAFE_AFFILIATES } from '@/lib/user-reports';
-import { Station, estimateTaxiFare, getAlternativeRoutes, AlternativeRouteOption } from '@/lib/hokkaido-data';
-import { HourlyRiskData, OperationStatus } from '@/lib/types';
+import { Station, getAlternativeRoutes } from '@/lib/hokkaido-data';
+import { HourlyRiskData } from '@/lib/types';
 import { generateStrategicAdvice, calculateTrafficRisk, checkAlternativeAvailability } from '@/lib/suggestion-logic';
 import {
     Train,
-    Bus,
     Car,
     Clock,
-    ChevronRight,
     AlertTriangle,
-    Coffee,
     ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReturnTripAdvisor } from './return-trip-advisor';
-import { TimeShiftSuggestion } from './time-shift-suggestion';
 import { UnifiedAlternativesCard } from './unified-alternatives';
 
 interface AlternativeRoutesProps {
@@ -47,8 +42,7 @@ interface AlternativeSelection {
 // 札幌圏の路線ID
 const SAPPORO_AREA_IDS = ['jr-hokkaido.hakodate-main', 'jr-hokkaido.chitose', 'jr-hokkaido.gakuentoshi'];
 
-export function AlternativeRoutes({ originalRoute, predictionResult, departureStation, arrivalStation, timeShiftSuggestion, futureRisks, onSelect }: AlternativeRoutesProps) {
-    const [selectedAlt, setSelectedAlt] = useState<string | null>(null);
+export function AlternativeRoutes({ originalRoute, predictionResult, departureStation, arrivalStation, timeShiftSuggestion, futureRisks, onSelect: _onSelect }: AlternativeRoutesProps) {
 
     // 特定の代替ルートを検索
     const specificAlternatives = useMemo(() => {
@@ -79,89 +73,81 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
     }, [predictionResult, futureRisks, timeShiftSuggestion]);
 
     // 渋滞リスクとタクシー料金の計算
-    const { taxiFareEstimate, trafficWarning } = useMemo(() => {
-        if (!predictionResult) return { taxiFareEstimate: null, trafficWarning: null };
+    const { trafficWarning } = useMemo(() => {
+        if (!predictionResult) return { trafficWarning: null };
 
         // 1. 渋滞リスク計算 (外部関数)
         const { warning } = calculateTrafficRisk(predictionResult);
 
-        // 2. タクシー料金見積もり
-        let fare = null;
-        if (departureStation && arrivalStation) {
-            fare = estimateTaxiFare(departureStation.id, arrivalStation.id);
-        }
-
-        return { taxiFareEstimate: fare, trafficWarning: warning };
-    }, [predictionResult, departureStation, arrivalStation]);
+        return { trafficWarning: warning };
+    }, [predictionResult]);
 
     // 時間表示フォーマッター (例: "+20分" -> "❄️約40分")
 
     // 時間表示フォーマッター (例: "+20分" -> "❄️約40分")
 
 
-    const handleSelect = (selection: AlternativeSelection, id: string) => {
-        setSelectedAlt(id);
-        onSelect(selection);
-    };
 
-    return (
     return (
         <section aria-labelledby="alternative-routes-title">
             <div className="flex items-center gap-2 mb-4 px-1">
-                <Train className="w-4 h-4 text-[var(--primary)]" />
-                <h3 id="alternative-routes-title" className="text-sm font-bold text-gray-700">代替ルート・行動提案</h3>
+                <Train className="w-5 h-5 text-[var(--primary)]" />
+                <h3 id="alternative-routes-title" className="text-lg font-bold text-gray-700">代替ルート・行動提案</h3>
             </div>
 
-            {/* 戦略的アドバイスの表示 - 統合カードの上に移動 */}
-            {advice && (
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
-                    <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2">
-                        <div className={cn(
-                            "p-1.5 rounded-md",
-                            advice.type === 'critical' ? "bg-red-100 text-red-600" :
-                                advice.type === 'warning' ? "bg-orange-100 text-orange-600" :
-                                    "bg-green-100 text-green-600"
-                        )}>
-                            {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
-                                advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
-                                    <Train className="w-4 h-4" />}
-                        </div>
-                        <span className="text-sm font-bold text-gray-700">AIアドバイザー</span>
-                    </div>
-
-                    <div className="p-4">
-                        <h4 className={cn(
-                            "font-bold text-base mb-2",
-                            advice.type === 'critical' ? "text-red-800" :
-                                advice.type === 'warning' ? "text-orange-800" :
-                                    "text-green-800"
-                        )}>
-                            {advice.title}
-                        </h4>
-                        <div className="text-sm text-gray-700 leading-relaxed">
-                            {advice.message}
+            <div className="space-y-4">
+                {/* 戦略的アドバイスの表示 */}
+                {advice && (
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2">
+                            <div className={cn(
+                                "p-1.5 rounded-md",
+                                advice.type === 'critical' ? "bg-red-100 text-red-600" :
+                                    advice.type === 'warning' ? "bg-orange-100 text-orange-600" :
+                                        "bg-green-100 text-green-600"
+                            )}>
+                                {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
+                                    advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
+                                        <Train className="w-4 h-4" />}
+                            </div>
+                            <span className="text-sm font-bold text-gray-700">AIアドバイザー</span>
                         </div>
 
-                        {/* 🆕 アクションボタン */}
-                        {(advice as any).actionLink && (
-                            <a
-                                href={(advice as any).actionLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-4 flex items-center justify-center gap-2 text-sm font-bold text-white bg-[var(--primary)] hover:bg-blue-700 px-4 py-3 rounded-lg transition-colors shadow-sm"
-                            >
-                                {(advice as any).actionLabel || '詳細を見る'} <ExternalLink className="w-4 h-4" />
-                            </a>
-                        )}
-                    </div>
-                </div>
-            )}
+                        <div className="p-4">
+                            <h4 className={cn(
+                                "font-bold text-base mb-2",
+                                advice.type === 'critical' ? "text-red-800" :
+                                    advice.type === 'warning' ? "text-orange-800" :
+                                        "text-green-800"
+                            )}>
+                                {advice.title}
+                            </h4>
+                            <div className="text-sm text-gray-700 leading-relaxed">
+                                {advice.message}
+                            </div>
 
-            {/* 統合代替手段カード */}
-            {predictionResult && (
-                <div className="mb-6 space-y-4">
+                            {/* アクションボタン */}
+                            {advice.actionLink && (
+                                <a
+                                    href={advice.actionLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-4 flex items-center justify-center gap-2 text-sm font-bold text-white bg-[var(--primary)] hover:bg-blue-700 px-4 py-3 rounded-lg transition-colors shadow-sm"
+                                >
+                                    {advice.actionLabel || '詳細を見る'} <ExternalLink className="w-4 h-4" />
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* 帰宅サバイバル判定 */}
+                {predictionResult && (
                     <ReturnTripAdvisor prediction={predictionResult} />
+                )}
 
+                {/* 統合代替手段カード（時間シフト・タクシー等） */}
+                {predictionResult && (
                     <UnifiedAlternativesCard
                         departureStation={departureStation || null}
                         arrivalStation={arrivalStation || null}
@@ -171,31 +157,23 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                         snowfall={predictionResult.comparisonData?.snow}
                         timeShiftSuggestion={timeShiftSuggestion}
                     />
-                </div>
-            )}
+                )}
 
+                {/* 暴風警告 */}
+                {warningMessage && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                        {warningMessage}
+                    </div>
+                )}
 
-            {/* ※時間シフト提案はUnifiedAlternativesCard内に統合済み */}
-
-            {warningMessage && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-start gap-2">
-                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-                    {warningMessage}
-                </div>
-            )}
-
-            {/* 雪渋滞警告 */}
-            {trafficWarning && !warningMessage && (
-                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-xs text-yellow-800 flex items-start gap-2">
-                    <Car className="w-4 h-4 shrink-0 mt-0.5" />
-                    {trafficWarning}
-                </div>
-            )}
-
-            <div className="space-y-3">
-                {/* ※重複していた推奨ルート・地下鉄・バスは UnifiedAlternativesCard に統合済み */}
-
-                {/* 移動手段の予約・手配はUnifiedAlternativesCard内に統合済み */}
+                {/* 雪渋滞警告 */}
+                {trafficWarning && !warningMessage && (
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md text-xs text-yellow-800 flex items-start gap-2">
+                        <Car className="w-4 h-4 shrink-0 mt-0.5" />
+                        {trafficWarning}
+                    </div>
+                )}
             </div>
         </section>
     );

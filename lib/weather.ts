@@ -112,7 +112,7 @@ interface OpenMeteoHourlyResponse {
     };
 }
 
-interface OpenMeteoDailyResponse {
+interface _OpenMeteoDailyResponse {
     latitude: number;
     longitude: number;
     timezone: string;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { calculateResumptionTime } from '../lib/prediction-engine/resumption';
 import { WeatherForecast } from '@/lib/types';

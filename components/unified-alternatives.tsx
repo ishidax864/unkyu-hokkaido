@@ -2,13 +2,11 @@
 
 import { useMemo } from 'react';
 import { Bus, Car, Train, Coffee, Hotel, ExternalLink, Clock } from 'lucide-react';
-import { Station, getAlternativeRoutes, AlternativeRouteOption, estimateTaxiFare } from '@/lib/hokkaido-data';
+import { Station, getAlternativeRoutes, estimateTaxiFare } from '@/lib/hokkaido-data';
 import { getStationFacilities } from '@/lib/alternative-options';
-import { getRecoveryMessage, shouldShowGenericSubway } from '@/lib/suggestion-logic';
 import { cn } from '@/lib/utils';
 import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
-import { PR_LABEL } from '@/lib/user-reports';
 import { getAffiliatesByType } from '@/lib/affiliates';
 
 interface TimeShiftData {
@@ -116,8 +114,8 @@ export function UnifiedAlternativesCard({
     const showHeavyTransport = isSevere; // 高速バス・レンタカー
 
     const taxiAffiliates = getAffiliatesByType('taxi').slice(0, 2); // Show up to 2 (Didi and GO)
-    const busAffiliate = getAffiliatesByType('bus')[0];
-    const rentalAffiliate = getAffiliatesByType('rental')[0];
+    // const busAffiliate = getAffiliatesByType('bus')[0]; // Unused
+    // const rentalAffiliate = getAffiliatesByType('rental')[0]; // Unused
 
     return (
         <div className="space-y-6">

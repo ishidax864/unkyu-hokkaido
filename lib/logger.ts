@@ -36,7 +36,7 @@ function addToHistory(entry: LogEntry): void {
 }
 
 // 本番では Sentry 等に送信
-async function sendToExternalService(entry: LogEntry): Promise<void> {
+async function sendToExternalService(_entry: LogEntry): Promise<void> {
     if (!isProduction) return;
 
     const sentryDsn = process.env.SENTRY_DSN;

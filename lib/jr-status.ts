@@ -1,7 +1,7 @@
 // JR北海道 運行情報取得
 // 公式サイトのJSON APIから直接取得するように改善
 import { logger } from './logger';
-import { JRStatus, JRStatusItem } from './types';
+import { JRStatus } from './types';
 
 // JR北海道公式JSON URL (エリア別)
 const JR_JSON_URLS = [

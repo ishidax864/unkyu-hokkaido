@@ -2,7 +2,6 @@
 
 import { PredictionResult } from '@/lib/types';
 import { Route } from '@/lib/types';
-import { SmartAffiliateCard } from "./smart-affiliate-card";
 import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, TrendingUp, Clock, AlertOctagon, Users, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
@@ -14,7 +13,7 @@ interface PredictionResultCardProps {
 }
 
 export function PredictionResultCard({ result, route, targetDate }: PredictionResultCardProps) {
-    const isHighRisk = result.probability >= 50;
+    const _isHighRisk = result.probability >= 50;
     const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended;
 
     // 当日かどうかを判定
@@ -23,7 +22,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
     const isToday = targetDate === today;
 
     // ステータスに応じた設定（信号色）
-    const getStatusConfig = () => {
+    const _getStatusConfig = () => {
         switch (result.status) {
             case '運休中':
                 return { icon: AlertOctagon, className: 'status-suspended' };
@@ -38,8 +37,8 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
         }
     };
 
-    const statusConfig = getStatusConfig();
-    const StatusIcon = statusConfig.icon;
+
+
 
     // 確率に応じた色
     const getProgressColor = () => {

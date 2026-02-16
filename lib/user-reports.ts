@@ -3,7 +3,6 @@
 
 import {
     isSupabaseAvailable,
-    saveReportToSupabase,
     getRecentReports,
     getReportStats,
     type UserReportDB
@@ -81,7 +80,7 @@ export const PR_LABEL = "PR";
 const REPORTS_STORAGE_KEY = 'unkyu-ai-user-reports';
 
 // 簡易的なIPハッシュ生成（プライバシー保護）
-function generateIpHash(): string {
+function _generateIpHash(): string {
     const timestamp = Date.now().toString(36);
     const random = Math.random().toString(36).substring(2, 8);
     return `${timestamp}-${random}`;

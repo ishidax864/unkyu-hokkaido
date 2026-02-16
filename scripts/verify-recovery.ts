@@ -58,7 +58,7 @@ async function fetch48HourWeather(startDate: string, routeId: string): Promise<W
             windGust: data.hourly.windgusts_10m[index],
             weatherCode: 71,
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -86,7 +86,7 @@ async function runPrecisionVerification() {
         if (hourly.length === 0) continue;
 
         // 1. Identify the *Actual Event Start* (First unsafe hour)
-        let firstUnsafeIndex = hourly.findIndex(h => !isConditionSafeForTarget(h, item.routeId));
+        let firstUnsafeIndex = hourly.findIndex(h => !isConditionSafeForTarget(h));
         if (firstUnsafeIndex === -1) firstUnsafeIndex = 0;
 
         const firstUnsafeHour = timeToHours(hourly[firstUnsafeIndex].targetTime || '06:00');
@@ -165,7 +165,7 @@ async function runPrecisionVerification() {
     }
 
     // Helper for the script
-    function isConditionSafeForTarget(weather: WeatherForecast, routeId: string): boolean {
+    function isConditionSafeForTarget(weather: WeatherForecast): boolean {
         // Simplified version matching resumption.ts logic
         if (weather.windSpeed >= 22) return false;
         if ((weather.snowfall || 0) >= 2.5) return false;

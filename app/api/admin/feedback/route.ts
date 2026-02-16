@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFeedbackList } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
     try {
         // middleware handles auth for /admin/*, but api routes might need it too
         // if they are not under /admin. Here it is /api/admin/* which we should also protect.

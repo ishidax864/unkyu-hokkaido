@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({
             partner: partner.name,
             timestamp: new Date().toISOString(),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             reports: result.data.map((r: any) => ({
                 id: r.id,
                 type: r.report_type,
@@ -36,7 +37,7 @@ export async function GET(req: NextRequest) {
                 createdAt: r.created_at
             }))
         });
-    } catch (err) {
+    } catch (_err) {
         return NextResponse.json({ error: 'Failed to fetch reports' }, { status: 500 });
     }
 }

@@ -3,7 +3,7 @@ import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine';
 
 export async function GET() {
-    const checks: Record<string, any> = {
+    const checks: Record<string, string> = {
         jr_hokkaido_json: 'pending',
         prediction_engine: 'pending',
     };

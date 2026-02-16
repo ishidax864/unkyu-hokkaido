@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
-import { Search, MapPin, ArrowRight, Calendar, Clock, AlertTriangle, Loader2, PlayCircle, Timer } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, PlayCircle, Timer } from 'lucide-react';
 import { Station } from '@/lib/hokkaido-data';
 import { StationSelector } from './station-selector';
 
@@ -159,7 +159,7 @@ export function SearchForm({
                                 d.setDate(d.getDate() + 7);
                                 return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
                             })()}
-                            className={`w-full input-field p-3 text-sm ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
+                            className={`w-full input-field p-3 text-lg font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
                         />
                         {!isDateValid(date) && (
                             <p className="text-[10px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
@@ -174,7 +174,7 @@ export function SearchForm({
                             <button
                                 type="button"
                                 onClick={() => setTimeType('departure')}
-                                className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${timeType === 'departure' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
+                                className={`flex-1 text-xs py-1.5 rounded flex items-center justify-center gap-1 ${timeType === 'departure' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
                             >
                                 <PlayCircle className="w-3 h-3" />
                                 出発
@@ -182,7 +182,7 @@ export function SearchForm({
                             <button
                                 type="button"
                                 onClick={() => setTimeType('arrival')}
-                                className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${timeType === 'arrival' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
+                                className={`flex-1 text-xs py-1.5 rounded flex items-center justify-center gap-1 ${timeType === 'arrival' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
                             >
                                 <Timer className="w-3 h-3" />
                                 到着
@@ -192,7 +192,7 @@ export function SearchForm({
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className="w-full input-field p-3 text-base font-bold"
+                            className="w-full input-field p-3 text-lg font-bold"
                         />
                     </div>
                 </div>
@@ -201,7 +201,7 @@ export function SearchForm({
                 <button
                     type="button"
                     onClick={setCurrentDateTime}
-                    className="w-full btn-secondary py-2.5 text-sm flex items-center justify-center gap-2"
+                    className="w-full btn-secondary py-3 text-sm flex items-center justify-center gap-2"
                 >
                     📍 現在の日時で検索
                 </button>
@@ -216,7 +216,7 @@ export function SearchForm({
             <button
                 type="submit"
                 disabled={!departureStation || !arrivalStation || !isDateValid(date) || isLoading}
-                className="w-full btn-primary py-3.5 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
+                className="w-full btn-primary py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
             >
                 {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

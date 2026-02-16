@@ -28,17 +28,15 @@
 
   /* Signal Colors - Clear Status Indicators */
   --status-normal: #22a352;
-  /* Green - 平常運転 */
   --status-warning: #f5a623;
-  /* Yellow - 遅延 */
   --status-suspended: #dc3545;
-  /* Red - 運休 */
 
   --border: #e2e8f0;
   --input: #f8fafc;
   --ring: #007849;
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+  /* 12px for modern feel */
 }
 
 body {
@@ -50,18 +48,19 @@ body {
 }
 
 /* Card Styles - Clean and Functional */
+/* Card Styles - Clean and Functional */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .card-elevated {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
 }
 
 /* Status Badge Styles */

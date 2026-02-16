@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -41,7 +42,7 @@ export function FeedbackForm({ onClose }: FeedbackFormProps) {
                 const data = await res.json();
                 setError(data.error || '送信に失敗しました');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('ネットワークエラーが発生しました');
         } finally {
             setIsSubmitting(false);
@@ -87,10 +88,11 @@ export function FeedbackForm({ onClose }: FeedbackFormProps) {
                         <button
                             key={opt.id}
                             type="button"
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             onClick={() => setType(opt.id as any)}
                             className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 ${type === opt.id
-                                    ? 'border-blue-500 ring-2 ring-blue-50/50 shadow-sm'
-                                    : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                                ? 'border-blue-500 ring-2 ring-blue-50/50 shadow-sm'
+                                : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                                 }`}
                         >
                             <div className={`${opt.bg} ${opt.color} p-2 rounded-lg`}>

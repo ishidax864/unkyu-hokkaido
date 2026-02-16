@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, MoreVertical, Key, ExternalLink } from 'lucide-react';
+import { Plus, MoreVertical, Key } from 'lucide-react';
 
 export default function PartnerManagement() {
     const partners = [
@@ -38,7 +38,7 @@ export default function PartnerManagement() {
                                 <td className="px-6 py-4 text-gray-500">{partner.industry}</td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${partner.tier === 'enterprise' ? 'bg-purple-100 text-purple-700 border border-purple-200' :
-                                            partner.tier === 'pro' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-700'
+                                        partner.tier === 'pro' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-700'
                                         }`}>
                                         {partner.tier}
                                     </span>

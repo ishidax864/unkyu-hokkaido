@@ -1,4 +1,4 @@
-import { PredictionInput, RiskFactor, VulnerabilityData } from '../types';
+import { RiskFactor, VulnerabilityData } from '../types';
 import { getJRStatusWeight } from '../jr-status';
 import { getRecencyWeight } from './helpers';
 
@@ -47,7 +47,6 @@ import {
     CRITICAL_SNOW_DEPTH_THRESHOLD, // 🆕
     CRITICAL_SNOW_DEPTH_SCORE, // 🆕
     SAFE_WIND_DIRECTION_MULTIPLIER, // 🆕
-    SNOW_DRIFT_WIND_THRESHOLD, // 🆕
 } from './constants';
 
 // 路線別の運休しやすさ係数（北海道の路線特性を反映）
@@ -304,16 +303,10 @@ export const RISK_FACTORS: RiskFactor[] = [
     {
         // 積雪深がある程度あり、かつ「降り続いている」または「風がある（吹き溜まり）」場合のみリスクとする
         // 単に積雪が深いだけ（晴れ・無風）なら、除雪済みであれば運行可能
-        condition: (input, vuln) => {
+        condition: (input, _vuln) => {
             const depth = input.weather?.snowDepth ?? 0;
             const snowfall = input.weather?.snowfall ?? 0;
-            const wind = input.weather?.windSpeed ?? 0;
 
-            // 閾値調整: Jan 29(運休)は雪0.28 -> 検知したい (0.25)
-            // Feb 5(正常)は雪0.14 -> 無視したい
-            // 風は誤報が多いので 16 -> 20 に引き上げ -> 再度10に緩和（地吹雪リスク）
-            // 安全な風向の場合は風条件を除外（地吹雪リスク低い）
-            const isSafeWind = isSafeWindDirection(input.weather?.windDirection, vuln.safeWindDirections);
             // 🆕 修正(v4): 風だけで「積雪深リスク」を発動させない。
             // 降雪 >= 1cm (0.25 -> 1.0へ引き上げ) のみ条件とする。
             // 地吹雪リスクは風速そのもの（または暴風警報）で評価する。

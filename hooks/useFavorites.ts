@@ -12,23 +12,25 @@ export interface FavoriteRoute {
 }
 
 export function useFavorites() {
-    const [favorites, setFavorites] = useState<FavoriteRoute[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    // Initial load
-    useEffect(() => {
+    const [favorites, setFavorites] = useState<FavoriteRoute[]>(() => {
         if (typeof window !== 'undefined') {
             try {
                 const stored = localStorage.getItem(STORAGE_KEY);
                 if (stored) {
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                    setFavorites(JSON.parse(stored));
+                    return JSON.parse(stored);
                 }
             } catch (error) {
                 console.error('Failed to load favorites', error);
             }
-            setIsLoaded(true);
         }
+        return [];
+    });
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    // Initial load from localStorage — setState in useEffect is intentional here
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsLoaded(true);
     }, []);
 
     // Save to storage

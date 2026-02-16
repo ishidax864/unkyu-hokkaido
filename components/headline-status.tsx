@@ -12,7 +12,7 @@ interface HeadlineStatusProps {
 /**
  * ページ上部に表示する今日の全体的な運行予報サマリー
  */
-export function HeadlineStatus({ warnings, weatherCondition, isLoading }: HeadlineStatusProps) {
+export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, isLoading }: HeadlineStatusProps) {
     if (isLoading) {
         return (
             <div className="card p-4 mb-4 border-2 bg-gray-50 border-gray-100 animate-pulse">

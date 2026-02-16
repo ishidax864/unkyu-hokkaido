@@ -59,6 +59,7 @@ export default function AdminDashboard() {
 
             if (res.ok) {
                 setRecentFeedback(prev =>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     prev.map(item => item.id === id ? { ...item, status: newStatus as any } : item)
                 );
             }

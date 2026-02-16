@@ -17,22 +17,21 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
 
     let status: 'safe' | 'warning' | 'critical' = 'safe';
     let message = '通常通り帰宅できそうです。';
-    let icon = <Coffee className="w-5 h-5 text-green-600" />;
+    let _icon = <Coffee className="w-5 h-5 text-green-600" />;
 
     if (prob >= 70) {
         status = 'critical';
         message = '帰宅困難になる可能性が高いです。今すぐ帰るか、駅近くのホテル確保を強く推奨します。';
-        icon = <Hotel className="w-5 h-5 text-red-600" />;
+        _icon = <Hotel className="w-5 h-5 text-red-600" />;
     } else if (prob >= 30) { // Changed from 40 to 30 to align with Route Comparison visibility
         status = 'warning';
         message = '夜遅くなると運休リスクが高まります。余裕を持った行動を推奨します。';
-        icon = <Home className="w-5 h-5 text-yellow-600" />;
+        _icon = <Home className="w-5 h-5 text-yellow-600" />;
     }
 
     // Only show relevant advice
     if (status === 'safe' && !isEveningSoon) return null; // Don't show "Safe" during morning commute? Maybe show small reassurance.
 
-    return (
     return (
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
             <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
@@ -82,6 +81,5 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
                 )}
             </div>
         </div>
-    );
     );
 }

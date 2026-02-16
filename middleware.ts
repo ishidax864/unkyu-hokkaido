@@ -126,7 +126,7 @@ export function middleware(request: NextRequest) {
                     headers: { 'WWW-Authenticate': 'Basic realm="Admin Access"' },
                 });
             }
-        } catch (e) {
+        } catch (_e) {
             return new NextResponse('Bad Request', { status: 400 });
         }
     }

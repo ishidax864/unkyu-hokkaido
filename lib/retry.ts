@@ -3,7 +3,7 @@
  * 外部API呼び出しやデータベース操作の信頼性を向上
  */
 
-import { ExternalAPIError, DatabaseError, isRetryableError } from './errors';
+import { isRetryableError } from './errors';
 import { logger } from './logger';
 
 // =====================

@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { FavoriteRoute } from '@/hooks/useFavorites';
-import { Star, ArrowRight, ChevronDown, Check } from 'lucide-react';
+import { Star, ArrowRight, ChevronDown } from 'lucide-react';
 
 interface FavoriteSelectorProps {
     favorites: FavoriteRoute[];

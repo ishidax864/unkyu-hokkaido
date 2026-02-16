@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageSquarePlus, X } from 'lucide-react';
+import { MessageSquarePlus } from 'lucide-react';
 import { FeedbackForm } from './feedback-form';
 
 export function FeedbackButton() {

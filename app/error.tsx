@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import Link from 'next/link';
 import { logger } from '@/lib/logger';
 
 export default function Error({
@@ -35,13 +36,13 @@ export default function Error({
                         <RefreshCw className="w-4 h-4" />
                         再試行
                     </button>
-                    <a
+                    <Link
                         href="/"
                         className="px-4 py-2 text-sm border border-[var(--border)] rounded-md hover:bg-[var(--background-secondary)] flex items-center gap-2"
                     >
                         <Home className="w-4 h-4" />
                         トップへ
-                    </a>
+                    </Link>
                 </div>
                 {error.digest && (
                     <p className="mt-4 text-xs text-[var(--muted)]">

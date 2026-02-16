@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import fs from 'fs';
 import path from 'path';
@@ -29,7 +30,34 @@ function getRandomDate() {
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 }
 
-async function fetchHourlyData(lat: number, lon: number, date: string) {
+// Define Interfaces
+interface HourlyData {
+    time: string[];
+    temperature_2m: number[];
+    precipitation: number[];
+    snowfall: number[];
+    snow_depth: number[];
+    windspeed_10m: number[];
+    winddirection_10m: number[];
+    windgusts_10m: number[];
+    pressure_msl: number[];
+}
+
+interface MeteoResponse {
+    hourly: HourlyData;
+}
+
+interface TrendData {
+    wind: number;
+    gust: number;
+    snow: number;
+    temp: number;
+    pressure: number;
+    dir: number;
+    depth: number;
+}
+
+async function fetchHourlyData(lat: number, lon: number, date: string): Promise<MeteoResponse | null> {
     await new Promise(r => setTimeout(r, 60));
     const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${date}&end_date=${date}&hourly=temperature_2m,precipitation,snowfall,snow_depth,windspeed_10m,winddirection_10m,windgusts_10m,pressure_msl&timezone=Asia%2FTokyo`;
 
@@ -43,9 +71,9 @@ async function fetchHourlyData(lat: number, lon: number, date: string) {
     } catch (e) { return null; }
 }
 
-function getThreeHourTrend(hourly: any, startIndex: number) {
+function getThreeHourTrend(hourly: HourlyData, startIndex: number): TrendData[] {
     // Collect data for T0, T+1, T+2
-    const data = [];
+    const data: TrendData[] = [];
     for (let i = 0; i < 3; i++) {
         const idx = startIndex + i;
         if (idx >= hourly.time.length) break;

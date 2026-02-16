@@ -15,7 +15,7 @@ interface WeeklyForecastChartProps {
 export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChartProps) {
     if (predictions.length === 0) return null;
 
-    const maxProb = Math.max(...predictions.map(p => p.probability), 50);
+    const _maxProb = Math.max(...predictions.map(p => p.probability), 50);
 
     // 日付フォーマット
     const formatDate = (dateStr: string) => {
@@ -70,7 +70,7 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
             </div>
 
             <div className="space-y-4">
-                {predictions.slice(0, 5).map((pred, index) => {
+                {predictions.slice(0, 5).map((pred, _index) => {
                     const dayWeather = weather.find(w => w.date === pred.targetDate);
                     const dateText = formatDate(pred.targetDate);
                     // '今日'や'明日'の場合はそのまま、それ以外は日付と曜日(カッコ内)を分割

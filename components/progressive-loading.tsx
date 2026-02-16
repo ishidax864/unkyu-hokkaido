@@ -64,19 +64,19 @@ export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
                 const Icon = step.icon;
                 const isActive = currentStep === index;
                 const isCompleted = completedSteps.includes(index);
-                const isPending = index > currentStep;
+                const _isPending = index > currentStep;
 
                 return (
                     <div
                         key={step.id}
                         className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all ${isActive ? 'bg-blue-50 border border-blue-200' :
-                                isCompleted ? 'bg-green-50 border border-green-200' :
-                                    'bg-gray-50 border border-transparent'
+                            isCompleted ? 'bg-green-50 border border-green-200' :
+                                'bg-gray-50 border border-transparent'
                             }`}
                     >
                         <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isActive ? 'bg-blue-500 text-white' :
-                                isCompleted ? 'bg-green-500 text-white' :
-                                    'bg-gray-300 text-gray-500'
+                            isCompleted ? 'bg-green-500 text-white' :
+                                'bg-gray-300 text-gray-500'
                             }`}>
                             {isCompleted ? (
                                 <CheckCircle className="w-4 h-4" />
@@ -86,8 +86,8 @@ export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
                         </div>
 
                         <span className={`text-sm font-medium ${isActive ? 'text-blue-700' :
-                                isCompleted ? 'text-green-700' :
-                                    'text-gray-400'
+                            isCompleted ? 'text-green-700' :
+                                'text-gray-400'
                             }`}>
                             {step.label}
                         </span>

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
-import { MapPin, ChevronDown, Search, X } from 'lucide-react';
+import { MapPin, ChevronDown, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StationSelectorProps {

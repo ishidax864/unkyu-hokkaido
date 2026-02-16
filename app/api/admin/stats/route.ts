@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getGlobalStats } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
     try {
         const result = await getGlobalStats();
 

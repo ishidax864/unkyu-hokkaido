@@ -1,9 +1,9 @@
-import { PredictionResult, ConfidenceLevel, PredictionInput } from '../types';
+import { PredictionResult, PredictionInput } from '../types';
 import { logger } from '../logger';
 import { CrowdsourcedStatus } from '../user-reports';
 import { JROperationStatus } from '../jr-status';
 import { WeatherForecast } from '../types';
-import { findHistoricalMatch, HistoricalPattern } from '../historical-data/suspension-patterns';
+import { findHistoricalMatch } from '../historical-data/suspension-patterns';
 
 // Refactored Modules
 import {
@@ -38,7 +38,7 @@ import {
 } from './constants';
 
 import { analyzeWeatherTrend } from '../recovery-prediction';
-import { calculateResumptionTime, matchTendencyToText } from './resumption';
+import { calculateResumptionTime } from './resumption';
 
 // ==========================================
 // Main Prediction Function
@@ -186,7 +186,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     if (input.weather && (isCurrentlySuspended || probability >= 40)) { // 40%以上でシミュレーション
         try {
-            const weatherTrend = analyzeWeatherTrend(input.weather, []);
+            const _weatherTrend = analyzeWeatherTrend(input.weather, []);
             const rain = input.weather.precipitation || 0;
             suspensionReason = determineSuspensionReason(wind, snow, rain);
 

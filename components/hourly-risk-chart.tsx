@@ -1,6 +1,6 @@
 'use client';
 
-import { Cloud, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { HourlyRiskData } from '@/lib/types';
@@ -25,7 +25,6 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
     };
 
     // 高さ計算用
-    const maxRisk = Math.max(...data.map(d => d.risk), 10); // 最小でも10%分の高さは確保
 
     const getBarColor = (risk: number) => {
         if (risk >= 70) return 'bg-[var(--status-suspended)]';

@@ -104,14 +104,6 @@ const nextConfig: NextConfig = {
     experimental: {
         optimizePackageImports: ['lucide-react'],
     },
-
-    // ビルド時のチェック無効化（緊急対応・スクリプトのエラーを除外するため）
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
 };
 
 export default nextConfig;

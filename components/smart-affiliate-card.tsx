@@ -1,9 +1,8 @@
 'use client';
 
-import { Car, Hotel, Plane, Clock, ArrowRight, Bus } from 'lucide-react';
+import { Car, Hotel, Plane, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { getAffiliatesByType, getAffiliateById } from '@/lib/affiliates';
+import { getAffiliatesByType } from '@/lib/affiliates';
 
 type AffiliateContext = 'commute_risk' | 'night_stay' | 'airport_access' | 'normal';
 
