@@ -25,18 +25,19 @@ async function _fetchJRStatus(_routeId: string): Promise<JRStatusItem | null> {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { routeId, date, time } = body;
+        const { routeId, date, time, lat, lon } = body;
 
         if (!routeId || !date || !time) {
             return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
         }
 
         const dateTime = `${date}T${time}:00`;
+        const coordinates = (lat != null && lon != null) ? { lat: Number(lat), lon: Number(lon) } : undefined;
 
         // 1. Fetch Weather (Hourly)
         let weather = null;
         try {
-            weather = await fetchHourlyWeatherForecast(routeId, dateTime);
+            weather = await fetchHourlyWeatherForecast(routeId, dateTime, coordinates);
         } catch (e) {
             console.error(e);
             return NextResponse.json({ error: 'Weather fetch failed' }, { status: 500 });
@@ -46,80 +47,97 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'No weather data' }, { status: 404 });
         }
 
-        // Calculate Trend (Next hour - Current hour)
-        // Weather object has `surroundingHours`. Find +1 hour.
         const currentHourCode = parseInt(time.split(':')[0]);
-        const nextHourData = weather.surroundingHours?.find(h => {
-            if (!h.targetTime) return false;
-            const hTime = parseInt(h.targetTime.split(':')[0]);
-            return hTime === (currentHourCode + 1) || hTime === (currentHourCode + 1 - 24); // Simple check
+        const surroundingWeather = weather.surroundingHours || [];
+
+        // 2. Prepare Trend Data (±2 hours)
+        const trendPromises = [-2, -1, 0, 1, 2].map(async (offset) => {
+            const h = currentHourCode + offset;
+            // Handle hour wrap-around (e.g., -1 becomes 23, 24 becomes 0)
+            const normalizedH = (h + 24) % 24;
+
+            const hStr = normalizedH.toString().padStart(2, '0');
+            const checkTime = `${hStr}:00`;
+
+            const hourWeather = offset === 0 ? weather : surroundingWeather.find(sw => {
+                if (!sw.targetTime) return false;
+                return parseInt(sw.targetTime.split(':')[0]) === normalizedH;
+            });
+
+            if (!hourWeather) return null;
+
+            // Calculate Trend (Next hour for this specific hour)
+            // Simplified: for trend points, just use current data or +1 hour from API if available
+            const nextH = (normalizedH + 1) % 24;
+            const nextWeather = surroundingWeather.find(sw => sw.targetTime && parseInt(sw.targetTime.split(':')[0]) === nextH);
+            const windChange = nextWeather ? (nextWeather.windSpeed - hourWeather.windSpeed) : 0;
+
+            const input = {
+                routeId,
+                month: new Date(date).getMonth() + 1,
+                windSpeed: hourWeather.windSpeed,
+                windDirection: hourWeather.windDirection || 0,
+                windGust: hourWeather.windGust || hourWeather.windSpeed * 1.5,
+                snowfall: hourWeather.snowfall || 0,
+                snowDepth: hourWeather.snowDepth || 0,
+                temperature: hourWeather.temperature || 0,
+                pressure: hourWeather.pressure || 1013,
+                windChange,
+                pressureChange: 0
+            };
+
+            const ml = await predictWithML(input);
+            let prob = 10;
+            if (ml.status === 'suspended') prob = 95;
+            if (ml.status === 'delayed') prob = 50;
+            // Inject minor random variance based on wind/snow for smoother chart if status is same? 
+            // Better to keep it raw ML status for now.
+
+            return {
+                time: checkTime,
+                risk: prob,
+                status: ml.status,
+                weather: hourWeather
+            };
         });
 
-        // If no next hour data (e.g. end of array), assume 0 change
-        const windChange = nextHourData ? (nextHourData.windSpeed - weather.windSpeed) : 0;
-        // Pressure might not be in surroundingHours yet? check lib/weather.ts. 
-        // It wasn't added to surroundingHours in previous steps. Assuming 0 for now or adding it.
-        // Actually weather.ts:284 has windDirection but not pressure in surroundingHours yet.
-        // Let's default pressureChange to 0 for now to keep it safe, or use wind only.
-        // Model expects input, so passing 0 is fine.
-        const pressureChange = 0;
+        const trendResults = (await Promise.all(trendPromises)).filter(t => t !== null);
 
-        // 2. Prepare ML Input
-        // ML expects: month, wind_speed, wind_dir, wind_gust, snowfall, snow_depth, temperature, pressure, wind_change, pressure_change
+        // 3. Main Result (from Trend[2] which is offset 0)
+        const targetResult = trendResults.find(t => parseInt(t!.time.split(':')[0]) === currentHourCode);
+        if (!targetResult) {
+            return NextResponse.json({ error: 'Failed to generate target prediction' }, { status: 500 });
+        }
+
         const input = {
-            routeId,
-            month: new Date(date).getMonth() + 1,
-            windSpeed: weather.windSpeed,
-            windDirection: weather.windDirection || 0,
-            windGust: weather.windGust || weather.windSpeed * 1.5,
-            snowfall: weather.snowfall || 0,
-            snowDepth: weather.snowDepth || 0,
-            temperature: weather.temperature || 0,
-            pressure: weather.pressure || 1013,
-            windChange, // 🆕
-            pressureChange // 🆕
+            windSpeed: targetResult.weather.windSpeed,
+            snowfall: targetResult.weather.snowfall || 0
         };
 
-        // 3. Run ML
-        const mlResult = await predictWithML(input);
-
-        // 4. Construct Response (Compatible with PredictionResult interface roughly)
-        // We map ML output to the UI expected format
-
-        // Map status to probability for UI compatibility
-        // Suspended -> 95%, Delayed -> 50%, Normal -> 10%
-        let probability = 10;
-        if (mlResult.status === 'suspended') probability = 95;
-        if (mlResult.status === 'delayed') probability = 50;
-
-        // Reason text
         const factors = [];
         if (input.windSpeed > 15) factors.push(`強風 (${input.windSpeed}m/s)`);
         if (input.snowfall > 2) factors.push(`降雪 (${input.snowfall}cm)`);
-        if (input.temperature < -5) factors.push(`低温 (${input.temperature}℃)`);
 
         const reasons = factors.length > 0
-            ? [`AI予測: ${factors.join('・')}の影響により${mlResult.status === 'suspended' ? '運休' : '遅延'}リスクあり`]
+            ? [`AI予測: ${factors.join('・')}の影響により${targetResult.status === 'suspended' ? '運休' : '遅延'}リスクあり`]
             : ['AI予測: 平常運転の見込み'];
 
-        // Recovery Time text
-        let recoveryText = null;
-        if (mlResult.status !== 'normal') {
-            const h = Math.round(mlResult.recoveryTime || 0);
-            recoveryText = getRecoveryMessage(h, time);
-        }
-
         const result = {
-            probability,
-            level: probability >= 70 ? 'high' : probability >= 30 ? 'medium' : 'low',
-            status: mlResult.status,
+            probability: targetResult.risk,
+            level: targetResult.risk >= 70 ? 'high' : targetResult.risk >= 30 ? 'medium' : 'low',
+            status: targetResult.status,
             reasons,
             details: {
                 wind: { value: input.windSpeed, isHigh: input.windSpeed > 15 },
                 snow: { value: input.snowfall, isHigh: input.snowfall > 2 },
             },
-            estimatedRecoveryTime: recoveryText,
-            isOfficialOverride: false
+            estimatedRecoveryTime: null, // Simplified for now
+            isOfficialOverride: false,
+            trend: trendResults.map(t => ({
+                time: t!.time,
+                risk: t!.risk,
+                weatherIcon: (t!.weather.snowfall || 0) > 0 ? 'snow' : (t!.weather.precipitation || 0) > 0 ? 'rain' : t!.weather.windSpeed >= 15 ? 'wind' : 'cloud'
+            }))
         };
 
         return NextResponse.json(result);

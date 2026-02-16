@@ -87,6 +87,9 @@ export interface PredictionResult {
   updatedAt: string;
   aiReason?: string;  // AI生成の理由文
 
+  // 🆕 時間帯別トレンド
+  trend?: HourlyRiskData[];
+
   // 復旧予測モード用
   mode: PredictionMode;
   isCurrentlySuspended: boolean;
