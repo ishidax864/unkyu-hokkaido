@@ -134,7 +134,7 @@ export type DbResult<T> =
 
 // ユーザー報告の保存（リトライ対応）
 export async function saveReportToSupabase(report: UserReportDB): Promise<DbResult<boolean>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -193,7 +193,7 @@ export async function getRecentReports(
     routeId: string,
     hoursBack: number = 2
 ): Promise<DbResult<UserReportDB[]>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -245,7 +245,7 @@ export async function getHistoricalSuspensionRate(
     avgSuspensionsPerWeek: number;
     recentTrend: 'increasing' | 'decreasing' | 'stable';
 }>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -326,7 +326,7 @@ export async function getHistoricalSuspensionRate(
 
 // 予測履歴の保存（リトライ対応）
 export async function savePredictionHistory(prediction: PredictionHistoryDB): Promise<DbResult<boolean>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -375,7 +375,7 @@ export async function getReportStats(routeId: string): Promise<DbResult<{
     delayed: number;
     normal: number;
 }>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -445,7 +445,7 @@ export interface MonitoringLogDB {
 
 // 監視ログの保存（リトライ対応）
 export async function saveMonitoringLog(log: MonitoringLogDB): Promise<DbResult<boolean>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         // Fallback to console if no DB
         logger.info('[MONITORING] (No DB) ' + JSON.stringify(log));
@@ -546,7 +546,7 @@ export async function saveFeedback(feedback: UserFeedbackDB): Promise<DbResult<b
 
 // 🆕 フィードバックの一覧取得（管理者用）
 export async function getFeedbackList(limit: number = 50): Promise<DbResult<UserFeedbackDB[]>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -579,7 +579,7 @@ export async function getGlobalStats(): Promise<DbResult<{
     feedbackCount: number;
     partnerCount: number;
 }>> {
-    const client = getSupabaseClient();
+    const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
     }
@@ -587,30 +587,35 @@ export async function getGlobalStats(): Promise<DbResult<{
     try {
         const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-        const [
-            { count: reportCount, error: rErr },
-            { count: recentReportCount, error: rrErr },
-            { count: feedbackCount, error: fErr },
-            { count: partnerCount, error: pErr }
-        ] = await Promise.all([
+        // 各統計を個別に取得（一部のテーブルがスキーマキャッシュにない場合でも他を活かすため）
+        const stats = {
+            reportCount: 0,
+            recentReportCount: 0,
+            feedbackCount: 0,
+            partnerCount: 0
+        };
+
+        const [rRes, rrRes, fRes, pRes] = await Promise.all([
             client.from('user_reports').select('*', { count: 'exact', head: true }),
             client.from('user_reports').select('*', { count: 'exact', head: true }).gte('created_at', since24h),
             client.from('user_feedback').select('*', { count: 'exact', head: true }).eq('status', 'open'),
             client.from('partners').select('*', { count: 'exact', head: true })
         ]);
 
-        if (rErr || rrErr || fErr || pErr) {
+        if (!rRes.error) stats.reportCount = rRes.count || 0;
+        if (!rrRes.error) stats.recentReportCount = rrRes.count || 0;
+        if (!fRes.error) stats.feedbackCount = fRes.count || 0;
+        if (!pRes.error) stats.partnerCount = pRes.count || 0;
+
+        // すべてエラーの場合は設定エラーの可能性あり
+        if (rRes.error && rrRes.error && fRes.error && pRes.error) {
+            logger.error('All global stats queries failed', { rErr: rRes.error, fErr: fRes.error });
             throw new DatabaseError('Failed to fetch global stats', 'read');
         }
 
         return {
             success: true,
-            data: {
-                reportCount: reportCount || 0,
-                recentReportCount: recentReportCount || 0,
-                feedbackCount: feedbackCount || 0,
-                partnerCount: partnerCount || 0
-            }
+            data: stats
         };
     } catch (error) {
         logger.error('Failed to calculate global stats', { error });

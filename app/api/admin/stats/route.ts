@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { getGlobalStats } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
