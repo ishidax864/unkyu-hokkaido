@@ -302,6 +302,23 @@ export function getConnectingRoute(stationA: Station, stationB: Station): Route 
         return HOKKAIDO_ROUTES.find(r => r.id === 'jr-hokkaido.sekihoku-main') || null;
     }
 
+    // 5. 札幌圏内の異なる路線間（千歳線 ↔ 函館本線 ↔ 学園都市線）
+    // 乗り換えを伴うが、到着駅側の路線をリスク指標として返す
+    const sapporoAreaIds = [
+        'sapporo', 'shin-sapporo', 'kotoni', 'teine', 'naebo', 'shiroishi', 'atsubetsu', 'oochi', 'nopporo', 'ebetsu',
+        'soen', 'hassamu', 'hassamu-chuo', 'inazumi-koen', 'inaho', 'hoshimi', 'kitahiroshima', 'kaminopporo', 'heiwa',
+        'shin-kotoni', 'shinkawa', 'hachiken', 'taihei', 'yurigahara', 'shinoro', 'takuhoku', 'ainosato-kyoiku-dai', 'ainosato-koen',
+        'otaru', 'otaru-chikko', 'zenibako', 'asari', 'minami-otaru',
+        'chitose', 'shin-chitose-kuko', 'minami-chitose', 'eniwa', 'megumino', 'shimamatu', 'kita-hiroshima',
+    ];
+    if (sapporoAreaIds.includes(stationA.id) && sapporoAreaIds.includes(stationB.id)) {
+        // 到着駅（stationB）の路線をリスク指標にする
+        const arrivalLine = stationB.lines[0];
+        if (arrivalLine) {
+            return HOKKAIDO_ROUTES.find(r => r.id === arrivalLine) || null;
+        }
+    }
+
     return null;
 }
 
