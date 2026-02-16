@@ -120,6 +120,7 @@ export interface JROperationStatus {
     expectedRecovery?: string;
     updatedAt: string;
     rawText?: string; // 🆕 生の概況テキスト
+    sourceArea?: string; // 🆕 情報取得元エリアID
 }
 
 /**
@@ -190,6 +191,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                             existing.status = status;
                             existing.statusText = description;
                             existing.rawText = cleanGaikyo; // 🆕
+                            existing.sourceArea = `${area} (${areaId})`; // 🆕
                         } else {
                             allItems.push({
                                 routeId: route.routeId,
@@ -197,7 +199,8 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                                 status,
                                 statusText: description,
                                 updatedAt: now,
-                                rawText: cleanGaikyo // 🆕
+                                rawText: cleanGaikyo, // 🆕
+                                sourceArea: `${area} (${areaId})` // 🆕
                             });
                         }
                     }
