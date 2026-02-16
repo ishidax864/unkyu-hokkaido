@@ -120,188 +120,175 @@ export function UnifiedAlternativesCard({
     const rentalAffiliate = getAffiliatesByType('rental')[0];
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-            {/* Header: Utility & Clarity */}
-            <div className="px-5 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-                <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                    <span className="bg-white p-1 rounded-md border border-gray-200">
-                        <Bus className="w-3 h-3 text-gray-600" />
-                    </span>
-                    代替手段・アクション
-                </h3>
-                <span className="text-xs font-mono text-gray-400">FROM: {departureStation.name}</span>
-            </div>
-
-            <div className="p-5 space-y-6">
-                {/* 0. Primary Recommendation (The "Best" Option) */}
-                {/* Logic: TimeShift > Subway > Standard Routes */}
-                {(timeShiftSuggestion?.difference ?? 0) >= 15 ? (
-                    <div className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
-                            RECOMMENDED
+        <div className="space-y-6">
+            {/* 0. Primary Recommendation (The "Best" Option) */}
+            {/* Logic: TimeShift > Subway > Standard Routes */}
+            {(timeShiftSuggestion?.difference ?? 0) >= 15 ? (
+                <div className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                        RECOMMENDED
+                    </div>
+                    <div className="flex items-start gap-4">
+                        <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
+                            <Clock className="w-6 h-6" />
                         </div>
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
-                                <Clock className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-800 text-base mb-1">
-                                    {timeShiftSuggestion?.time} 発の列車に変更
-                                </h4>
-                                <p className="text-sm text-gray-600 mb-1">
-                                    運休リスク: <span className="font-bold text-emerald-600">{timeShiftSuggestion?.risk}%</span>（通常より{timeShiftSuggestion?.difference}% 低い）
-                                </p>
-                                <p className="text-xs text-gray-400">現在時刻より早い時間への変更が最も確実です。</p>
-                            </div>
+                        <div>
+                            <h4 className="font-bold text-emerald-800 text-base mb-1">
+                                {timeShiftSuggestion?.time} 発の列車に変更
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-1">
+                                運休リスク: <span className="font-bold text-emerald-600">{timeShiftSuggestion?.risk}%</span>（通常より{timeShiftSuggestion?.difference}% 低い）
+                            </p>
+                            <p className="text-xs text-gray-400">現在時刻より早い時間への変更が最も確実です。</p>
                         </div>
                     </div>
-                ) : showGenericSubway && facilities?.subwayLines ? (
-                    <div className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
-                            RECOMMENDED
+                </div>
+            ) : showGenericSubway && facilities?.subwayLines ? (
+                <div className="bg-white border border-emerald-100 rounded-lg p-4 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                        RECOMMENDED
+                    </div>
+                    <div className="flex items-start gap-4">
+                        <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
+                            <Train className="w-6 h-6" />
                         </div>
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
-                                <Train className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-800 text-base mb-1">
-                                    地下鉄ルート（{facilities.subwayLines.join('・')}）
-                                </h4>
-                                <p className="text-sm text-gray-600 mb-1">
-                                    天候の影響を受けず、定時運行中。
-                                </p>
-                                <p className="text-xs text-gray-400">市内移動の最も確実な手段です。</p>
-                            </div>
+                        <div>
+                            <h4 className="font-bold text-emerald-800 text-base mb-1">
+                                地下鉄ルート（{facilities.subwayLines.join('・')}）
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-1">
+                                天候の影響を受けず、定時運行中。
+                            </p>
+                            <p className="text-xs text-gray-400">市内移動の最も確実な手段です。</p>
                         </div>
                     </div>
-                ) : null}
+                </div>
+            ) : null}
 
-                {/* 1. Other Options List (Table Style) */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200">
-                        その他の選択肢
-                    </div>
-                    <div className="divide-y divide-gray-100">
-                        {/* Bus & Car Routes */}
-                        {recommendedRoutes
-                            .filter(route => showHeavyTransport || route.type === 'subway')
-                            // Exclude subway if it was shown as Primary Recommendation
-                            .filter(route => !(showGenericSubway && route.type === 'subway' && (!timeShiftSuggestion || timeShiftSuggestion.difference < 15)))
-                            .map((route, idx) => (
-                                <a
-                                    key={idx}
-                                    href={route.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
-                                    className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="text-gray-400 group-hover:text-gray-600">
-                                            {route.type === 'bus' ? <Bus className="w-5 h-5" /> :
-                                                route.type === 'subway' ? <Train className="w-5 h-5" /> :
-                                                    <Car className="w-5 h-5" />}
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-gray-700 text-sm">{route.name}</div>
-                                            <div className="text-xs text-gray-500">{route.time}</div>
-                                        </div>
+            {/* 1. Other Options List (Table Style) */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200">
+                    その他の選択肢
+                </div>
+                <div className="divide-y divide-gray-100">
+                    {/* Bus & Car Routes */}
+                    {recommendedRoutes
+                        .filter(route => showHeavyTransport || route.type === 'subway')
+                        // Exclude subway if it was shown as Primary Recommendation
+                        .filter(route => !(showGenericSubway && route.type === 'subway' && (!timeShiftSuggestion || timeShiftSuggestion.difference < 15)))
+                        .map((route, idx) => (
+                            <a
+                                key={idx}
+                                href={route.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => sendGAEvent('event', 'alternative_click', { type: route.type, name: route.name, route_scope: 'specific' })}
+                                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="text-gray-400 group-hover:text-gray-600">
+                                        {route.type === 'bus' ? <Bus className="w-5 h-5" /> :
+                                            route.type === 'subway' ? <Train className="w-5 h-5" /> :
+                                                <Car className="w-5 h-5" />}
                                     </div>
-                                    <div className="text-right">
-                                        <div className={cn(
-                                            "text-xs font-bold px-2 py-0.5 rounded",
-                                            route.type === 'subway' ? "bg-emerald-100 text-emerald-700" :
-                                                busRisk === 'low' ? "bg-blue-100 text-blue-700" :
-                                                    busRisk === 'medium' ? "bg-orange-100 text-orange-700" :
-                                                        "bg-red-100 text-red-700"
-                                        )}>
-                                            {route.type === 'subway' ? '通常運行' :
-                                                busRisk === 'low' ? '通常運行' :
-                                                    busRisk === 'medium' ? '遅延注意' : '運休リスク'}
-                                        </div>
+                                    <div>
+                                        <div className="font-bold text-gray-700 text-sm">{route.name}</div>
+                                        <div className="text-xs text-gray-500">{route.time}</div>
                                     </div>
-                                    <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
-                                </a>
-                            ))}
+                                </div>
+                                <div className="text-right">
+                                    <div className={cn(
+                                        "text-xs font-bold px-2 py-0.5 rounded",
+                                        route.type === 'subway' ? "bg-emerald-100 text-emerald-700" :
+                                            busRisk === 'low' ? "bg-blue-100 text-blue-700" :
+                                                busRisk === 'medium' ? "bg-orange-100 text-orange-700" :
+                                                    "bg-red-100 text-red-700"
+                                    )}>
+                                        {route.type === 'subway' ? '通常運行' :
+                                            busRisk === 'low' ? '通常運行' :
+                                                busRisk === 'medium' ? '遅延注意' : '運休リスク'}
+                                    </div>
+                                </div>
+                                <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
+                            </a>
+                        ))}
 
-                        {/* Taxi Rows */}
-                        {facilities?.hasTaxi && taxiAffiliates.map((affiliate) => {
-                            // If taxi is very expensive, maybe don't highlight it as much or show warning
-                            // But for now, we just show the estimate.
-                            // If high cost, add a badge.
-                            return (
-                                <a
-                                    key={affiliate.id}
-                                    href={affiliate.webUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: affiliate.name })}
-                                    className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="text-gray-400 group-hover:text-gray-600">
-                                            <Car className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-gray-700 text-sm flex items-center gap-2">
-                                                タクシー手配 ({affiliate.name})
-                                                {taxiInfo?.isHighCost && (
-                                                    <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded border border-red-200">
-                                                        高額注意
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <div className="text-[10px] text-gray-500">{affiliate.description}</div>
-                                        </div>
+                    {/* Taxi Rows */}
+                    {facilities?.hasTaxi && taxiAffiliates.map((affiliate) => {
+                        // If taxi is very expensive, maybe don't highlight it as much or show warning
+                        // But for now, we just show the estimate.
+                        // If high cost, add a badge.
+                        return (
+                            <a
+                                key={affiliate.id}
+                                href={affiliate.webUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'taxi', provider: affiliate.name })}
+                                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="text-gray-400 group-hover:text-gray-600">
+                                        <Car className="w-5 h-5" />
                                     </div>
-                                    <div className="text-right">
-                                        <div className={cn(
-                                            "text-xs font-mono",
-                                            taxiInfo?.isHighCost ? "text-red-600 font-bold" : "text-gray-600"
-                                        )}>
-                                            {taxiInfo ? `¥${taxiInfo.fare.toLocaleString()}~` : 'ESTIMATE'}
+                                    <div>
+                                        <div className="font-bold text-gray-700 text-sm flex items-center gap-2">
+                                            タクシー手配 ({affiliate.name})
+                                            {taxiInfo?.isHighCost && (
+                                                <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded border border-red-200">
+                                                    高額注意
+                                                </span>
+                                            )}
                                         </div>
-                                        {taxiInfo?.isHighCost && (
-                                            <div className="text-[9px] text-gray-400">長距離のため高額</div>
-                                        )}
+                                        <div className="text-[10px] text-gray-500">{affiliate.description}</div>
                                     </div>
-                                    <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
-                                </a>
-                            );
-                        })}
-
-                        {/* Hotel / Cafe (Wait options) */}
-                        {(showLongStayOptions || showShortStayOptions) && (
-                            <div className="p-4 bg-gray-50/50 flex flex-col gap-2">
-                                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">待機・滞在</div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    {/* Hotel */}
-                                    {showLongStayOptions && facilities?.hasHotel && (
-                                        <a
-                                            href={`https://search.travel.rakuten.co.jp/ds/hotel/search?f_keyword=${encodeURIComponent(departureStation.name + '駅')}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="px-3 py-2 bg-white border border-gray-200 rounded text-sm font-medium text-gray-700 hover:border-pink-300 hover:text-pink-600 transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            <Hotel className="w-4 h-4" /> {departureStation.name}周辺のホテル
-                                        </a>
-                                    )}
-                                    {/* Cafe */}
-                                    {(showShortStayOptions || (showLongStayOptions && !facilities?.hasHotel)) && facilities?.hasCafe && (
-                                        <a
-                                            href={`https://www.google.com/maps/search/カフェ+${encodeURIComponent(departureStation.name + '駅')}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="px-3 py-2 bg-white border border-gray-200 rounded text-sm font-medium text-gray-700 hover:border-orange-300 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            <Coffee className="w-4 h-4" /> カフェ検索
-                                        </a>
+                                </div>
+                                <div className="text-right">
+                                    <div className={cn(
+                                        "text-xs font-mono",
+                                        taxiInfo?.isHighCost ? "text-red-600 font-bold" : "text-gray-600"
+                                    )}>
+                                        {taxiInfo ? `¥${taxiInfo.fare.toLocaleString()}~` : 'ESTIMATE'}
+                                    </div>
+                                    {taxiInfo?.isHighCost && (
+                                        <div className="text-[9px] text-gray-400">長距離のため高額</div>
                                     )}
                                 </div>
+                                <ExternalLink className="w-4 h-4 text-gray-300 ml-4 group-hover:text-blue-500" />
+                            </a>
+                        );
+                    })}
+
+                    {/* Hotel / Cafe (Wait options) */}
+                    {(showLongStayOptions || showShortStayOptions) && (
+                        <div className="p-4 bg-gray-50/50 flex flex-col gap-2">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">待機・滞在</div>
+                            <div className="grid grid-cols-2 gap-2">
+                                {/* Hotel */}
+                                {showLongStayOptions && facilities?.hasHotel && (
+                                    <a
+                                        href={`https://search.travel.rakuten.co.jp/ds/hotel/search?f_keyword=${encodeURIComponent(departureStation.name + '駅')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-2 bg-white border border-gray-200 rounded text-sm font-medium text-gray-700 hover:border-pink-300 hover:text-pink-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Hotel className="w-4 h-4" /> {departureStation.name}周辺のホテル
+                                    </a>
+                                )}
+                                {/* Cafe */}
+                                {(showShortStayOptions || (showLongStayOptions && !facilities?.hasHotel)) && facilities?.hasCafe && (
+                                    <a
+                                        href={`https://www.google.com/maps/search/カフェ+${encodeURIComponent(departureStation.name + '駅')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-2 bg-white border border-gray-200 rounded text-sm font-medium text-gray-700 hover:border-orange-300 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Coffee className="w-4 h-4" /> カフェ検索
+                                    </a>
+                                )}
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

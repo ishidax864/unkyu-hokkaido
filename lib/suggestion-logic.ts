@@ -94,11 +94,22 @@ export function generateStrategicAdvice(
             };
         } else {
             // recoveryHours不明 または 0
-            return {
-                type: 'alert',
-                title: '移動手段の変更を検討してください',
-                message: '運転再開の目処が立っていません。代替ルートの利用をおすすめします。'
-            };
+
+            // 🆕 公式情報による上書きの場合は「目処立たず」とするが、
+            // AI予測の場合は「可能性が高い」という表現に留める
+            if (predictionResult.isOfficialOverride) {
+                return {
+                    type: 'alert',
+                    title: '移動手段の変更を検討してください',
+                    message: '運転再開の目処が立っていません。代替ルートの利用をおすすめします。'
+                };
+            } else {
+                return {
+                    type: 'critical',
+                    title: '運休の可能性が高いです',
+                    message: '悪天候により、運休や長期の運転見合わせが発生する可能性が高いです。今のうちに代替ルートでの移動を強く検討してください。'
+                };
+            }
         }
     }
 
