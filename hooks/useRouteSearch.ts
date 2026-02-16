@@ -268,55 +268,70 @@ export function useRouteSearch() {
         // 🆕 終日運休等の場合は時間変更提案をしない
         const isAllDaySuspension = finalPrediction ? (finalPrediction.estimatedRecoveryTime === '終日運休' || finalPrediction.isOfficialOverride) : false;
 
-        // Calculate risk trend always
+        // Calculate risk trend using surroundingHours from the main weather fetch
+        // (already fetched from correct station-midpoint coordinates)
         const trendData: HourlyRiskData[] = [];
-        let bestShift = null; // Initialize bestShift
+        let bestShift = null;
 
         const currentHour = parseInt(targetTimeStr.split(':')[0]);
+
+        // Collect surrounding hours data from the main weather fetch
+        const surroundingWeather = targetWeather?.surroundingHours || [];
 
         for (let offset = -2; offset <= 2; offset++) {
             const h = currentHour + offset;
             if (h < 0 || h > 23) continue;
 
-            // Format time string HH:00
             const hStr = h.toString().padStart(2, '0');
             const checkTime = `${hStr}:00`;
-            const checkDateTime = `${searchDate}T${checkTime}:00`; // Assuming 00 minutes for trend
 
-            let trendWeather: WeatherForecast | null = null;
-            try {
-                // Fetch weather for this hour
-                // Note: fetchHourlyWeatherForecast might be async, ensure we await or handle
-                // In this scope, we can await inside loop if it's async
-                trendWeather = await fetchHourlyWeatherForecast(routeId, checkDateTime);
-            } catch { }
+            let hourRisk: number;
+            let hourWeather: WeatherForecast | null = null;
 
-            // Calculate risk for this hour
-            const r = calculateSuspensionRisk({
-                weather: trendWeather,
-                routeId,
-                routeName: primaryRoute?.name || '',
-                targetDate: searchDate,
-                targetTime: checkTime,
-                historicalData: null, // Don't use historical data for trend to keep it simple/fast? Or use it?
-                // Using null for historical/jr/crowd for trend to reflect WEATHER trend primarily
-                jrStatus: offset === 0 ? jrStatus : null,
-                crowdsourcedStatus: offset === 0 ? crowdsourcedStatus : null,
-                timetableTrain: undefined // Don't verify timetable for every hour in trend
-            });
+            if (offset === 0) {
+                // 中央の時間帯: メイン予測のリスク値をそのまま使う（一致を保証）
+                hourRisk = finalPrediction?.probability ?? 0;
+                hourWeather = targetWeather;
+            } else {
+                // 周辺時間帯: surroundingHoursから該当時刻のデータを検索
+                hourWeather = surroundingWeather.find(sw => {
+                    const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
+                    return swHour === h;
+                }) || null;
+
+                if (hourWeather) {
+                    // surroundingHoursの天気データでリスクを計算
+                    const r = calculateSuspensionRisk({
+                        weather: hourWeather,
+                        routeId,
+                        routeName: primaryRoute?.name || '',
+                        targetDate: searchDate,
+                        targetTime: checkTime,
+                        historicalData: null,
+                        jrStatus: null,
+                        crowdsourcedStatus: null,
+                        timetableTrain: undefined
+                    });
+                    hourRisk = r.probability;
+                } else {
+                    // surroundingHoursにデータがない場合はスキップ
+                    continue;
+                }
+            }
 
             // Determine icon
+            const displayWeather = offset === 0 ? targetWeather : hourWeather;
             let icon: HourlyRiskData['weatherIcon'] = 'cloud';
-            if (trendWeather) {
-                if ((trendWeather.snowfall ?? 0) > 0) icon = 'snow';
-                else if (trendWeather.precipitation && trendWeather.precipitation > 0) icon = 'rain';
-                else if (trendWeather.windSpeed >= 15) icon = 'wind';
-                else if (trendWeather.weather.includes('晴')) icon = 'sun';
+            if (displayWeather) {
+                if ((displayWeather.snowfall ?? 0) > 0) icon = 'snow';
+                else if (displayWeather.precipitation && displayWeather.precipitation > 0) icon = 'rain';
+                else if (displayWeather.windSpeed >= 15) icon = 'wind';
+                else if (displayWeather.weather.includes('晴')) icon = 'sun';
             }
 
             trendData.push({
                 time: checkTime,
-                risk: r.probability,
+                risk: hourRisk,
                 weatherIcon: icon,
                 isTarget: offset === 0,
                 isCurrent: offset === 0
@@ -324,15 +339,14 @@ export function useRouteSearch() {
 
             // Calculate best shift if high risk
             if (finalPrediction && finalPrediction.probability >= 30 && !isAllDaySuspension && offset !== 0) {
-                const diff = finalPrediction.probability - r.probability;
-                // 🆕 過去の時間は提案しない (Simple check)
+                const diff = finalPrediction.probability - hourRisk;
                 const isPast = isToday && (h < new Date().getHours());
 
                 if (diff >= 20 && !isPast) {
                     if (!bestShift || diff > bestShift.difference) {
                         bestShift = {
                             time: checkTime,
-                            risk: r.probability,
+                            risk: hourRisk,
                             difference: diff,
                             isEarlier: offset < 0
                         };
