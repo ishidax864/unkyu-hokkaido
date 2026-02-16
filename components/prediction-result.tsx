@@ -125,11 +125,7 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                     </div>
                 </div>
 
-                {/* Smart Affiliate Suggestion (Monetization) */}
-                <SmartAffiliateCard
-                    prediction={result}
-                    routeId={route.id}
-                />
+
 
                 {/* 詳細情報 */}
                 <div className="space-y-2 mb-4">
