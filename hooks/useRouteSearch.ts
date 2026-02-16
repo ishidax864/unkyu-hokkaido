@@ -15,11 +15,16 @@ export function useRouteSearch() {
     const [departureStation, setDepartureStation] = useState<Station | null>(null);
     const [arrivalStation, setArrivalStation] = useState<Station | null>(null);
     const [date, setDate] = useState(() => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return tomorrow.toISOString().split('T')[0];
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     });
-    const [time, setTime] = useState('08:00');
+    const [time, setTime] = useState(() => {
+        const now = new Date();
+        return now.toTimeString().slice(0, 5);
+    });
     const [timeType, setTimeType] = useState<'departure' | 'arrival'>('departure');
 
     // Search Result State
