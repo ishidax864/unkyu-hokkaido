@@ -7,25 +7,31 @@ interface ReturnTripAdvisorProps {
 }
 
 export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isToday = prediction.targetDate === todayStr;
     const prob = prediction.probability;
-    const isEveningSoon = new Date().getHours() >= 15;
-
-    // Logic for Advice
-    // If Probability is high (>70%) -> CRITICAL (Hotel or NO GO)
-    // If Probability is medium (40-69%) -> WARNING (Go Home Early)
-    // If Probability is low (<40%) -> SAFE
+    const isEveningSoon = now.getHours() >= 15;
 
     let status: 'safe' | 'warning' | 'critical' = 'safe';
-    let message = '通常通り帰宅できそうです。';
+    let message = isToday ? '通常通り帰宅できそうです。' : '指定の日時は通常通り移動できそうです。';
     let _icon = <Coffee className="w-5 h-5 text-green-600" />;
 
     if (prob >= 70) {
         status = 'critical';
-        message = '帰宅困難になる可能性が高いです。今すぐ帰るか、駅近くのホテル確保を強く推奨します。';
+        if (isToday) {
+            message = '帰宅困難になる可能性が高いです。今すぐ帰るか、駅近くのホテル確保を強く推奨します。';
+        } else {
+            message = '指定の日時は運休リスクが非常に高く、帰宅困難になる恐れがあります。宿泊の準備や予定の変更を強く推奨します。';
+        }
         _icon = <Hotel className="w-5 h-5 text-red-600" />;
-    } else if (prob >= 30) { // Changed from 40 to 30 to align with Route Comparison visibility
+    } else if (prob >= 30) {
         status = 'warning';
-        message = '夜遅くなると運休リスクが高まります。余裕を持った行動を推奨します。';
+        if (isToday) {
+            message = '夜遅くなると運休リスクが高まります。余裕を持った行動を推奨します。';
+        } else {
+            message = '指定の日時は夜間の運休リスクが高まる見込みです。予定を早めに切り上げるなどの検討を推奨します。';
+        }
         _icon = <Home className="w-5 h-5 text-yellow-600" />;
     }
 

@@ -31,8 +31,12 @@ export function generateStrategicAdvice(
     futureRisks: HourlyRiskData[] = [],
     currentTimeShiftTime: string = '00:00' // timeShiftSuggestion.time
 ): Advice | null {
-    const { probability, status, estimatedRecoveryHours } = predictionResult;
+    const { probability, status, estimatedRecoveryHours, targetDate } = predictionResult;
     const isSuspended = status === '運休' || status === '運休中' || status === '運転見合わせ' || estimatedRecoveryHours === '終日運休';
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isToday = targetDate === todayStr;
 
     // 未来のリスク評価 (今後3時間)
     // 時間シフト提案がある場合は、その時間以降のリスクを見る
@@ -107,7 +111,9 @@ export function generateStrategicAdvice(
                 return {
                     type: 'critical',
                     title: '運休の可能性が高いです',
-                    message: '悪天候により、運休や長期の運転見合わせが発生する可能性が高いです。今のうちに代替ルートでの移動を強く検討してください。'
+                    message: isToday
+                        ? '悪天候により、運休や長期の運転見合わせが発生する可能性が高いです。今のうちに代替ルートでの移動を強く検討してください。'
+                        : '対象の日時は悪天候により、運休や長期の運転見合わせが発生する可能性が高いです。余裕を持って代替ルートでの移動を検討してください。'
                 };
             }
         }
@@ -124,8 +130,12 @@ export function generateStrategicAdvice(
             type: 'critical',
             title: '運休リスクが非常に高いです',
             message: (longSuspensionRisk || persistentRisk)
-                ? `まもなく運転見合わせになる見込みです。悪天候が長時間続く予報のため、今のうちに移動手段を変更するか、移動自体の延期を検討してください。`
-                : 'まもなく運転見合わせになる見込みです。今のうちに地下鉄などの代替手段で移動するか、移動自体の延期を検討してください。'
+                ? (isToday
+                    ? `まもなく運転見合わせになる見込みです。悪天候が長時間続く予報のため、今のうちに移動手段を変更するか、移動自体の延期を検討してください。`
+                    : `指定の日時は運転見合わせになる可能性が非常に高いです。悪天候が長時間続く予報のため、移動手段を変更するか、移動自体の延期を検討してください。`)
+                : (isToday
+                    ? 'まもなく運転見合わせになる見込みです。今のうちに地下鉄などの代替手段で移動するか、移動自体の延期を検討してください。'
+                    : '指定の日時は運転見合わせになる可能性が高いです。あらかじめ地下鉄などの代替手段を確保するか、移動自体の延期を検討してください。')
         };
     } else if (probability >= 50) {
         // 遅延・部分運休リスク
@@ -146,7 +156,9 @@ export function generateStrategicAdvice(
         return {
             type: 'warning',
             title: '遅延や急な運休に注意',
-            message: '天候が悪化しています。「1本早い列車に乗る」など、早めの行動を心がけてください。余裕があれば地下鉄利用が確実です。'
+            message: isToday
+                ? '天候が悪化しています。「1本早い列車に乗る」など、早めの行動を心がけてください。余裕があれば地下鉄利用が確実です。'
+                : '対象の日時は天候の悪化が予想されます。予定を早めるなど、余裕を持ったスケジュールを心がけてください。余裕があれば地下鉄への振替が確実です。'
         };
     } else if (probability >= 30) {
         return {
