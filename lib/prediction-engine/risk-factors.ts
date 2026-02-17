@@ -218,14 +218,18 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `風速${input.weather?.windSpeed}m/sの予報（運転規制基準）`,
         priority: 4,
     },
-    // やや強い風
+    // やや強い風（遅延リスク）
     {
         condition: (input, vuln) => {
             const ws = input.weather?.windSpeed ?? 0;
+            // 閾値の70%〜100%の範囲を「やや強い風」として捕捉
             return ws >= MODERATE_WIND_MIN && ws < vuln.windThreshold;
         },
         weight: (input, vuln) => {
             const ws = input.weather?.windSpeed ?? 0;
+            // スコア計算: 基本18点 + 超過分 * 2.0
+            // 例: 閾値20m/sの路線で、風速18m/sの場合
+            // 18 + (18 - 13) * 2.0 = 28点 -> 脆弱性1.0なら28点（遅延閾値20%を超える）
             const score = MODERATE_WIND_BASE_SCORE + Math.round((ws - MODERATE_WIND_MIN) * MODERATE_WIND_COEFFICIENT);
 
             // 安全な風向ならスコア大幅減
@@ -234,8 +238,8 @@ export const RISK_FACTORS: RiskFactor[] = [
             }
             return score;
         },
-        reason: (input) => `風速${input.weather?.windSpeed}m/sの予報（徐行運転の可能性）`,
-        priority: 7,
+        reason: (input) => `風速${input.weather?.windSpeed}m/sの予報（徐行運転による遅延の可能性）`,
+        priority: 6, // 優先度上げ (7 -> 6)
     },
     // 軽い風
     {
@@ -264,7 +268,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `積雪${input.weather?.snowfall}cmの予報（除雪作業により遅延見込み）`,
         priority: 5,
     },
-    // 中程度の積雪
+    // 中程度の積雪（遅延リスク）
     {
         condition: (input, vuln) => {
             const snow = input.weather?.snowfall ?? 0;
@@ -272,10 +276,13 @@ export const RISK_FACTORS: RiskFactor[] = [
         },
         weight: (input) => {
             const snow = input.weather?.snowfall ?? 0;
-            return MODERATE_SNOW_BASE_SCORE + Math.round(snow * MODERATE_SNOW_COEFFICIENT);
+            // スコア計算: 基本30点 + 超過分 * 15
+            // 例: 閾値5cmの路線で、積雪3cmの場合
+            // 30 + (3 - 2) * 15 = 45点 -> 脆弱性1.0なら45点（遅延濃厚）
+            return MODERATE_SNOW_BASE_SCORE + Math.round((snow - MODERATE_SNOW_MIN) * MODERATE_SNOW_COEFFICIENT);
         },
-        reason: (input) => `積雪${input.weather?.snowfall}cmの予報（遅延の可能性）`,
-        priority: 8,
+        reason: (input) => `積雪${input.weather?.snowfall}cmの予報（除雪作業による遅延の可能性）`,
+        priority: 7, // 優先度上げ (8 -> 7)
     },
     // 軽い積雪
     {
