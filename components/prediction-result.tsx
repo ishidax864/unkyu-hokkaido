@@ -181,35 +181,12 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
                 </div>
             </div>
 
-            {/* 📡 現在の運行状況（JR公式） - 当日のみ表示 */}
-            {isToday && (
-                <div className="mb-4 p-3 rounded-lg bg-gray-50 border border-gray-200">
-                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                        <span>📡</span> 現在の運行状況（JR公式）
-                    </div>
-                    <div className="font-black text-xl flex items-center gap-2">
-                        {result.isCurrentlySuspended ? (
-                            <>
-                                <span className="text-red-600">🔴 運休中</span>
-                                {result.estimatedRecoveryTime && (
-                                    <span className="text-xs font-medium text-gray-500">
-                                        （{result.estimatedRecoveryTime}頃 再開見込み）
-                                    </span>
-                                )}
-                            </>
-                        ) : result.status === '遅延' ? (
-                            <span className="text-yellow-600">🟡 遅延中</span>
-                        ) : (
-                            <span className="text-green-600 text-lg">🟢 通常運行中</span>
-                        )}
-                    </div>
-                </div>
-            )}
 
             {/* 📊 予測セクション (ユーザーの出発時刻に基づく) */}
             <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
                 <span>📊</span> あなたの出発時刻の予測
             </div>
+
 
             {/* ユーザー報告（リアルタイム） */}
             {
