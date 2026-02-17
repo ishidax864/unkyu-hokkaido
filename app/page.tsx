@@ -95,21 +95,21 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--background-secondary)]">
       {/* ヘッダー */}
-      <header className="bg-[var(--primary)] text-white px-4 py-3">
-        <div className="max-w-lg mx-auto flex justify-between items-center">
+      <header className="bg-[var(--primary)] text-white px-4 py-3 sm:py-4">
+        <div className="max-w-2xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Train className="w-5 h-5" />
-            <h1 className="text-xl font-bold">運休北海道</h1>
-            <span className="text-[10px] opacity-80 ml-1">JR予報</span>
+            <h1 className="text-lg sm:text-xl font-bold">運休北海道</h1>
+            <span className="text-xs opacity-80 ml-1">JR予報</span>
           </div>
           <div className="text-right text-sm">
-            <div className="opacity-80 text-[10px]">札幌</div>
-            <div className="font-bold text-base">{currentTime}</div>
+            <div className="opacity-80 text-xs">札幌</div>
+            <div className="font-bold text-sm sm:text-base">{currentTime}</div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-4 pb-24 md:px-6">
+      <div className="max-w-2xl mx-auto px-4 py-4 pb-24 sm:px-6">
 
         {/* Headline Status (Phase 27) */}
         <HeadlineStatus
@@ -120,7 +120,7 @@ export default function Home() {
 
         {/* 天気サマリー */}
         {isWeatherLoading ? (
-          <section className="card p-4 mb-4 flex items-center justify-between animate-pulse h-[72px]">
+          <section className="card p-4 mb-4 flex items-center justify-between animate-pulse min-h-[72px]">
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 bg-gray-200 rounded-full" />
               <div>
@@ -151,7 +151,7 @@ export default function Home() {
               <div className="text-2xl" aria-hidden="true">
                 {getWeatherIcon(todayWeather.weather)}
               </div>
-              <div className="text-[10px] font-medium text-[var(--muted)]">
+              <div className="text-xs font-medium text-[var(--muted)]">
                 {todayWeather.windSpeed >= 15 ? (
                   <span className="text-orange-500 font-bold">💨{todayWeather.windSpeed}m/s</span>
                 ) : (

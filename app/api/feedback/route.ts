@@ -2,35 +2,57 @@ import { NextRequest, NextResponse } from 'next/server';
 import { saveFeedback } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 import crypto from 'crypto';
+import {
+    validateFeedbackType,
+    isNonEmptyString,
+    sanitizeString,
+    validateAndSanitizeEmail,
+    extractIP
+} from '@/lib/validation-helpers';
+import { ValidationError } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { type, content, email, pageUrl } = body;
 
-        // Basic validation
-        if (!type || !content) {
+        // Validation using helpers
+        if (!isNonEmptyString(type) || !isNonEmptyString(content)) {
             return NextResponse.json({ error: 'Type and content are required' }, { status: 400 });
         }
 
-        if (!['bug', 'improvement', 'other'].includes(type)) {
+        if (!validateFeedbackType(type)) {
             return NextResponse.json({ error: 'Invalid feedback type' }, { status: 400 });
         }
 
-        // Sanitize content (basic)
-        const sanitizedContent = content.slice(0, 2000); // Limit length
+        // Sanitize content
+        const sanitizedContent = sanitizeString(content, 2000);
 
         // Get IP and UA info for anti-spam and debugging
         const forwarded = req.headers.get('x-forwarded-for');
-        const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
-        const ipHash = crypto.createHash('md5').update(ip).digest('hex');
+        const ip = extractIP(forwarded);
+        // Use SHA-256 for better security (consistent with reports API)
+        const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
         const ua = req.headers.get('user-agent') || 'unknown';
+
+        // Validate email if provided
+        let sanitizedEmail: string | undefined;
+        if (email) {
+            try {
+                sanitizedEmail = validateAndSanitizeEmail(email);
+            } catch (error) {
+                if (error instanceof ValidationError) {
+                    return NextResponse.json({ error: error.message }, { status: 400 });
+                }
+                throw error;
+            }
+        }
 
         const result = await saveFeedback({
             type,
             content: sanitizedContent,
-            email: email ? email.slice(0, 255) : undefined,
-            page_url: pageUrl ? pageUrl.slice(0, 500) : undefined,
+            email: sanitizedEmail,
+            page_url: pageUrl ? sanitizeString(pageUrl, 500) : undefined,
             ua_info: ua,
             ip_hash: ipHash
         });

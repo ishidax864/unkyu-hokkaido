@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server';
 import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine';
+import { isSupabaseAvailable } from '@/lib/supabase';
+import { weatherAPIBreaker, jrStatusBreaker } from '@/lib/circuit-breaker';
+
+// Cache health check result for 30 seconds
+let lastHealthCheck: { data: unknown; timestamp: number } | null = null;
+const CACHE_TTL = 30 * 1000;
 
 export async function GET() {
+    // Return cached result if fresh
+    if (lastHealthCheck && Date.now() - lastHealthCheck.timestamp < CACHE_TTL) {
+        return NextResponse.json(lastHealthCheck.data);
+    }
+
     const checks: Record<string, string> = {
         jr_hokkaido_json: 'pending',
         prediction_engine: 'pending',
@@ -46,8 +57,29 @@ export async function GET() {
     const healthCheck = {
         status: isHealthy ? 'healthy' : 'degraded',
         timestamp: new Date().toISOString(),
-        version: '1.1.0',
+        version: '1.2.0',
+        uptime: process.uptime(),
+        memory: {
+            used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+            total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+            unit: 'MB',
+        },
         checks,
+        dependencies: {
+            supabase: isSupabaseAvailable() ? 'available' : 'unavailable',
+            weatherAPI: weatherAPIBreaker.getState(),
+            jrStatusAPI: jrStatusBreaker.getState(),
+        },
+        circuitBreakers: {
+            weatherAPI: weatherAPIBreaker.getMetrics(),
+            jrStatusAPI: jrStatusBreaker.getMetrics(),
+        },
+    };
+
+    // Cache result
+    lastHealthCheck = {
+        data: healthCheck,
+        timestamp: Date.now(),
     };
 
     return NextResponse.json(healthCheck, {

@@ -2,31 +2,36 @@ import { NextRequest, NextResponse } from 'next/server';
 import { saveReportToSupabase } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 import crypto from 'crypto';
+import {
+    validateReportType,
+    isNonEmptyString,
+    sanitizeString,
+    extractIP
+} from '@/lib/validation-helpers';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { routeId, reportType, comment } = body;
 
-        // 1. Basic Validation
-        if (!routeId || !reportType) {
+        // Validation using helpers
+        if (!isNonEmptyString(routeId) || !isNonEmptyString(reportType)) {
             return NextResponse.json({ error: 'routeId and reportType are required' }, { status: 400 });
         }
 
-        const validTypes = ['stopped', 'delayed', 'crowded', 'normal'];
-        if (!validTypes.includes(reportType)) {
+        if (!validateReportType(reportType)) {
             return NextResponse.json({ error: 'Invalid reportType' }, { status: 400 });
         }
 
         // 2. Security: Get real IP and Hash it (Server-side)
         const forwarded = req.headers.get('x-forwarded-for');
-        const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
+        const ip = extractIP(forwarded);
 
-        // Use a secure hash (SHA-256) for IP protection
+        // Use SHA-256 for secure hashing
         const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
 
         // 3. Sanitization
-        const sanitizedComment = comment ? comment.slice(0, 500) : undefined;
+        const sanitizedComment = comment ? sanitizeString(comment, 500) : undefined;
 
         // 4. Save to DB
         const result = await saveReportToSupabase({

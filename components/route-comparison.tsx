@@ -1,4 +1,6 @@
 import { Bus, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/ui-utils';
 
 interface BusAlternativeCardProps {
     jrProb: number;
@@ -34,27 +36,41 @@ export function RouteComparisonCard({ jrProb, windSpeed, snowfall }: BusAlternat
     const isBusRecommended = jrProb >= 50 && busProb < 50;
 
     return (
-        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-white/20 shadow-sm mb-4">
-            <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                <span className="bg-gray-200 p-1 rounded text-gray-600">
+        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-4 sm:p-5 border border-white/20 shadow-sm mb-4">
+            <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2 flex-wrap">
+                <span className="bg-gray-200 px-2 py-1 rounded text-gray-600">
                     🚌 代替手段（高速バス）
                 </span>
                 {isBusRecommended && (
-                    <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
+                    <Badge variant="info" size="sm" pulse>
                         おすすめ！
-                    </span>
+                    </Badge>
                 )}
             </h3>
 
-            <div className={`p-3 rounded-lg border-2 ${busProb >= 50 ? 'bg-red-50 border-red-100' : 'bg-blue-50 border-blue-100'}`}>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Bus className={`w-5 h-5 ${busProb >= 50 ? 'text-red-600' : 'text-blue-600'}`} />
-                        <span className={`text-lg font-bold ${busProb >= 50 ? 'text-red-700' : 'text-blue-700'}`}>
+            <div className={cn(
+                "p-4 rounded-lg border-2",
+                busProb >= 50 ? 'bg-red-50 border-red-100' : 'bg-blue-50 border-blue-100'
+            )}>
+                <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <Bus className={cn(
+                            "w-5 h-5",
+                            busProb >= 50 ? 'text-red-600' : 'text-blue-600'
+                        )} />
+                        <span className={cn(
+                            "text-base sm:text-lg font-bold",
+                            busProb >= 50 ? 'text-red-700' : 'text-blue-700'
+                        )}>
                             {busStatus === 'suspended' ? '運休見込み' : busStatus === 'warning' ? '遅延見込み' : '運行見込み'}
                         </span>
                     </div>
-                    <span className="text-sm text-gray-500">リスク: {busProb}%</span>
+                    <Badge
+                        variant={busProb >= 50 ? 'danger' : busProb >= 40 ? 'warning' : 'info'}
+                        size="sm"
+                    >
+                        リスク: {busProb}%
+                    </Badge>
                 </div>
             </div>
 

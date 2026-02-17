@@ -398,22 +398,31 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 // 駅間のタクシー概算料金を計算
-export function estimateTaxiFare(station1Id: string, station2Id: string): number | null {
-    const s1 = getStationById(station1Id);
-    const s2 = getStationById(station2Id);
-
-    if (!s1?.lat || !s1?.lon || !s2?.lat || !s2?.lon) {
+export function estimateTaxiFare(station1: Station, station2: Station): {
+    estimatedFare: number;
+    distance: number;
+    duration: string;
+} | null {
+    if (!station1?.lat || !station1?.lon || !station2?.lat || !station2?.lon) {
         return null;
     }
 
-    const distanceKm = calculateDistance(s1.lat, s1.lon, s2.lat, s2.lon);
+    const distanceKm = calculateDistance(station1.lat, station1.lon, station2.lat, station2.lon);
 
     // 簡易計算: 初乗り670円(1.6km) + その後300mごとに100円 (約333円/km) + 迎車等予備費
     // 実際は信号待ち等の時間距離併用運賃があるため、少し多めに見積もる (400円/km)
     const baseFare = 670;
     const distanceFare = Math.max(0, distanceKm - 1.6) * 400;
+    const estimatedFare = Math.round((baseFare + distanceFare) / 100) * 100; // 100円単位に丸める
 
-    return Math.round((baseFare + distanceFare) / 100) * 100; // 100円単位に丸める
+    // 所要時間推定 (平均24km/h)
+    const durationMin = Math.round(distanceKm * 2.5);
+
+    return {
+        estimatedFare,
+        distance: Math.round(distanceKm * 10) / 10, // 小数第1位
+        duration: `約${durationMin}分`
+    };
 }
 
 // 代替ルート定義

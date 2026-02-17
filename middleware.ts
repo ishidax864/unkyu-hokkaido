@@ -103,7 +103,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl;
 
     // 🆕 Admin routes protection
-    if (url.pathname.startsWith('/admin')) {
+    if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/api/admin')) {
         const authHeader = request.headers.get('authorization');
 
         if (!authHeader) {

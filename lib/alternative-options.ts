@@ -177,8 +177,68 @@ const DEFAULT_FACILITIES: StationFacilities = {
     hasCafe: false,
 };
 
+/**
+ * 駅の生の施設情報を取得（StationFacilitiesオブジェクト）
+ * 他の関数から使用される正規の関数
+ */
 export function getStationFacilities(stationId: string): StationFacilities {
     return STATION_FACILITIES[stationId] || DEFAULT_FACILITIES;
+}
+
+/**
+ * 駅の施設情報を配列形式で取得（UI表示用）
+ * テストスクリプトやUI表示で使用
+ */
+export function getStationFacilitiesList(stationId: string): { type: string; name: string; description?: string }[] {
+    const facilities = getStationFacilities(stationId);
+    const result: { type: string; name: string; description?: string }[] = [];
+
+    if (facilities.hasSubway && facilities.subwayLines) {
+        result.push({
+            type: '地下鉄',
+            name: facilities.subwayLines.join('・'),
+            description: '雪・風の影響を受けず運行'
+        });
+    }
+
+    if (facilities.hasBusTerminal) {
+        result.push({
+            type: 'バスターミナル',
+            name: '高速・路線バス',
+            description: '都市間バスが利用可能'
+        });
+    }
+
+    if (facilities.hasTaxi) {
+        result.push({
+            type: 'タクシー',
+            name: 'タクシー乗り場',
+        });
+    }
+
+    if (facilities.hasRentalCar) {
+        result.push({
+            type: 'レンタカー',
+            name: 'レンタカー店舗',
+            description: 'スタッドレス装備確認必須'
+        });
+    }
+
+    if (facilities.hasHotel) {
+        result.push({
+            type: 'ホテル',
+            name: '近隣宿泊施設',
+        });
+    }
+
+    if (facilities.hasCafe) {
+        result.push({
+            type: 'カフェ・待合',
+            name: '待機場所',
+        });
+    }
+
+    return result;
 }
 
 // ===== 代替手段の提案 =====
@@ -235,16 +295,14 @@ export function getAvailableAlternatives(
 
     // 3. タクシー（ほぼ全駅で利用可能）
     if (facilities.hasTaxi && departure && arrival) {
-        const fare = estimateTaxiFare(departureId, arrivalId);
-        const distanceKm = calculateTaxiDistance(departure, arrival);
-        const timeMin = distanceKm ? Math.round(distanceKm * 2.5) : null; // 約24km/h平均
+        const taxiInfo = estimateTaxiFare(departure, arrival);
 
         options.push({
             type: 'taxi',
             icon: '🚕',
             name: 'タクシー',
-            description: fare ? `概算: ¥${fare.toLocaleString()}〜` : '料金は距離による',
-            time: timeMin ? `約${timeMin}分` : undefined,
+            description: taxiInfo ? `概算: ¥${taxiInfo.estimatedFare.toLocaleString()}〜` : '料金は距離による',
+            time: taxiInfo?.duration,
             note: '悪天候時は渋滞・料金増加の可能性あり',
             priority: 3,
         });

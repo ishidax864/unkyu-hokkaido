@@ -18,14 +18,24 @@ export default function AdminDashboard() {
 
     const [recentFeedback, setRecentFeedback] = useState<UserFeedbackDB[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        const abortController = new AbortController();
+
         async function fetchData() {
             try {
+                setError(null);
+
+                // Add timeout (10 seconds)
+                const timeout = setTimeout(() => abortController.abort(), 10000);
+
                 const [statsRes, feedbackRes] = await Promise.all([
-                    fetch('/api/admin/stats'),
-                    fetch('/api/admin/feedback')
+                    fetch('/api/admin/stats', { signal: abortController.signal }),
+                    fetch('/api/admin/feedback', { signal: abortController.signal })
                 ]);
+
+                clearTimeout(timeout);
 
                 if (statsRes.ok && feedbackRes.ok) {
                     const statsData = await statsRes.json();
@@ -38,15 +48,25 @@ export default function AdminDashboard() {
                     ]);
 
                     setRecentFeedback(feedbackData.items);
+                } else {
+                    setError('Failed to load dashboard data. Please try again.');
                 }
             } catch (error) {
-                console.error('Failed to fetch admin data', error);
+                if (error instanceof Error && error.name === 'AbortError') {
+                    setError('Request timeout. Please check your connection and try again.');
+                } else {
+                    console.error('Failed to fetch admin data', error);
+                    setError('An error occurred while loading data.');
+                }
             } finally {
                 setIsLoading(false);
             }
         }
 
         fetchData();
+
+        // Cleanup on unmount
+        return () => abortController.abort();
     }, []);
 
     const handleStatusUpdate = async (id: string, newStatus: string) => {
@@ -68,8 +88,31 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleRetry = () => {
+        setIsLoading(true);
+        setError(null);
+        // Trigger re-fetch by updating a key (simple approach)
+        window.location.reload();
+    };
+
     return (
         <div className="space-y-8">
+            {/* Error Alert */}
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <AlertTriangle className="w-5 h-5 text-red-600" />
+                        <p className="text-red-800 font-medium">{error}</p>
+                    </div>
+                    <button
+                        onClick={handleRetry}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-bold"
+                    >
+                        再試行
+                    </button>
+                </div>
+            )}
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {stats.map((stat) => {
@@ -98,7 +141,7 @@ export default function AdminDashboard() {
                 })}
             </div>
 
-            <div className="grid grid-cols-1 gap-8 text-nowrap">
+            <div className="grid grid-cols-1 gap-8">
                 {/* Recent Feedback Table */}
                 <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <div className="p-6 border-b border-gray-50 flex items-center justify-between">
@@ -142,7 +185,7 @@ export default function AdminDashboard() {
                                                 {row.type === 'bug' ? 'バグ' : row.type === 'improvement' ? '改善' : 'その他'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-800 font-medium max-w-xs truncate" title={row.content}>
+                                        <td className="px-6 py-4 text-gray-800 font-medium min-w-[300px] whitespace-pre-wrap break-words" title={row.content}>
                                             {row.content}
                                         </td>
                                         <td className="px-6 py-4">

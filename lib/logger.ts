@@ -36,22 +36,33 @@ function addToHistory(entry: LogEntry): void {
 }
 
 // 本番では Sentry 等に送信
-async function sendToExternalService(_entry: LogEntry): Promise<void> {
+async function sendToExternalService(entry: LogEntry): Promise<void> {
     if (!isProduction) return;
 
-    const sentryDsn = process.env.SENTRY_DSN;
-    if (!sentryDsn) {
-        // Sentry DSNが設定されていない場合は警告（初回のみ等に抑えるのが望ましいが、ここではシンプルに保持）
-        return;
-    }
+    try {
+        // Sentry integration (only in production with DSN configured)
+        if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+            const Sentry = await import('@sentry/nextjs');
 
-    // 将来的な SDK 導入時のコード
-    // import * as Sentry from "@sentry/nextjs";
-    // if (entry.level === 'error') {
-    //     Sentry.captureException(entry.context?.error || entry.message, { extra: entry.context });
-    // } else {
-    //     Sentry.captureMessage(entry.message, { level: entry.level as Sentry.SeverityLevel, extra: entry.context });
-    // }
+            if (entry.level === 'error') {
+                Sentry.captureException(
+                    entry.context?.error || new Error(entry.message),
+                    {
+                        extra: entry.context,
+                        level: 'error'
+                    }
+                );
+            } else if (entry.level === 'warn') {
+                Sentry.captureMessage(entry.message, {
+                    level: 'warning',
+                    extra: entry.context
+                });
+            }
+        }
+    } catch (error) {
+        // Avoid infinite loops if Sentry itself fails
+        console.error('Failed to send to external service', error);
+    }
 }
 
 export const logger = {
