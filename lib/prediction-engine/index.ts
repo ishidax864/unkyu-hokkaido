@@ -308,7 +308,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         comparisonData: {
             wind,
             snow
-        }
+        },
+        officialStatus: input.jrStatus // 🆕 公式情報をそのまま格納
     };
 }
 

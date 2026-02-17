@@ -182,6 +182,40 @@ export function PredictionResultCard({ result, route, targetDate }: PredictionRe
             </div>
 
 
+            {/* 📡 現在の運行状況（JR公式） - データがある場合のみ表示 */}
+            {result.officialStatus && (
+                <div className="mb-4 p-3 rounded-lg bg-gray-50 border border-gray-200">
+                    <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                        <span>📡</span> 現在の運行状況（JR公式）
+                        <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-bold">実データ</span>
+                    </div>
+
+                    {/* ステータス表示 */}
+                    <div className="font-black text-xl flex items-center gap-2">
+                        {result.officialStatus.status === 'suspended' || result.officialStatus.status === 'cancelled' ? (
+                            <span className="text-red-600">🔴 運休・見合わせ</span>
+                        ) : result.officialStatus.status === 'delay' ? (
+                            <span className="text-yellow-600">🟡 遅延</span>
+                        ) : result.officialStatus.status === 'normal' ? (
+                            <span className="text-green-600">🟢 {result.officialStatus.statusText.replace(/。/g, '') || '現在、遅れに関する情報はありません'}</span>
+                        ) : (
+                            <span className="text-gray-600">⚪ 情報なし</span>
+                        )}
+                    </div>
+
+                    {/* 原文テキスト（あれば） */}
+                    {result.officialStatus.rawText && result.officialStatus.status !== 'normal' && (
+                        <div className="mt-2 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100 leading-relaxed">
+                            "{result.officialStatus.rawText}"
+                        </div>
+                    )}
+
+                    <div className="text-[10px] text-gray-400 text-right mt-1">
+                        更新: {result.officialStatus.updatedAt ? new Date(result.officialStatus.updatedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                    </div>
+                </div>
+            )}
+
             {/* 📊 予測セクション (ユーザーの出発時刻に基づく) */}
             <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
                 <span>📊</span> あなたの出発時刻の予測

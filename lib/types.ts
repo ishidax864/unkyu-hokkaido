@@ -109,6 +109,13 @@ export interface PredictionResult {
     snow: number;
   };
   isOfficialOverride?: boolean; // 🆕 公式情報によるオーバーライドかどうか
+  officialStatus?: {
+    status: JRStatus;
+    statusText?: string;
+    updatedAt?: string;
+    rawText?: string;
+    sourceArea?: string;
+  } | null; // 🆕 公式運行情報 (実データ)
 }
 
 // =====================
