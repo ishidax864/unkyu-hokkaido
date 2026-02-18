@@ -133,7 +133,7 @@ export function useRouteSearch() {
                     matchingStatus = data.items.find((item: JRStatusItem) => item.routeName === 'JR北海道');
                 }
 
-                if (isToday && matchingStatus) {
+                if (matchingStatus) {
                     jrStatus = {
                         routeId: routeId,
                         routeName: primaryRoute?.name || matchingStatus.routeName,
@@ -149,7 +149,12 @@ export function useRouteSearch() {
         }
 
         // Crowdsourced Status
-        const crowdsourcedStatus = isToday && routeId ? aggregateCrowdsourcedStatus(routeId) : null;
+        // 🆕 週間予測の「今日」の行のために、本日でなくても取得する（ただし計算に使用するのは1行目のみ）
+        const rtStatus = routeId ? aggregateCrowdsourcedStatus(routeId) : null;
+        setRealtimeStatus(rtStatus);
+
+        // 検索日が今日の場合のみ、メインの計算用にStatusを使用する
+        const currentCrowdsourcedStatus = isToday ? rtStatus : null;
 
         // 🆕 過去30日の運休履歴を取得（Phase 1実装）
         let historicalData = null;
@@ -187,7 +192,8 @@ export function useRouteSearch() {
             if (apiRes.ok) {
                 const mlResult: PredictionResult & { trend?: HourlyRiskData[] } = await apiRes.json();
 
-                if (jrStatus) {
+                // 検索日が今日の場合のみ、公式情報をメイン結果に上書きする
+                if (isToday && jrStatus) {
                     // Overlay JR Status info (Realtime override)
                     if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
                         mlResult.probability = 100;
@@ -223,8 +229,8 @@ export function useRouteSearch() {
                 targetDate: searchDate,
                 targetTime: targetTimeStr,
                 historicalData,
-                jrStatus,
-                crowdsourcedStatus,
+                jrStatus: isToday ? jrStatus : null, // メイン結果には「検索日が今日」の時のみ反映
+                crowdsourcedStatus: currentCrowdsourcedStatus,
                 timetableTrain: timetableTrain || undefined
             });
             setPrediction(result);
@@ -234,23 +240,16 @@ export function useRouteSearch() {
             // ... (We could add fallback trend gen here if needed, but keeping it simple for now)
         }
 
-        // 🆕 Always set realtime status for UI display (badges), regardless of search date
-        if (routeId) {
-            const rtStatus = aggregateCrowdsourcedStatus(routeId);
-            setRealtimeStatus(rtStatus);
-        } else {
-            setRealtimeStatus(null);
-        }
-
         // Helper: Weekly Calculation
+        // 週間予測用。ここでは jrStatus が今日のものであるため、calculateWeeklyForecast 側で正しく「今日」の行に適用される
         if (weeklyWeather.length > 0) {
             setWeeklyPredictions(calculateWeeklyForecast(
                 routeId,
                 primaryRoute?.name || '',
                 weeklyWeather,
                 jrStatus,
-                crowdsourcedStatus,
-                historicalData // 🆕 ここで実績データを渡す
+                rtStatus,
+                historicalData
             ));
         }
 

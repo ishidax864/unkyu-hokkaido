@@ -293,13 +293,14 @@ export function calculateWeeklyForecast(
     crowdsourcedStatus?: CrowdsourcedStatus | null,
     historicalData?: PredictionInput['historicalData'] | null
 ): PredictionResult[] {
-    // 🆕 JST基準で本日を判定
-    const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-    const todayStr = jstNow.toISOString().split('T')[0];
+    // 🆕 Timezone fix: Use JST for today determination
+    const today = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Tokyo'
+    }).format(new Date());
 
     return weeklyWeather.map((weather, index) => {
-        //日付文字列が一致するか、または最初の要素かつJST本日であればリアルタイム情報を反映
-        const isToday = weather.date === todayStr || (index === 0 && weather.date <= todayStr);
+        // 今日、または過去（念のため）のデータであれば公式情報を反映
+        const isToday = weather.date <= today;
 
         return calculateSuspensionRisk({
             routeId,
