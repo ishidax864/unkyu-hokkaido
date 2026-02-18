@@ -1,23 +1,23 @@
 {
   "summary": {
-    "accuracy": 41.41414141414141,
+    "accuracy": 37.37373737373738,
     "matrix": {
       "stopped": {
-        "stopped": 25,
-        "delayed": 3,
+        "stopped": 23,
+        "delayed": 5,
         "normal": 2,
         "total": 30
       },
       "delayed": {
-        "stopped": 3,
+        "stopped": 2,
         "delayed": 2,
-        "normal": 3,
+        "normal": 4,
         "total": 8
       },
       "normal": {
-        "stopped": 39,
-        "delayed": 8,
-        "normal": 14,
+        "stopped": 36,
+        "delayed": 13,
+        "normal": 12,
         "total": 61
       }
     }
@@ -27,13 +27,13 @@
       "date": "2023-12-22",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "stopped",
-      "predictedStatus": "delayed",
-      "probability": 58,
-      "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 5.8,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "predictedStatus": "stopped",
+      "probability": 85,
+      "isCorrect": true,
+      "weatherCode": 71,
+      "windSpeed": 21.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-12-23",
@@ -42,10 +42,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 0,
-      "windSpeed": 14.5,
+      "weatherCode": 1,
+      "windSpeed": 17.3,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-01-25",
@@ -54,9 +54,9 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 3,
-      "windSpeed": 19.1,
-      "snowfall": 0,
+      "weatherCode": 73,
+      "windSpeed": 33.5,
+      "snowfall": 0.28,
       "resumptionPrediction": null
     },
     {
@@ -66,22 +66,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 19.3,
+      "weatherCode": 3,
+      "windSpeed": 17.7,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-15",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "delayed",
-      "probability": 65,
+      "predictedStatus": "stopped",
+      "probability": 85,
       "isCorrect": false,
-      "weatherCode": 71,
-      "windSpeed": 14,
-      "snowfall": 0.14,
-      "resumptionPrediction": null
+      "weatherCode": 51,
+      "windSpeed": 16.3,
+      "snowfall": 0,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-12-22",
@@ -90,10 +90,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 2,
-      "windSpeed": 16.6,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 21.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-01",
@@ -102,22 +102,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 73,
-      "windSpeed": 13,
-      "snowfall": 0.21,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 23.8,
+      "snowfall": 0.07,
+      "resumptionPrediction": null
     },
     {
       "date": "2024-02-07",
       "routeId": "jr-hokkaido.soya",
       "actualStatus": "stopped",
-      "predictedStatus": "normal",
-      "probability": 29,
-      "isCorrect": false,
-      "weatherCode": 2,
-      "windSpeed": 3.2,
+      "predictedStatus": "stopped",
+      "probability": 85,
+      "isCorrect": true,
+      "weatherCode": 3,
+      "windSpeed": 19.4,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "05:00"
     },
     {
       "date": "2024-01-10",
@@ -127,33 +127,33 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 71,
-      "windSpeed": 13.6,
+      "windSpeed": 19.1,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-02-29",
       "routeId": "jr-hokkaido.soya",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
+      "predictedStatus": "delayed",
+      "probability": 48,
       "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 14.7,
+      "windSpeed": 13,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2023-12-22",
       "routeId": "jr-hokkaido.hakodate-main",
       "actualStatus": "stopped",
-      "predictedStatus": "stopped",
-      "probability": 85,
-      "isCorrect": true,
+      "predictedStatus": "delayed",
+      "probability": 65,
+      "isCorrect": false,
       "weatherCode": 71,
       "windSpeed": 21.1,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-01-24",
@@ -165,7 +165,7 @@
       "weatherCode": 71,
       "windSpeed": 24,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-01-08",
@@ -177,7 +177,7 @@
       "weatherCode": 73,
       "windSpeed": 29.5,
       "snowfall": 0.63,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-02-22",
@@ -189,7 +189,7 @@
       "weatherCode": 71,
       "windSpeed": 30,
       "snowfall": 0.14,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2025-01-04",
@@ -199,7 +199,7 @@
       "probability": 28,
       "isCorrect": false,
       "weatherCode": 1,
-      "windSpeed": 10.8,
+      "windSpeed": 3.1,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -208,12 +208,12 @@
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "stopped",
       "predictedStatus": "delayed",
-      "probability": 51,
+      "probability": 45,
       "isCorrect": false,
       "weatherCode": 71,
       "windSpeed": 12.9,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "08:00"
     },
     {
       "date": "2024-01-25",
@@ -231,12 +231,12 @@
       "date": "2025-02-01",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "delayed",
-      "predictedStatus": "delayed",
-      "probability": 65,
-      "isCorrect": true,
-      "weatherCode": 75,
-      "windSpeed": 4,
-      "snowfall": 1.89,
+      "predictedStatus": "normal",
+      "probability": 30,
+      "isCorrect": false,
+      "weatherCode": 1,
+      "windSpeed": 1.1,
+      "snowfall": 0,
       "resumptionPrediction": null
     },
     {
@@ -244,24 +244,24 @@
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 85,
+      "probability": 72,
       "isCorrect": false,
       "weatherCode": 3,
       "windSpeed": 14.1,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-03-05",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 80,
+      "probability": 71,
       "isCorrect": false,
       "weatherCode": 2,
       "windSpeed": 16.1,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-12-22",
@@ -270,22 +270,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 0,
-      "windSpeed": 19.4,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 21.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-03-20",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "stopped",
       "predictedStatus": "stopped",
-      "probability": 85,
+      "probability": 84,
       "isCorrect": true,
-      "weatherCode": 3,
-      "windSpeed": 17.3,
+      "weatherCode": 1,
+      "windSpeed": 20,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-01-15",
@@ -294,34 +294,34 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 73,
-      "windSpeed": 25.7,
-      "snowfall": 0.56,
-      "resumptionPrediction": "19:00"
+      "weatherCode": 75,
+      "windSpeed": 39.8,
+      "snowfall": 0.98,
+      "resumptionPrediction": null
     },
     {
       "date": "2025-01-10",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
-      "isCorrect": false,
-      "weatherCode": 3,
-      "windSpeed": 19.5,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "predictedStatus": "normal",
+      "probability": 29,
+      "isCorrect": true,
+      "weatherCode": 71,
+      "windSpeed": 6.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": null
     },
     {
       "date": "2024-03-10",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 82,
+      "predictedStatus": "delayed",
+      "probability": 46,
       "isCorrect": false,
-      "weatherCode": 2,
-      "windSpeed": 13.1,
+      "weatherCode": 1,
+      "windSpeed": 15.3,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2025-01-25",
@@ -330,10 +330,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 0,
-      "windSpeed": 13.8,
+      "weatherCode": 3,
+      "windSpeed": 15.5,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-03-19",
@@ -345,14 +345,14 @@
       "weatherCode": 71,
       "windSpeed": 28,
       "snowfall": 0.14,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-12-15",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "delayed",
-      "probability": 46,
+      "probability": 41,
       "isCorrect": false,
       "weatherCode": 71,
       "windSpeed": 10.6,
@@ -363,13 +363,13 @@
       "date": "2025-01-17",
       "routeId": "jr-hokkaido.hakodate-main",
       "actualStatus": "delayed",
-      "predictedStatus": "stopped",
-      "probability": 85,
-      "isCorrect": false,
+      "predictedStatus": "delayed",
+      "probability": 63,
+      "isCorrect": true,
       "weatherCode": 73,
       "windSpeed": 16.7,
       "snowfall": 0.21,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2023-01-25",
@@ -390,20 +390,20 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 20.4,
+      "weatherCode": 3,
+      "windSpeed": 34.8,
       "snowfall": 0,
-      "resumptionPrediction": "10:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-12-17",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "delayed",
-      "probability": 57,
-      "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 2.8,
+      "predictedStatus": "normal",
+      "probability": 30,
+      "isCorrect": true,
+      "weatherCode": 2,
+      "windSpeed": 7,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -411,25 +411,25 @@
       "date": "2025-02-11",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "delayed",
-      "probability": 68,
+      "predictedStatus": "stopped",
+      "probability": 85,
       "isCorrect": false,
-      "weatherCode": 3,
-      "windSpeed": 13.8,
-      "snowfall": 0,
-      "resumptionPrediction": null
+      "weatherCode": 71,
+      "windSpeed": 16.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-03-25",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "normal",
-      "probability": 28,
-      "isCorrect": true,
-      "weatherCode": 3,
-      "windSpeed": 11.9,
+      "predictedStatus": "stopped",
+      "probability": 85,
+      "isCorrect": false,
+      "weatherCode": 2,
+      "windSpeed": 19,
       "snowfall": 0,
-      "resumptionPrediction": null
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-01-05",
@@ -438,10 +438,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 71,
-      "windSpeed": 13.7,
-      "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 3,
+      "windSpeed": 17.4,
+      "snowfall": 0,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-12-10",
@@ -451,9 +451,9 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 13.3,
+      "windSpeed": 14.8,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2025-02-04",
@@ -462,10 +462,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 73,
-      "windSpeed": 24.9,
-      "snowfall": 0.28,
-      "resumptionPrediction": "21:00"
+      "weatherCode": 75,
+      "windSpeed": 13,
+      "snowfall": 2.03,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-02-27",
@@ -475,21 +475,21 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 73,
-      "windSpeed": 22.4,
-      "snowfall": 0.28,
-      "resumptionPrediction": "20:00"
+      "windSpeed": 18.3,
+      "snowfall": 0.21,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-12-05",
       "routeId": "jr-hokkaido.hakodate-main",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
+      "predictedStatus": "delayed",
+      "probability": 69,
       "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 21.2,
+      "windSpeed": 22.5,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2024-02-12",
@@ -535,16 +535,16 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 71,
-      "windSpeed": 16.8,
+      "windSpeed": 28,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-01-30",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "normal",
-      "probability": 17,
+      "probability": 15,
       "isCorrect": true,
       "weatherCode": 3,
       "windSpeed": 8.2,
@@ -559,21 +559,21 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 0,
-      "windSpeed": 17.5,
+      "windSpeed": 15.9,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-05",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
+      "predictedStatus": "delayed",
+      "probability": 41,
       "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 18,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 13.2,
+      "snowfall": 0.07,
+      "resumptionPrediction": null
     },
     {
       "date": "2025-01-07",
@@ -582,10 +582,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 55,
-      "windSpeed": 22.1,
+      "weatherCode": 3,
+      "windSpeed": 14.8,
       "snowfall": 0,
-      "resumptionPrediction": "15:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2025-02-18",
@@ -594,9 +594,9 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 71,
-      "windSpeed": 16.5,
-      "snowfall": 0.07,
+      "weatherCode": 73,
+      "windSpeed": 18.9,
+      "snowfall": 0.21,
       "resumptionPrediction": "06:00"
     },
     {
@@ -606,10 +606,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 20.1,
+      "weatherCode": 2,
+      "windSpeed": 16.8,
       "snowfall": 0,
-      "resumptionPrediction": "02:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-05",
@@ -630,10 +630,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 75,
-      "windSpeed": 14.9,
-      "snowfall": 0.91,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 73,
+      "windSpeed": 19.8,
+      "snowfall": 0.28,
+      "resumptionPrediction": "18:00"
     },
     {
       "date": "2022-12-23",
@@ -642,10 +642,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 75,
-      "windSpeed": 19.1,
-      "snowfall": 1.96,
-      "resumptionPrediction": null
+      "weatherCode": 73,
+      "windSpeed": 21.4,
+      "snowfall": 0.63,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-01-25",
@@ -654,10 +654,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 71,
-      "windSpeed": 13.3,
-      "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 3,
+      "windSpeed": 28.8,
+      "snowfall": 0,
+      "resumptionPrediction": null
     },
     {
       "date": "2022-12-01",
@@ -666,22 +666,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 2,
-      "windSpeed": 19.3,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 16.9,
+      "snowfall": 0.07,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-02-15",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
+      "predictedStatus": "delayed",
+      "probability": 43,
       "isCorrect": false,
-      "weatherCode": 3,
-      "windSpeed": 16.9,
+      "weatherCode": 1,
+      "windSpeed": 13,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2022-12-22",
@@ -690,10 +690,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 0,
-      "windSpeed": 13.9,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 73,
+      "windSpeed": 19.8,
+      "snowfall": 0.28,
+      "resumptionPrediction": "18:00"
     },
     {
       "date": "2023-02-01",
@@ -702,22 +702,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 71,
-      "windSpeed": 12.7,
-      "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 75,
+      "windSpeed": 11.5,
+      "snowfall": 1.26,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-02-07",
       "routeId": "jr-hokkaido.soya",
       "actualStatus": "stopped",
-      "predictedStatus": "stopped",
-      "probability": 74,
-      "isCorrect": true,
+      "predictedStatus": "delayed",
+      "probability": 54,
+      "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 7.4,
+      "windSpeed": 15.3,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "05:00"
     },
     {
       "date": "2023-01-10",
@@ -726,22 +726,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 13.8,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 73,
+      "windSpeed": 17.8,
+      "snowfall": 0.21,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2022-12-22",
       "routeId": "jr-hokkaido.hakodate-main",
       "actualStatus": "stopped",
-      "predictedStatus": "stopped",
-      "probability": 85,
-      "isCorrect": true,
-      "weatherCode": 73,
-      "windSpeed": 19.8,
-      "snowfall": 0.28,
-      "resumptionPrediction": "01:00"
+      "predictedStatus": "delayed",
+      "probability": 69,
+      "isCorrect": false,
+      "weatherCode": 75,
+      "windSpeed": 13.1,
+      "snowfall": 2.1,
+      "resumptionPrediction": "18:00"
     },
     {
       "date": "2023-01-24",
@@ -753,7 +753,7 @@
       "weatherCode": 2,
       "windSpeed": 26,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-01-08",
@@ -798,10 +798,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 71,
-      "windSpeed": 16.6,
-      "snowfall": 0.14,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 75,
+      "windSpeed": 20.7,
+      "snowfall": 1.33,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-01-25",
@@ -813,7 +813,7 @@
       "weatherCode": 73,
       "windSpeed": 19.9,
       "snowfall": 0.21,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-01",
@@ -822,20 +822,20 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 17.3,
+      "weatherCode": 0,
+      "windSpeed": 17.5,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-12-24",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "normal",
-      "probability": 25,
+      "probability": 15,
       "isCorrect": true,
-      "weatherCode": 2,
-      "windSpeed": 1.8,
+      "weatherCode": 3,
+      "windSpeed": 6.5,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -858,34 +858,34 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": true,
-      "weatherCode": 51,
-      "windSpeed": 19.2,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 73,
+      "windSpeed": 19.8,
+      "snowfall": 0.28,
+      "resumptionPrediction": "18:00"
     },
     {
       "date": "2023-03-20",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "stopped",
-      "predictedStatus": "stopped",
-      "probability": 85,
-      "isCorrect": true,
-      "weatherCode": 0,
-      "windSpeed": 18.8,
+      "predictedStatus": "normal",
+      "probability": 29,
+      "isCorrect": false,
+      "weatherCode": 2,
+      "windSpeed": 6.4,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "10:00"
     },
     {
       "date": "2023-01-15",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 85,
+      "probability": 81,
       "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 20,
+      "windSpeed": 15.6,
       "snowfall": 0,
-      "resumptionPrediction": "02:00"
+      "resumptionPrediction": "05:00"
     },
     {
       "date": "2024-01-10",
@@ -894,22 +894,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 16.2,
-      "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 71,
+      "windSpeed": 19.1,
+      "snowfall": 0.07,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-03-10",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 84,
+      "probability": 85,
       "isCorrect": false,
-      "weatherCode": 2,
-      "windSpeed": 15.7,
+      "weatherCode": 51,
+      "windSpeed": 39.3,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2024-01-25",
@@ -933,17 +933,17 @@
       "weatherCode": 0,
       "windSpeed": 15.1,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-12-15",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "normal",
-      "probability": 25,
+      "probability": 15,
       "isCorrect": true,
       "weatherCode": 3,
-      "windSpeed": 5.9,
+      "windSpeed": 7.5,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -969,17 +969,17 @@
       "weatherCode": 71,
       "windSpeed": 8,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "05:00"
     },
     {
       "date": "2023-01-12",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "normal",
-      "probability": 28,
-      "isCorrect": true,
+      "predictedStatus": "delayed",
+      "probability": 49,
+      "isCorrect": false,
       "weatherCode": 0,
-      "windSpeed": 10.1,
+      "windSpeed": 15,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -990,34 +990,34 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 3,
-      "windSpeed": 17.4,
+      "weatherCode": 51,
+      "windSpeed": 14,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2024-02-11",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
-      "predictedStatus": "normal",
-      "probability": 28,
-      "isCorrect": true,
-      "weatherCode": 3,
-      "windSpeed": 3.3,
-      "snowfall": 0,
-      "resumptionPrediction": null
+      "predictedStatus": "stopped",
+      "probability": 85,
+      "isCorrect": false,
+      "weatherCode": 73,
+      "windSpeed": 19.9,
+      "snowfall": 0.21,
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-03-25",
       "routeId": "jr-hokkaido.sekihoku",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 84,
+      "probability": 85,
       "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 13.8,
+      "weatherCode": 3,
+      "windSpeed": 13.9,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "10:00"
     },
     {
       "date": "2023-01-05",
@@ -1027,9 +1027,9 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 3,
-      "windSpeed": 18.8,
+      "windSpeed": 20.6,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-12-10",
@@ -1039,20 +1039,20 @@
       "probability": 85,
       "isCorrect": false,
       "weatherCode": 1,
-      "windSpeed": 21.8,
+      "windSpeed": 16.6,
       "snowfall": 0,
-      "resumptionPrediction": null
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-02-04",
       "routeId": "jr-hokkaido.soya",
       "actualStatus": "normal",
-      "predictedStatus": "normal",
-      "probability": 25,
-      "isCorrect": true,
-      "weatherCode": 3,
-      "windSpeed": 5.9,
-      "snowfall": 0,
+      "predictedStatus": "delayed",
+      "probability": 65,
+      "isCorrect": false,
+      "weatherCode": 71,
+      "windSpeed": 15.3,
+      "snowfall": 0.07,
       "resumptionPrediction": null
     },
     {
@@ -1062,22 +1062,22 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 3,
-      "windSpeed": 14.2,
+      "weatherCode": 0,
+      "windSpeed": 20.1,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2022-12-05",
       "routeId": "jr-hokkaido.hakodate-main",
       "actualStatus": "normal",
-      "predictedStatus": "stopped",
-      "probability": 85,
+      "predictedStatus": "delayed",
+      "probability": 67,
       "isCorrect": false,
       "weatherCode": 2,
       "windSpeed": 20.5,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2023-02-12",
@@ -1089,7 +1089,7 @@
       "weatherCode": 71,
       "windSpeed": 26.4,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2024-01-14",
@@ -1101,7 +1101,7 @@
       "weatherCode": 71,
       "windSpeed": 23.8,
       "snowfall": 0.07,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2022-12-28",
@@ -1125,14 +1125,14 @@
       "weatherCode": 3,
       "windSpeed": 21.8,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2023-01-30",
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "normal",
-      "probability": 17,
+      "probability": 15,
       "isCorrect": true,
       "weatherCode": 2,
       "windSpeed": 5.8,
@@ -1144,7 +1144,7 @@
       "routeId": "jr-hokkaido.chitose",
       "actualStatus": "normal",
       "predictedStatus": "normal",
-      "probability": 17,
+      "probability": 15,
       "isCorrect": true,
       "weatherCode": 3,
       "windSpeed": 9.7,
@@ -1156,10 +1156,10 @@
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
       "predictedStatus": "delayed",
-      "probability": 53,
+      "probability": 54,
       "isCorrect": false,
-      "weatherCode": 1,
-      "windSpeed": 14.5,
+      "weatherCode": 3,
+      "windSpeed": 16.3,
       "snowfall": 0,
       "resumptionPrediction": null
     },
@@ -1168,24 +1168,24 @@
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 71,
+      "probability": 85,
       "isCorrect": false,
-      "weatherCode": 0,
-      "windSpeed": 11.3,
+      "weatherCode": 3,
+      "windSpeed": 16.6,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": "12:00"
     },
     {
       "date": "2024-02-18",
       "routeId": "jr-hokkaido.nemuro",
       "actualStatus": "normal",
       "predictedStatus": "stopped",
-      "probability": 71,
+      "probability": 85,
       "isCorrect": false,
       "weatherCode": 0,
-      "windSpeed": 15.8,
+      "windSpeed": 24,
       "snowfall": 0,
-      "resumptionPrediction": "01:00"
+      "resumptionPrediction": null
     },
     {
       "date": "2024-03-01",
@@ -1194,10 +1194,10 @@
       "predictedStatus": "stopped",
       "probability": 85,
       "isCorrect": false,
-      "weatherCode": 73,
-      "windSpeed": 17.9,
-      "snowfall": 0.28,
-      "resumptionPrediction": "01:00"
+      "weatherCode": 3,
+      "windSpeed": 18.1,
+      "snowfall": 0,
+      "resumptionPrediction": "06:00"
     },
     {
       "date": "2023-02-05",

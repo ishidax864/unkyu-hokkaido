@@ -167,10 +167,12 @@ export function useRouteSearch() {
         }
 
         // ML Prediction (Server-side)
+        // Now authorizes the server as the single source of truth for both Main Result and Trend.
         let finalPrediction: PredictionResult | null = null;
+        let trendData: HourlyRiskData[] = [];
 
         try {
-            const apiRes = await fetch('/api/prediction/v2/route', {
+            const apiRes = await fetch('/api/prediction/v2', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -194,8 +196,8 @@ export function useRouteSearch() {
                         mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
                         mlResult.isOfficialOverride = true;
                     } else if (jrStatus.status === 'delay') {
-                        if (mlResult.probability < 50) mlResult.probability = 50;
-                        mlResult.level = mlResult.probability >= 70 ? 'high' : 'medium';
+                        if (mlResult.probability < 80) mlResult.probability = 80;
+                        mlResult.level = 'high';
                         mlResult.status = 'delayed';
                         mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
                     }
@@ -204,31 +206,16 @@ export function useRouteSearch() {
                 setPrediction(mlResult);
                 finalPrediction = mlResult;
 
-                // APIからトレンドデータが返ってきている場合はそれを使用
+                // Use Server-Side Trend
                 if (mlResult.trend) {
-                    setRiskTrend(mlResult.trend);
-                    // Need to also compute bestShift from ML trend if possible, or skip for now
+                    trendData = mlResult.trend;
                 }
             } else {
-                // Fallback to local calculation if API fails
-                logger.error('ML API failed, falling back to local');
-                const result = calculateSuspensionRisk({
-                    weather: targetWeather,
-                    routeId: routeId,
-                    routeName: primaryRoute?.name || '',
-                    targetDate: searchDate,
-                    targetTime: targetTimeStr,
-                    historicalData,
-                    jrStatus,
-                    crowdsourcedStatus,
-                    timetableTrain: timetableTrain || undefined
-                });
-                setPrediction(result);
-                finalPrediction = result;
+                throw new Error('API Error');
             }
         } catch (e) {
             logger.error('ML API error', e);
-            // Fallback
+            // Fallback (Local Calc)
             const result = calculateSuspensionRisk({
                 weather: targetWeather,
                 routeId: routeId,
@@ -242,6 +229,9 @@ export function useRouteSearch() {
             });
             setPrediction(result);
             finalPrediction = result;
+
+            // Fallback Trend Gen (Simplified)
+            // ... (We could add fallback trend gen here if needed, but keeping it simple for now)
         }
 
         // 🆕 Always set realtime status for UI display (badges), regardless of search date
@@ -259,7 +249,8 @@ export function useRouteSearch() {
                 primaryRoute?.name || '',
                 weeklyWeather,
                 jrStatus,
-                crowdsourcedStatus
+                crowdsourcedStatus,
+                historicalData // 🆕 ここで実績データを渡す
             ));
         }
 
@@ -267,9 +258,7 @@ export function useRouteSearch() {
         // 🆕 終日運休等の場合は時間変更提案をしない
         const isAllDaySuspension = finalPrediction ? (finalPrediction.estimatedRecoveryTime === '終日運休' || finalPrediction.isOfficialOverride) : false;
 
-        // Calculate risk trend using surroundingHours from the main weather fetch
-        // (already fetched from correct station-midpoint coordinates)
-        let trendData: HourlyRiskData[] = (finalPrediction as any)?.trend || [];
+        const currentHour = parseInt(targetTimeStr.split(':')[0]);
         let bestShift: {
             time: string;
             risk: number;
@@ -277,90 +266,43 @@ export function useRouteSearch() {
             isEarlier: boolean;
         } | null = null;
 
-        const currentHour = parseInt(targetTimeStr.split(':')[0]);
-
-        // APIからトレンドデータが取れなかった場合のみ、ローカルで計算（フォールバック）
+        // If API didn't return trend (or fallback used), use empty or calculate locally
         if (trendData.length === 0) {
-            const surroundingWeather = targetWeather?.surroundingHours || [];
-
-            for (let offset = -2; offset <= 2; offset++) {
-                const h = currentHour + offset;
-                if (h < 0 || h > 23) continue;
-
-                const hStr = h.toString().padStart(2, '0');
-                const checkTime = `${hStr}:00`;
-
-                let hourRisk: number;
-                let hourWeather: WeatherForecast | null = null;
-
-                if (offset === 0) {
-                    hourRisk = finalPrediction?.probability ?? 0;
-                    hourWeather = targetWeather;
-                } else {
-                    hourWeather = surroundingWeather.find(sw => {
-                        const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
-                        return swHour === h;
-                    }) || null;
-
-                    if (hourWeather) {
-                        const r = calculateSuspensionRisk({
-                            weather: hourWeather,
-                            routeId,
-                            routeName: primaryRoute?.name || '',
-                            targetDate: searchDate,
-                            targetTime: checkTime,
-                            historicalData: null,
-                            jrStatus: null,
-                            crowdsourcedStatus: null,
-                            timetableTrain: undefined
-                        });
-                        hourRisk = r.probability;
-                    } else {
-                        continue;
-                    }
-                }
-
-                // Determine icon
-                const displayWeather = offset === 0 ? targetWeather : hourWeather;
-                let icon: HourlyRiskData['weatherIcon'] = 'cloud';
-                if (displayWeather) {
-                    if ((displayWeather.snowfall ?? 0) > 0) icon = 'snow';
-                    else if (displayWeather.precipitation && displayWeather.precipitation > 0) icon = 'rain';
-                    else if (displayWeather.windSpeed >= 15) icon = 'wind';
-                    else if (displayWeather.weather.includes('晴')) icon = 'sun';
-                }
-
-                trendData.push({
-                    time: checkTime,
-                    risk: hourRisk,
-                    weatherIcon: icon,
-                    isTarget: offset === 0,
-                    isCurrent: offset === 0
-                });
-            }
+            // Fallback Trend Gen Logic (Simplified for now - can be expanded if robust fallback needed)
+            // For now, trusting API primarily.
         }
 
-        // Calculate best shift based on trendData (common for both API/local)
-        if (finalPrediction && finalPrediction.probability >= 30 && !isAllDaySuspension) {
-            trendData.forEach(td => {
-                const h = parseInt(td.time.split(':')[0]);
-                if (h === currentHour) return;
+        // 🆕 Recalculate Best Shift based on the NEW trend data
+        // Filter out high risk options effectively
+        if (trendData.length > 0) {
+            const currentRisk = finalPrediction?.probability ?? 0;
+            // Find lowest risk in future
+            const futureOptions = trendData.filter(d => {
+                const h = parseInt(d.time.split(':')[0]);
+                const currentH = parseInt(targetTimeStr.split(':')[0]);
+                return h > currentH; // Only future
+            });
 
-                const diff = finalPrediction!.probability - td.risk;
-                const isPast = isToday && (h < new Date().getHours());
+            if (futureOptions.length > 0) {
+                // Find minimum risk
+                const minRisk = Math.min(...futureOptions.map(o => o.risk));
 
-                if (diff >= 20 && !isPast) {
-                    if (!bestShift || diff > bestShift.difference) {
+                // Only suggest if significantly better and safe enough (<50%)
+                if (minRisk < 50 && (currentRisk - minRisk >= 20)) {
+                    const bestOption = futureOptions.find(o => o.risk === minRisk);
+                    if (bestOption) {
+                        const diff = parseInt(bestOption.time.split(':')[0]) - currentHour;
                         bestShift = {
-                            time: td.time,
-                            risk: td.risk,
-                            difference: diff,
-                            isEarlier: h < currentHour
+                            time: bestOption.time,
+                            risk: bestOption.risk,
+                            difference: diff * 60, // minutes (rough)
+                            isEarlier: false
                         };
                     }
                 }
-            });
+            }
         }
+
 
         setRiskTrend(trendData);
         setTimeShiftSuggestion(bestShift);

@@ -230,6 +230,7 @@ export default function Home() {
             prediction={prediction}
             selectedRouteId={selectedRouteId}
             date={date}
+            time={time}
             depStation={departureStation}
             arrStation={arrivalStation}
             riskTrend={riskTrend}

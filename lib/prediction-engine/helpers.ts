@@ -24,8 +24,10 @@ import {
     TREND_DECREASING_PENALTY,
     USER_CONSENSUS_MIN_REPORTS,
     HEAVY_RAIN_THRESHOLD,
-    MAX_PREDICTION_WITH_NORMAL_DATA, // 🆕
+    MAX_PREDICTION_WITH_NORMAL_DATA,
 } from './constants';
+import { RISK_FACTORS } from './risk-factors';
+import { COMPOUND_RISK_MULTIPLIER } from './constants';
 
 // =====================
 // 型定義
@@ -380,4 +382,62 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
         filteredProbability: probability,
         wasFiltered: false
     };
+}
+
+/**
+ * Calculate Raw Risk Score (before time/season multipliers)
+ * Extracted to allow calculating "Theoretical Risk Now" for Adaptive Calibration
+ */
+export function calculateRawRiskScore(
+    input: PredictionInput,
+    vulnerability: VulnerabilityData,
+    historicalMatch: any
+): RiskEvaluationResult {
+    const enrichedInput = { ...input, historicalMatch };
+
+    // 1. リスク要因の包括的評価
+    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS);
+    let totalScore = bScore;
+    const reasonsWithPriority = [...bReasons];
+
+    // 🆕 過去事例に基づく理由の追加
+    if (historicalMatch) {
+        reasonsWithPriority.push({
+            reason: `【過去事例】${historicalMatch.label}に近い気象条件です。`,
+            priority: 1,
+        });
+    }
+
+    // 2. 冬季ベースリスク
+    const winterRisk = calculateWinterRisk(input.targetDate, vulnerability);
+    if (winterRisk.score > 0) {
+        totalScore += winterRisk.score;
+        if (winterRisk.shouldDisplay && totalScore < 8) {
+            reasonsWithPriority.push({
+                reason: '冬季の北海道は天候急変のリスクがあります',
+                priority: 11,
+            });
+        }
+    }
+
+    // 3. 複合リスク（風×雪）
+    const wind = input.weather?.windSpeed ?? 0;
+    const snow = input.weather?.snowfall ?? 0;
+    const compoundRisk = calculateCompoundRisk(wind, snow, vulnerability);
+
+    if (compoundRisk > 0) {
+        totalScore += compoundRisk;
+        reasonsWithPriority.push({
+            reason: `強風と積雪の複合影響（+${compoundRisk}%）`,
+            priority: 5,
+        });
+    }
+
+    // 🆕 Decisive Scoring
+    const criticalFactors = reasonsWithPriority.filter(r => r.priority <= 4).length;
+    if (criticalFactors >= 2) {
+        totalScore = Math.round(totalScore * COMPOUND_RISK_MULTIPLIER);
+    }
+
+    return { totalScore, reasonsWithPriority, hasRealTimeData };
 }

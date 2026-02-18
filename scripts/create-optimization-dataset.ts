@@ -21,9 +21,21 @@ async function createOptimizationDataset() {
 
     const allData: GroundTruthItem[] = JSON.parse(fs.readFileSync(inputPath, 'utf-8'));
 
+    // 0. 追加の手動データを読み込み
+    const manualCasesPath = path.join(process.cwd(), 'lib/backtest/manual-cases-comprehensive.json');
+    let additionalManualCases: GroundTruthItem[] = [];
+    if (fs.existsSync(manualCasesPath)) {
+        additionalManualCases = JSON.parse(fs.readFileSync(manualCasesPath, 'utf-8'));
+        console.log(`Loaded ${additionalManualCases.length} additional manual cases from 2022-2024.`);
+    }
+
     // 1. 手動データの抽出 (notesに'Generated'が含まれていないもの)
-    const manualCases = allData.filter(item => !item.notes.includes('Generated'));
-    console.log(`Found ${manualCases.length} manual cases.`);
+    const existingManualCases = allData.filter(item => !item.notes.includes('Generated'));
+
+    // 手動データを結合（重複排除は簡易的にrouteId+dateで行うべきだが、今回は追加分を優先）
+    const combinedManualCases = [...existingManualCases, ...additionalManualCases];
+
+    console.log(`Total manual cases: ${combinedManualCases.length}`);
 
     // 2. 生成データの抽出
     const generatedCases = allData.filter(item => item.notes.includes('Generated'));
@@ -41,18 +53,18 @@ async function createOptimizationDataset() {
 
     // ターゲット数まで埋める
     const targetTotal = 600;
-    const needed = targetTotal - manualCases.length - delayedGenerated.length;
+    const needed = Math.max(0, targetTotal - combinedManualCases.length - delayedGenerated.length);
 
     const selectedOthers = shuffledOthers.slice(0, needed);
 
     const finalDataset = [
-        ...manualCases,
+        ...combinedManualCases,
         ...delayedGenerated,
         ...selectedOthers
     ];
 
     console.log(`Created dataset with ${finalDataset.length} cases.`);
-    console.log(`- Manual: ${manualCases.length}`);
+    console.log(`- Manual (Total): ${combinedManualCases.length}`);
     console.log(`- Generated (Delayed): ${delayedGenerated.length}`);
     console.log(`- Generated (Others): ${selectedOthers.length}`);
 

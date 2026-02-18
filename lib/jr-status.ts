@@ -4,7 +4,7 @@ import { logger } from './logger';
 import { JRStatus } from './types';
 
 // JR北海道公式JSON URL (エリア別)
-const JR_JSON_URLS = [
+export const JR_JSON_URLS = [
     { id: '01', area: '札幌近郊' },
     { id: '02', area: '道央' },
     { id: '03', area: '道南' },
@@ -22,7 +22,7 @@ interface RouteDefinition {
     validAreas?: string[]; // 🆕 エリアフィルタ (01:札幌, 02:道央, 03:道南, 04:道北, 05:道東)
 }
 
-const ROUTE_DEFINITIONS: RouteDefinition[] = [
+export const ROUTE_DEFINITIONS: RouteDefinition[] = [
     // 札幌圏・道央
     {
         name: '千歳線',
@@ -121,6 +121,33 @@ export interface JROperationStatus {
     updatedAt: string;
     rawText?: string; // 🆕 生の概況テキスト
     sourceArea?: string; // 🆕 情報取得元エリアID
+    delayMinutes?: number; // 🆕 抽出された遅延分
+    recoveryTime?: string; // 🆕 抽出された再開見込み時刻 (HH:mm)
+}
+
+/**
+ * 🆕 テキストから数値情報を抽出 (ML強化用)
+ * 例: "30分程度の遅れ" -> { delayMinutes: 30 }
+ * 例: "20時30分頃に運転再開を見込んでいます" -> { recoveryTime: "20:30" }
+ */
+export function extractNumericalStatus(text: string): { delayMinutes?: number; recoveryTime?: string } {
+    const result: { delayMinutes?: number; recoveryTime?: string } = {};
+
+    // 1. 遅延分の抽出
+    const delayMatch = text.match(/(\d+)分(?:程度)?の?(?:遅れ|遅延)/);
+    if (delayMatch) {
+        result.delayMinutes = parseInt(delayMatch[1]);
+    }
+
+    // 2. 再開見込み時刻の抽出 (HH時mm分)
+    const recoveryMatch = text.match(/(\d{1,2})時(\d{1,2})分(?:頃)?(?:に)?(?:運転(?:を)?)?再開/);
+    if (recoveryMatch) {
+        const h = recoveryMatch[1].padStart(2, '0');
+        const m = recoveryMatch[2].padStart(2, '0');
+        result.recoveryTime = `${h}:${m}`;
+    }
+
+    return result;
 }
 
 /**

@@ -17,6 +17,7 @@ interface PredictionResultsProps {
     prediction: PredictionResult;
     selectedRouteId: string | null;
     date: string;
+    time: string; // 🆕
     depStation: Station | null;
     arrStation: Station | null;
     riskTrend: HourlyRiskData[] | null;
@@ -38,6 +39,7 @@ export function PredictionResults({
     prediction,
     selectedRouteId,
     date,
+    time, // 🆕
     depStation,
     arrStation,
     riskTrend,
@@ -93,6 +95,7 @@ export function PredictionResults({
                 result={prediction}
                 route={route}
                 targetDate={date}
+                targetTime={time}
             />
 
             {/* SNSシェア */}

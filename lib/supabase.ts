@@ -440,6 +440,8 @@ export interface MonitoringLogDB {
     actual_status_text?: string;
     is_match: boolean;
     weather_summary?: string; // e.g. "Wind: 15m/s, Snow: 0cm"
+    delay_minutes?: number; // 🆕
+    recovery_time?: string; // 🆕
     created_at?: string;
 }
 
@@ -465,7 +467,9 @@ export async function saveMonitoringLog(log: MonitoringLogDB): Promise<DbResult<
                         actual_status: log.actual_status,
                         actual_status_text: log.actual_status_text,
                         is_match: log.is_match,
-                        weather_summary: log.weather_summary
+                        weather_summary: log.weather_summary,
+                        delay_minutes: log.delay_minutes,
+                        recovery_time: log.recovery_time
                     });
 
                 if (error) {

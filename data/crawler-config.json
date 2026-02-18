@@ -1,0 +1,206 @@
+{
+    "areas": [
+        {
+            "id": "01",
+            "name": "札幌近郊",
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_01.json"
+        },
+        {
+            "id": "02",
+            "name": "道央",
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_02.json"
+        },
+        {
+            "id": "03",
+            "name": "道南",
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_03.json"
+        },
+        {
+            "id": "04",
+            "name": "道北",
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_04.json"
+        },
+        {
+            "id": "05",
+            "name": "道東",
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_05.json"
+        }
+    ],
+    "routeMatching": [
+        {
+            "id": "jr-hokkaido.chitose",
+            "keywords": [
+                "千歳線",
+                "エアポート",
+                "新千歳空港"
+            ],
+            "areas": [
+                "01",
+                "02"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.hakodate-main",
+            "keywords": [
+                "函館線",
+                "函館本線",
+                "小樽",
+                "岩見沢",
+                "滝川"
+            ],
+            "areas": [
+                "01",
+                "02"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.hakodate-main",
+            "keywords": [
+                "函館線",
+                "函館本線",
+                "倶知安",
+                "ニセコ",
+                "余市"
+            ],
+            "areas": [
+                "04"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.hakodate-main",
+            "keywords": [
+                "函館線",
+                "函館本線",
+                "函館",
+                "新函館北斗",
+                "長万部"
+            ],
+            "areas": [
+                "03"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.gakuentoshi",
+            "keywords": [
+                "学園都市線",
+                "札沼線",
+                "北海道医療大学"
+            ],
+            "areas": [
+                "01"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.muroran-main",
+            "keywords": [
+                "室蘭線",
+                "室蘭本線",
+                "すずらん",
+                "苫小牧",
+                "東室蘭"
+            ],
+            "areas": [
+                "02",
+                "03"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.sekisho",
+            "keywords": [
+                "石勝線",
+                "おおぞら",
+                "とかち"
+            ],
+            "areas": [
+                "02",
+                "05"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.hidaka",
+            "keywords": [
+                "日高線",
+                "日高本線"
+            ],
+            "areas": [
+                "02",
+                "05"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.soya-main",
+            "keywords": [
+                "宗谷線",
+                "宗谷本線",
+                "名寄",
+                "稚内"
+            ],
+            "areas": [
+                "04"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.sekihoku-main",
+            "keywords": [
+                "石北線",
+                "石北本線",
+                "北見",
+                "網走"
+            ],
+            "areas": [
+                "04",
+                "05"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.furano",
+            "keywords": [
+                "富良野線"
+            ],
+            "areas": [
+                "04"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.rumoi",
+            "keywords": [
+                "留萌線",
+                "留萌本線"
+            ],
+            "areas": [
+                "04"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.senmo",
+            "keywords": [
+                "釧網線",
+                "釧網本線"
+            ],
+            "areas": [
+                "05"
+            ]
+        },
+        {
+            "id": "jr-hokkaido.hanasaki",
+            "keywords": [
+                "花咲線",
+                "根室線",
+                "根室本線"
+            ],
+            "areas": [
+                "05"
+            ]
+        }
+    ],
+    "excludeKeywords": [
+        "鹿",
+        "人身",
+        "信号",
+        "車両",
+        "線路支障",
+        "倒木",
+        "点検",
+        "工事"
+    ]
+}

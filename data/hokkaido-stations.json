@@ -1,0 +1,1467 @@
+[
+    {
+        "id": "sapporo",
+        "name": "札幌",
+        "kana": "さっぽろ",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.chitose",
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 43.0687,
+        "lon": 141.3508
+    },
+    {
+        "id": "shin-sapporo",
+        "name": "新札幌",
+        "kana": "しんさっぽろ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 43.0388,
+        "lon": 141.4733
+    },
+    {
+        "id": "shin-chitose-airport",
+        "name": "新千歳空港",
+        "kana": "しんちとせくうこう",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 42.7877,
+        "lon": 141.6795
+    },
+    {
+        "id": "minami-chitose",
+        "name": "南千歳",
+        "kana": "みなみちとせ",
+        "lines": [
+            "jr-hokkaido.chitose",
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 42.8091,
+        "lon": 141.6748
+    },
+    {
+        "id": "chitose",
+        "name": "千歳",
+        "kana": "ちとせ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.8282,
+        "lon": 141.6521
+    },
+    {
+        "id": "osatsu",
+        "name": "長都",
+        "kana": "おさつ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.8532,
+        "lon": 141.6136
+    },
+    {
+        "id": "sapporo-beer-teien",
+        "name": "サッポロビール庭園",
+        "kana": "さっぽろびーるていえん",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.8632,
+        "lon": 141.5936
+    },
+    {
+        "id": "eniwa",
+        "name": "恵庭",
+        "kana": "えにわ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.8832,
+        "lon": 141.5836
+    },
+    {
+        "id": "megumino",
+        "name": "恵み野",
+        "kana": "めぐみの",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.8932,
+        "lon": 141.5736
+    },
+    {
+        "id": "shimamatsu",
+        "name": "島松",
+        "kana": "しままつ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.9032,
+        "lon": 141.5633
+    },
+    {
+        "id": "kitahiroshima",
+        "name": "北広島",
+        "kana": "きたひろしま",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 42.9806,
+        "lon": 141.5649
+    },
+    {
+        "id": "kaminopporo",
+        "name": "上野幌",
+        "kana": "かみのっぽろ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 43.0188,
+        "lon": 141.4933
+    },
+    {
+        "id": "heiwa",
+        "name": "平和",
+        "kana": "へいわ",
+        "lines": [
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 43.0288,
+        "lon": 141.4533
+    },
+    {
+        "id": "otaru",
+        "name": "小樽",
+        "kana": "おたる",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 43.1977,
+        "lon": 140.9937
+    },
+    {
+        "id": "otaru-chikko",
+        "name": "小樽築港",
+        "kana": "おたるちっこう",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.1818,
+        "lon": 141.0269
+    },
+    {
+        "id": "zenibako",
+        "name": "銭函",
+        "kana": "ぜにばこ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.1438,
+        "lon": 141.1594
+    },
+    {
+        "id": "asari",
+        "name": "朝里",
+        "kana": "あさり",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.16,
+        "lon": 141.08
+    },
+    {
+        "id": "yoichi",
+        "name": "余市",
+        "kana": "よいち",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.1878,
+        "lon": 140.7847
+    },
+    {
+        "id": "minami-otaru",
+        "name": "南小樽",
+        "kana": "みなみおたる",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.187,
+        "lon": 141.007
+    },
+    {
+        "id": "niki",
+        "name": "仁木",
+        "kana": "にき",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.15,
+        "lon": 140.77
+    },
+    {
+        "id": "kozawa",
+        "name": "小沢",
+        "kana": "こざわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 42.98,
+        "lon": 140.68
+    },
+    {
+        "id": "kutchan",
+        "name": "倶知安",
+        "kana": "くっちゃん",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 42.9,
+        "lon": 140.75
+    },
+    {
+        "id": "niseko",
+        "name": "ニセコ",
+        "kana": "にせこ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 42.8,
+        "lon": 140.68
+    },
+    {
+        "id": "rankoshi",
+        "name": "蘭越",
+        "kana": "らんこし",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 42.8,
+        "lon": 140.52
+    },
+    {
+        "id": "kuromatsunai",
+        "name": "黒松内",
+        "kana": "くろまつない",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 42.67,
+        "lon": 140.3
+    },
+    {
+        "id": "hassamu-chuo",
+        "name": "発寒中央",
+        "kana": "はっさむちゅうおう",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.0918,
+        "lon": 141.2864
+    },
+    {
+        "id": "inazumi-koen",
+        "name": "稲積公園",
+        "kana": "いなづみこうえん",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.1,
+        "lon": 141.26
+    },
+    {
+        "id": "teine",
+        "name": "手稲",
+        "kana": "ていね",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.1118,
+        "lon": 141.2464
+    },
+    {
+        "id": "inaho",
+        "name": "稲穂",
+        "kana": "いなほ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.12,
+        "lon": 141.22
+    },
+    {
+        "id": "hoshimi",
+        "name": "ほしみ",
+        "kana": "ほしみ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.13,
+        "lon": 141.2
+    },
+    {
+        "id": "kotoni",
+        "name": "琴似",
+        "kana": "ことに",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.0815,
+        "lon": 141.306
+    },
+    {
+        "id": "soen",
+        "name": "桑園",
+        "kana": "そうえん",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.0708,
+        "lon": 141.3325
+    },
+    {
+        "id": "naebo",
+        "name": "苗穂",
+        "kana": "なえぼ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.0685,
+        "lon": 141.38
+    },
+    {
+        "id": "shiroishi",
+        "name": "白石",
+        "kana": "しろいし",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "lat": 43.0545,
+        "lon": 141.4135
+    },
+    {
+        "id": "atsubetsu",
+        "name": "厚別",
+        "kana": "あつべつ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.045,
+        "lon": 141.455
+    },
+    {
+        "id": "oochi",
+        "name": "大麻",
+        "kana": "おおち",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.07,
+        "lon": 141.5
+    },
+    {
+        "id": "nopporo",
+        "name": "野幌",
+        "kana": "のっぽろ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.09,
+        "lon": 141.53
+    },
+    {
+        "id": "ebetsu",
+        "name": "江別",
+        "kana": "えべつ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.11,
+        "lon": 141.55
+    },
+    {
+        "id": "toyohoro",
+        "name": "豊幌",
+        "kana": "とよほろ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.125,
+        "lon": 141.615
+    },
+    {
+        "id": "horomui",
+        "name": "幌向",
+        "kana": "ほろむい",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.151,
+        "lon": 141.657
+    },
+    {
+        "id": "kamishunai",
+        "name": "上幌向",
+        "kana": "かみほろむい",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.175,
+        "lon": 141.705
+    },
+    {
+        "id": "iwamizawa",
+        "name": "岩見沢",
+        "kana": "いわみざわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 43.2042,
+        "lon": 141.7596
+    },
+    {
+        "id": "bibai",
+        "name": "美唄",
+        "kana": "びばい",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.2977,
+        "lon": 141.8617
+    },
+    {
+        "id": "naie",
+        "name": "奈井江",
+        "kana": "ないえ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.42,
+        "lon": 141.89
+    },
+    {
+        "id": "sunagawa",
+        "name": "砂川",
+        "kana": "すながわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.4934,
+        "lon": 141.9083
+    },
+    {
+        "id": "takikawa",
+        "name": "滝川",
+        "kana": "たきかわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道央",
+        "lat": 43.5552,
+        "lon": 141.908
+    },
+    {
+        "id": "akabira",
+        "name": "赤平",
+        "kana": "あかびら",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道央",
+        "lat": 43.55,
+        "lon": 142.05
+    },
+    {
+        "id": "ebeotsu",
+        "name": "江部乙",
+        "kana": "えべおつ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.62,
+        "lon": 141.93
+    },
+    {
+        "id": "moseushi",
+        "name": "妹背牛",
+        "kana": "もせうし",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.7,
+        "lon": 141.96
+    },
+    {
+        "id": "ashibetsu",
+        "name": "芦別",
+        "kana": "あしべつ",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道央",
+        "lat": 43.51,
+        "lon": 142.18
+    },
+    {
+        "id": "osamunai",
+        "name": "納内",
+        "kana": "おさむない",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.68,
+        "lon": 142.0
+    },
+    {
+        "id": "fukagawa",
+        "name": "深川",
+        "kana": "ふかがわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main"
+        ],
+        "region": "道央",
+        "lat": 43.7212,
+        "lon": 142.0416
+    },
+    {
+        "id": "ishikari-numata",
+        "name": "石狩沼田",
+        "kana": "いしかりぬまた",
+        "lines": [
+            "jr-hokkaido.rumoi"
+        ],
+        "region": "道北",
+        "lat": 43.79,
+        "lon": 141.93
+    },
+    {
+        "id": "asahikawa",
+        "name": "旭川",
+        "kana": "あさひかわ",
+        "lines": [
+            "jr-hokkaido.hakodate-main",
+            "jr-hokkaido.soya-main",
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 43.7628,
+        "lon": 142.3587
+    },
+    {
+        "id": "nagayama",
+        "name": "永山",
+        "kana": "ながやま",
+        "lines": [
+            "jr-hokkaido.soya-main",
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.81,
+        "lon": 142.44
+    },
+    {
+        "id": "pippu",
+        "name": "比布",
+        "kana": "ぴっぷ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 43.87,
+        "lon": 142.47
+    },
+    {
+        "id": "ranru",
+        "name": "蘭留",
+        "kana": "らんる",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 43.94,
+        "lon": 142.48
+    },
+    {
+        "id": "hachiken",
+        "name": "八軒",
+        "kana": "はちけん",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.088,
+        "lon": 141.325
+    },
+    {
+        "id": "shinkawa",
+        "name": "新川",
+        "kana": "しんかわ",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.1,
+        "lon": 141.325
+    },
+    {
+        "id": "shin-kotoni",
+        "name": "新琴似",
+        "kana": "しんことに",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.1,
+        "lon": 141.33
+    },
+    {
+        "id": "taihei",
+        "name": "太平",
+        "kana": "たいへい",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.13,
+        "lon": 141.35
+    },
+    {
+        "id": "yurigahara",
+        "name": "百合が原",
+        "kana": "ゆりがはら",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.14,
+        "lon": 141.37
+    },
+    {
+        "id": "shinoro",
+        "name": "篠路",
+        "kana": "しのろ",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.145,
+        "lon": 141.385
+    },
+    {
+        "id": "takuhoku",
+        "name": "拓北",
+        "kana": "たくほく",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.155,
+        "lon": 141.415
+    },
+    {
+        "id": "ainosato-kyoiku-dai",
+        "name": "あいの里教育大",
+        "kana": "あいのさときょういくだい",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.1554,
+        "lon": 141.4011
+    },
+    {
+        "id": "ainosato-koen",
+        "name": "あいの里公園",
+        "kana": "あいのさとこうえん",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.165,
+        "lon": 141.425
+    },
+    {
+        "id": "ishikari-futomi",
+        "name": "石狩太美",
+        "kana": "いしかりふとみ",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.195,
+        "lon": 141.465
+    },
+    {
+        "id": "ishikari-tobetsu",
+        "name": "石狩当別",
+        "kana": "いしかりとうべつ",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.2208,
+        "lon": 141.5126
+    },
+    {
+        "id": "hokkaido-iryo-daigaku",
+        "name": "北海道医療大学",
+        "kana": "ほっかいどういりょうだいがく",
+        "lines": [
+            "jr-hokkaido.sassho"
+        ],
+        "region": "道央",
+        "lat": 43.2384,
+        "lon": 141.5422
+    },
+    {
+        "id": "tomakomai",
+        "name": "苫小牧",
+        "kana": "とまこまい",
+        "lines": [
+            "jr-hokkaido.muroran-main",
+            "jr-hokkaido.chitose"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 42.6416,
+        "lon": 141.5973
+    },
+    {
+        "id": "mukawa",
+        "name": "むかわ",
+        "kana": "むかわ",
+        "lines": [
+            "jr-hokkaido.hidaka"
+        ],
+        "region": "道東",
+        "lat": 42.57,
+        "lon": 141.92
+    },
+    {
+        "id": "shiraoi",
+        "name": "白老",
+        "kana": "しらおい",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.5539,
+        "lon": 141.3533
+    },
+    {
+        "id": "noboribetsu",
+        "name": "登別",
+        "kana": "のぼりべつ",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.4552,
+        "lon": 141.1764
+    },
+    {
+        "id": "higashi-muroran",
+        "name": "東室蘭",
+        "kana": "ひがしむろらん",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "isMajor": true,
+        "lat": 42.3392,
+        "lon": 141.0263
+    },
+    {
+        "id": "muroran",
+        "name": "室蘭",
+        "kana": "むろらん",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.3152,
+        "lon": 140.9753
+    },
+    {
+        "id": "datemombetsu",
+        "name": "伊達紋別",
+        "kana": "だてもんべつ",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.4697,
+        "lon": 140.8542
+    },
+    {
+        "id": "toya",
+        "name": "洞爺",
+        "kana": "とうや",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.5592,
+        "lon": 140.7589
+    },
+    {
+        "id": "kuriyama",
+        "name": "栗山",
+        "kana": "くりやま",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 43.0589,
+        "lon": 141.7761
+    },
+    {
+        "id": "yuni",
+        "name": "由仁",
+        "kana": "ゆに",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 43.0039,
+        "lon": 141.7850
+    },
+    {
+        "id": "abira",
+        "name": "安平",
+        "kana": "あびら",
+        "lines": [
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道央",
+        "lat": 42.8767,
+        "lon": 141.7633
+    },
+    {
+        "id": "oizawake",
+        "name": "追分",
+        "kana": "おいざわけ",
+        "lines": [
+            "jr-hokkaido.muroran-main",
+            "jr-hokkaido.sekisho"
+        ],
+        "region": "道央",
+        "lat": 42.8731,
+        "lon": 141.8106
+    },
+    {
+        "id": "shimukappu",
+        "name": "占冠",
+        "kana": "しむかっぷ",
+        "lines": [
+            "jr-hokkaido.sekisho"
+        ],
+        "region": "道央",
+        "lat": 42.99,
+        "lon": 142.39
+    },
+    {
+        "id": "tomamu",
+        "name": "トマム",
+        "kana": "トマム",
+        "lines": [
+            "jr-hokkaido.sekisho"
+        ],
+        "region": "道東",
+        "isMajor": true,
+        "lat": 43.0558,
+        "lon": 142.6122
+    },
+    {
+        "id": "furano",
+        "name": "富良野",
+        "kana": "ふらの",
+        "lines": [
+            "jr-hokkaido.furano",
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道北",
+        "isMajor": true,
+        "lat": 43.3469,
+        "lon": 142.3917
+    },
+    {
+        "id": "nakafurano",
+        "name": "中富良野",
+        "kana": "なかふらの",
+        "lines": [
+            "jr-hokkaido.furano"
+        ],
+        "region": "道北",
+        "lat": 43.41,
+        "lon": 142.42
+    },
+    {
+        "id": "kamifurano",
+        "name": "上富良野",
+        "kana": "かみふらの",
+        "lines": [
+            "jr-hokkaido.furano"
+        ],
+        "region": "道北",
+        "lat": 43.46,
+        "lon": 142.46
+    },
+    {
+        "id": "bibaushi",
+        "name": "美馬牛",
+        "kana": "びばうし",
+        "lines": [
+            "jr-hokkaido.furano"
+        ],
+        "region": "道北",
+        "lat": 43.54,
+        "lon": 142.45
+    },
+    {
+        "id": "biei",
+        "name": "美瑛",
+        "kana": "びえい",
+        "lines": [
+            "jr-hokkaido.furano"
+        ],
+        "region": "道北",
+        "lat": 43.5908,
+        "lon": 142.4628
+    },
+    {
+        "id": "wakkanai",
+        "name": "稚内",
+        "kana": "わっかない",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "isMajor": true,
+        "lat": 45.4162,
+        "lon": 141.6734
+    },
+    {
+        "id": "shibetsu",
+        "name": "士別",
+        "kana": "しべつ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.1794,
+        "lon": 142.3969
+    },
+    {
+        "id": "wassamu",
+        "name": "和寒",
+        "kana": "わっさむ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.02,
+        "lon": 142.42
+    },
+    {
+        "id": "kenbuchi",
+        "name": "剣淵",
+        "kana": "けんぶち",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.1,
+        "lon": 142.42
+    },
+    {
+        "id": "nayoro",
+        "name": "名寄",
+        "kana": "なよろ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.3562,
+        "lon": 142.4641
+    },
+    {
+        "id": "bifuka",
+        "name": "美深",
+        "kana": "びふか",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.48,
+        "lon": 142.35
+    },
+    {
+        "id": "otoineppu",
+        "name": "音威子府",
+        "kana": "おといねっぷ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.73,
+        "lon": 142.26
+    },
+    {
+        "id": "teshio-nakagawa",
+        "name": "天塩中川",
+        "kana": "てしおなかがわ",
+        "lines": [
+            "jr-hokkaido.soya-main"
+        ],
+        "region": "道北",
+        "lat": 44.81,
+        "lon": 142.06
+    },
+    {
+        "id": "kamikawa",
+        "name": "上川",
+        "kana": "かみかわ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.8483,
+        "lon": 142.7725
+    },
+    {
+        "id": "antaroma",
+        "name": "安足間",
+        "kana": "あんたろま",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.88,
+        "lon": 142.72
+    },
+    {
+        "id": "aibetsu",
+        "name": "愛別",
+        "kana": "あいべつ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.91,
+        "lon": 142.58
+    },
+    {
+        "id": "shirataki",
+        "name": "白滝",
+        "kana": "しらたき",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.88,
+        "lon": 143.18
+    },
+    {
+        "id": "maruseppu",
+        "name": "丸瀬布",
+        "kana": "まるせっぷ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.99,
+        "lon": 143.34
+    },
+    {
+        "id": "ikutahara",
+        "name": "生田原",
+        "kana": "いくたはら",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.96,
+        "lon": 143.48
+    },
+    {
+        "id": "rubeshibe",
+        "name": "留辺蘂",
+        "kana": "るべしべ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.78,
+        "lon": 143.61
+    },
+    {
+        "id": "tanno",
+        "name": "端野",
+        "kana": "たんの",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.85,
+        "lon": 143.95
+    },
+    {
+        "id": "engaru",
+        "name": "遠軽",
+        "kana": "えんがる",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 44.0617,
+        "lon": 143.5283
+    },
+    {
+        "id": "memambetsu",
+        "name": "女満別",
+        "kana": "めまんべつ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.92,
+        "lon": 144.17
+    },
+    {
+        "id": "abashiri",
+        "name": "網走",
+        "kana": "あばしり",
+        "lines": [
+            "jr-hokkaido.sekihoku-main",
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道北",
+        "isMajor": true,
+        "lat": 44.0202,
+        "lon": 144.2547
+    },
+    {
+        "id": "bihoro",
+        "name": "美幌",
+        "kana": "びほろ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.8322,
+        "lon": 144.1083
+    },
+    {
+        "id": "kitami",
+        "name": "北見",
+        "kana": "きたみ",
+        "lines": [
+            "jr-hokkaido.sekihoku-main"
+        ],
+        "region": "道北",
+        "lat": 43.8057,
+        "lon": 143.8962
+    },
+    {
+        "id": "shintoku",
+        "name": "新得",
+        "kana": "しんとく",
+        "lines": [
+            "jr-hokkaido.sekisho",
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 43.0833,
+        "lon": 142.8333
+    },
+    {
+        "id": "obihiro",
+        "name": "帯広",
+        "kana": "おびひろ",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "isMajor": true,
+        "lat": 42.918,
+        "lon": 143.2088
+    },
+    {
+        "id": "ikeda",
+        "name": "池田",
+        "kana": "いけだ",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 42.9267,
+        "lon": 143.4475
+    },
+    {
+        "id": "shiranuka",
+        "name": "白糠",
+        "kana": "しらぬか",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 42.95,
+        "lon": 144.07
+    },
+    {
+        "id": "kushiro",
+        "name": "釧路",
+        "kana": "くしろ",
+        "lines": [
+            "jr-hokkaido.nemuro-main",
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道東",
+        "isMajor": true,
+        "lat": 42.9904,
+        "lon": 144.3814
+    },
+    {
+        "id": "atsukeshi",
+        "name": "厚岸",
+        "kana": "あっけし",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 43.0514,
+        "lon": 144.8458
+    },
+    {
+        "id": "hamanaka",
+        "name": "浜中",
+        "kana": "はまなか",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 43.14,
+        "lon": 145.06
+    },
+    {
+        "id": "attoko",
+        "name": "厚床",
+        "kana": "あっとこ",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 43.23,
+        "lon": 145.24
+    },
+    {
+        "id": "nemuro",
+        "name": "根室",
+        "kana": "ねむろ",
+        "lines": [
+            "jr-hokkaido.nemuro-main"
+        ],
+        "region": "道東",
+        "lat": 43.3304,
+        "lon": 145.5826
+    },
+    {
+        "id": "mashu",
+        "name": "摩周",
+        "kana": "ましゅう",
+        "lines": [
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道東",
+        "lat": 43.4883,
+        "lon": 144.5333
+    },
+    {
+        "id": "kawayu-onsen",
+        "name": "川湯温泉",
+        "kana": "かわゆおんせん",
+        "lines": [
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道東",
+        "lat": 43.62,
+        "lon": 144.45
+    },
+    {
+        "id": "midori",
+        "name": "緑",
+        "kana": "みどり",
+        "lines": [
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道東",
+        "lat": 43.72,
+        "lon": 144.50
+    },
+    {
+        "id": "shiretoko-shari",
+        "name": "知床斜里",
+        "kana": "しれとこしゃり",
+        "lines": [
+            "jr-hokkaido.senmo-main"
+        ],
+        "region": "道東",
+        "lat": 43.9103,
+        "lon": 144.661
+    },
+    {
+        "id": "hakodate",
+        "name": "函館",
+        "kana": "はこだて",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "isMajor": true,
+        "lat": 41.7737,
+        "lon": 140.7264
+    },
+    {
+        "id": "shin-hakodate-hokuto",
+        "name": "新函館北斗",
+        "kana": "しんはこだてほくと",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "isMajor": true,
+        "lat": 41.9048,
+        "lon": 140.6481
+    },
+    {
+        "id": "nanae",
+        "name": "七飯",
+        "kana": "ななえ",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "lat": 41.88,
+        "lon": 140.68
+    },
+    {
+        "id": "onuma",
+        "name": "大沼",
+        "kana": "おおぬま",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "lat": 41.97,
+        "lon": 140.67
+    },
+    {
+        "id": "onuma-koen",
+        "name": "大沼公園",
+        "kana": "おおぬまこうえん",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "lat": 41.98,
+        "lon": 140.67
+    },
+    {
+        "id": "mori",
+        "name": "森",
+        "kana": "もり",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "lat": 42.1098,
+        "lon": 140.5746
+    },
+    {
+        "id": "yakumo",
+        "name": "八雲",
+        "kana": "やくも",
+        "lines": [
+            "jr-hokkaido.hakodate-south"
+        ],
+        "region": "道南",
+        "lat": 42.2533,
+        "lon": 140.2725
+    },
+    {
+        "id": "oshamambe",
+        "name": "長万部",
+        "kana": "おしゃまんべ",
+        "lines": [
+            "jr-hokkaido.hakodate-south",
+            "jr-hokkaido.muroran-main"
+        ],
+        "region": "道南",
+        "lat": 42.5126,
+        "lon": 140.3752
+    }
+]

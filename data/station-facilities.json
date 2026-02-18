@@ -1,0 +1,141 @@
+{
+    "sapporo": {
+        "hasSubway": true,
+        "subwayLines": [
+            "南北線",
+            "東西線",
+            "東豊線"
+        ],
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "shin-sapporo": {
+        "hasSubway": true,
+        "subwayLines": [
+            "東西線"
+        ],
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "kotoni": {
+        "hasSubway": true,
+        "subwayLines": [
+            "東西線"
+        ],
+        "hasBusTerminal": false,
+        "hasRentalCar": false,
+        "hasTaxi": true,
+        "hasHotel": false,
+        "hasCafe": true
+    },
+    "teine": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": false,
+        "hasTaxi": true,
+        "hasHotel": false,
+        "hasCafe": true
+    },
+    "shin-chitose-airport": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "otaru": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "asahikawa": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "tomakomai": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "higashi-muroran": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "hakodate": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "shin-hakodate-hokuto": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": false,
+        "hasCafe": true
+    },
+    "obihiro": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "kushiro": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "wakkanai": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "abashiri": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    },
+    "kitami": {
+        "hasSubway": false,
+        "hasBusTerminal": true,
+        "hasRentalCar": true,
+        "hasTaxi": true,
+        "hasHotel": true,
+        "hasCafe": true
+    }
+}

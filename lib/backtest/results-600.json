@@ -1,77 +1,81 @@
 {
-  "timestamp": "2026-02-17T07:21:45.774Z",
-  "totalCases": 600,
+  "timestamp": "2026-02-17T08:03:14.746Z",
+  "totalCases": 512,
   "metrics": {
     "overall": {
-      "accuracy": 51.83333333333333,
-      "precision": 51.83333333333333,
-      "recall": 51.83333333333333,
-      "f1Score": 51.83333333333333
+      "accuracy": 56.0546875,
+      "precision": 56.0546875,
+      "recall": 56.0546875,
+      "f1Score": 56.0546875
     },
     "byStatus": {
       "stopped": {
-        "tp": 236,
-        "fp": 128,
-        "fn": 111,
-        "tn": 125
+        "tp": 225,
+        "fp": 101,
+        "fn": 91,
+        "tn": 95
       },
       "delayed": {
         "tp": 7,
-        "fp": 80,
-        "fn": 24,
-        "tn": 489
+        "fp": 57,
+        "fn": 18,
+        "tn": 430
       },
       "normal": {
-        "tp": 68,
-        "fp": 81,
-        "fn": 154,
-        "tn": 297
+        "tp": 55,
+        "fp": 67,
+        "fn": 116,
+        "tn": 274
       }
     },
     "byRoute": {
-      "jr-hokkaido.sekihoku": {
-        "accuracy": 47.05882352941176,
-        "sampleCount": 68
-      },
-      "jr-hokkaido.soya": {
-        "accuracy": 48.61111111111111,
-        "sampleCount": 72
-      },
       "jr-hokkaido.hakodate-main": {
-        "accuracy": 42.30769230769231,
-        "sampleCount": 78
+        "accuracy": 45.65217391304348,
+        "sampleCount": 46
       },
       "jr-hokkaido.chitose": {
-        "accuracy": 44.11764705882353,
-        "sampleCount": 68
+        "accuracy": 45.714285714285715,
+        "sampleCount": 70
       },
       "jr-hokkaido.nemuro": {
-        "accuracy": 47.2972972972973,
-        "sampleCount": 74
+        "accuracy": 55.38461538461539,
+        "sampleCount": 65
+      },
+      "jr-hokkaido.sekihoku": {
+        "accuracy": 57.14285714285714,
+        "sampleCount": 42
       },
       "jr-hokkaido.muroran": {
-        "accuracy": 54,
-        "sampleCount": 50
+        "accuracy": 60,
+        "sampleCount": 60
       },
       "jr-hokkaido.senmo": {
-        "accuracy": 52.63157894736842,
+        "accuracy": 46,
+        "sampleCount": 50
+      },
+      "jr-hokkaido.soya": {
+        "accuracy": 57.89473684210527,
         "sampleCount": 57
       },
       "jr-hokkaido.sekisho": {
-        "accuracy": 54.347826086956516,
-        "sampleCount": 46
+        "accuracy": 55.81395348837209,
+        "sampleCount": 43
+      },
+      "jr-hokkaido.soya-main": {
+        "accuracy": 100,
+        "sampleCount": 1
       },
       "jr-hokkaido.sassho": {
-        "accuracy": 60,
-        "sampleCount": 30
+        "accuracy": 55.55555555555556,
+        "sampleCount": 18
       },
       "jr-hokkaido.hidaka": {
-        "accuracy": 81.25,
-        "sampleCount": 32
+        "accuracy": 81.81818181818183,
+        "sampleCount": 33
       },
       "jr-hokkaido.rumoi": {
-        "accuracy": 80,
-        "sampleCount": 25
+        "accuracy": 74.07407407407408,
+        "sampleCount": 27
       }
     },
     "byTimeOfDay": {
@@ -80,1210 +84,10 @@
       "evening": 0
     },
     "consistency": {
-      "flipFlopRate": 15.666666666666668
+      "flipFlopRate": 16.796875
     }
   },
   "errorCases": [
-    {
-      "date": "2023-12-22",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 8.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 8,
-          "wind": 4.7,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 25,
-          "wind": 10.8,
-          "snow": 0.14
-        }
-      }
-    },
-    {
-      "date": "2023-12-01",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 10.8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 53,
-          "wind": 11.3,
-          "snow": 0.91
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 6.8,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-02-07",
-      "route": "jr-hokkaido.soya",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 61,
-          "wind": 12.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 52,
-          "wind": 10.8,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 27,
-          "wind": 10,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-10",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 30.3,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 34.9,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 22.8,
-          "snow": 0.35
-        }
-      }
-    },
-    {
-      "date": "2024-02-29",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 18.7,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 17.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 8.7,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-12-22",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 67,
-          "wind": 16.3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 6,
-          "wind": 12,
-          "snow": 0.49
-        },
-        "evening": {
-          "prob": 7,
-          "wind": 11,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-08",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "delayed",
-      "predicted": "stopped",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 6.9,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 29.5,
-          "snow": 0.84
-        },
-        "evening": {
-          "prob": 70,
-          "wind": 19.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-02-22",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 50,
-          "wind": 13.1,
-          "snow": 0.49
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 30.8,
-          "snow": 0.28
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 25.2,
-          "snow": 0.35
-        }
-      }
-    },
-    {
-      "date": "2025-01-04",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 7.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 9,
-          "wind": 5.7,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 7,
-          "wind": 3.1,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-12-22",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 10.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 31,
-          "wind": 12.9,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 3.4,
-          "snow": 0.42
-        }
-      }
-    },
-    {
-      "date": "2025-02-01",
-      "route": "jr-hokkaido.chitose",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 4,
-          "snow": 1.89
-        },
-        "afternoon": {
-          "prob": 11,
-          "wind": 7.7,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 13,
-          "wind": 9.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-12-24",
-      "route": "jr-hokkaido.chitose",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 10.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 15,
-          "wind": 12.8,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 66,
-          "wind": 14.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-05",
-      "route": "jr-hokkaido.chitose",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 12.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 7,
-          "wind": 12,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 50,
-          "wind": 11,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-01-15",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 33.5,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 35.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 54,
-          "snow": 0.21
-        }
-      }
-    },
-    {
-      "date": "2025-01-10",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 20.1,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 21.3,
-          "snow": 0.42
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 25.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-12",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 22.6,
-          "snow": 1.12
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 19.7,
-          "snow": 1.05
-        },
-        "evening": {
-          "prob": 76,
-          "wind": 11.3,
-          "snow": 0.14
-        }
-      }
-    },
-    {
-      "date": "2024-12-17",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 4.3,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 6.9,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.3,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2025-02-11",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 4.5,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 8.8,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-25",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 9.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 17.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 13.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-05",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 19.5,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 22,
-          "snow": 1.12
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 26.4,
-          "snow": 1.05
-        }
-      }
-    },
-    {
-      "date": "2024-12-10",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 23.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 21.8,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 18.1,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-04",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 45.2,
-          "snow": 1.61
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 48,
-          "snow": 0.35
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 45,
-          "snow": 0.56
-        }
-      }
-    },
-    {
-      "date": "2024-02-27",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 29,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 28.1,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 27.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-12-12",
-      "route": "jr-hokkaido.chitose",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 13,
-          "wind": 9.7,
-          "snow": 0.42
-        },
-        "afternoon": {
-          "prob": 24,
-          "wind": 16,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 28,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-02-05",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 26.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 25.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 22.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-07",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 44.6,
-          "snow": 0.84
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 53.3,
-          "snow": 1.47
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 39,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2025-02-18",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 34.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 26.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 22.2,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-03-01",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 27.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 20.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 71,
-          "wind": 12.8,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2022-12-01",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 65,
-          "wind": 11.6,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 22.2,
-          "snow": 0.35
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 15.7,
-          "snow": 0.21
-        }
-      }
-    },
-    {
-      "date": "2023-02-15",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 8.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 8,
-          "wind": 10.2,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 9.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-01",
-      "route": "jr-hokkaido.soya",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 43,
-          "wind": 15,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 16.3,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 60,
-          "wind": 13.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-10",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 20.9,
-          "snow": 0.56
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 24.9,
-          "snow": 0.35
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 23.8,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-02-29",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 22.2,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 16.6,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 41,
-          "wind": 8.1,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-08",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 3.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 9,
-          "wind": 5.2,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 7.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-04",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 3.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 6,
-          "wind": 4.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 5.2,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-02-01",
-      "route": "jr-hokkaido.chitose",
-      "actual": "delayed",
-      "predicted": "stopped",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 23.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 25.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 19.3,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-01-15",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 32.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 25,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 19.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-10",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 14.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 38.8,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 37.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-03-10",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 31.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 45.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 35.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-03-19",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 11.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 50,
-          "wind": 15.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 7,
-          "wind": 10,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-17",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 27,
-          "wind": 15.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 49,
-          "wind": 18.2,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 23,
-          "wind": 14.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2022-01-25",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 6,
-          "wind": 10.2,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 7.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-12",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 10.4,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 8.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 7.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-12-17",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 34,
-          "snow": 0.63
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 24.3,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 36.9,
-          "snow": 0.98
-        }
-      }
-    },
-    {
-      "date": "2024-02-11",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 9.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 6.8,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 5.9,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-03-25",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 4.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 77,
-          "wind": 13.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 83,
-          "wind": 12.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-05",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 28.2,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 29.6,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 25,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-12-10",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 33.4,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 40.2,
-          "snow": 0.21
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 37.4,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-02-04",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 17.1,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 17.7,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 15.2,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-27",
-      "route": "jr-hokkaido.soya",
-      "actual": "normal",
-      "predicted": "stopped",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 28.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 30.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 85,
-          "wind": 26.3,
-          "snow": 0
-        }
-      }
-    },
     {
       "date": "2023-02-12",
       "route": "jr-hokkaido.hakodate-main",
@@ -1724,12 +528,12 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 80,
+          "prob": 85,
           "wind": 17.8,
           "snow": 0
         },
         "afternoon": {
-          "prob": 66,
+          "prob": 77,
           "wind": 17.9,
           "snow": 0
         },
@@ -1868,17 +672,17 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 5,
+          "prob": 6,
           "wind": 8.3,
           "snow": 0
         },
         "afternoon": {
-          "prob": 71,
+          "prob": 85,
           "wind": 18.9,
           "snow": 0
         },
         "evening": {
-          "prob": 81,
+          "prob": 85,
           "wind": 18.1,
           "snow": 0
         }
@@ -2012,17 +816,17 @@
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 13,
+          "prob": 15,
           "wind": 6.5,
           "snow": 0.07
         },
         "afternoon": {
-          "prob": 50,
+          "prob": 58,
           "wind": 13.1,
           "snow": 0
         },
         "evening": {
-          "prob": 13,
+          "prob": 15,
           "wind": 9.7,
           "snow": 0
         }
@@ -2041,12 +845,12 @@
           "snow": 0
         },
         "afternoon": {
-          "prob": 23,
+          "prob": 26,
           "wind": 14.5,
           "snow": 0
         },
         "evening": {
-          "prob": 13,
+          "prob": 15,
           "wind": 6.1,
           "snow": 0
         }
@@ -2060,12 +864,12 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 80,
+          "prob": 85,
           "wind": 17.8,
           "snow": 0
         },
         "afternoon": {
-          "prob": 66,
+          "prob": 77,
           "wind": 17.9,
           "snow": 0
         },
@@ -2084,7 +888,7 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 20,
+          "prob": 23,
           "wind": 15.3,
           "snow": 0
         },
@@ -2132,7 +936,7 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 74,
+          "prob": 85,
           "wind": 16.9,
           "snow": 0
         },
@@ -2317,6 +1121,30 @@
       }
     },
     {
+      "date": "2021-06-15",
+      "route": "jr-hokkaido.chitose",
+      "actual": "normal",
+      "predicted": "delayed",
+      "errorType": "FP",
+      "predictions": {
+        "morning": {
+          "prob": 0,
+          "wind": 10.7,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 36,
+          "wind": 10.5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 32,
+          "wind": 12,
+          "snow": 0
+        }
+      }
+    },
+    {
       "date": "2022-06-02",
       "route": "jr-hokkaido.senmo",
       "actual": "normal",
@@ -2377,12 +1205,12 @@
           "snow": 0
         },
         "afternoon": {
-          "prob": 11,
+          "prob": 12,
           "wind": 6.1,
           "snow": 0
         },
         "evening": {
-          "prob": 13,
+          "prob": 15,
           "wind": 5.4,
           "snow": 0
         }
@@ -2900,12 +1728,12 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 25,
+          "prob": 29,
           "wind": 13,
           "snow": 0
         },
         "afternoon": {
-          "prob": 68,
+          "prob": 79,
           "wind": 16.3,
           "snow": 1.19
         },
@@ -3064,21 +1892,21 @@
       "date": "2023-06-10",
       "route": "jr-hokkaido.chitose",
       "actual": "normal",
-      "predicted": "delayed",
+      "predicted": "stopped",
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 74,
+          "prob": 85,
           "wind": 17,
           "snow": 0
         },
         "afternoon": {
-          "prob": 69,
+          "prob": 85,
           "wind": 19.2,
           "snow": 0
         },
         "evening": {
-          "prob": 60,
+          "prob": 70,
           "wind": 14.5,
           "snow": 0
         }
@@ -4453,30 +3281,6 @@
       }
     },
     {
-      "date": "2023-08-06",
-      "route": "jr-hokkaido.chitose",
-      "actual": "delayed",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 81,
-          "wind": 17.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 67,
-          "wind": 19.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 29,
-          "wind": 11.9,
-          "snow": 0
-        }
-      }
-    },
-    {
       "date": "2022-09-06",
       "route": "jr-hokkaido.nemuro",
       "actual": "normal",
@@ -4532,7 +3336,7 @@
       "errorType": "FP",
       "predictions": {
         "morning": {
-          "prob": 13,
+          "prob": 15,
           "wind": 7.9,
           "snow": 0
         },
@@ -4717,6 +3521,270 @@
       }
     },
     {
+      "date": "2024-02-01",
+      "route": "jr-hokkaido.chitose",
+      "actual": "delayed",
+      "predicted": "stopped",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 23.9,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 25.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 85,
+          "wind": 19.3,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2024-02-03",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 9,
+          "wind": 3.9,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 5.2,
+          "snow": 0.14
+        },
+        "evening": {
+          "prob": 9,
+          "wind": 10.8,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-02-06",
+      "route": "jr-hokkaido.soya",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 15.1,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 51,
+          "wind": 11.8,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 41,
+          "wind": 5.4,
+          "snow": 0.14
+        }
+      }
+    },
+    {
+      "date": "2023-01-10",
+      "route": "jr-hokkaido.chitose",
+      "actual": "delayed",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 16.4,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 75,
+          "wind": 17,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 18,
+          "wind": 10,
+          "snow": 0.77
+        }
+      }
+    },
+    {
+      "date": "2023-01-20",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 18.4,
+          "snow": 0.28
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 9.2,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 9,
+          "wind": 10.6,
+          "snow": 0.49
+        }
+      }
+    },
+    {
+      "date": "2023-01-26",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 26,
+          "wind": 14.3,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 7,
+          "wind": 12.8,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 16.2,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2023-02-02",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 28.5,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 74,
+          "wind": 17.6,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 26,
+          "wind": 14.9,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2022-01-25",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 5.1,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 5.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 15,
+          "wind": 5.1,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2022-02-07",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 9,
+          "wind": 11.3,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 5.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 15,
+          "wind": 9.6,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2022-02-08",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 7.2,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 7,
+          "wind": 4.3,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 9,
+          "wind": 11.1,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2022-02-23",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 30,
+          "wind": 16.3,
+          "snow": 0.21
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 23.8,
+          "snow": 0.63
+        },
+        "evening": {
+          "prob": 29,
+          "wind": 14.1,
+          "snow": 0.07
+        }
+      }
+    },
+    {
       "date": "2023-01-07",
       "route": "jr-hokkaido.sekisho",
       "actual": "delayed",
@@ -4753,12 +3821,12 @@
           "snow": 0
         },
         "afternoon": {
-          "prob": 11,
+          "prob": 12,
           "wind": 9.4,
           "snow": 0
         },
         "evening": {
-          "prob": 8,
+          "prob": 9,
           "wind": 10.3,
           "snow": 0
         }
@@ -4861,31 +3929,55 @@
       }
     },
     {
-      "date": "2024-03-22",
-      "route": "jr-hokkaido.hakodate-main",
+      "date": "2025-03-25",
+      "route": "jr-hokkaido.rumoi",
       "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
+      "predicted": "normal",
+      "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 12,
-          "wind": 8.3,
+          "prob": 85,
+          "wind": 18.8,
           "snow": 0
         },
         "afternoon": {
-          "prob": 6,
-          "wind": 10.9,
+          "prob": 85,
+          "wind": 14.1,
           "snow": 0
         },
         "evening": {
-          "prob": 61,
-          "wind": 18.2,
+          "prob": 25,
+          "wind": 4,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-03-20",
+      "date": "2025-03-13",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 20.4,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 13,
+          "wind": 7.8,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 25,
+          "wind": 10.7,
+          "snow": 0.14
+        }
+      }
+    },
+    {
+      "date": "2026-01-24",
       "route": "jr-hokkaido.sassho",
       "actual": "stopped",
       "predicted": "normal",
@@ -4893,84 +3985,324 @@
       "predictions": {
         "morning": {
           "prob": 8,
-          "wind": 10.9,
+          "wind": 2.9,
           "snow": 0
         },
         "afternoon": {
-          "prob": 9,
-          "wind": 9.8,
+          "prob": 6,
+          "wind": 4.6,
           "snow": 0
         },
         "evening": {
-          "prob": 7,
-          "wind": 11.7,
+          "prob": 11,
+          "wind": 6,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-02-27",
-      "route": "jr-hokkaido.sassho",
+      "date": "2026-02-14",
+      "route": "jr-hokkaido.rumoi",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
           "prob": 85,
-          "wind": 17.7,
-          "snow": 0
+          "wind": 15.9,
+          "snow": 0.07
         },
         "afternoon": {
-          "prob": 85,
-          "wind": 21.5,
+          "prob": 56,
+          "wind": 12.3,
           "snow": 0
         },
         "evening": {
-          "prob": 22,
-          "wind": 13.5,
+          "prob": 25,
+          "wind": 11,
           "snow": 0
         }
       }
     },
     {
-      "date": "2024-03-07",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 10.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 14.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-21",
+      "date": "2026-02-14",
       "route": "jr-hokkaido.hidaka",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 85,
-          "wind": 14.6,
-          "snow": 0.14
+          "prob": 66,
+          "wind": 11.8,
+          "snow": 0
         },
         "afternoon": {
-          "prob": 69,
-          "wind": 13.7,
+          "prob": 85,
+          "wind": 18.7,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 27,
+          "wind": 3.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-31",
+      "route": "jr-hokkaido.hakodate-main",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 12,
+          "wind": 8.7,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 37,
+          "wind": 12.6,
+          "snow": 0.21
+        },
+        "evening": {
+          "prob": 31,
+          "wind": 10.4,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-19",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 9,
+          "wind": 2.7,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 60,
+          "wind": 13.2,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 15,
+          "wind": 9.8,
+          "snow": 0.21
+        }
+      }
+    },
+    {
+      "date": "2025-03-31",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 14.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 67,
+          "wind": 13.9,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 7.9,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-01-07",
+      "route": "jr-hokkaido.sekisho",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 10,
+          "wind": 12.4,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 8,
+          "wind": 12.6,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 45,
+          "wind": 7.7,
+          "snow": 0.63
+        }
+      }
+    },
+    {
+      "date": "2024-03-07",
+      "route": "jr-hokkaido.hidaka",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 6.9,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 47,
+          "wind": 11.9,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 27,
+          "wind": 11.1,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2023-03-26",
+      "route": "jr-hokkaido.soya",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 14.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 17.1,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 41,
+          "wind": 7.4,
+          "snow": 0.14
+        }
+      }
+    },
+    {
+      "date": "2025-03-31",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 54,
+          "wind": 11.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 76,
+          "wind": 15.3,
+          "snow": 0.14
+        },
+        "evening": {
+          "prob": 48,
+          "wind": 10.3,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2026-02-14",
+      "route": "jr-hokkaido.nemuro",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 19.8,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 70,
+          "wind": 15.5,
+          "snow": 0.14
+        },
+        "evening": {
+          "prob": 29,
+          "wind": 11.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-10",
+      "route": "jr-hokkaido.nemuro",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 19.1,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 76,
+          "wind": 14.5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 29,
+          "wind": 10.1,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2026-01-03",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 72,
+          "wind": 13.6,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 17.7,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 9,
+          "wind": 11.9,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2026-02-08",
+      "route": "jr-hokkaido.hidaka",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 49,
+          "wind": 11.5,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 49,
+          "wind": 11,
           "snow": 0
         },
         "evening": {
@@ -4981,745 +4313,49 @@
       }
     },
     {
-      "date": "2024-03-22",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 25.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 20.8,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 28,
-          "wind": 8.8,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-03-14",
-      "route": "jr-hokkaido.rumoi",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 18,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 16.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-17",
-      "route": "jr-hokkaido.sekisho",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 1.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 7.2,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 45,
-          "wind": 7.8,
-          "snow": 0.56
-        }
-      }
-    },
-    {
-      "date": "2025-02-20",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 2.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 6,
-          "wind": 2.7,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 5.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-28",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 5.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-15",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 3.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 9,
-          "wind": 6.8,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 7.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-02-09",
-      "route": "jr-hokkaido.sekisho",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 12.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 20.8,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 69,
-          "wind": 11.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-27",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 12.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 8,
-          "wind": 11.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 25,
-          "wind": 10.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-24",
-      "route": "jr-hokkaido.rumoi",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 7.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 15.2,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 9.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-06",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 74,
-          "wind": 12.5,
-          "snow": 1.4
-        },
-        "afternoon": {
-          "prob": 51,
-          "wind": 14,
-          "snow": 0.21
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 8.3,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-03-20",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 10.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 26,
-          "wind": 10.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 12.8,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-01",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 11.7,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 62,
-          "wind": 21.1,
-          "snow": 0.21
-        },
-        "evening": {
-          "prob": 57,
-          "wind": 15.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2026-01-27",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 19.6,
-          "snow": 0.21
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 24.2,
-          "snow": 0.35
-        },
-        "evening": {
-          "prob": 29,
-          "wind": 10.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-25",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 19.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 8,
-          "wind": 11.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-26",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 15.3,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 81,
-          "wind": 19.6,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 68,
-          "wind": 13.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-02",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 11.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 47,
-          "wind": 9.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 28,
-          "wind": 7.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-26",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 10,
-          "snow": 0.21
-        },
-        "afternoon": {
-          "prob": 61,
-          "wind": 17.6,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 50,
-          "wind": 13,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-07",
-      "route": "jr-hokkaido.soya",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 11,
-          "wind": 11.9,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 77,
-          "wind": 13.5,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 41,
-          "wind": 9.1,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-02-15",
-      "route": "jr-hokkaido.sekisho",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 21.8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 19.7,
-          "snow": 0.21
-        },
-        "evening": {
-          "prob": 45,
-          "wind": 8.7,
-          "snow": 0.98
-        }
-      }
-    },
-    {
-      "date": "2025-01-06",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 22,
-          "wind": 9.7,
-          "snow": 0.77
-        },
-        "afternoon": {
-          "prob": 74,
-          "wind": 18.5,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 62,
-          "wind": 14.4,
-          "snow": 0.28
-        }
-      }
-    },
-    {
-      "date": "2024-03-16",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 11.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 67,
-          "wind": 16.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 46,
-          "wind": 8.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-27",
-      "route": "jr-hokkaido.hidaka",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 57,
-          "wind": 12.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 46,
-          "wind": 11.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 26,
-          "wind": 9.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-03",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 15.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 17.3,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 25,
-          "wind": 10.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-03-01",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 7.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 62,
-          "wind": 18.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 60,
-          "wind": 13.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-15",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 5.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 6,
-          "wind": 3.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 11,
-          "wind": 8.7,
-          "snow": 0.14
-        }
-      }
-    },
-    {
-      "date": "2024-02-09",
-      "route": "jr-hokkaido.nemuro",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 27.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 18.3,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 28,
-          "wind": 8.8,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-03-14",
-      "route": "jr-hokkaido.hidaka",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 81,
-          "wind": 13.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 48,
-          "wind": 12.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 67,
-          "wind": 10.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-19",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 77,
-          "wind": 16.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 66,
-          "wind": 17.2,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 11.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2026-01-15",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 51,
-          "wind": 13,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 15,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 21,
-          "wind": 13.2,
-          "snow": 0
-        }
-      }
-    },
-    {
       "date": "2024-02-03",
-      "route": "jr-hokkaido.sassho",
+      "route": "jr-hokkaido.chitose",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 53,
-          "wind": 13.8,
+          "prob": 9,
+          "wind": 3.9,
           "snow": 0.14
         },
         "afternoon": {
-          "prob": 85,
-          "wind": 21.2,
-          "snow": 0.28
+          "prob": 12,
+          "wind": 5.2,
+          "snow": 0.14
         },
         "evening": {
-          "prob": 7,
-          "wind": 11.6,
+          "prob": 9,
+          "wind": 10.8,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-03-11",
-      "route": "jr-hokkaido.rumoi",
+      "date": "2024-02-12",
+      "route": "jr-hokkaido.sekihoku",
       "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
+      "predicted": "normal",
+      "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 17,
-          "wind": 9.7,
+          "prob": 10,
+          "wind": 4.5,
           "snow": 0.07
         },
         "afternoon": {
-          "prob": 8,
-          "wind": 12.2,
+          "prob": 70,
+          "wind": 14.4,
           "snow": 0
         },
         "evening": {
-          "prob": 30,
-          "wind": 7.4,
+          "prob": 25,
+          "wind": 10.5,
           "snow": 0
         }
       }
@@ -5749,97 +4385,145 @@
       }
     },
     {
-      "date": "2024-01-22",
-      "route": "jr-hokkaido.senmo",
+      "date": "2025-03-04",
+      "route": "jr-hokkaido.sassho",
       "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
+      "predicted": "delayed",
+      "errorType": "None",
       "predictions": {
         "morning": {
-          "prob": 17,
-          "wind": 7,
-          "snow": 0
+          "prob": 85,
+          "wind": 15.8,
+          "snow": 0.07
         },
         "afternoon": {
           "prob": 85,
-          "wind": 16.7,
-          "snow": 0
+          "wind": 19,
+          "snow": 0.14
         },
         "evening": {
-          "prob": 25,
-          "wind": 12.9,
+          "prob": 41,
+          "wind": 10.9,
           "snow": 0
         }
       }
     },
     {
-      "date": "2024-03-31",
+      "date": "2025-03-28",
+      "route": "jr-hokkaido.hidaka",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 8.5,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 69,
+          "wind": 11.4,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-25",
+      "route": "jr-hokkaido.sekisho",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 19.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 67,
+          "wind": 13.1,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 29,
+          "wind": 10.8,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2026-02-17",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 7.6,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 7,
+          "wind": 11.4,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 9,
+          "wind": 10.3,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-02-09",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 5.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 28,
+          "wind": 16.2,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 27,
+          "wind": 13.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2023-01-01",
       "route": "jr-hokkaido.hakodate-main",
       "actual": "stopped",
       "predicted": "delayed",
       "errorType": "None",
       "predictions": {
         "morning": {
-          "prob": 31,
-          "wind": 7.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 23.3,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 65,
-          "wind": 15.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-06",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 12.3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 14.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.4,
+          "prob": 8,
+          "wind": 11.7,
           "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2026-02-17",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 9.7,
-          "snow": 0
         },
         "afternoon": {
-          "prob": 9,
-          "wind": 8.5,
-          "snow": 0
+          "prob": 62,
+          "wind": 21.1,
+          "snow": 0.21
         },
         "evening": {
-          "prob": 7,
-          "wind": 11.5,
+          "prob": 57,
+          "wind": 15.5,
           "snow": 0
         }
       }
@@ -5857,67 +4541,115 @@
           "snow": 0.07
         },
         "afternoon": {
-          "prob": 42,
+          "prob": 48,
           "wind": 11.8,
           "snow": 0.77
         },
         "evening": {
-          "prob": 13,
+          "prob": 15,
           "wind": 8.7,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-01-13",
+      "date": "2025-03-19",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 10,
+          "wind": 10.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 14.2,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 25,
+          "wind": 12.9,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2026-01-27",
+      "route": "jr-hokkaido.senmo",
+      "actual": "normal",
+      "predicted": "delayed",
+      "errorType": "FP",
+      "predictions": {
+        "morning": {
+          "prob": 17,
+          "wind": 9.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 13,
+          "wind": 5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 7.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2026-01-27",
       "route": "jr-hokkaido.sassho",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 85,
-          "wind": 20.2,
+          "prob": 12,
+          "wind": 9,
           "snow": 0
         },
         "afternoon": {
-          "prob": 85,
-          "wind": 20.9,
-          "snow": 0
+          "prob": 9,
+          "wind": 9.6,
+          "snow": 0.07
         },
         "evening": {
-          "prob": 7,
-          "wind": 10.5,
+          "prob": 11,
+          "wind": 5.2,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-01-19",
-      "route": "jr-hokkaido.senmo",
+      "date": "2026-01-03",
+      "route": "jr-hokkaido.sassho",
       "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
+      "predicted": "normal",
+      "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 10,
-          "wind": 12.6,
-          "snow": 0
+          "prob": 8,
+          "wind": 10.2,
+          "snow": 0.14
         },
         "afternoon": {
-          "prob": 13,
-          "wind": 7.9,
-          "snow": 0
+          "prob": 25,
+          "wind": 12.7,
+          "snow": 0.07
         },
         "evening": {
-          "prob": 52,
-          "wind": 13.2,
+          "prob": 11,
+          "wind": 9.2,
           "snow": 0
         }
       }
     },
     {
-      "date": "2026-02-14",
+      "date": "2024-02-21",
       "route": "jr-hokkaido.nemuro",
       "actual": "stopped",
       "predicted": "normal",
@@ -5925,785 +4657,113 @@
       "predictions": {
         "morning": {
           "prob": 85,
-          "wind": 19.8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 70,
-          "wind": 15.5,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 29,
-          "wind": 11.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-30",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 74,
-          "wind": 17.2,
-          "snow": 0.35
-        },
-        "afternoon": {
-          "prob": 68,
-          "wind": 18.7,
-          "snow": 0.42
-        },
-        "evening": {
-          "prob": 66,
-          "wind": 15.2,
-          "snow": 0.49
-        }
-      }
-    },
-    {
-      "date": "2026-02-14",
-      "route": "jr-hokkaido.hidaka",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 66,
-          "wind": 11.8,
+          "wind": 20.9,
           "snow": 0
         },
         "afternoon": {
-          "prob": 85,
-          "wind": 18.7,
+          "prob": 78,
+          "wind": 15.1,
           "snow": 0
         },
         "evening": {
-          "prob": 27,
-          "wind": 3.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-03",
-      "route": "jr-hokkaido.hidaka",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 54,
-          "wind": 11,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 46,
-          "wind": 11.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 67,
-          "wind": 12.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-03-17",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 10.2,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 68,
-          "wind": 18.8,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 66,
-          "wind": 15.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-01-04",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 27,
-          "wind": 15.5,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 69,
-          "wind": 22.9,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 67,
-          "wind": 17.1,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2025-01-24",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 61,
-          "wind": 13.6,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 11,
-          "wind": 8.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 13,
-          "wind": 8.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-24",
-      "route": "jr-hokkaido.muroran",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 28.8,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 19.3,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 26,
-          "wind": 4.8,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-01",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 20,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 57,
-          "wind": 15,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 13,
-          "wind": 6.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2026-01-15",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 12.5,
-          "snow": 0
-        },
-        "afternoon": {
           "prob": 28,
-          "wind": 12,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 11,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-01-16",
-      "route": "jr-hokkaido.hidaka",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 15,
-          "wind": 8.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 68,
-          "wind": 13.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 67,
-          "wind": 10.7,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-16",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 59,
-          "wind": 14.8,
-          "snow": 0.14
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 25.1,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 69,
-          "wind": 19.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-03-16",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 3.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 30,
-          "wind": 12.6,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 10.8,
-          "snow": 0.35
-        }
-      }
-    },
-    {
-      "date": "2023-01-31",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 85,
-          "wind": 14.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 14.3,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 25,
-          "wind": 10.9,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-01-07",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 76,
-          "wind": 16.4,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 10.6,
-          "snow": 0.63
-        },
-        "evening": {
-          "prob": 47,
-          "wind": 11.2,
-          "snow": 0.42
-        }
-      }
-    },
-    {
-      "date": "2023-01-19",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 8,
-          "wind": 10.8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 52,
-          "wind": 19.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 69,
-          "wind": 20.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-18",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 7.9,
-          "snow": 0.21
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 16.3,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 9.7,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2024-01-28",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 5.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
           "wind": 8.4,
           "snow": 0
         }
       }
     },
     {
-      "date": "2023-01-13",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 69,
-          "wind": 20.2,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 57,
-          "wind": 20.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 7,
-          "wind": 10.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-03-04",
-      "route": "jr-hokkaido.sekihoku",
+      "date": "2024-02-15",
+      "route": "jr-hokkaido.sekisho",
       "actual": "stopped",
       "predicted": "delayed",
       "errorType": "None",
       "predictions": {
         "morning": {
-          "prob": 17,
-          "wind": 5.7,
+          "prob": 85,
+          "wind": 21.8,
           "snow": 0.07
         },
         "afternoon": {
-          "prob": 49,
-          "wind": 11.6,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 6.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-23",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 6.2,
-          "snow": 0.28
-        },
-        "afternoon": {
-          "prob": 42,
-          "wind": 13,
-          "snow": 0.35
-        },
-        "evening": {
-          "prob": 31,
-          "wind": 12.6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-27",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 25,
-          "wind": 17.7,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 60,
-          "wind": 21.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 22,
-          "wind": 13.5,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-03-04",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 67,
-          "wind": 15.8,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 68,
-          "wind": 19,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 41,
-          "wind": 10.9,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2026-02-08",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
-      "predictions": {
-        "morning": {
-          "prob": 17,
-          "wind": 5.9,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 6.2,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 8.1,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-02-15",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 60,
-          "wind": 13.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 64,
-          "wind": 17.4,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 11.7,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2023-03-29",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 4.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 27,
-          "wind": 10.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 41,
-          "wind": 12,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2024-03-07",
-      "route": "jr-hokkaido.hakodate-main",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 7.6,
-          "snow": 0.07
-        },
-        "afternoon": {
-          "prob": 60,
-          "wind": 21.1,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 66,
-          "wind": 18,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-17",
-      "route": "jr-hokkaido.sassho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 12,
-          "wind": 5.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 45,
-          "wind": 13.7,
+          "prob": 85,
+          "wind": 19.7,
           "snow": 0.21
         },
         "evening": {
-          "prob": 7,
-          "wind": 11.6,
-          "snow": 0.07
+          "prob": 45,
+          "wind": 8.7,
+          "snow": 0.98
         }
       }
     },
     {
-      "date": "2024-01-31",
-      "route": "jr-hokkaido.sekisho",
+      "date": "2023-01-28",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 26,
+          "wind": 13.2,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 8,
+          "wind": 12.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 54,
+          "wind": 13.8,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-31",
+      "route": "jr-hokkaido.sassho",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 12,
+          "wind": 8.7,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 37,
+          "wind": 12.6,
+          "snow": 0.21
+        },
+        "evening": {
+          "prob": 31,
+          "wind": 10.4,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-01-21",
+      "route": "jr-hokkaido.rumoi",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
           "prob": 10,
-          "wind": 10.7,
+          "wind": 2.5,
           "snow": 0
         },
         "afternoon": {
-          "prob": 8,
-          "wind": 11.4,
-          "snow": 0.07
-        },
-        "evening": {
-          "prob": 29,
-          "wind": 4.5,
-          "snow": 0.14
-        }
-      }
-    },
-    {
-      "date": "2025-03-10",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 9,
-          "wind": 4.3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 11,
-          "wind": 5.9,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 12,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2026-01-21",
-      "route": "jr-hokkaido.senmo",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 27,
-          "wind": 13.6,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 85,
-          "wind": 18.8,
+          "prob": 13,
+          "wind": 8.9,
           "snow": 0
         },
         "evening": {
           "prob": 25,
-          "wind": 12.8,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2026-02-05",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 13,
-          "wind": 7.1,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 11,
-          "wind": 6.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 13,
-          "wind": 6,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-01-03",
-      "route": "jr-hokkaido.sekisho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 16,
-          "wind": 8.3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 45,
-          "wind": 11.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 28,
-          "wind": 5,
+          "wind": 12.5,
           "snow": 0
         }
       }
@@ -6733,6 +4793,414 @@
       }
     },
     {
+      "date": "2024-01-16",
+      "route": "jr-hokkaido.hidaka",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 8.7,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 68,
+          "wind": 13.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 67,
+          "wind": 10.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-03-22",
+      "route": "jr-hokkaido.rumoi",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 17,
+          "wind": 5.4,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 46,
+          "wind": 11.9,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 7.1,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-02-02",
+      "route": "jr-hokkaido.rumoi",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 15.1,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 13,
+          "wind": 9.7,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 8.3,
+          "snow": 0.21
+        }
+      }
+    },
+    {
+      "date": "2025-03-28",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 60,
+          "wind": 13,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 27,
+          "wind": 13.7,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-02-06",
+      "route": "jr-hokkaido.soya",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 15.1,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 51,
+          "wind": 11.8,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 41,
+          "wind": 5.4,
+          "snow": 0.14
+        }
+      }
+    },
+    {
+      "date": "2024-01-22",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 17,
+          "wind": 7,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 16.7,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 25,
+          "wind": 12.9,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2023-01-04",
+      "route": "jr-hokkaido.hakodate-main",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 27,
+          "wind": 15.5,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 69,
+          "wind": 22.9,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 67,
+          "wind": 17.1,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2026-01-12",
+      "route": "jr-hokkaido.hakodate-main",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 23.4,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 50,
+          "wind": 14.1,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 7,
+          "wind": 10.6,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-03-31",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 56,
+          "wind": 11.1,
+          "snow": 0.21
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 19.5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 52,
+          "wind": 10.4,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-01-03",
+      "route": "jr-hokkaido.hakodate-main",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 15,
+          "wind": 12,
+          "snow": 0.63
+        },
+        "afternoon": {
+          "prob": 25,
+          "wind": 12,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 7,
+          "wind": 4.6,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-13",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 21.4,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 24.5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 51,
+          "wind": 11.1,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-03-25",
+      "route": "jr-hokkaido.hakodate-main",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 62,
+          "wind": 14.1,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 60,
+          "wind": 15.7,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 39,
+          "wind": 9,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2023-01-19",
+      "route": "jr-hokkaido.muroran",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 9,
+          "wind": 12.2,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 11,
+          "wind": 7.6,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 46,
+          "wind": 14.5,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2023-01-13",
+      "route": "jr-hokkaido.rumoi",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 10,
+          "wind": 11,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 8,
+          "wind": 10.2,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 9.2,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2025-01-24",
+      "route": "jr-hokkaido.muroran",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 28.8,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 19.3,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 26,
+          "wind": 4.8,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2023-02-03",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 10,
+          "wind": 10.5,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 8,
+          "wind": 11.3,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 30,
+          "wind": 8.2,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2024-02-09",
+      "route": "jr-hokkaido.nemuro",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 27.7,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 18.3,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 28,
+          "wind": 8.8,
+          "snow": 0.07
+        }
+      }
+    },
+    {
       "date": "2023-03-23",
       "route": "jr-hokkaido.sekisho",
       "actual": "stopped",
@@ -6757,265 +5225,265 @@
       }
     },
     {
-      "date": "2026-02-17",
+      "date": "2024-01-04",
+      "route": "jr-hokkaido.hidaka",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 54,
+          "wind": 12,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 12,
+          "wind": 7.4,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 26,
+          "wind": 7.6,
+          "snow": 0
+        }
+      }
+    },
+    {
+      "date": "2024-01-13",
       "route": "jr-hokkaido.chitose",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 13,
-          "wind": 7.6,
+          "prob": 54,
+          "wind": 12.9,
           "snow": 0
         },
         "afternoon": {
           "prob": 7,
-          "wind": 11.4,
+          "wind": 12.3,
           "snow": 0
         },
         "evening": {
-          "prob": 8,
-          "wind": 10.3,
+          "prob": 9,
+          "wind": 12.7,
+          "snow": 0.07
+        }
+      }
+    },
+    {
+      "date": "2023-01-10",
+      "route": "jr-hokkaido.chitose",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 85,
+          "wind": 16.4,
+          "snow": 0.07
+        },
+        "afternoon": {
+          "prob": 75,
+          "wind": 17,
+          "snow": 0.07
+        },
+        "evening": {
+          "prob": 18,
+          "wind": 10,
+          "snow": 0.77
+        }
+      }
+    },
+    {
+      "date": "2026-01-18",
+      "route": "jr-hokkaido.rumoi",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 78,
+          "wind": 13.2,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 46,
+          "wind": 10.8,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 25,
+          "wind": 10.2,
           "snow": 0
         }
       }
     },
     {
-      "date": "2025-01-03",
+      "date": "2023-02-15",
       "route": "jr-hokkaido.sassho",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 15,
-          "wind": 12,
+          "prob": 12,
+          "wind": 5.5,
+          "snow": 0
+        },
+        "afternoon": {
+          "prob": 6,
+          "wind": 3.9,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 11,
+          "wind": 8.7,
+          "snow": 0.14
+        }
+      }
+    },
+    {
+      "date": "2025-03-28",
+      "route": "jr-hokkaido.senmo",
+      "actual": "stopped",
+      "predicted": "delayed",
+      "errorType": "None",
+      "predictions": {
+        "morning": {
+          "prob": 28,
+          "wind": 7.3,
           "snow": 0.63
         },
         "afternoon": {
-          "prob": 25,
-          "wind": 12,
-          "snow": 0.07
+          "prob": 8,
+          "wind": 4.5,
+          "snow": 0
+        },
+        "evening": {
+          "prob": 41,
+          "wind": 10.4,
+          "snow": 0.56
+        }
+      }
+    },
+    {
+      "date": "2024-02-03",
+      "route": "jr-hokkaido.sassho",
+      "actual": "stopped",
+      "predicted": "normal",
+      "errorType": "FN",
+      "predictions": {
+        "morning": {
+          "prob": 53,
+          "wind": 13.8,
+          "snow": 0.14
+        },
+        "afternoon": {
+          "prob": 85,
+          "wind": 21.2,
+          "snow": 0.28
         },
         "evening": {
           "prob": 7,
-          "wind": 4.6,
+          "wind": 11.6,
           "snow": 0
         }
       }
     },
     {
-      "date": "2025-01-12",
-      "route": "jr-hokkaido.rumoi",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 12.3,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 71,
-          "wind": 13.5,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 25,
-          "wind": 11.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2025-02-14",
-      "route": "jr-hokkaido.chitose",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 13,
-          "wind": 5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 61,
-          "wind": 14.4,
-          "snow": 0.14
-        },
-        "evening": {
-          "prob": 8,
-          "wind": 12.4,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-02-06",
+      "date": "2023-02-24",
       "route": "jr-hokkaido.nemuro",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 74,
-          "wind": 13.7,
+          "prob": 85,
+          "wind": 18.1,
           "snow": 0
         },
         "afternoon": {
           "prob": 13,
           "wind": 7.9,
-          "snow": 0.07
+          "snow": 0
         },
         "evening": {
           "prob": 29,
-          "wind": 12.3,
+          "wind": 11.6,
           "snow": 0
         }
       }
     },
     {
-      "date": "2025-02-17",
-      "route": "jr-hokkaido.hakodate-main",
+      "date": "2023-01-31",
+      "route": "jr-hokkaido.chitose",
       "actual": "stopped",
       "predicted": "normal",
       "errorType": "FN",
       "predictions": {
         "morning": {
-          "prob": 12,
-          "wind": 5.1,
+          "prob": 9,
+          "wind": 10,
           "snow": 0
         },
         "afternoon": {
-          "prob": 45,
-          "wind": 13.7,
-          "snow": 0.21
+          "prob": 56,
+          "wind": 13.5,
+          "snow": 0
         },
         "evening": {
-          "prob": 7,
-          "wind": 11.6,
-          "snow": 0.07
+          "prob": 15,
+          "wind": 8.5,
+          "snow": 0
         }
       }
     },
     {
-      "date": "2023-03-05",
-      "route": "jr-hokkaido.sekihoku",
+      "date": "2024-02-09",
+      "route": "jr-hokkaido.sekisho",
       "actual": "stopped",
       "predicted": "delayed",
       "errorType": "None",
       "predictions": {
         "morning": {
           "prob": 10,
-          "wind": 10.4,
+          "wind": 12.5,
           "snow": 0
         },
         "afternoon": {
-          "prob": 44,
-          "wind": 12.2,
+          "prob": 85,
+          "wind": 20.8,
           "snow": 0
         },
         "evening": {
-          "prob": 30,
-          "wind": 9.1,
+          "prob": 69,
+          "wind": 11.6,
           "snow": 0
         }
       }
     },
     {
-      "date": "2026-01-06",
-      "route": "jr-hokkaido.soya",
+      "date": "2024-03-28",
+      "route": "jr-hokkaido.sekihoku",
       "actual": "stopped",
       "predicted": "delayed",
       "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 11,
-          "wind": 11.7,
-          "snow": 0.28
-        },
-        "afternoon": {
-          "prob": 79,
-          "wind": 13.3,
-          "snow": 0.56
-        },
-        "evening": {
-          "prob": 41,
-          "wind": 9.3,
-          "snow": 0.07
-        }
-      }
-    },
-    {
-      "date": "2025-01-24",
-      "route": "jr-hokkaido.rumoi",
-      "actual": "normal",
-      "predicted": "delayed",
-      "errorType": "FP",
       "predictions": {
         "morning": {
           "prob": 17,
-          "wind": 9.7,
-          "snow": 0.14
+          "wind": 6,
+          "snow": 0
         },
         "afternoon": {
           "prob": 13,
-          "wind": 8.2,
+          "wind": 5.1,
           "snow": 0
         },
         "evening": {
           "prob": 30,
-          "wind": 9.3,
-          "snow": 0
-        }
-      }
-    },
-    {
-      "date": "2023-03-02",
-      "route": "jr-hokkaido.sekisho",
-      "actual": "stopped",
-      "predicted": "normal",
-      "errorType": "FN",
-      "predictions": {
-        "morning": {
-          "prob": 16,
-          "wind": 7.7,
-          "snow": 0.35
-        },
-        "afternoon": {
-          "prob": 13,
-          "wind": 8.1,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 28,
-          "wind": 9.3,
-          "snow": 0.28
-        }
-      }
-    },
-    {
-      "date": "2024-01-01",
-      "route": "jr-hokkaido.sekihoku",
-      "actual": "stopped",
-      "predicted": "delayed",
-      "errorType": "None",
-      "predictions": {
-        "morning": {
-          "prob": 10,
-          "wind": 10.5,
-          "snow": 0
-        },
-        "afternoon": {
-          "prob": 8,
-          "wind": 3.7,
-          "snow": 0
-        },
-        "evening": {
-          "prob": 30,
-          "wind": 7.6,
+          "wind": 8.4,
           "snow": 0
         }
       }

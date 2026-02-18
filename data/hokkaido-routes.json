@@ -1,0 +1,93 @@
+[
+    {
+        "id": "jr-hokkaido.hakodate-main",
+        "name": "函館本線",
+        "company": "JR北海道",
+        "region": "道央",
+        "color": "#2563eb"
+    },
+    {
+        "id": "jr-hokkaido.chitose",
+        "name": "千歳線",
+        "company": "JR北海道",
+        "region": "道央",
+        "color": "#059669"
+    },
+    {
+        "id": "jr-hokkaido.sassho",
+        "name": "学園都市線（札沼線）",
+        "company": "JR北海道",
+        "region": "道央",
+        "color": "#7c3aed"
+    },
+    {
+        "id": "jr-hokkaido.muroran-main",
+        "name": "室蘭本線",
+        "company": "JR北海道",
+        "region": "道央",
+        "color": "#dc2626"
+    },
+    {
+        "id": "jr-hokkaido.soya-main",
+        "name": "宗谷本線",
+        "company": "JR北海道",
+        "region": "道北",
+        "color": "#0891b2"
+    },
+    {
+        "id": "jr-hokkaido.sekihoku-main",
+        "name": "石北本線",
+        "company": "JR北海道",
+        "region": "道北",
+        "color": "#ca8a04"
+    },
+    {
+        "id": "jr-hokkaido.furano",
+        "name": "富良野線",
+        "company": "JR北海道",
+        "region": "道北",
+        "color": "#a855f7"
+    },
+    {
+        "id": "jr-hokkaido.rumoi",
+        "name": "留萌本線",
+        "company": "JR北海道",
+        "region": "道北",
+        "color": "#64748b"
+    },
+    {
+        "id": "jr-hokkaido.hidaka",
+        "name": "日高本線",
+        "company": "JR北海道",
+        "region": "道東",
+        "color": "#be185d"
+    },
+    {
+        "id": "jr-hokkaido.sekisho",
+        "name": "石勝線",
+        "company": "JR北海道",
+        "region": "道東",
+        "color": "#d97706"
+    },
+    {
+        "id": "jr-hokkaido.nemuro-main",
+        "name": "根室本線",
+        "company": "JR北海道",
+        "region": "道東",
+        "color": "#ea580c"
+    },
+    {
+        "id": "jr-hokkaido.senmo-main",
+        "name": "釧網本線",
+        "company": "JR北海道",
+        "region": "道東",
+        "color": "#16a34a"
+    },
+    {
+        "id": "jr-hokkaido.hakodate-south",
+        "name": "函館本線（道南）",
+        "company": "JR北海道",
+        "region": "道南",
+        "color": "#9333ea"
+    }
+]

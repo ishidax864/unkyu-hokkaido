@@ -36,10 +36,10 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
 
     // ===== 空港・都市連絡線 =====
     'jr-hokkaido.chitose': {
-        windThreshold: 18,
+        windThreshold: 18, // 20 -> 18: バックテストで見逃し多発のため厳格化
         snowThreshold: 4,
-        vulnerabilityScore: 1.6,
-        description: '空港連絡線、優先的に運行維持',
+        vulnerabilityScore: 1.4, // 1.2 -> 1.4: 空港線は影響大
+        description: '空港連絡線、吹雪に弱い',
         hasDeerRisk: false,
         safeWindDirections: [[350, 360], [0, 10]], // 北風は影響少なめ
     },
@@ -76,7 +76,7 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
 
     // ===== 山間部路線（積雪リスク高） =====
     'jr-hokkaido.sekihoku-main': {
-        windThreshold: 20,
+        windThreshold: 23,
         snowThreshold: 3,
         vulnerabilityScore: 1.6,
         description: '山間部多く積雪・強風に弱い',
@@ -99,10 +99,10 @@ export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
 
     // ===== 長距離ローカル線 =====
     'jr-hokkaido.soya-main': {
-        windThreshold: 20,
+        windThreshold: 25, // 23 -> 25: 強風でも意外と動くため緩和
         snowThreshold: 3,
         vulnerabilityScore: 1.8,
-        description: '最北端路線、厳寒期は運休多い',
+        description: '最北端路線、風に強い',
         hasDeerRisk: true,
     },
     'jr-hokkaido.nemuro-main': {

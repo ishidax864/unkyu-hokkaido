@@ -36,9 +36,12 @@ export interface Route {
 export interface Station {
   id: string;
   name: string;
+  kana: string;
   lines: string[];
-  latitude?: number;
-  longitude?: number;
+  region: '道央' | '道北' | '道東' | '道南';
+  isMajor?: boolean;
+  lat?: number;
+  lon?: number;
 }
 
 // =====================
@@ -95,6 +98,7 @@ export interface PredictionResult {
   isCurrentlySuspended: boolean;
   estimatedRecoveryTime?: string;  // 例: "13:00頃", "18:30頃"
   estimatedRecoveryHours?: number | string; // 🆕 時間単位（0.5, 1, 3, 6, 12）または '終日運休'
+  suspensionScale?: 'small' | 'medium' | 'large' | 'all-day'; // 🆕 運休規模（ユーザーへの直感的な伝達用）
   recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
   suspensionReason?: string;  // 運休の原因
   crowdStats?: {
@@ -157,9 +161,11 @@ export interface JRStatusItem {
   routeName: string;
   status: JRStatus;
   description: string;
+  statusText?: string; // 🆕 Added for consistency
   updatedAt: string;
   source: 'official' | 'rss' | 'mock';
-  rawText?: string; // 🆕
+  rawText?: string;
+  sourceArea?: string; // 🆕
 }
 
 export interface AIReasonRequest {

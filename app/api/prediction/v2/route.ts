@@ -1,25 +1,131 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
-import { predictWithML } from '@/lib/prediction-engine/ml-runner';
-import { JRStatusItem } from '@/lib/types';
-import { getRecoveryMessage } from '@/lib/suggestion-logic';
+import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
+import { JRStatusItem, PredictionInput } from '@/lib/types';
 
-// Helper to fetch JR Status
-async function _fetchJRStatus(_routeId: string): Promise<JRStatusItem | null> {
+import { getAdminSupabaseClient } from '@/lib/supabase';
+import { ROUTE_DEFINITIONS } from '@/lib/jr-status';
+
+// Helper to fetch JR Status (Debug Version)
+async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
     try {
-        // Self-call or mocking internal logic? 
-        // In Server Action/Route Handler, calling another API route via fetch(localhost) is efficient? 
-        // Or just implementing logic directly.
-        // Let's assume we can fetch the public endpoint or use a lib. 
-        // For simplicity, let's skip JR Status fetching inside this API for now 
-        // OR reuse the logic if it's in a lib. 
-        // Given current structure, we'll fetch from the LIVE endpoint if possible, 
-        // but `fetch` to localhost in Vercel is flaky. 
-        // Better: The client passes JR Status? No, server should handle it.
-        // Let's skip JR Status integration in V2 PoC for a moment and focus on Weather+ML.
+        const supabase = getAdminSupabaseClient();
+        if (!supabase) {
+            console.error('Missing Supabase credentials');
+            return {
+                routeName: 'System',
+                status: 'delayed' as any,
+                description: 'System Error',
+                statusText: 'ERR: Admin Key Missing',
+                updatedAt: new Date().toISOString(),
+                source: 'official'
+            } as any;
+        }
+
+        const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
+        const routeName = routeDef?.name || '当該路線';
+
+        // 1. Check for recent incidents
+        const since = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+
+        const { data: incidents, error: dbError } = await supabase
+            .from('route_status_history')
+            .select('*')
+            .eq('route_id', routeId)
+            .gte('created_at', since)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (dbError) {
+            return {
+                routeName: routeName,
+                status: 'delayed' as any,
+                description: 'DB Error',
+                statusText: 'ERR: DB History Fetch Failed ' + dbError.message,
+                updatedAt: new Date().toISOString(),
+                source: 'official'
+            } as any;
+        }
+
+        if (incidents && incidents.length > 0) {
+            const latest = incidents[0];
+            const description = latest.status === 'suspended' ? '運休・見合わせが発生しています' : latest.status === 'delayed' ? '遅延が発生しています' : '平常運転';
+            return {
+                routeId,
+                routeName,
+                status: latest.status as any,
+                description,
+                statusText: latest.details || description,
+                updatedAt: latest.timestamp || latest.created_at,
+                source: 'official',
+                rawText: latest.details
+            };
+        }
+
+        // 2. If no incidents, check if crawler ran recently (< 1 hour)
+        const { data: logs, error: logError } = await supabase
+            .from('crawler_logs')
+            .select('fetched_at')
+            .order('fetched_at', { ascending: false })
+            .limit(1);
+
+        if (logError) {
+            return {
+                routeName: routeName,
+                status: 'delayed' as any,
+                description: 'DB Error',
+                statusText: 'ERR: Log Fetch Failed ' + logError.message,
+                updatedAt: new Date().toISOString(),
+                source: 'official'
+            } as any;
+        }
+
+        if (logs && logs.length > 0) {
+            const lastFetch = new Date(logs[0].fetched_at).getTime();
+            const now = Date.now();
+            if (now - lastFetch < 60 * 60 * 1000) { // 1 hour
+                return {
+                    routeId,
+                    routeName,
+                    status: 'normal',
+                    description: '平常運転',
+                    statusText: '現在、遅れに関する情報はありません',
+                    updatedAt: logs[0].fetched_at,
+                    source: 'official'
+                };
+            } else {
+                return {
+                    routeName: routeName,
+                    status: 'delayed' as any,
+                    description: 'Stale Data',
+                    statusText: `ERR: Data Stale (${Math.round((now - lastFetch) / 60000)}min old)`,
+                    updatedAt: logs[0].fetched_at,
+                    source: 'official'
+                } as any;
+            }
+        } else {
+            return {
+                routeName: routeName,
+                status: 'delayed' as any,
+                description: 'No Data',
+                statusText: 'ERR: No Crawler Logs Found',
+                updatedAt: new Date().toISOString(),
+                source: 'official'
+            } as any;
+        }
+
         return null;
-    } catch { return null; }
+    } catch (e: any) {
+        console.error('JR Status Fetch Error:', e);
+        return {
+            routeName: 'System',
+            status: 'delayed' as any,
+            description: 'Exception',
+            statusText: 'ERR: Exception ' + (e.message || String(e)),
+            updatedAt: new Date().toISOString(),
+            source: 'official'
+        } as any;
+    }
 }
 
 export async function POST(req: NextRequest) {
@@ -27,123 +133,122 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { routeId, date, time, lat, lon } = body;
 
-        if (!routeId || !date || !time) {
-            return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
-        }
-
+        // Parallel fetch
         const dateTime = `${date}T${time}:00`;
         const coordinates = (lat != null && lon != null) ? { lat: Number(lat), lon: Number(lon) } : undefined;
 
-        // 1. Fetch Weather (Hourly)
-        let weather = null;
-        try {
-            weather = await fetchHourlyWeatherForecast(routeId, dateTime, coordinates);
-        } catch (e) {
-            console.error(e);
+        const [weather, jrStatus] = await Promise.all([
+            fetchHourlyWeatherForecast(routeId, dateTime, coordinates).catch(e => {
+                console.error(e);
+                return null;
+            }),
+            _fetchJRStatus(routeId)
+        ]);
+
+        if (!weather) {
             return NextResponse.json({ error: 'Weather fetch failed' }, { status: 500 });
         }
 
-        if (!weather) {
-            return NextResponse.json({ error: 'No weather data' }, { status: 404 });
-        }
+        const input: PredictionInput = {
+            weather,
+            routeId,
+            routeName: jrStatus?.routeName || '当該路線', // Fallback name
+            targetDate: date,
+            targetTime: time,
+            historicalData: null, // API generally doesn't check historical here or needs fetch
+            jrStatus: jrStatus,
+            crowdsourcedStatus: null
+        };
 
-        const currentHourCode = parseInt(time.split(':')[0]);
+        const result = calculateSuspensionRisk(input);
+
+        // Ensure officialStatus is set in the result
+        result.officialStatus = jrStatus;
+
+        // 🆕 Trend Calculation (Server-Side)
+        // User Request: "Calculate on server for consistency throughout."
+        const trend: any[] = [];
+        const targetHour = parseInt(time.split(':')[0]);
         const surroundingWeather = weather.surroundingHours || [];
 
-        // 2. Prepare Trend Data (±2 hours)
-        const trendPromises = [-2, -1, 0, 1, 2].map(async (offset) => {
-            const h = currentHourCode + offset;
-            // Handle hour wrap-around (e.g., -1 becomes 23, 24 becomes 0)
-            const normalizedH = (h + 24) % 24;
+        for (let offset = -2; offset <= 2; offset++) {
+            const h = targetHour + offset;
+            if (h < 0 || h > 23) continue;
 
-            const hStr = normalizedH.toString().padStart(2, '0');
+            const hStr = h.toString().padStart(2, '0');
             const checkTime = `${hStr}:00`;
 
-            const hourWeather = offset === 0 ? weather : surroundingWeather.find(sw => {
-                if (!sw.targetTime) return false;
-                return parseInt(sw.targetTime.split(':')[0]) === normalizedH;
-            });
+            let hourRisk: number;
+            let hourWeather: any = null;
+            const isTarget = offset === 0;
 
-            if (!hourWeather) return null;
+            if (isTarget) {
+                hourRisk = result.probability; // Re-use main result
+                hourWeather = weather;
+            } else {
+                hourWeather = surroundingWeather.find((sw: any) => {
+                    const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
+                    return swHour === h;
+                }) || null;
 
-            // Calculate Trend (Next hour for this specific hour)
-            // Simplified: for trend points, just use current data or +1 hour from API if available
-            const nextH = (normalizedH + 1) % 24;
-            const nextWeather = surroundingWeather.find(sw => sw.targetTime && parseInt(sw.targetTime.split(':')[0]) === nextH);
-            const windChange = nextWeather ? (nextWeather.windSpeed - hourWeather.windSpeed) : 0;
+                if (hourWeather) {
+                    // 🔑 CRITICAL: Context Attachment for Adaptive Calibration
+                    // We must attach 'surroundingHours' to the neighbor weather object
+                    // so that 'calculateSuspensionRisk' can find "Now" and apply the delta.
+                    // We use the full 'surroundingHours' from the main weather object.
 
-            const input = {
-                routeId,
-                month: new Date(date).getMonth() + 1,
-                windSpeed: hourWeather.windSpeed,
-                windDirection: hourWeather.windDirection || 0,
-                windGust: hourWeather.windGust || hourWeather.windSpeed * 1.5,
-                snowfall: hourWeather.snowfall || 0,
-                snowDepth: hourWeather.snowDepth || 0,
-                temperature: hourWeather.temperature || 0,
-                pressure: hourWeather.pressure || 1013,
-                windChange,
-                pressureChange: 0
-            };
+                    // We also need to include the main weather itself in the list if it's not there,
+                    // but usually 'surroundingHours' contains neighbors.
+                    // To be safe, we construct a context list that includes the main weather.
+                    const contextHours = [...surroundingWeather, weather];
 
-            const ml = await predictWithML(input);
-            let prob = 10;
-            if (ml.status === 'suspended') prob = 95;
-            if (ml.status === 'delayed') prob = 50;
-            // Inject minor random variance based on wind/snow for smoother chart if status is same? 
-            // Better to keep it raw ML status for now.
+                    const weatherWithContext = {
+                        ...hourWeather,
+                        surroundingHours: contextHours
+                    };
 
-            return {
+                    const r = calculateSuspensionRisk({
+                        weather: weatherWithContext,
+                        routeId,
+                        routeName: jrStatus?.routeName || '当該路線',
+                        targetDate: date,
+                        targetTime: checkTime,
+                        historicalData: null,
+                        jrStatus: jrStatus,
+                        crowdsourcedStatus: null,
+                        timetableTrain: undefined
+                    });
+                    hourRisk = r.probability;
+                } else {
+                    continue;
+                }
+            }
+
+            // Determine icon
+            let icon = 'cloud';
+            const displayWeather = isTarget ? weather : hourWeather;
+            if (displayWeather) {
+                if ((displayWeather.snowfall ?? 0) > 0) icon = 'snow';
+                else if (displayWeather.precipitation && displayWeather.precipitation > 0) icon = 'rain';
+                else if (displayWeather.windSpeed >= 15) icon = 'wind';
+                else if (displayWeather.weather.includes('晴')) icon = 'sun';
+            }
+
+            trend.push({
                 time: checkTime,
-                risk: prob,
-                status: ml.status,
-                weather: hourWeather
-            };
-        });
-
-        const trendResults = (await Promise.all(trendPromises)).filter(t => t !== null);
-
-        // 3. Main Result (from Trend[2] which is offset 0)
-        const targetResult = trendResults.find(t => parseInt(t!.time.split(':')[0]) === currentHourCode);
-        if (!targetResult) {
-            return NextResponse.json({ error: 'Failed to generate target prediction' }, { status: 500 });
+                risk: Math.floor(hourRisk), // Ensure integer
+                weatherIcon: icon,
+                isTarget: isTarget,
+                isCurrent: isTarget
+            });
         }
 
-        const input = {
-            windSpeed: targetResult.weather.windSpeed,
-            snowfall: targetResult.weather.snowfall || 0
-        };
-
-        const factors = [];
-        if (input.windSpeed > 15) factors.push(`強風 (${input.windSpeed}m/s)`);
-        if (input.snowfall > 2) factors.push(`降雪 (${input.snowfall}cm)`);
-
-        const reasons = factors.length > 0
-            ? [`AI予測: ${factors.join('・')}の影響により${targetResult.status === 'suspended' ? '運休' : '遅延'}リスクあり`]
-            : ['AI予測: 平常運転の見込み'];
-
-        const result = {
-            probability: targetResult.risk,
-            level: targetResult.risk >= 70 ? 'high' : targetResult.risk >= 30 ? 'medium' : 'low',
-            status: targetResult.status,
-            reasons,
-            details: {
-                wind: { value: input.windSpeed, isHigh: input.windSpeed > 15 },
-                snow: { value: input.snowfall, isHigh: input.snowfall > 2 },
-            },
-            estimatedRecoveryTime: null, // Simplified for now
-            isOfficialOverride: false,
-            trend: trendResults.map(t => ({
-                time: t!.time,
-                risk: t!.risk,
-                weatherIcon: (t!.weather.snowfall || 0) > 0 ? 'snow' : (t!.weather.precipitation || 0) > 0 ? 'rain' : t!.weather.windSpeed >= 15 ? 'wind' : 'cloud'
-            }))
-        };
+        result.trend = trend;
 
         return NextResponse.json(result);
 
     } catch (error) {
-        console.error('Prediction API Error', error);
+        console.error('Prediction API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

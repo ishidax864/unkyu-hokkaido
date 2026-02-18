@@ -67,8 +67,21 @@ export const LIGHT_WIND_MIN = 5;
 /** 軽い風の最大値（m/s） */
 export const LIGHT_WIND_MAX = 10;
 
+
 /** 軽い風のリスクスコア */
 export const LIGHT_WIND_SCORE = 3;
+
+/** 🆕 地吹雪発生の気温閾値（これより低いとパウダースノーで舞いやすい） */
+export const DRIFTING_SNOW_TEMP_THRESHOLD = -2;
+
+/** 🆕 地吹雪発生の風速閾値（これ以上で舞い始める） */
+export const DRIFTING_SNOW_WIND_THRESHOLD = 10;
+
+/** 🆕 地吹雪リスクの基本スコア (20点: 視界不良による徐行) */
+export const DRIFTING_SNOW_BASE_SCORE = 20;
+
+/** 🆕 地吹雪リスクの強風ボーナス係数 */
+export const DRIFTING_SNOW_WIND_COEFFICIENT = 2;
 
 /** やや強い風の最小値（m/s） (15 -> 13: 遅延検知のため感度向上) */
 export const MODERATE_WIND_MIN = 13;

@@ -21,7 +21,8 @@ import {
     evaluateRiskFactors,
     applyHistoricalDataAdjustment,
     determineSuspensionReason,
-    applyConfidenceFilter
+    applyConfidenceFilter,
+    calculateRawRiskScore // 🆕
 } from './helpers';
 
 import {
@@ -34,76 +35,36 @@ import {
 import {
     MAX_DISPLAY_REASONS,
     COMPOUND_RISK_MULTIPLIER,
-    MAX_PREDICTION_WITH_NORMAL_DATA // 🆕
+    MAX_PREDICTION_WITH_NORMAL_DATA
 } from './constants';
 
 import { analyzeWeatherTrend } from '../recovery-prediction';
 import { calculateResumptionTime } from './resumption';
+import { applyAdaptiveCalibration } from './calibration'; // 🆕
 
 // ==========================================
 // Main Prediction Function
 // ==========================================
 
-// メインの予測関数（強化版）
 export function calculateSuspensionRisk(input: PredictionInput): PredictionResult {
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
 
-    // 0. 過去事例の事前抽出 (Early matching for dependency injections)
+    // 0. 過去事例の事前抽出
     const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
-    const enrichedInput = { ...input, historicalMatch };
 
     // 1. リスク要因の包括的評価
-    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS);
-    let totalScore = bScore;
-    const reasonsWithPriority = [...bReasons];
+    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(input, vulnerability, historicalMatch);
+    let totalScore = rawScore;
+    let reasonsWithPriority = [...rawReasons];
 
-    // 🆕 過去事例に基づく理由の追加（evaluateRiskFactors内でカバーされない広範な理由）
-    if (historicalMatch) {
-        reasonsWithPriority.push({
-            reason: `【過去事例】${historicalMatch.label}に近い気象条件です。`,
-            priority: 1,
-        });
-    }
+    const wind = input.weather?.windSpeed ?? 0;
+    const snow = input.weather?.snowfall ?? 0;
 
     logger.debug('Risk factors evaluated', {
         routeId: input.routeId,
         score: totalScore,
         factorCount: reasonsWithPriority.length
     });
-
-    // 2. 冬季ベースリスク
-    const winterRisk = calculateWinterRisk(input.targetDate, vulnerability);
-    if (winterRisk.score > 0) {
-        totalScore += winterRisk.score;
-        if (winterRisk.shouldDisplay && totalScore < 8) {
-            reasonsWithPriority.push({
-                reason: '冬季の北海道は天候急変のリスクがあります',
-                priority: 11,
-            });
-        }
-    }
-
-    // 3. 複合リスク（風×雪）
-    const wind = input.weather?.windSpeed ?? 0;
-    const snow = input.weather?.snowfall ?? 0;
-    const compoundRisk = calculateCompoundRisk(wind, snow, vulnerability);
-
-    if (compoundRisk > 0) {
-        totalScore += compoundRisk;
-        reasonsWithPriority.push({
-            reason: `強風と積雪の複合影響（+${compoundRisk}%）`,
-            priority: 5,
-        });
-    }
-
-    // 🆕 Decisive Scoring: 危険因子が複数ある場合、乗算でリスクを跳ね上げる
-    // Priority 4以下（=重要）の要因が2つ以上ある場合、全体スコアを1.5倍にする
-    const criticalFactors = reasonsWithPriority.filter(r => r.priority <= 4).length;
-    if (criticalFactors >= 2) {
-        totalScore = Math.round(totalScore * COMPOUND_RISK_MULTIPLIER);
-        logger.debug('Applied compound multiplier', { originalScore: totalScore / COMPOUND_RISK_MULTIPLIER, newScore: totalScore });
-    }
-
 
     // 4. 時間帯・季節補正
     const timeMultiplier = getTimeMultiplier(input.targetTime);
@@ -121,8 +82,12 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     const maxProbability = determineMaxProbability(input);
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
-    // 🆕 Confidence Filter (Wolf Boy Mitigation)
-    // 弱い気象信号で警告を出しすぎないよう、リスクを抑制する
+    // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
+    const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority);
+    probability = calibration.probability;
+    reasonsWithPriority = calibration.reasons;
+
+    // 🆕 Confidence Filter
     if (input.weather) {
         const filterResult = applyConfidenceFilter({
             probability,
@@ -130,7 +95,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             windSpeed: input.weather.windSpeed || 0,
             windGust: input.weather.windGust || 0,
             snowfall: input.weather.snowfall || 0,
-            jrStatus: input.jrStatus?.status // 🆕 公式情報をフィルターに渡す
+            jrStatus: input.jrStatus?.status
         });
 
         if (filterResult.wasFiltered) {
@@ -141,19 +106,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                     priority: 20
                 });
             }
-            logger.debug('Confidence Filter Applied', {
-                original: totalScore,
-                filtered: probability,
-                reason: filterResult.reason
-            });
         }
     }
 
-    // 🆕 公式情報によるキャップが適用された場合の理由追加
+    // Official Info Cap
     if (probability === MAX_PREDICTION_WITH_NORMAL_DATA && input.jrStatus?.status === 'normal') {
         reasonsWithPriority.push({
             reason: '【公式情報】JR北海道より通常運行が発表されているため、予測リスクを抑制しています',
-            priority: 0 // 最優先で表示
+            priority: 0
         });
     }
 
@@ -189,9 +149,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             const _weatherTrend = analyzeWeatherTrend(input.weather, []);
             const rain = input.weather.precipitation || 0;
             suspensionReason = determineSuspensionReason(wind, snow, rain);
-
-
-
 
             // 🆕 Unified Resumption Logic
             if (input.weather && input.weather.surroundingHours) {
@@ -242,7 +199,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 🆕 公式情報の解析とオーバーライド (Official Info Override)
     // 気象データに基づく予測よりも、公式の「終日運休」等の発表を絶対的に優先する
-    let isOfficialOverride = false; // 🆕
+    let isOfficialOverride = false;
 
     if (input.jrStatus) {
         let text = input.jrStatus.rawText || input.jrStatus.statusText || '';
@@ -261,7 +218,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             estimatedRecoveryTime = '終日運休';
             estimatedRecoveryHours = undefined; // 時間計算ではないためundefined
             recoveryRecommendation = `JR北海道公式発表: ${text}`;
-            isOfficialOverride = true; // 🆕
+            isOfficialOverride = true;
 
             // 理由リストの先頭に公式情報を追加（重複しないようにチェック）
             const officialReason = `【公式発表】${text}`;
@@ -297,21 +254,35 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         estimatedRecoveryHours,
         recoveryRecommendation,
         suspensionReason,
-        isOfficialOverride, // 🆕
+        isOfficialOverride,
+        suspensionScale: (() => {
+            if (estimatedRecoveryTime === '終日運休') return 'all-day';
+            if (typeof estimatedRecoveryHours === 'number') {
+                if (estimatedRecoveryHours <= 2) return 'small';
+                if (estimatedRecoveryHours <= 6) return 'medium';
+                return 'large';
+            }
+            // 🆕 運休中だが復旧時刻が算出できない（＝見通しが立たない）場合は「大規模」扱いとする
+            if (isCurrentlySuspended && !estimatedRecoveryTime) {
+                return 'large';
+            }
+            return undefined;
+        })(),
         crowdStats: input.crowdsourcedStatus?.last15minCounts ? {
             last15minReportCount: input.crowdsourcedStatus.last15minCounts.total,
             last15minStopped: input.crowdsourcedStatus.last15minCounts.stopped,
-            last15minDelayed: input.crowdsourcedStatus.last15minCounts.delayed, // 🆕
-            last15minCrowded: input.crowdsourcedStatus.last15minCounts.crowded, // 🆕
+            last15minDelayed: input.crowdsourcedStatus.last15minCounts.delayed,
+            last15minCrowded: input.crowdsourcedStatus.last15minCounts.crowded,
             last15minResumed: input.crowdsourcedStatus.last15minCounts.resumed
         } : undefined,
         comparisonData: {
             wind,
             snow
         },
-        officialStatus: input.jrStatus // 🆕 公式情報をそのまま格納
+        officialStatus: input.jrStatus
     };
 }
+
 
 // 週間予測を計算
 export function calculateWeeklyForecast(
@@ -319,23 +290,27 @@ export function calculateWeeklyForecast(
     routeName: string,
     weeklyWeather: WeatherForecast[],
     jrStatus?: JROperationStatus | null,
-    crowdsourcedStatus?: CrowdsourcedStatus | null
+    crowdsourcedStatus?: CrowdsourcedStatus | null,
+    historicalData?: PredictionInput['historicalData'] | null
 ): PredictionResult[] {
-    // 🆕 Timezone fix: Use JST for today determination
-    const today = new Intl.DateTimeFormat('sv-SE', {
-        timeZone: 'Asia/Tokyo'
-    }).format(new Date());
+    // 🆕 JST基準で本日を判定
+    const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    const todayStr = jstNow.toISOString().split('T')[0];
 
-    return weeklyWeather.map(weather =>
-        calculateSuspensionRisk({
+    return weeklyWeather.map((weather, index) => {
+        //日付文字列が一致するか、または最初の要素かつJST本日であればリアルタイム情報を反映
+        const isToday = weather.date === todayStr || (index === 0 && weather.date <= todayStr);
+
+        return calculateSuspensionRisk({
             routeId,
             routeName,
             targetDate: weather.date,
-            targetTime: '12:00', // 週間予測は正午（標準的な活動時間）基準で計算し、閲覧時刻による変動を防ぐ
+            targetTime: '12:00', // 週間予測は正午基準
             weather,
-            // 今日のみリアルタイム情報を反映
-            jrStatus: weather.date === today ? jrStatus : null,
-            crowdsourcedStatus: weather.date === today ? crowdsourcedStatus : null,
-        })
-    );
+            jrStatus: isToday ? jrStatus : null,
+            crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
+            historicalData: historicalData
+        });
+    });
 }
+

@@ -2100,6 +2100,209 @@
     "notes": "Synthetic Large Case 199"
   },
   {
+    "date": "2024-02-01",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "delayed",
+    "cause": "heavy_snow",
+    "notes": "Large scale snow delays, Airport Rapid reduced."
+  },
+  {
+    "date": "2024-02-02",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "210 trains cancelled including Airport Rapid."
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "124 trains cancelled."
+  },
+  {
+    "date": "2024-01-15",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Sapporo heavy snow, 200+ trains cancelled."
+  },
+  {
+    "date": "2024-01-16",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Continued heavy snow impact."
+  },
+  {
+    "date": "2024-01-24",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Low pressure blizzard, wide area suspension."
+  },
+  {
+    "date": "2024-01-25",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Blizzard continuing."
+  },
+  {
+    "date": "2024-02-06",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "130+ trains cancelled."
+  },
+  {
+    "date": "2024-03-02",
+    "routeId": "jr-hokkaido.soya-main",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Blizzard in northern area."
+  },
+  {
+    "date": "2023-01-10",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "delayed",
+    "cause": "snow",
+    "notes": "Snow accumulation delays."
+  },
+  {
+    "date": "2023-01-20",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "99 trains cancelled in Sapporo area."
+  },
+  {
+    "date": "2023-01-24",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Low pressure, wide suspension anticipated."
+  },
+  {
+    "date": "2023-01-25",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Major cold wave, 193 trains cancelled."
+  },
+  {
+    "date": "2023-01-26",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Continued cold wave impact, 862 trains cancelled over 2 days."
+  },
+  {
+    "date": "2023-02-01",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Low pressure, all Sapporo trains suspended after 20:00."
+  },
+  {
+    "date": "2023-02-02",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "All Sapporo trains suspended from morning until 10:00."
+  },
+  {
+    "date": "2022-01-12",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "320 trains cancelled."
+  },
+  {
+    "date": "2022-01-14",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "All Sapporo trains suspended after 21:00."
+  },
+  {
+    "date": "2022-01-25",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Record snow, 7000 stranded at airport."
+  },
+  {
+    "date": "2022-02-06",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Record 24h snowfall (60cm), massive suspension began."
+  },
+  {
+    "date": "2022-02-07",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Sapporo area complete suspension."
+  },
+  {
+    "date": "2022-02-08",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Sapporo area complete suspension continued."
+  },
+  {
+    "date": "2022-02-09",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "Gradual resumption but major disruptions."
+  },
+  {
+    "date": "2022-02-21",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Second major wave, blizzard and snow."
+  },
+  {
+    "date": "2022-02-22",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Massive cancellations continued."
+  },
+  {
+    "date": "2022-02-23",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "New Chitose Airport access cut off."
+  },
+  {
+    "date": "2022-12-15",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "heavy_snow",
+    "notes": "104 trains cancelled state-wide."
+  },
+  {
+    "date": "2022-12-23",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Winter pressure pattern, blizzard warnings."
+  },
+  {
+    "date": "2022-12-24",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Blizzard in Eastern Hokkaido."
+  },
+  {
     "date": "2023-01-07",
     "routeId": "jr-hokkaido.sekisho",
     "status": "delayed",
@@ -2163,11 +2366,256 @@
     "notes": "Generated: Wind 8.6m/s, Gust 20.2m/s, Snow 4.3cm"
   },
   {
-    "date": "2023-01-25",
+    "date": "2025-02-23",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.7m/s, Gust 49.7m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2026-01-27",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.2m/s, Gust 32.4m/s, Snow 1.9cm"
+  },
+  {
+    "date": "2025-03-31",
     "routeId": "jr-hokkaido.rumoi",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 42.5m/s, Gust 79.2m/s, Snow 2.9cm"
+    "notes": "Generated: Wind 24.7m/s, Gust 53.6m/s, Snow 1.4cm"
+  },
+  {
+    "date": "2025-03-25",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.8m/s, Gust 36.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-04",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.6m/s, Gust 49.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-16",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.8m/s, Gust 49.7m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 37.7m/s, Gust 52.6m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2025-03-28",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 35.4m/s, Gust 56.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-01",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.5m/s, Gust 49.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-13",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.4m/s, Gust 39.6m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2025-03-22",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.6m/s, Gust 56.5m/s, Snow 1.9cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.5m/s, Gust 41.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-07",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.5m/s, Gust 43.2m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2026-01-24",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 43.6m/s, Gust 63.4m/s, Snow 2.0cm"
+  },
+  {
+    "date": "2026-01-24",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 10.6m/s, Gust 20.2m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2025-03-22",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 50.4m/s, Gust 80.6m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.0m/s, Gust 40.3m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.7m/s, Gust 45.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.6m/s, Gust 33.1m/s, Snow 0.9cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.9m/s, Gust 39.6m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-01-07",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.9m/s, Gust 36.7m/s, Snow 2.4cm"
+  },
+  {
+    "date": "2024-01-16",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 16.2m/s, Gust 31.3m/s, Snow 2.4cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.0m/s, Gust 45.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-19",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.2m/s, Gust 29.2m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2024-01-01",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 30.1m/s, Gust 55.1m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.8m/s, Gust 27.4m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2025-03-07",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 29.6m/s, Gust 52.6m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2024-01-07",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 30.2m/s, Gust 61.6m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.4m/s, Gust 34.2m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2026-01-30",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.0m/s, Gust 47.2m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.9m/s, Gust 50.4m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2024-02-21",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.4m/s, Gust 37.4m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2025-03-13",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.7m/s, Gust 67.7m/s, Snow 3.0cm"
+  },
+  {
+    "date": "2024-01-07",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 13.8m/s, Gust 23.4m/s, Snow 2.5cm"
+  },
+  {
+    "date": "2024-03-07",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 11.9m/s, Gust 30.6m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2023-03-26",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.1m/s, Gust 33.5m/s, Snow 1.1cm"
   },
   {
     "date": "2026-02-08",
@@ -2177,130 +2625,200 @@
     "notes": "Generated: Wind 17.9m/s, Gust 42.1m/s, Snow 2.3cm"
   },
   {
-    "date": "2024-03-19",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.1m/s, Gust 62.6m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-31",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 41.1m/s, Gust 72.0m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-16",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.0m/s, Gust 58.7m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-01-15",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.8m/s, Gust 62.3m/s, Snow 4.0cm"
-  },
-  {
-    "date": "2025-01-27",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 51.8m/s, Gust 91.8m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2024-03-22",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.2m/s, Gust 29.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-20",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 11.7m/s, Gust 24.5m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-02-27",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.5m/s, Gust 31.3m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-08",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.4m/s, Gust 36.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-07",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.6m/s, Gust 28.8m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-03-02",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.1m/s, Gust 34.9m/s, Snow 4.1cm"
-  },
-  {
-    "date": "2025-01-21",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.6m/s, Gust 33.8m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2024-03-22",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.5m/s, Gust 50.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-30",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 41.0m/s, Gust 73.8m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2023-03-17",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.9m/s, Gust 41.8m/s, Snow 0.3cm"
-  },
-  {
-    "date": "2024-02-18",
+    "date": "2024-02-15",
     "routeId": "jr-hokkaido.muroran",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 25.9m/s, Gust 33.5m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 30.1m/s, Gust 40.3m/s, Snow 6.5cm"
   },
   {
-    "date": "2024-02-12",
-    "routeId": "jr-hokkaido.hidaka",
+    "date": "2024-01-10",
+    "routeId": "jr-hokkaido.sassho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 19.4m/s, Gust 44.3m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 29.4m/s, Gust 43.2m/s, Snow 0.4cm"
   },
   {
-    "date": "2023-03-14",
+    "date": "2023-03-23",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 26.6m/s, Gust 48.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-10",
     "routeId": "jr-hokkaido.rumoi",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 18.0m/s, Gust 33.1m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 30.4m/s, Gust 62.3m/s, Snow 4.7cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.3m/s, Gust 45.0m/s, Snow 0.9cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.3m/s, Gust 36.4m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2026-02-17",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.5m/s, Gust 30.6m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.9m/s, Gust 37.8m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 16.9m/s, Gust 23.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-10",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.4m/s, Gust 40.7m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2026-02-08",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.2m/s, Gust 38.5m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2026-01-06",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 31.0m/s, Gust 46.4m/s, Snow 2.4cm"
+  },
+  {
+    "date": "2025-03-10",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.5m/s, Gust 40.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.7m/s, Gust 38.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-03-23",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.3m/s, Gust 46.1m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-08",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 11.5m/s, Gust 31.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-09",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 16.6m/s, Gust 38.5m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.3m/s, Gust 32.4m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2024-02-06",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.7m/s, Gust 29.9m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-18",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.4m/s, Gust 43.9m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.8m/s, Gust 57.6m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2026-01-09",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.4m/s, Gust 54.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-15",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.2m/s, Gust 55.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.4m/s, Gust 28.1m/s, Snow 1.2cm"
+  },
+  {
+    "date": "2026-01-27",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 14.1m/s, Gust 24.8m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-02-09",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.8m/s, Gust 28.8m/s, Snow 0.7cm"
+  },
+  {
+    "date": "2025-03-04",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.0m/s, Gust 41.8m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.5m/s, Gust 44.3m/s, Snow 2.5cm"
   },
   {
     "date": "2024-02-12",
@@ -2310,102 +2828,606 @@
     "notes": "Generated: Wind 12.6m/s, Gust 18.7m/s, Snow 0.0cm"
   },
   {
-    "date": "2024-03-13",
-    "routeId": "jr-hokkaido.sekisho",
+    "date": "2025-03-28",
+    "routeId": "jr-hokkaido.hidaka",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 23.2m/s, Gust 40.7m/s, Snow 0.2cm"
+    "notes": "Generated: Wind 16.4m/s, Gust 38.5m/s, Snow 0.0cm"
   },
   {
-    "date": "2024-01-25",
-    "routeId": "jr-hokkaido.senmo",
+    "date": "2026-02-08",
+    "routeId": "jr-hokkaido.rumoi",
     "status": "stopped",
-    "cause": "blizzard",
-    "notes": "Generated: Wind 56.8m/s, Gust 98.6m/s, Snow 15.8cm"
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.8m/s, Gust 34.9m/s, Snow 2.2cm"
   },
   {
-    "date": "2025-02-17",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 8.2m/s, Gust 17.3m/s, Snow 2.3cm"
-  },
-  {
-    "date": "2023-02-18",
+    "date": "2023-02-09",
     "routeId": "jr-hokkaido.senmo",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 19.8m/s, Gust 36.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 22.0m/s, Gust 42.8m/s, Snow 0.4cm"
   },
   {
-    "date": "2023-02-15",
-    "routeId": "jr-hokkaido.nemuro",
+    "date": "2025-03-16",
+    "routeId": "jr-hokkaido.sekisho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 38.5m/s, Gust 68.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 20.9m/s, Gust 40.0m/s, Snow 3.6cm"
   },
   {
     "date": "2024-02-03",
-    "routeId": "jr-hokkaido.soya",
+    "routeId": "jr-hokkaido.senmo",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 32.8m/s, Gust 65.9m/s, Snow 0.6cm"
+    "notes": "Generated: Wind 26.4m/s, Gust 50.0m/s, Snow 0.8cm"
   },
   {
-    "date": "2024-02-18",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.7m/s, Gust 49.0m/s, Snow 0.0cm"
+    "date": "2024-01-31",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 11.8m/s, Gust 22.3m/s, Snow 3.7cm"
   },
   {
-    "date": "2025-01-30",
+    "date": "2026-01-09",
     "routeId": "jr-hokkaido.hidaka",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 24.6m/s, Gust 56.2m/s, Snow 0.3cm"
+    "notes": "Generated: Wind 20.9m/s, Gust 51.5m/s, Snow 0.0cm"
   },
   {
-    "date": "2023-02-12",
-    "routeId": "jr-hokkaido.rumoi",
+    "date": "2025-03-25",
+    "routeId": "jr-hokkaido.sekisho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 21.9m/s, Gust 40.7m/s, Snow 5.9cm"
+    "notes": "Generated: Wind 19.8m/s, Gust 38.5m/s, Snow 1.5cm"
   },
   {
-    "date": "2023-03-11",
+    "date": "2026-02-17",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 11.9m/s, Gust 23.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-16",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 36.4m/s, Gust 59.8m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2023-01-25",
     "routeId": "jr-hokkaido.muroran",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 34.5m/s, Gust 44.3m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 64.9m/s, Gust 99.0m/s, Snow 9.9cm"
   },
   {
-    "date": "2025-02-20",
-    "routeId": "jr-hokkaido.sassho",
+    "date": "2023-02-09",
+    "routeId": "jr-hokkaido.chitose",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 9.9m/s, Gust 27.0m/s, Snow 0.7cm"
-  },
-  {
-    "date": "2024-03-13",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.2m/s, Gust 47.5m/s, Snow 0.2cm"
+    "notes": "Generated: Wind 30.1m/s, Gust 52.9m/s, Snow 0.5cm"
   },
   {
     "date": "2024-02-09",
-    "routeId": "jr-hokkaido.rumoi",
+    "routeId": "jr-hokkaido.chitose",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 19.8m/s, Gust 40.7m/s, Snow 3.4cm"
+    "notes": "Generated: Wind 16.2m/s, Gust 31.3m/s, Snow 0.1cm"
   },
   {
-    "date": "2025-02-23",
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.1m/s, Gust 34.2m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.3m/s, Gust 26.3m/s, Snow 1.2cm"
+  },
+  {
+    "date": "2023-01-22",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 35.3m/s, Gust 71.6m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 43.2m/s, Gust 77.4m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2026-01-15",
     "routeId": "jr-hokkaido.hidaka",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 13.9m/s, Gust 35.6m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 22.2m/s, Gust 52.9m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2025-03-19",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.2m/s, Gust 27.0m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.1m/s, Gust 34.2m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2023-01-25",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.5m/s, Gust 68.8m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2024-02-21",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.9m/s, Gust 41.8m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 29.6m/s, Gust 62.6m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2025-03-07",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.3m/s, Gust 41.4m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2026-02-08",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 47.5m/s, Gust 66.6m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.7m/s, Gust 37.1m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-27",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 9.8m/s, Gust 18.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-30",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.6m/s, Gust 50.8m/s, Snow 2.0cm"
+  },
+  {
+    "date": "2026-01-30",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 11.7m/s, Gust 25.2m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.1m/s, Gust 35.6m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-04",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 48.9m/s, Gust 74.5m/s, Snow 3.8cm"
+  },
+  {
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 26.6m/s, Gust 45.7m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-01-19",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 12.0m/s, Gust 26.3m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-01-25",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.9m/s, Gust 58.7m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2026-01-27",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 9.6m/s, Gust 19.8m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 38.9m/s, Gust 52.9m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2023-01-16",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 43.0m/s, Gust 74.2m/s, Snow 6.0cm"
+  },
+  {
+    "date": "2026-02-17",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.7m/s, Gust 47.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.7m/s, Gust 27.4m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2024-03-25",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 26.2m/s, Gust 39.6m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.6m/s, Gust 39.6m/s, Snow 2.2cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.4m/s, Gust 37.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.1m/s, Gust 47.2m/s, Snow 3.4cm"
+  },
+  {
+    "date": "2024-02-21",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.0m/s, Gust 50.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.8m/s, Gust 37.4m/s, Snow 2.3cm"
+  },
+  {
+    "date": "2024-02-15",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.8m/s, Gust 38.2m/s, Snow 6.1cm"
+  },
+  {
+    "date": "2023-01-28",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.8m/s, Gust 28.1m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-03-26",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.4m/s, Gust 44.3m/s, Snow 1.6cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.6m/s, Gust 33.1m/s, Snow 0.9cm"
+  },
+  {
+    "date": "2025-01-18",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.1m/s, Gust 32.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-30",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.1m/s, Gust 42.1m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-28",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 47.2m/s, Gust 65.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-01-18",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.4m/s, Gust 41.8m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2023-01-28",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.7m/s, Gust 50.0m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2023-03-29",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 26.4m/s, Gust 50.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-01-21",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.4m/s, Gust 26.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-13",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 59.0m/s, Gust 81.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-03-19",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.9m/s, Gust 47.9m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2023-01-13",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.0m/s, Gust 41.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-07",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 11.3m/s, Gust 26.3m/s, Snow 4.1cm"
+  },
+  {
+    "date": "2024-01-16",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.6m/s, Gust 33.5m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-03-22",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 11.9m/s, Gust 26.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-02-02",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.1m/s, Gust 28.8m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2024-03-16",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.4m/s, Gust 40.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-28",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.7m/s, Gust 29.9m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-12",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.5m/s, Gust 50.0m/s, Snow 5.0cm"
+  },
+  {
+    "date": "2025-03-07",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.9m/s, Gust 46.4m/s, Snow 3.4cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.5m/s, Gust 65.2m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2026-01-12",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.6m/s, Gust 78.1m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-02-06",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.1m/s, Gust 29.2m/s, Snow 2.7cm"
+  },
+  {
+    "date": "2024-01-22",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 16.7m/s, Gust 31.7m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-02-06",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.7m/s, Gust 52.9m/s, Snow 2.7cm"
+  },
+  {
+    "date": "2023-01-16",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.5m/s, Gust 43.9m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2023-01-22",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 42.4m/s, Gust 62.6m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2026-01-21",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 37.9m/s, Gust 69.1m/s, Snow 2.5cm"
+  },
+  {
+    "date": "2023-03-29",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.8m/s, Gust 29.5m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-04",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.9m/s, Gust 37.1m/s, Snow 0.8cm"
+  },
+  {
+    "date": "2024-02-12",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.4m/s, Gust 44.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-17",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.5m/s, Gust 31.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-13",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 37.4m/s, Gust 51.5m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-03-26",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Generated: Wind 16.6m/s, Gust 33.1m/s, Snow 10.4cm"
+  },
+  {
+    "date": "2024-03-28",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.2m/s, Gust 41.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-03-16",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.0m/s, Gust 58.7m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-01-07",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.7m/s, Gust 39.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-11",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "blizzard",
+    "notes": "Generated: Wind 22.5m/s, Gust 57.6m/s, Snow 11.4cm"
+  },
+  {
+    "date": "2024-01-19",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.5m/s, Gust 39.6m/s, Snow 0.0cm"
   },
   {
     "date": "2025-01-18",
@@ -2415,46 +3437,389 @@
     "notes": "Generated: Wind 37.8m/s, Gust 66.2m/s, Snow 0.0cm"
   },
   {
+    "date": "2026-02-05",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.1m/s, Gust 43.6m/s, Snow 0.0cm"
+  },
+  {
     "date": "2024-02-18",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 40.0m/s, Gust 85.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-12",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.4m/s, Gust 52.9m/s, Snow 1.9cm"
+  },
+  {
+    "date": "2024-01-04",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.4m/s, Gust 26.3m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-01",
     "routeId": "jr-hokkaido.senmo",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 19.0m/s, Gust 33.1m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 26.0m/s, Gust 47.9m/s, Snow 0.8cm"
   },
   {
-    "date": "2024-03-28",
-    "routeId": "jr-hokkaido.sekihoku",
+    "date": "2026-01-12",
+    "routeId": "jr-hokkaido.sekisho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 12.5m/s, Gust 27.0m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 40.9m/s, Gust 82.1m/s, Snow 1.0cm"
   },
   {
-    "date": "2024-01-13",
-    "routeId": "jr-hokkaido.soya",
+    "date": "2024-03-31",
+    "routeId": "jr-hokkaido.chitose",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 33.2m/s, Gust 65.2m/s, Snow 2.0cm"
+    "notes": "Generated: Wind 19.5m/s, Gust 41.0m/s, Snow 0.2cm"
   },
   {
-    "date": "2025-01-15",
-    "routeId": "jr-hokkaido.sassho",
+    "date": "2024-01-16",
+    "routeId": "jr-hokkaido.nemuro",
     "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 12.3m/s, Gust 24.1m/s, Snow 0.8cm"
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 57.7m/s, Gust 109.4m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2025-01-03",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.0m/s, Gust 27.7m/s, Snow 1.8cm"
+  },
+  {
+    "date": "2025-03-13",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.8m/s, Gust 55.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-25",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.1m/s, Gust 47.5m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-22",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 30.2m/s, Gust 56.9m/s, Snow 8.6cm"
+  },
+  {
+    "date": "2023-02-03",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.2m/s, Gust 48.2m/s, Snow 1.9cm"
+  },
+  {
+    "date": "2024-01-31",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.4m/s, Gust 36.7m/s, Snow 1.6cm"
+  },
+  {
+    "date": "2025-03-25",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.3m/s, Gust 51.5m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-11",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 47.2m/s, Gust 63.0m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2025-01-24",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 37.1m/s, Gust 62.3m/s, Snow 6.8cm"
+  },
+  {
+    "date": "2026-01-15",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.9m/s, Gust 72.0m/s, Snow 1.7cm"
   },
   {
     "date": "2025-02-11",
-    "routeId": "jr-hokkaido.hidaka",
+    "routeId": "jr-hokkaido.muroran",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 23.6m/s, Gust 54.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 44.9m/s, Gust 62.3m/s, Snow 1.0cm"
   },
   {
-    "date": "2025-01-06",
+    "date": "2026-02-17",
     "routeId": "jr-hokkaido.soya",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 18.6m/s, Gust 35.3m/s, Snow 3.7cm"
+    "notes": "Generated: Wind 30.3m/s, Gust 61.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-22",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.5m/s, Gust 56.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-25",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 42.5m/s, Gust 79.2m/s, Snow 2.9cm"
+  },
+  {
+    "date": "2023-01-19",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.7m/s, Gust 34.6m/s, Snow 1.3cm"
+  },
+  {
+    "date": "2024-02-09",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.7m/s, Gust 45.4m/s, Snow 2.0cm"
+  },
+  {
+    "date": "2023-01-28",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.1m/s, Gust 45.7m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2023-03-23",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 35.1m/s, Gust 44.6m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 39.0m/s, Gust 55.1m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2024-01-25",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 56.4m/s, Gust 84.2m/s, Snow 6.9cm"
+  },
+  {
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.5m/s, Gust 49.0m/s, Snow 2.4cm"
+  },
+  {
+    "date": "2023-01-25",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 46.5m/s, Gust 83.2m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2023-01-13",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.5m/s, Gust 32.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-16",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 42.2m/s, Gust 56.9m/s, Snow 6.9cm"
+  },
+  {
+    "date": "2025-01-24",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 29.4m/s, Gust 41.0m/s, Snow 1.5cm"
+  },
+  {
+    "date": "2024-03-28",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 36.7m/s, Gust 46.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 36.9m/s, Gust 58.7m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2023-01-01",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 45.9m/s, Gust 67.0m/s, Snow 2.0cm"
+  },
+  {
+    "date": "2024-03-31",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 40.3m/s, Gust 54.7m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-02-12",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.1m/s, Gust 32.4m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2023-02-03",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.4m/s, Gust 37.1m/s, Snow 0.9cm"
+  },
+  {
+    "date": "2024-03-19",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 40.7m/s, Gust 53.3m/s, Snow 0.2cm"
+  },
+  {
+    "date": "2025-03-04",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.6m/s, Gust 47.9m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-18",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.7m/s, Gust 49.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-06",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 8.6m/s, Gust 11.2m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-02-11",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.7m/s, Gust 47.9m/s, Snow 3.4cm"
+  },
+  {
+    "date": "2023-02-15",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 38.5m/s, Gust 68.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-03-23",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.6m/s, Gust 41.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-01-27",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 51.8m/s, Gust 91.8m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2024-02-09",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 28.0m/s, Gust 49.7m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2026-01-30",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 34.3m/s, Gust 56.5m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2025-02-08",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.9m/s, Gust 34.9m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2023-03-17",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.4m/s, Gust 59.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-03-23",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 10.2m/s, Gust 22.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-01-10",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.5m/s, Gust 40.0m/s, Snow 4.8cm"
+  },
+  {
+    "date": "2024-01-10",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.2m/s, Gust 40.0m/s, Snow 2.9cm"
+  },
+  {
+    "date": "2023-02-18",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.2m/s, Gust 49.0m/s, Snow 1.8cm"
   },
   {
     "date": "2025-01-06",
@@ -2464,46 +3829,165 @@
     "notes": "Generated: Wind 27.9m/s, Gust 43.6m/s, Snow 0.6cm"
   },
   {
-    "date": "2024-01-19",
-    "routeId": "jr-hokkaido.nemuro",
+    "date": "2023-01-10",
+    "routeId": "jr-hokkaido.hidaka",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 36.2m/s, Gust 68.8m/s, Snow 1.2cm"
+    "notes": "Generated: Wind 13.5m/s, Gust 33.5m/s, Snow 0.0cm"
   },
   {
-    "date": "2024-03-19",
-    "routeId": "jr-hokkaido.sekihoku",
+    "date": "2026-01-03",
+    "routeId": "jr-hokkaido.soya",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 18.1m/s, Gust 35.6m/s, Snow 0.4cm"
+    "notes": "Generated: Wind 19.3m/s, Gust 34.9m/s, Snow 0.0cm"
   },
   {
-    "date": "2024-02-09",
-    "routeId": "jr-hokkaido.sekisho",
+    "date": "2026-01-12",
+    "routeId": "jr-hokkaido.muroran",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 20.8m/s, Gust 36.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 65.7m/s, Gust 91.8m/s, Snow 7.0cm"
   },
   {
-    "date": "2023-02-27",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 12.2m/s, Gust 23.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-29",
-    "routeId": "jr-hokkaido.senmo",
+    "date": "2024-01-04",
+    "routeId": "jr-hokkaido.hidaka",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 15.5m/s, Gust 29.5m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 13.5m/s, Gust 28.8m/s, Snow 0.1cm"
   },
   {
-    "date": "2023-03-08",
+    "date": "2024-01-13",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 15.2m/s, Gust 28.4m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2025-03-04",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 14.0m/s, Gust 34.9m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2023-02-15",
     "routeId": "jr-hokkaido.rumoi",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 22.3m/s, Gust 40.7m/s, Snow 0.1cm"
+    "notes": "Generated: Wind 22.3m/s, Gust 43.9m/s, Snow 1.2cm"
+  },
+  {
+    "date": "2023-01-10",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 17.0m/s, Gust 32.8m/s, Snow 2.1cm"
+  },
+  {
+    "date": "2025-01-27",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.5m/s, Gust 27.7m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-16",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.3m/s, Gust 46.1m/s, Snow 3.8cm"
+  },
+  {
+    "date": "2024-02-18",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 19.0m/s, Gust 33.1m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2026-01-18",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.2m/s, Gust 26.3m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2026-01-09",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.1m/s, Gust 54.4m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-01-10",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 47.8m/s, Gust 69.5m/s, Snow 1.8cm"
+  },
+  {
+    "date": "2026-02-14",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.8m/s, Gust 37.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-02-02",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 18.1m/s, Gust 31.0m/s, Snow 0.5cm"
+  },
+  {
+    "date": "2023-02-15",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "weather",
+    "notes": "Generated: Wind 13.0m/s, Gust 20.2m/s, Snow 1.8cm"
+  },
+  {
+    "date": "2025-02-05",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 25.3m/s, Gust 51.5m/s, Snow 6.7cm"
+  },
+  {
+    "date": "2023-02-03",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 43.2m/s, Gust 63.0m/s, Snow 1.1cm"
+  },
+  {
+    "date": "2025-03-28",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.5m/s, Gust 30.6m/s, Snow 2.6cm"
+  },
+  {
+    "date": "2025-02-05",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 20.2m/s, Gust 40.3m/s, Snow 2.0cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.sassho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 27.2m/s, Gust 42.1m/s, Snow 1.8cm"
+  },
+  {
+    "date": "2025-02-11",
+    "routeId": "jr-hokkaido.hidaka",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.6m/s, Gust 54.4m/s, Snow 0.0cm"
   },
   {
     "date": "2025-02-14",
@@ -2514,80 +3998,52 @@
   },
   {
     "date": "2023-02-24",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.2m/s, Gust 31.7m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2024-03-28",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.5m/s, Gust 50.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-06",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.6m/s, Gust 33.8m/s, Snow 3.7cm"
-  },
-  {
-    "date": "2024-02-21",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.4m/s, Gust 37.4m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2024-01-31",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.1m/s, Gust 33.5m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-28",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.8m/s, Gust 33.1m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2025-03-01",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 39.5m/s, Gust 51.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-20",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.8m/s, Gust 25.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-21",
     "routeId": "jr-hokkaido.nemuro",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 33.3m/s, Gust 56.2m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 28.8m/s, Gust 47.9m/s, Snow 0.0cm"
   },
   {
-    "date": "2023-02-27",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.5m/s, Gust 42.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-01",
+    "date": "2024-02-21",
     "routeId": "jr-hokkaido.hakodate-main",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 21.1m/s, Gust 34.2m/s, Snow 0.4cm"
+    "notes": "Generated: Wind 27.9m/s, Gust 41.8m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2024-03-16",
+    "routeId": "jr-hokkaido.rumoi",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.8m/s, Gust 52.2m/s, Snow 3.1cm"
+  },
+  {
+    "date": "2026-01-18",
+    "routeId": "jr-hokkaido.hakodate-main",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 8.3m/s, Gust 15.5m/s, Snow 1.0cm"
+  },
+  {
+    "date": "2023-02-06",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.5m/s, Gust 42.8m/s, Snow 2.4cm"
+  },
+  {
+    "date": "2023-01-31",
+    "routeId": "jr-hokkaido.chitose",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 13.5m/s, Gust 25.6m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-03-04",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 23.9m/s, Gust 43.2m/s, Snow 1.5cm"
   },
   {
     "date": "2025-01-27",
@@ -2597,928 +4053,32 @@
     "notes": "Generated: Wind 19.0m/s, Gust 43.6m/s, Snow 0.1cm"
   },
   {
-    "date": "2024-01-10",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 47.8m/s, Gust 69.5m/s, Snow 1.8cm"
-  },
-  {
-    "date": "2026-01-27",
+    "date": "2023-01-22",
     "routeId": "jr-hokkaido.nemuro",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 24.2m/s, Gust 40.3m/s, Snow 1.2cm"
-  },
-  {
-    "date": "2024-02-03",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 39.0m/s, Gust 55.1m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-01-04",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.0m/s, Gust 43.6m/s, Snow 2.1cm"
-  },
-  {
-    "date": "2024-03-25",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 25.5m/s, Gust 43.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-24",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.5m/s, Gust 44.3m/s, Snow 5.7cm"
-  },
-  {
-    "date": "2025-01-24",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 5.0m/s, Gust 11.2m/s, Snow 1.3cm"
-  },
-  {
-    "date": "2024-01-10",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.2m/s, Gust 40.0m/s, Snow 2.9cm"
-  },
-  {
-    "date": "2024-02-12",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 16.9m/s, Gust 23.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-01",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 45.9m/s, Gust 67.0m/s, Snow 2.0cm"
-  },
-  {
-    "date": "2023-01-16",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.1m/s, Gust 34.9m/s, Snow 3.4cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 35.6m/s, Gust 53.3m/s, Snow 1.4cm"
-  },
-  {
-    "date": "2025-02-05",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.0m/s, Gust 56.5m/s, Snow 7.9cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.5m/s, Gust 41.0m/s, Snow 0.3cm"
-  },
-  {
-    "date": "2024-01-13",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 45.3m/s, Gust 85.3m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-16",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.2m/s, Gust 36.0m/s, Snow 3.4cm"
-  },
-  {
-    "date": "2023-03-26",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.5m/s, Gust 42.8m/s, Snow 8.5cm"
-  },
-  {
-    "date": "2025-02-02",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.6m/s, Gust 41.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.6m/s, Gust 38.2m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2024-02-09",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.8m/s, Gust 28.8m/s, Snow 0.7cm"
-  },
-  {
-    "date": "2024-02-12",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.1m/s, Gust 40.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 56.3m/s, Gust 77.4m/s, Snow 2.6cm"
-  },
-  {
-    "date": "2023-01-07",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.5m/s, Gust 28.4m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2025-01-15",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.5m/s, Gust 46.4m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-02-15",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.8m/s, Gust 38.2m/s, Snow 6.1cm"
-  },
-  {
-    "date": "2025-01-06",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.5m/s, Gust 38.2m/s, Snow 5.5cm"
-  },
-  {
-    "date": "2024-03-16",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.5m/s, Gust 44.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-27",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.9m/s, Gust 40.3m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-28",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.6m/s, Gust 36.4m/s, Snow 2.2cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.3m/s, Gust 33.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-31",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.8m/s, Gust 56.5m/s, Snow 3.7cm"
-  },
-  {
-    "date": "2025-02-23",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.4m/s, Gust 40.3m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-01-19",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 12.0m/s, Gust 26.3m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-02-18",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 40.0m/s, Gust 85.7m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 35.6m/s, Gust 62.3m/s, Snow 0.0cm"
   },
   {
     "date": "2025-03-01",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.1m/s, Gust 37.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.2m/s, Gust 73.8m/s, Snow 8.0cm"
-  },
-  {
-    "date": "2023-02-15",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 13.0m/s, Gust 20.2m/s, Snow 1.8cm"
-  },
-  {
-    "date": "2025-02-14",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.3m/s, Gust 46.4m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2024-02-09",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.0m/s, Gust 49.7m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2025-02-14",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.2m/s, Gust 52.2m/s, Snow 1.3cm"
-  },
-  {
-    "date": "2023-01-10",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.5m/s, Gust 40.0m/s, Snow 4.8cm"
-  },
-  {
-    "date": "2024-02-06",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 35.0m/s, Gust 62.3m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2023-03-14",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.5m/s, Gust 46.4m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-12",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 65.7m/s, Gust 91.8m/s, Snow 7.0cm"
-  },
-  {
-    "date": "2024-01-19",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.2m/s, Gust 33.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-04",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 27.7m/s, Gust 40.7m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2026-01-15",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.0m/s, Gust 27.4m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2026-01-30",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.1m/s, Gust 42.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-15",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 32.9m/s, Gust 72.0m/s, Snow 1.7cm"
-  },
-  {
-    "date": "2026-01-30",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 41.1m/s, Gust 56.2m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-02-03",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 27.2m/s, Gust 42.1m/s, Snow 1.8cm"
-  },
-  {
-    "date": "2024-01-04",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 12.4m/s, Gust 22.3m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-17",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 41.4m/s, Gust 54.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-18",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.5m/s, Gust 44.3m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2026-01-18",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.0m/s, Gust 56.5m/s, Snow 2.5cm"
-  },
-  {
-    "date": "2023-01-28",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 38.0m/s, Gust 70.2m/s, Snow 5.7cm"
-  },
-  {
-    "date": "2024-02-12",
     "routeId": "jr-hokkaido.senmo",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 15.6m/s, Gust 27.7m/s, Snow 0.2cm"
+    "notes": "Generated: Wind 17.4m/s, Gust 34.9m/s, Snow 0.0cm"
   },
   {
-    "date": "2023-03-11",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.5m/s, Gust 30.6m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2023-02-24",
+    "date": "2023-01-25",
     "routeId": "jr-hokkaido.soya",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 20.7m/s, Gust 43.9m/s, Snow 1.6cm"
-  },
-  {
-    "date": "2026-01-27",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 14.1m/s, Gust 24.8m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-02-03",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 35.3m/s, Gust 60.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-18",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 52.8m/s, Gust 74.2m/s, Snow 6.9cm"
-  },
-  {
-    "date": "2026-01-12",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 40.9m/s, Gust 82.1m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2024-01-22",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.7m/s, Gust 31.7m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-31",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.3m/s, Gust 45.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-31",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.5m/s, Gust 47.5m/s, Snow 0.8cm"
+    "notes": "Generated: Wind 43.9m/s, Gust 95.4m/s, Snow 2.5cm"
   },
   {
     "date": "2023-02-21",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.1m/s, Gust 49.7m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2024-02-03",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.9m/s, Gust 50.4m/s, Snow 1.5cm"
-  },
-  {
-    "date": "2023-03-08",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.0m/s, Gust 46.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-09",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.9m/s, Gust 70.2m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-02-18",
     "routeId": "jr-hokkaido.soya",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 31.1m/s, Gust 59.8m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2023-01-28",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.7m/s, Gust 50.0m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2023-02-06",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.9m/s, Gust 28.4m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2023-03-11",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 9.2m/s, Gust 14.4m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-02-17",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.8m/s, Gust 25.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-01",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.3m/s, Gust 26.3m/s, Snow 1.2cm"
-  },
-  {
-    "date": "2024-01-22",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "blizzard",
-    "notes": "Generated: Wind 38.4m/s, Gust 79.2m/s, Snow 10.2cm"
-  },
-  {
-    "date": "2023-03-23",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.3m/s, Gust 35.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-13",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.9m/s, Gust 29.5m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-05",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.5m/s, Gust 53.3m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-03-22",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 36.1m/s, Gust 70.6m/s, Snow 6.2cm"
-  },
-  {
-    "date": "2026-02-08",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.6m/s, Gust 54.0m/s, Snow 4.3cm"
-  },
-  {
-    "date": "2023-01-19",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.9m/s, Gust 28.4m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 25.1m/s, Gust 64.1m/s, Snow 8.2cm"
-  },
-  {
-    "date": "2026-02-14",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.9m/s, Gust 37.8m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2023-03-02",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.1m/s, Gust 49.3m/s, Snow 6.2cm"
-  },
-  {
-    "date": "2025-01-30",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.1m/s, Gust 42.8m/s, Snow 7.4cm"
-  },
-  {
-    "date": "2026-02-14",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.7m/s, Gust 45.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.4m/s, Gust 32.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-13",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 35.0m/s, Gust 63.4m/s, Snow 1.5cm"
-  },
-  {
-    "date": "2023-01-28",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.1m/s, Gust 45.7m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2024-03-04",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.6m/s, Gust 33.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-03-17",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.9m/s, Gust 41.8m/s, Snow 0.3cm"
-  },
-  {
-    "date": "2023-02-12",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.4m/s, Gust 39.6m/s, Snow 2.7cm"
-  },
-  {
-    "date": "2026-02-14",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.8m/s, Gust 37.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-04",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.9m/s, Gust 37.1m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2025-01-24",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.6m/s, Gust 27.0m/s, Snow 2.9cm"
-  },
-  {
-    "date": "2024-03-13",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.2m/s, Gust 40.7m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-02-11",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.4m/s, Gust 45.4m/s, Snow 4.5cm"
-  },
-  {
-    "date": "2025-02-08",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.5m/s, Gust 33.5m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2023-02-09",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.6m/s, Gust 42.1m/s, Snow 4.3cm"
-  },
-  {
-    "date": "2025-02-14",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.8m/s, Gust 37.4m/s, Snow 6.9cm"
-  },
-  {
-    "date": "2025-02-08",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 37.4m/s, Gust 69.1m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2024-01-13",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 37.4m/s, Gust 51.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-01-24",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 29.4m/s, Gust 41.0m/s, Snow 1.5cm"
-  },
-  {
-    "date": "2025-01-30",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 44.1m/s, Gust 60.1m/s, Snow 1.7cm"
-  },
-  {
-    "date": "2025-02-17",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.6m/s, Gust 37.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-03-04",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.3m/s, Gust 38.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-01",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.3m/s, Gust 55.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-15",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.5m/s, Gust 26.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-16",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.6m/s, Gust 33.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-01-30",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.4m/s, Gust 58.3m/s, Snow 2.4cm"
-  },
-  {
-    "date": "2025-03-01",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.5m/s, Gust 49.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-16",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.1m/s, Gust 38.5m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2025-02-05",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.8m/s, Gust 41.4m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2025-03-16",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.8m/s, Gust 30.6m/s, Snow 2.3cm"
-  },
-  {
-    "date": "2024-03-16",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.4m/s, Gust 40.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-23",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.6m/s, Gust 41.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-06",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.1m/s, Gust 40.7m/s, Snow 3.7cm"
-  },
-  {
-    "date": "2026-01-21",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.4m/s, Gust 37.4m/s, Snow 0.3cm"
-  },
-  {
-    "date": "2025-03-13",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.4m/s, Gust 44.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-31",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.3m/s, Gust 27.0m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2024-01-07",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.1m/s, Gust 31.3m/s, Snow 2.3cm"
-  },
-  {
-    "date": "2023-01-19",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.7m/s, Gust 30.6m/s, Snow 1.2cm"
-  },
-  {
-    "date": "2023-02-18",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.3m/s, Gust 36.4m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2026-02-17",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.8m/s, Gust 42.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-01-28",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 8.4m/s, Gust 11.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-04",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.4m/s, Gust 59.4m/s, Snow 2.2cm"
-  },
-  {
-    "date": "2023-01-13",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.9m/s, Gust 29.5m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-03-04",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 11.6m/s, Gust 28.1m/s, Snow 0.2cm"
-  },
-  {
-    "date": "2023-01-16",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.9m/s, Gust 37.8m/s, Snow 4.7cm"
-  },
-  {
-    "date": "2023-03-20",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 27.2m/s, Gust 50.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 28.2m/s, Gust 52.2m/s, Snow 0.6cm"
   },
   {
     "date": "2024-03-22",
@@ -3528,606 +4088,25 @@
     "notes": "Generated: Wind 14.6m/s, Gust 31.3m/s, Snow 0.0cm"
   },
   {
-    "date": "2024-03-01",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.4m/s, Gust 55.8m/s, Snow 6.0cm"
-  },
-  {
-    "date": "2024-03-16",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.0m/s, Gust 52.2m/s, Snow 2.4cm"
-  },
-  {
-    "date": "2023-03-08",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.3m/s, Gust 55.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-11",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.3m/s, Gust 46.4m/s, Snow 4.3cm"
-  },
-  {
-    "date": "2024-02-15",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.1m/s, Gust 40.3m/s, Snow 6.5cm"
-  },
-  {
-    "date": "2026-02-11",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.1m/s, Gust 58.7m/s, Snow 5.5cm"
-  },
-  {
-    "date": "2023-01-04",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.1m/s, Gust 28.4m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-23",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.9m/s, Gust 31.3m/s, Snow 7.3cm"
-  },
-  {
-    "date": "2023-01-04",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.9m/s, Gust 37.1m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2023-02-27",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.5m/s, Gust 31.3m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-03-04",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.0m/s, Gust 41.8m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2026-02-08",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 10.9m/s, Gust 20.9m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2025-03-22",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.6m/s, Gust 59.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-02-15",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.9m/s, Gust 51.8m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2025-01-18",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 40.1m/s, Gust 58.7m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-25",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.1m/s, Gust 46.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-29",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.0m/s, Gust 25.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-07",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.4m/s, Gust 32.8m/s, Snow 0.7cm"
-  },
-  {
-    "date": "2025-01-24",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 37.1m/s, Gust 62.3m/s, Snow 6.8cm"
-  },
-  {
-    "date": "2025-02-20",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 39.3m/s, Gust 65.9m/s, Snow 3.3cm"
-  },
-  {
-    "date": "2025-02-17",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.7m/s, Gust 29.2m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2025-02-11",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.3m/s, Gust 46.4m/s, Snow 4.3cm"
-  },
-  {
-    "date": "2025-01-27",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.3m/s, Gust 51.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-25",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 33.8m/s, Gust 66.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-31",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 11.4m/s, Gust 21.2m/s, Snow 2.2cm"
-  },
-  {
-    "date": "2023-02-09",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 45.6m/s, Gust 64.1m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2023-02-12",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.5m/s, Gust 54.0m/s, Snow 2.5cm"
-  },
-  {
-    "date": "2023-01-16",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.9m/s, Gust 37.8m/s, Snow 4.7cm"
-  },
-  {
-    "date": "2023-02-12",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 17.1m/s, Gust 32.4m/s, Snow 1.0cm"
-  },
-  {
-    "date": "2025-03-10",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.6m/s, Gust 29.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-01-13",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 15.0m/s, Gust 40.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-02-06",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.7m/s, Gust 29.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-14",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.5m/s, Gust 43.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-18",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.4m/s, Gust 41.8m/s, Snow 0.6cm"
-  },
-  {
-    "date": "2025-02-05",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.0m/s, Gust 52.9m/s, Snow 4.6cm"
-  },
-  {
-    "date": "2023-02-03",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 25.2m/s, Gust 48.2m/s, Snow 1.9cm"
-  },
-  {
-    "date": "2023-03-17",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 27.1m/s, Gust 60.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-21",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.8m/s, Gust 35.6m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 28.1m/s, Gust 48.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-02-11",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.5m/s, Gust 46.8m/s, Snow 6.2cm"
-  },
-  {
-    "date": "2026-02-05",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.8m/s, Gust 29.9m/s, Snow 0.7cm"
-  },
-  {
-    "date": "2026-02-14",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.4m/s, Gust 34.2m/s, Snow 0.5cm"
-  },
-  {
-    "date": "2024-02-21",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.5m/s, Gust 53.3m/s, Snow 2.2cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 11.5m/s, Gust 27.4m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-12",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 45.2m/s, Gust 79.9m/s, Snow 0.0cm"
-  },
-  {
     "date": "2024-03-28",
-    "routeId": "jr-hokkaido.senmo",
+    "routeId": "jr-hokkaido.soya",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 19.7m/s, Gust 36.4m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 26.8m/s, Gust 57.2m/s, Snow 0.0cm"
   },
   {
-    "date": "2025-03-07",
+    "date": "2023-02-24",
     "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 11.3m/s, Gust 26.3m/s, Snow 4.1cm"
-  },
-  {
-    "date": "2024-02-27",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 36.9m/s, Gust 68.4m/s, Snow 3.8cm"
-  },
-  {
-    "date": "2024-01-25",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 56.4m/s, Gust 84.2m/s, Snow 6.9cm"
-  },
-  {
-    "date": "2023-03-23",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 10.2m/s, Gust 22.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-01-01",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.0m/s, Gust 47.9m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2023-02-09",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.0m/s, Gust 42.8m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2023-02-03",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.1m/s, Gust 40.0m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-02-17",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 11.9m/s, Gust 23.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-01",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 34.3m/s, Gust 50.8m/s, Snow 7.2cm"
-  },
-  {
-    "date": "2025-01-03",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.0m/s, Gust 27.7m/s, Snow 1.8cm"
-  },
-  {
-    "date": "2025-03-22",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 31.3m/s, Gust 79.6m/s, Snow 1.3cm"
-  },
-  {
-    "date": "2025-01-12",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.5m/s, Gust 29.9m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2026-01-06",
-    "routeId": "jr-hokkaido.hakodate-main",
     "status": "normal",
     "cause": "none",
-    "notes": "Generated: Wind 6.9m/s, Gust 17.6m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 7.9m/s, Gust 15.5m/s, Snow 0.1cm"
   },
   {
-    "date": "2025-02-14",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 14.8m/s, Gust 34.2m/s, Snow 0.4cm"
-  },
-  {
-    "date": "2023-02-09",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 32.8m/s, Gust 50.4m/s, Snow 1.9cm"
-  },
-  {
-    "date": "2025-03-19",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 10.6m/s, Gust 29.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-03-17",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.4m/s, Gust 59.8m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-24",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.1m/s, Gust 52.9m/s, Snow 3.4cm"
-  },
-  {
-    "date": "2023-01-01",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.5m/s, Gust 49.0m/s, Snow 2.4cm"
-  },
-  {
-    "date": "2024-03-31",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 40.3m/s, Gust 54.7m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-02-06",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.5m/s, Gust 28.1m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-03-19",
-    "routeId": "jr-hokkaido.chitose",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 23.9m/s, Gust 47.9m/s, Snow 1.5cm"
-  },
-  {
-    "date": "2025-02-17",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.7m/s, Gust 29.2m/s, Snow 0.8cm"
-  },
-  {
-    "date": "2024-01-07",
-    "routeId": "jr-hokkaido.hakodate-main",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.9m/s, Gust 36.7m/s, Snow 2.4cm"
-  },
-  {
-    "date": "2023-01-04",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 16.8m/s, Gust 40.7m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-02-26",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 41.8m/s, Gust 82.1m/s, Snow 5.1cm"
-  },
-  {
-    "date": "2025-03-19",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.6m/s, Gust 34.9m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2026-01-30",
-    "routeId": "jr-hokkaido.hidaka",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 19.9m/s, Gust 48.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-25",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 26.2m/s, Gust 39.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-02-03",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 43.2m/s, Gust 77.4m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2024-02-21",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 27.9m/s, Gust 41.8m/s, Snow 0.3cm"
-  },
-  {
-    "date": "2023-03-05",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 12.2m/s, Gust 25.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-02-17",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 30.3m/s, Gust 61.2m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2025-01-27",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 32.5m/s, Gust 61.9m/s, Snow 2.2cm"
-  },
-  {
-    "date": "2024-03-22",
-    "routeId": "jr-hokkaido.sassho",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 18.2m/s, Gust 29.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-06",
-    "routeId": "jr-hokkaido.soya",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.9m/s, Gust 25.6m/s, Snow 4.1cm"
-  },
-  {
-    "date": "2026-01-09",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 13.8m/s, Gust 26.6m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2026-01-30",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 22.6m/s, Gust 50.8m/s, Snow 2.0cm"
-  },
-  {
-    "date": "2023-01-31",
+    "date": "2024-02-09",
     "routeId": "jr-hokkaido.sekisho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 21.9m/s, Gust 38.2m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2025-01-24",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "normal",
-    "cause": "none",
-    "notes": "Generated: Wind 10.5m/s, Gust 20.9m/s, Snow 0.4cm"
+    "notes": "Generated: Wind 20.8m/s, Gust 36.4m/s, Snow 0.0cm"
   },
   {
     "date": "2024-01-25",
@@ -4137,25 +4116,81 @@
     "notes": "Generated: Wind 30.3m/s, Gust 69.1m/s, Snow 0.8cm"
   },
   {
-    "date": "2023-03-02",
-    "routeId": "jr-hokkaido.sekisho",
-    "status": "stopped",
-    "cause": "weather",
-    "notes": "Generated: Wind 11.7m/s, Gust 21.2m/s, Snow 3.9cm"
-  },
-  {
-    "date": "2024-03-07",
-    "routeId": "jr-hokkaido.muroran",
+    "date": "2026-02-17",
+    "routeId": "jr-hokkaido.rumoi",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 31.2m/s, Gust 42.1m/s, Snow 0.0cm"
+    "notes": "Generated: Wind 13.9m/s, Gust 29.2m/s, Snow 0.1cm"
   },
   {
-    "date": "2023-03-11",
+    "date": "2026-01-18",
+    "routeId": "jr-hokkaido.nemuro",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 33.0m/s, Gust 56.5m/s, Snow 2.5cm"
+  },
+  {
+    "date": "2024-03-28",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 12.5m/s, Gust 27.0m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2025-02-08",
     "routeId": "jr-hokkaido.sassho",
     "status": "stopped",
     "cause": "strong_wind",
-    "notes": "Generated: Wind 25.6m/s, Gust 41.0m/s, Snow 0.1cm"
+    "notes": "Generated: Wind 16.5m/s, Gust 33.5m/s, Snow 0.4cm"
+  },
+  {
+    "date": "2025-02-11",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 22.2m/s, Gust 42.8m/s, Snow 0.0cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.sekihoku",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 11.3m/s, Gust 20.5m/s, Snow 0.7cm"
+  },
+  {
+    "date": "2024-02-03",
+    "routeId": "jr-hokkaido.soya",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 32.8m/s, Gust 65.9m/s, Snow 0.6cm"
+  },
+  {
+    "date": "2023-01-22",
+    "routeId": "jr-hokkaido.senmo",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 21.0m/s, Gust 39.6m/s, Snow 0.3cm"
+  },
+  {
+    "date": "2023-01-19",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "normal",
+    "cause": "none",
+    "notes": "Generated: Wind 11.6m/s, Gust 15.8m/s, Snow 0.1cm"
+  },
+  {
+    "date": "2025-01-30",
+    "routeId": "jr-hokkaido.muroran",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 44.1m/s, Gust 60.1m/s, Snow 1.7cm"
+  },
+  {
+    "date": "2025-03-31",
+    "routeId": "jr-hokkaido.sekisho",
+    "status": "stopped",
+    "cause": "strong_wind",
+    "notes": "Generated: Wind 24.9m/s, Gust 50.4m/s, Snow 0.0cm"
   },
   {
     "date": "2026-01-21",
@@ -4163,40 +4198,5 @@
     "status": "stopped",
     "cause": "strong_wind",
     "notes": "Generated: Wind 27.7m/s, Gust 46.1m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-01-01",
-    "routeId": "jr-hokkaido.sekihoku",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 20.6m/s, Gust 43.9m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2024-03-04",
-    "routeId": "jr-hokkaido.nemuro",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 24.2m/s, Gust 47.5m/s, Snow 0.1cm"
-  },
-  {
-    "date": "2023-01-10",
-    "routeId": "jr-hokkaido.senmo",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 29.8m/s, Gust 58.0m/s, Snow 1.3cm"
-  },
-  {
-    "date": "2025-03-28",
-    "routeId": "jr-hokkaido.rumoi",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 21.8m/s, Gust 42.5m/s, Snow 0.0cm"
-  },
-  {
-    "date": "2023-02-06",
-    "routeId": "jr-hokkaido.muroran",
-    "status": "stopped",
-    "cause": "strong_wind",
-    "notes": "Generated: Wind 32.5m/s, Gust 42.8m/s, Snow 2.4cm"
   }
 ]

@@ -87,7 +87,7 @@ async function runBacktest() {
                     targetDate: testCase.date,
                     targetTime: hourWeather.targetTime,
                     weather: hourWeather,
-                    jrStatus: { status: 'normal' }, // Assume no official info (Pure Prediction)
+                    jrStatus: null, // Pure Prediction (No official info)
                     crowdsourcedStatus: null,
                 };
 

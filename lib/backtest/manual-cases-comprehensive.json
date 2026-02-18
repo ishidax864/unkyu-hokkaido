@@ -1,0 +1,205 @@
+[
+    {
+        "date": "2024-02-01",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "delayed",
+        "cause": "heavy_snow",
+        "notes": "Large scale snow delays, Airport Rapid reduced."
+    },
+    {
+        "date": "2024-02-02",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "210 trains cancelled including Airport Rapid."
+    },
+    {
+        "date": "2024-02-03",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "124 trains cancelled."
+    },
+    {
+        "date": "2024-01-15",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Sapporo heavy snow, 200+ trains cancelled."
+    },
+    {
+        "date": "2024-01-16",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Continued heavy snow impact."
+    },
+    {
+        "date": "2024-01-24",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Low pressure blizzard, wide area suspension."
+    },
+    {
+        "date": "2024-01-25",
+        "routeId": "jr-hokkaido.nemuro",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Blizzard continuing."
+    },
+    {
+        "date": "2024-02-06",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "130+ trains cancelled."
+    },
+    {
+        "date": "2024-03-02",
+        "routeId": "jr-hokkaido.soya-main",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Blizzard in northern area."
+    },
+    {
+        "date": "2023-01-10",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "delayed",
+        "cause": "snow",
+        "notes": "Snow accumulation delays."
+    },
+    {
+        "date": "2023-01-20",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "99 trains cancelled in Sapporo area."
+    },
+    {
+        "date": "2023-01-24",
+        "routeId": "jr-hokkaido.hakodate-main",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Low pressure, wide suspension anticipated."
+    },
+    {
+        "date": "2023-01-25",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Major cold wave, 193 trains cancelled."
+    },
+    {
+        "date": "2023-01-26",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Continued cold wave impact, 862 trains cancelled over 2 days."
+    },
+    {
+        "date": "2023-02-01",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Low pressure, all Sapporo trains suspended after 20:00."
+    },
+    {
+        "date": "2023-02-02",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "All Sapporo trains suspended from morning until 10:00."
+    },
+    {
+        "date": "2022-01-12",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "320 trains cancelled."
+    },
+    {
+        "date": "2022-01-14",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "All Sapporo trains suspended after 21:00."
+    },
+    {
+        "date": "2022-01-25",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Record snow, 7000 stranded at airport."
+    },
+    {
+        "date": "2022-02-06",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Record 24h snowfall (60cm), massive suspension began."
+    },
+    {
+        "date": "2022-02-07",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Sapporo area complete suspension."
+    },
+    {
+        "date": "2022-02-08",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Sapporo area complete suspension continued."
+    },
+    {
+        "date": "2022-02-09",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "Gradual resumption but major disruptions."
+    },
+    {
+        "date": "2022-02-21",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Second major wave, blizzard and snow."
+    },
+    {
+        "date": "2022-02-22",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Massive cancellations continued."
+    },
+    {
+        "date": "2022-02-23",
+        "routeId": "jr-hokkaido.chitose",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "New Chitose Airport access cut off."
+    },
+    {
+        "date": "2022-12-15",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "heavy_snow",
+        "notes": "104 trains cancelled state-wide."
+    },
+    {
+        "date": "2022-12-23",
+        "routeId": "jr-hokkaido.soya",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Winter pressure pattern, blizzard warnings."
+    },
+    {
+        "date": "2022-12-24",
+        "routeId": "jr-hokkaido.senmo",
+        "status": "stopped",
+        "cause": "blizzard",
+        "notes": "Blizzard in Eastern Hokkaido."
+    }
+]

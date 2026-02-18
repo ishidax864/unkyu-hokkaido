@@ -1,0 +1,50 @@
+{
+    "jr-hokkaido.hakodate-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_spo.html",
+        "label": "札幌近郊の運行情報"
+    },
+    "jr-hokkaido.chitose": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_spo.html",
+        "label": "札幌近郊の運行情報"
+    },
+    "jr-hokkaido.sassho": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_spo.html",
+        "label": "札幌近郊の運行情報"
+    },
+    "jr-hokkaido.muroran-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_doo.html",
+        "label": "道央エリアの運行情報"
+    },
+    "jr-hokkaido.soya-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_dohoku.html",
+        "label": "道北エリアの運行情報"
+    },
+    "jr-hokkaido.sekihoku-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_dohoku.html",
+        "label": "道北エリアの運行情報"
+    },
+    "jr-hokkaido.rumoi": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_dohoku.html",
+        "label": "道北エリアの運行情報"
+    },
+    "jr-hokkaido.hidaka": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_doo.html",
+        "label": "道央エリアの運行情報"
+    },
+    "jr-hokkaido.nemuro-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_doto.html",
+        "label": "道東エリアの運行情報"
+    },
+    "jr-hokkaido.sekisho": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_doto.html",
+        "label": "道東エリアの運行情報"
+    },
+    "jr-hokkaido.senmo-main": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_doto.html",
+        "label": "道東エリアの運行情報"
+    },
+    "jr-hokkaido.hakodate-south": {
+        "url": "https://www3.jrhokkaido.co.jp/webunkou/area_donan.html",
+        "label": "道南エリアの運行情報"
+    }
+}

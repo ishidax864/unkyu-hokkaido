@@ -1,0 +1,125 @@
+[
+    {
+        "from": "sapporo",
+        "to": "shin-chitose-airport",
+        "options": [
+            {
+                "type": "bus",
+                "name": "空港連絡バス（中央バス/北都交通）",
+                "details": "札幌市内各所・主要ホテルから直行。確実に座れるが、雪による渋滞リスクあり。",
+                "time": "約70-80分",
+                "note": "高速道路通行止めの場合は下道迂回で大幅遅延あり",
+                "url": "https://www.chuo-bus.co.jp/airport/"
+            },
+            {
+                "type": "subway",
+                "name": "地下鉄東豊線 + バス",
+                "details": "地下鉄「福住駅」まで移動し、そこから空港連絡バスに乗車。",
+                "time": "約60分",
+                "note": "札幌中心部の渋滞を回避できるため、雪の日は比較的安定。荷物が多いと乗り換えが少し大変。"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "otaru",
+        "options": [
+            {
+                "type": "bus",
+                "name": "高速おたる号（中央バス/JRバス）",
+                "details": "札幌ターミナル・札幌駅から頻発。円山経由・北大経由あり。",
+                "time": "約65分",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=8"
+            },
+            {
+                "type": "subway",
+                "name": "地下鉄東西線 + バス",
+                "details": "地下鉄「宮の沢駅」まで移動し、ターミナルから小樽行きバスに乗車。",
+                "time": "約50分",
+                "note": "札幌市内の渋滞を完全回避。宮の沢駅は屋内ターミナル直結で快適。"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "asahikawa",
+        "options": [
+            {
+                "type": "bus",
+                "name": "高速あさひかわ号",
+                "details": "札幌駅前ターミナル発。30分間隔で運行。",
+                "time": "約130分",
+                "note": "JR特急運休時は非常に混雑し、積み残し発生の可能性あり。予約推奨（一部便）。",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=1"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "muroran",
+        "options": [
+            {
+                "type": "bus",
+                "name": "高速とまこまい号 / 高速むろらん号",
+                "details": "札幌駅前ターミナル発。",
+                "time": "苫小牧:約100分 / 室蘭:約150分",
+                "url": "https://www.chuo-bus.co.jp/highway/"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "hakodate",
+        "options": [
+            {
+                "type": "bus",
+                "name": "高速はこだて号",
+                "details": "札幌駅前 ↔ 函館駅前。要予約。所要約5時間30分。",
+                "time": "約5時間30分",
+                "note": "JR運休時は満席になりやすい。夜行便もあり。",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=2"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "obihiro_kushiro",
+        "options": [
+            {
+                "type": "bus",
+                "name": "ポテトライナー / スターライト釧路号",
+                "details": "札幌駅前 ↔ 帯広・釧路。要予約。",
+                "time": "帯広:約4時間 / 釧路:約5.5時間",
+                "note": "冬季は峠越えのため遅延リスクあり。暴風雪時は運休リスク高。",
+                "url": "https://www.chuo-bus.co.jp/highway/"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "wakkanai_nayoro",
+        "options": [
+            {
+                "type": "bus",
+                "name": "わっかない号",
+                "details": "札幌駅前 ↔ 稚内駅前。要予約。",
+                "time": "約5時間50分",
+                "note": "海沿いルートのため、宗谷本線と同様に強風リスクあり。",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=34"
+            }
+        ]
+    },
+    {
+        "fromArea": "sapporo",
+        "toArea": "abashiri_kitami",
+        "options": [
+            {
+                "type": "bus",
+                "name": "ドリーミントオホーツク号",
+                "details": "札幌 ↔ 北見・網走。要予約。",
+                "time": "約6時間",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=6"
+            }
+        ]
+    }
+]

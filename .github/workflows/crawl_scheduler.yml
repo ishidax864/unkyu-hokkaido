@@ -1,0 +1,23 @@
+name: Trigger JR Status Crawler
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Vercel Cron API
+        run: |
+          curl -X GET https://unkyu-hokkaido.jp/api/cron/crawl
+
+  monitor:
+    runs-on: ubuntu-latest
+    needs: crawl
+    steps:
+      - name: Call Vercel Monitor API
+        run: |
+          curl -X GET "https://unkyu-hokkaido.jp/api/system/monitor?key=admin_monitor"

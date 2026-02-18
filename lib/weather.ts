@@ -253,9 +253,9 @@ export async function fetchHourlyWeatherForecast(
             currentHourData.windGust
         );
 
-        // 前後2時間のデータを抽出（タイムシフト提案用）
+        // 前後12時間のデータを抽出（タイムシフト提案・グラフ用）
         const surroundingHours: WeatherForecast[] = [];
-        for (let i = -2; i <= 2; i++) {
+        for (let i = -12; i <= 12; i++) {
             if (i === 0) continue;
             const targetIdx = closestIndex + i;
             if (targetIdx >= 0 && targetIdx < data.hourly.time.length) {
@@ -390,14 +390,14 @@ export async function fetchDailyWeatherForecast(
             // 降水量は合計（営業時間内）
             const precipitation = group.precipitations.reduce((a, b) => a + b, 0);
 
-            // 風速は「営業時間内の上位15%点（85パーセンタイル）」を採用
+            // 風速は「営業時間内の上位30%点（70パーセンタイル）」を採用
             // これにより、一瞬の突風のみで一日全体が高リスクになるのを防ぎつつ、
             // ある程度継続する悪天候を捕捉する。
             const sortedWinds = [...group.windSpeeds].sort((a, b) => b - a);
             const sortedGusts = [...group.windGusts].sort((a, b) => b - a);
 
-            // 例: 18時間分なら 18 * 0.15 = 2.7 -> index 2 (3番目に強い風)
-            const percentileIndex = Math.floor(group.windSpeeds.length * 0.15);
+            // 例: 18時間分なら 18 * 0.30 = 5.4 -> index 5 (6番目に強い風)
+            const percentileIndex = Math.floor(group.windSpeeds.length * 0.30);
             const windSpeed = sortedWinds[percentileIndex] || sortedWinds[0] || 0;
             const windGust = sortedGusts[percentileIndex] || sortedGusts[0] || 0;
 

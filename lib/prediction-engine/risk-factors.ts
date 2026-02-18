@@ -46,99 +46,17 @@ import {
     MODERATE_SNOW_DEPTH_SCORE, // 🆕
     CRITICAL_SNOW_DEPTH_THRESHOLD, // 🆕
     CRITICAL_SNOW_DEPTH_SCORE, // 🆕
-    SAFE_WIND_DIRECTION_MULTIPLIER, // 🆕
+    SAFE_WIND_DIRECTION_MULTIPLIER,
+    DRIFTING_SNOW_TEMP_THRESHOLD, // 🆕
+    DRIFTING_SNOW_WIND_THRESHOLD, // 🆕
+    DRIFTING_SNOW_BASE_SCORE,     // 🆕
+    DRIFTING_SNOW_WIND_COEFFICIENT, // 🆕
 } from './constants';
 
-// 路線別の運休しやすさ係数（北海道の路線特性を反映）
-export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = {
+import vulnerabilitiesData from '../../data/hokkaido-vulnerabilities.json';
 
-    'jr-hokkaido.hakodate-main': {
-        windThreshold: 23, // 20 -> 23: 安全サイド緩和 (バックテスト結果反映)
-        snowThreshold: 5,
-        vulnerabilityScore: 1.0,
-        description: '主要幹線、比較的安定',
-        hasDeerRisk: false,
-    },
-    'jr-hokkaido.chitose': {
-        windThreshold: 20, // 18 -> 20: バックテスト結果反映、空港線は強めに運行
-        snowThreshold: 4,
-        vulnerabilityScore: 1.2, // 1.6 -> 0.7 -> 1.2: 空港連絡線としての高い回復力・維持能力を反映（公式発表キャップと合わせて調整）
-        description: '空港連絡線、優先的に運行維持',
-        hasDeerRisk: false,
-        safeWindDirections: [[350, 360], [0, 10]], // 北風(線路並行)は影響比較的少なめ
-    },
-
-    'jr-hokkaido.gakuentoshi': {
-        windThreshold: 15,
-        snowThreshold: 4,
-        vulnerabilityScore: 1.1,
-        description: '一部単線区間あり',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.muroran': {
-        windThreshold: 16,
-        snowThreshold: 4,
-        vulnerabilityScore: 1.3,
-        description: '海沿い区間で強風の影響受けやすい',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.sekihoku': {
-        windThreshold: 23, // 20 -> 23: バックテスト結果反映
-        snowThreshold: 3,
-        vulnerabilityScore: 1.6,
-        description: '山間部多く積雪・強風に弱い',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.soya': {
-        windThreshold: 23, // 20 -> 23
-        snowThreshold: 3,
-        vulnerabilityScore: 1.8,
-        description: '最北端路線、厳寒期は運休多い',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.nemuro': {
-        windThreshold: 23, // 20 -> 23
-        snowThreshold: 3,
-        vulnerabilityScore: 1.5,
-        description: '長距離路線、部分運休が発生しやすい',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.senmo': {
-        windThreshold: 14,
-        snowThreshold: 3,
-        vulnerabilityScore: 1.6,
-        description: '観光路線、冬季は運休しやすい',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.hidaka': {
-        windThreshold: 16,
-        snowThreshold: 3,
-        vulnerabilityScore: 1.4,
-        description: '海沿い区間あり',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.rumoi': { // 🆕
-        windThreshold: 14,
-        snowThreshold: 3,
-        vulnerabilityScore: 1.6,
-        description: '海岸線に近い・強風・積雪',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.sekisho': { // 🆕
-        windThreshold: 16,
-        snowThreshold: 4,
-        vulnerabilityScore: 1.5,
-        description: '山間部・峠越え区間（強風・積雪）',
-        hasDeerRisk: true,
-    },
-    'jr-hokkaido.furano': {
-        windThreshold: 16,
-        snowThreshold: 3,
-        vulnerabilityScore: 1.3,
-        description: '内陸部、積雪の影響',
-        hasDeerRisk: true,
-    },
-};
+// 路線別の運休しやすさ係数（JSONから読込）
+export const ROUTE_VULNERABILITY: Record<string, VulnerabilityData> = vulnerabilitiesData as Record<string, VulnerabilityData>;
 
 export const DEFAULT_VULNERABILITY: VulnerabilityData = {
     windThreshold: 15,
@@ -305,6 +223,28 @@ export const RISK_FACTORS: RiskFactor[] = [
         },
         reason: (input) => `積雪が急増中（${input.weather?.snowDepthChange}cm/h）: 車両スタックのリスク増大`,
         priority: 4, // 比較的優先度高め
+    },
+    // 🆕 地吹雪（Drifting Snow）
+    // 条件: 氷点下(-2℃未満) + 風がある程度強い(10m/s以上) + 積雪がある
+    // 降雪がなくても、積もった雪が舞い上がって視界不良になる現象
+    {
+        condition: (input) => {
+            const temp = input.weather?.temperature ?? 0;
+            const wind = input.weather?.windSpeed ?? 0;
+            const depth = input.weather?.snowDepth ?? 0;
+
+            // 雪が積もっていないと地吹雪は起きない
+            if (depth < 5) return false;
+
+            return temp <= DRIFTING_SNOW_TEMP_THRESHOLD && wind >= DRIFTING_SNOW_WIND_THRESHOLD;
+        },
+        weight: (input) => {
+            const wind = input.weather?.windSpeed ?? 0;
+            // 基本スコア + 風速超過分
+            return DRIFTING_SNOW_BASE_SCORE + Math.max(0, (wind - DRIFTING_SNOW_WIND_THRESHOLD) * DRIFTING_SNOW_WIND_COEFFICIENT);
+        },
+        reason: (input) => `低温(-2℃未満)かつ強風(${input.weather?.windSpeed}m/s): 地吹雪による視界不良リスク`,
+        priority: 5,
     },
     // 🆕 累積降雪（除雪作業・計画運休リスク）
     {
