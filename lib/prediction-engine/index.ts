@@ -331,16 +331,35 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             // 🆕 Check for Resumption Time from Status Logic (or parsed earlier)
             if (input.jrStatus?.resumptionTime) {
                 isOfficialOverride = true;
+
+                // Format with date awareness
+                const resumptionDate = new Date(input.jrStatus.resumptionTime);
                 const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
+
+                const now = new Date();
+                const today = now.getDate();
+                const resumptionDay = resumptionDate.getDate();
+
+                let timeStr = `${resumptionHHMM}頃`;
+                if (resumptionDay !== today) {
+                    // Check if tomorrow
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    if (resumptionDay === tomorrow.getDate()) {
+                        timeStr = `明日 ${resumptionHHMM}頃`;
+                    } else {
+                        timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
+                    }
+                }
 
                 // Always use official time if available, overwriting any AI prediction
                 // 🆕 User Request: Prioritize official info absolutely
-                estimatedRecoveryTime = `${resumptionHHMM}頃`;
-                recoveryRecommendation = `公式発表により、${resumptionHHMM}頃の運転再開が見込まれています`;
+                estimatedRecoveryTime = timeStr;
+                recoveryRecommendation = `公式発表により、${timeStr}の運転再開が見込まれています`;
 
                 // Also add to reasons if not present
                 if (!reasons.some(r => r.includes(resumptionHHMM))) {
-                    reasons.unshift(`【公式発表】${resumptionHHMM}頃運転再開見込み`);
+                    reasons.unshift(`【公式発表】${timeStr}運転再開見込み`);
                 }
             }
 
