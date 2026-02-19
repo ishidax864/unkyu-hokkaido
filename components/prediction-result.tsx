@@ -187,33 +187,33 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
             {/* 🆕 Action Status Display (Hero Section) */}
             {(() => {
                 const getActionStatus = () => {
-                    // 1. HOPELESS (Red): High Probability OR Suspended
+                    // 1. CRITICAL (Red): High Probability OR Suspended
                     if (result.probability >= 70 || result.status === 'suspended' || result.status === 'cancelled' || result.status === '運休' || result.status === '運休中') {
                         return {
-                            type: 'HOPELESS',
-                            title: '移動困難 (HOPELESS)',
-                            message: '今日の移動は諦めるか、別ルートを推奨します',
+                            type: 'CRITICAL',
+                            title: '移動困難 (High Risk)',
+                            message: '移動の延期、または代替手段の検討を強く推奨します',
                             bgColor: 'bg-red-500 text-white',
                             icon: <XCircle size={48} />,
                             subColor: 'bg-red-600'
                         };
                     }
-                    // 2. CHAOS (Orange): Chaos Flag OR Medium Probability
+                    // 2. CAUTION (Orange): Chaos Flag OR Medium Probability
                     if (result.isPostResumptionChaos || result.probability >= 40) {
                         return {
-                            type: 'CHAOS',
-                            title: '泥沼状態 (CHAOS)',
-                            message: '動いてはいますが、地獄のような混雑と遅延です',
+                            type: 'CAUTION',
+                            title: 'ダイヤ乱れ警戒 (Caution)',
+                            message: '運転再開直後につき、大幅な遅れや混雑が予想されます',
                             bgColor: 'bg-orange-500 text-white',
                             icon: <AlertTriangle size={48} />,
                             subColor: 'bg-orange-600'
                         };
                     }
-                    // 3. SMOOTH (Green): Low Probability
+                    // 3. NORMAL (Green): Low Probability
                     return {
-                        type: 'SMOOTH',
-                        title: '順調 (SMOOTH)',
-                        message: '今のところ定刻通り移動できそうです',
+                        type: 'NORMAL',
+                        title: '平常運転見込み (Normal)',
+                        message: '現時点では定刻通りの運行が予測されます',
                         bgColor: 'bg-green-500 text-white',
                         icon: <CheckCircle size={48} />,
                         subColor: 'bg-green-600'
