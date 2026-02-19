@@ -35,6 +35,24 @@ export function determineBaseStatus(
     const hasSuspensionKeywords = rawText.includes('運休') || rawText.includes('見合わせ');
 
     if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled' || hasSuspensionKeywords) {
+        // 🆕 Check if Resumption Time has passed
+        if (jrStatus.resumptionTime) {
+            const resumptionDate = new Date(jrStatus.resumptionTime);
+            // Add 1 hour buffer for "resumed but maybe delayed" state
+            // If target time is largely past resumption time, treat as Delay or Normal
+            const bufferTime = new Date(resumptionDate.getTime() + 60 * 60 * 1000); // +1 hour
+
+            if (targetDateTime > bufferTime) {
+                // Downgrade to Delay (yellow) instead of Suspended (red)
+                return {
+                    status: '遅延', // 'delay'
+                    isOfficialSuspended: false,
+                    maxProbabilityCap: 60,
+                    overrideReason: `【公式】運転再開（${jrStatus.resumptionTime.substring(11, 16)}頃再開）後の遅延・ダイヤ乱れの可能性があります`
+                };
+            }
+        }
+
         // 🆕 User Request: If official status is Suspended, FORCE SUSPENDED (100%)
         // Do NOT lower the risk even if targetTime > resumptionTime.
         // The resumption info will be used for display only.
