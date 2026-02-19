@@ -4,14 +4,14 @@ import path from 'path';
 import fs from 'fs';
 
 // Load route map
-const ROUTE_MAP_PATH = path.join(process.cwd(), 'lib/prediction-engine/route_map.json');
+const ROUTE_MAP_PATH = path.join(process.cwd(), 'public/models/route_map.json');
 const ROUTE_MAP: Record<string, number> = JSON.parse(fs.readFileSync(ROUTE_MAP_PATH, 'utf-8'));
 
 // Models (Lazy loaded Singleton)
 let sessionClassifier: ort.InferenceSession | null = null;
 let sessionRegressor: ort.InferenceSession | null = null;
 
-const MODEL_DIR = path.join(process.cwd(), 'lib/prediction-engine');
+const MODEL_DIR = path.join(process.cwd(), 'public/models');
 
 async function getSessions() {
     if (!sessionClassifier) {
