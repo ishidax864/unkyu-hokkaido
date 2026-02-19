@@ -6,7 +6,8 @@ import { PredictionInput, WeatherForecast, Route } from '../lib/types';
 // Mock Utilities
 const createWeather = (temp: number, snow: number, wind: number, warnings: string[] = []): WeatherForecast => ({
     date: '2026-02-20',
-    time: '12:00',
+    weather: 'Snow', // Added
+    // time property removed
     weatherCode: 71, // Snow
     temperature: temp,
     precipitation: 0,
@@ -134,6 +135,46 @@ runTest('Snow Removal Buffer (31cm)', () => {
     const forecasts = createHourlyForecast([31, 0, 0, 0, 0, 0]);
     const result = calculateResumptionTime(forecasts, 'jr-hokkaido.hakodate-main');
     return result.reason.includes('大規模な除雪');
+});
+
+// 5. Future Masking Regression (Same Day Resumption)
+runTest('Future Masking (Same Day > Resumption)', () => {
+    const result = calculateSuspensionRisk({
+        routeId: 'jr-hokkaido.hakodate-main',
+        routeName: 'Test Route',
+        targetDate: '2026-02-20',
+        targetTime: '20:00', // After resumption
+        weather: createWeather(-2, 0, 5.0),
+        jrStatus: {
+            status: 'suspended',
+            statusText: '運転見合わせ。18:00頃再開見込み',
+            rawText: '運転見合わせ。18:00頃運転再開を見込んでいます。',
+            updatedAt: '2026-02-20T17:00:00Z',
+            resumptionTime: '2026-02-20T18:00:00+09:00'
+        }
+    });
+    // Should be low risk (Delay/Normal), definitely NOT Suspended (100 or high)
+    // Expecting < 60% (Delay cap is 60%, but weather is good so maybe lower)
+    return result.probability < 70;
+});
+
+// 6. Future Masking Regression (Next Day)
+runTest('Future Masking (Next Day)', () => {
+    const result = calculateSuspensionRisk({
+        routeId: 'jr-hokkaido.hakodate-main',
+        routeName: 'Test Route',
+        targetDate: '2026-02-21', // Tomorrow
+        targetTime: '08:00',
+        weather: createWeather(-2, 0, 5.0),
+        jrStatus: {
+            status: 'suspended', // Current status is suspended
+            statusText: '運転見合わせ',
+            rawText: '運転見合わせ',
+            updatedAt: '2026-02-20T17:00:00Z'
+        }
+    });
+    // Should be low risk because today's status shouldn't affect tomorrow unless specified
+    return result.probability < 50;
 });
 
 console.log('\nAll Legendary Tests Passed! 🚀');
