@@ -113,6 +113,7 @@ export interface PredictionResult {
     snow: number;
   };
   isOfficialOverride?: boolean; // 🆕 公式情報によるオーバーライドかどうか
+  isOfficialInfluenced?: boolean; // 🆕 クローラー等の公的情報が予測に影響を与えたか
   officialStatus?: {
     status: JRStatus;
     statusText?: string;
@@ -230,6 +231,15 @@ export interface PredictionInput {
     recentTrend: 'increasing' | 'decreasing' | 'stable';
     totalReports: number;
   } | null;
+  officialHistory?: {
+    status: string;
+    cause: string;
+    date: string;
+    time: string;
+    details?: string;
+    delay_minutes?: number;
+    recovery_time?: string;
+  }[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   historicalMatch?: any | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
