@@ -31,28 +31,16 @@ export function determineBaseStatus(
 
     // 1. Check for Suspension / Cancellation
     if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
-        // If resumption time is set, check if we passed it
-        if (jrStatus.resumptionTime) {
-            const resumption = new Date(jrStatus.resumptionTime);
-            if (targetDateTime.getTime() >= resumption.getTime()) {
-                // Passed resumption time -> Treat as Resumed (Delay/Caution)
-                return {
-                    status: 'delayed', // Or 'resumed' conceptually
-                    isOfficialSuspended: false,
-                    maxProbabilityCap: 50, // Cap at Delay
-                    overrideReason: `【公式発表】運転再開予定時刻（${jrStatus.resumptionTime.substring(11, 16)}）を過ぎているため、運行再開と予測します`
-                };
-            }
-        }
-
-        // If no resumption time OR target is before resumption
-        // BUT only if it is TODAY (or we don't handle future suspensions yet, usually they are for today)
-        // actually, if it's tomorrow and suspended, it's suspended.
+        // 🆕 User Request: If official status is Suspended, FORCE SUSPENDED (100%)
+        // Do NOT lower the risk even if targetTime > resumptionTime.
+        // The resumption info will be used for display only.
         return {
             status: '運休', // 'suspended'
             isOfficialSuspended: true,
-            maxProbabilityCap: undefined, // No cap, allow high risk
-            overrideReason: undefined
+            maxProbabilityCap: undefined, // No cap, allow high risk (will be forced to 100 in index.ts)
+            overrideReason: jrStatus.resumptionTime
+                ? `【公式発表】運転見合わせ中（${jrStatus.resumptionTime.substring(11, 16)}頃再開見込み）`
+                : undefined
         };
     }
 

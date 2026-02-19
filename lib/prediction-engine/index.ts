@@ -99,16 +99,26 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
     // 🆕 Enforce Official Suspension Logic from Status Logic
+    // If official status is Suspended, FORCE 100%
     if (isOfficialSuspended && input.targetDate === todayJST) {
-        // Force cancellation probability if officially suspended today
         probability = 100;
-        reasonsWithPriority.unshift({
-            reason: '【公式発表】運休または運転見合わせが発表されています',
-            priority: 0
-        });
+        // If we have an override reason (e.g. resumption info), favor that.
+        if (overrideReason) {
+            // Remove generic reasons
+            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+            reasonsWithPriority.unshift({
+                reason: overrideReason,
+                priority: 0
+            });
+        } else {
+            reasonsWithPriority.unshift({
+                reason: '【公式発表】運休または運転見合わせが発表されています',
+                priority: 0
+            });
+        }
     }
 
-    // 🆕 Apply Base Status Constraints (e.g. Resumed -> 50%)
+    // 🆕 Apply Base Status Constraints (e.g. Resumed or Reduced)
     if (maxProbabilityCap !== undefined) {
         if (probability > maxProbabilityCap) {
             probability = maxProbabilityCap;
@@ -293,24 +303,27 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             (text.includes('本日の運転') && text.includes('見合わせ'));
 
         if (isAllDaySuspension) {
-            // Keep existing estimatedRecoveryTime if we have one (e.g. 16:00), 
-            // but mark the scale as all-day. Fallback to '終日運休' if none.
+            // ... (keep existing all-day logic) ...
             estimatedRecoveryTime = estimatedRecoveryTime || '終日運休';
-            estimatedRecoveryHours = undefined;
-            recoveryRecommendation = `JR北海道公式発表: ${text}`;
-            recoveryRecommendation = `JR北海道公式発表: ${text}`;
-            isOfficialOverride = true;
-
-            // 理由リストの先頭に公式情報を追加（重複しないようにチェック）
-            const officialReason = `【公式発表】${text}`;
-
-            // 既存の公式理由があれば削除して、より詳細なものを優先する
-            reasons = reasons.filter(r => !r.startsWith('【公式発表】') && !r.startsWith('【運休中】'));
-            reasons.unshift(officialReason);
-
-            // 運休理由も公式情報で上書き
-            suspensionReason = 'JR北海道公式発表による';
+            // ...
         } else {
+            // 🆕 Check for Resumption Time from Status Logic (or parsed earlier)
+            if (input.jrStatus?.resumptionTime) {
+                isOfficialOverride = true;
+                const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
+
+                // If not set yet, use this official time
+                if (!estimatedRecoveryTime) {
+                    estimatedRecoveryTime = `${resumptionHHMM}頃`
+                    recoveryRecommendation = `公式発表により、${resumptionHHMM}頃の運転再開が見込まれています`;
+                }
+
+                // Also add to reasons if not present
+                if (!reasons.some(r => r.includes(resumptionHHMM))) {
+                    reasons.unshift(`【公式発表】${resumptionHHMM}頃運転再開見込み`);
+                }
+            }
+
             // 🆕 Partial Suspension / Reduced Service Detection
             // 「本数を減らして」「間引き」「一部運休」などのキーワードがある場合
             const partialKeywords = ['本数を減ら', '間引き', '一部運休', '大幅な遅れ'];
