@@ -49,7 +49,8 @@ export default function Home() {
     isWeatherLoading,
     lastWeatherUpdate,
     locationName,
-    userLocation
+    userLocation,
+    jrStatus // 🆕
   } = useAppInit();
 
 
@@ -71,19 +72,6 @@ export default function Home() {
 
       // 自分の投稿を即座に反映させるため、データを再取得
       refreshRealtimeStatus();
-
-      // 必要なら全体再検索も（念のため非同期で）
-      /*
-      if (departureStation && arrivalStation) {
-        handleSearch(
-          departureStation.id,
-          arrivalStation.id,
-          date,
-          time,
-          timeType
-        );
-      }
-      */
     } catch (error) {
       console.error('Report save error:', error);
     }
@@ -115,6 +103,7 @@ export default function Home() {
         <HeadlineStatus
           warnings={warnings.flatMap(w => w.warnings)}
           weatherCondition={todayWeather?.weather || ''}
+          jrStatus={jrStatus} // 🆕
           isLoading={isWeatherLoading}
         />
 

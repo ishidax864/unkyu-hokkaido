@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchDailyWeatherForecast, fetchAllHokkaidoWarnings, findNearestWeatherPoint } from '@/lib/weather';
-import { WeatherForecast, WeatherWarning } from '@/lib/types';
+import { WeatherForecast, WeatherWarning, JRStatusItem, JRStatusResponse } from '@/lib/types';
 import { logger } from '@/lib/logger';
 
 interface AppInitState {
@@ -11,6 +11,7 @@ interface AppInitState {
     lastWeatherUpdate: string;
     locationName: string;
     userLocation: { lat: number; lon: number } | undefined;
+    jrStatus: JRStatusItem[]; // 🆕
 }
 
 export function useAppInit() {
@@ -22,6 +23,7 @@ export function useAppInit() {
         lastWeatherUpdate: '',
         locationName: '札幌',
         userLocation: undefined,
+        jrStatus: [], // 🆕
     });
 
     // Time Update
@@ -90,6 +92,18 @@ export function useAppInit() {
                 logger.error('Warning fetch failed', error);
             }
 
+            // 4. JR Status (Global) 🆕
+            let allJrStatus: JRStatusItem[] = [];
+            try {
+                const res = await fetch('/api/jr-status');
+                if (res.ok) {
+                    const data: JRStatusResponse = await res.json();
+                    allJrStatus = data.items;
+                }
+            } catch (error) {
+                logger.error('JR Status fetch failed', error);
+            }
+
             setState(prev => ({
                 ...prev,
                 userLocation: currentCoords,
@@ -97,6 +111,7 @@ export function useAppInit() {
                 weather: realWeather,
                 lastWeatherUpdate: updateTime,
                 warnings: allWarnings,
+                jrStatus: allJrStatus, // 🆕
                 isWeatherLoading: false
             }));
         };
