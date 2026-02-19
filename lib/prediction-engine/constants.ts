@@ -102,7 +102,7 @@ export const STRONG_WIND_EXCESS_COEFFICIENT = 3;
 export const STRONG_WIND_MAX_BONUS = 40;
 
 /** 瞬間風速の危険閾値（m/s） - JR北海道の「早め規制」基準に合わせる */
-export const WIND_GUST_DANGER_THRESHOLD = 25;
+export const WIND_GUST_DANGER_THRESHOLD = 18; // 25 -> 18: 更に早期の規制リスク検知のため
 
 /** 瞬間風速のベーススコア（重要度再評価：20に戻す） */
 export const WIND_GUST_BASE_SCORE = 20;

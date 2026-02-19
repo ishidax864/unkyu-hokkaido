@@ -156,18 +156,27 @@ export function useRouteSearch() {
         // 検索日が今日の場合のみ、メインの計算用にStatusを使用する
         const currentCrowdsourcedStatus = isToday ? rtStatus : null;
 
-        // 🆕 過去30日の運休履歴を取得（Phase 1実装）
+        // 🆕 過去30日の運休履歴、および公的ステータス履歴を取得
         let historicalData = null;
+        let officialHistory = null;
         if (routeId) {
             try {
-                // Dynamic import to avoid server-side module issues if any, though here it's client side code
-                const { getHistoricalSuspensionRate } = await import('@/lib/supabase');
-                const result = await getHistoricalSuspensionRate(routeId);
-                if (result.success && result.data) {
-                    historicalData = result.data;
+                // Dynamic import to avoid server-side module issues
+                const { getHistoricalSuspensionRate, getOfficialRouteHistory } = await import('@/lib/supabase');
+
+                // 1. ユーザー報告ベースの統計
+                const historyResult = await getHistoricalSuspensionRate(routeId);
+                if (historyResult.success && historyResult.data) {
+                    historicalData = historyResult.data;
+                }
+
+                // 2. 🆕 クローラーベースの公的履歴（直近24時間）
+                const officialRes = await getOfficialRouteHistory(routeId, 24);
+                if (officialRes.success && officialRes.data) {
+                    officialHistory = officialRes.data;
                 }
             } catch (e) {
-                logger.warn('Historical data fetch failed', { error: e });
+                logger.warn('History data fetch failed', { error: e });
             }
         }
 
@@ -229,6 +238,7 @@ export function useRouteSearch() {
                 targetDate: searchDate,
                 targetTime: targetTimeStr,
                 historicalData,
+                officialHistory,
                 jrStatus: isToday ? jrStatus : null, // メイン結果には「検索日が今日」の時のみ反映
                 crowdsourcedStatus: currentCrowdsourcedStatus,
                 timetableTrain: timetableTrain || undefined
@@ -249,7 +259,8 @@ export function useRouteSearch() {
                 weeklyWeather,
                 jrStatus,
                 rtStatus,
-                historicalData
+                historicalData,
+                officialHistory
             ));
         }
 

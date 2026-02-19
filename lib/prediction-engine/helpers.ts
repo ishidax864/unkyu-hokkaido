@@ -131,7 +131,7 @@ export function calculateWinterRisk(
  * @param input 予測入力データ
  * @returns 確率上限値
  */
-export function determineMaxProbability(input: PredictionInput): number {
+export function determineMaxProbability(input: PredictionInput, isNearRealTime: boolean = false): number {
     let maxProbability = MAX_PREDICTION_WITHOUT_OFFICIAL_DATA;
 
     // JR公式情報がある場合
@@ -141,8 +141,21 @@ export function determineMaxProbability(input: PredictionInput): number {
         } else if (input.jrStatus.status === 'delay') {
             maxProbability = MAX_PREDICTION_WITH_DELAY;
         } else if (input.jrStatus.status === 'normal') {
-            // 🆕 公式が平常運転なら、気象に関わらずリスクを低く抑える（上限35%）
-            maxProbability = MAX_PREDICTION_WITH_NORMAL_DATA;
+            // 🆕 「現在」かつ「公式が平常運転」なら強力に抑制（35%）
+            // 未来の予測（!isNearRealTime）の場合は、このハードキャップを無効化し気象リスクを優先する
+            if (isNearRealTime) {
+                // 極端な気象（突風等）がある場合は、平常でも50%まで許容
+                const windGust = input.weather?.windGust ?? 0;
+                const snowfall = input.weather?.snowfall ?? 0;
+                if (windGust >= 18 || snowfall >= 3.0) {
+                    maxProbability = 50;
+                } else {
+                    maxProbability = MAX_PREDICTION_WITH_NORMAL_DATA;
+                }
+            } else {
+                // 未来の予測なら、キャップを外して(80%等)気象・過去データとのブレンドを許可
+                maxProbability = MAX_PREDICTION_WITHOUT_OFFICIAL_DATA;
+            }
         }
     }
 
@@ -171,14 +184,15 @@ export function determineMaxProbability(input: PredictionInput): number {
 export function evaluateRiskFactors(
     input: PredictionInput,
     vuln: VulnerabilityData,
-    riskFactors: RiskFactor[]
+    riskFactors: RiskFactor[],
+    isNearRealTime: boolean = false
 ): RiskEvaluationResult {
     let totalScore = 0;
     const reasonsWithPriority: Array<{ reason: string; priority: number }> = [];
     let hasRealTimeData = false;
 
-    // JR公式情報があれば優先
-    if (input.jrStatus && input.jrStatus.status !== 'normal') {
+    // JR公式情報があれば優先（リアルタイム検索時のみ）
+    if (isNearRealTime && input.jrStatus && input.jrStatus.status !== "normal") {
         hasRealTimeData = true;
     }
 
@@ -340,6 +354,7 @@ interface ConfidenceFilterParams {
     windSpeed: number;
     windGust: number;
     snowfall: number;
+    isNearRealTime?: boolean; // 🆕
 }
 
 interface ConfidenceFilterResult {
@@ -360,17 +375,26 @@ interface ConfidenceFilterResult {
  * - 降雪 < 1cm (1cmでも遅延リスクを認める)
  */
 export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatus?: string | null }): ConfidenceFilterResult {
-    const { probability, totalScore, windSpeed, windGust, snowfall, jrStatus } = params;
+    const { probability, totalScore, windSpeed, windGust, snowfall, jrStatus, isNearRealTime } = params;
 
     // フィルタ適用条件をチェック
     // 🆕 公式が平常（normal）かつ気象警報等がない場合、抑制をより広範囲に適用する
-    const isOfficialNormal = jrStatus === 'normal';
-    const isInFilterRange = isOfficialNormal ? (probability >= 10 && probability < 80) : (probability >= 30 && probability < 60);
-    const isLowScore = isOfficialNormal ? totalScore < 100 : totalScore < 40;
-    const isWeakWeather = windSpeed < 20 && windGust < 30 && snowfall < 5.0; // 閾値を少し緩和して公式情報を優先
+    const isOfficialNormal = jrStatus === "normal" && isNearRealTime;
+    
+    // 🆕 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
+    const isWeakWeather = windSpeed < 12 && windGust < 15 && snowfall < 0.5; 
+
+    const isInFilterRange = isOfficialNormal 
+        ? (probability >= 10 && probability < 80) 
+        : (probability >= 30 && probability < 60);
+    
+    const isLowScore = isOfficialNormal ? totalScore < 80 : totalScore < 40;
 
     if (isInFilterRange && isLowScore && isWeakWeather) {
-        const suppressionRatio = isOfficialNormal ? 0.4 : 0.8; // 公式平常ならリスクをさらに6割カット
+        // 公式平常時の抑制率を緩和 (0.4 -> 0.7) 
+        // Gusts > 18m/s (even if < 20) should have even less suppression
+        const hasSignificantGust = windGust >= 18;
+        const suppressionRatio = isOfficialNormal ? (hasSignificantGust ? 0.85 : 0.7) : 0.8; 
         return {
             filteredProbability: Math.round(probability * suppressionRatio),
             wasFiltered: true,
@@ -384,19 +408,16 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
     };
 }
 
-/**
- * Calculate Raw Risk Score (before time/season multipliers)
- * Extracted to allow calculating "Theoretical Risk Now" for Adaptive Calibration
- */
 export function calculateRawRiskScore(
     input: PredictionInput,
     vulnerability: VulnerabilityData,
-    historicalMatch: any
+    historicalMatch: any,
+    isNearRealTime: boolean = false
 ): RiskEvaluationResult {
     const enrichedInput = { ...input, historicalMatch };
 
     // 1. リスク要因の包括的評価
-    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS);
+    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS, isNearRealTime);
     let totalScore = bScore;
     const reasonsWithPriority = [...bReasons];
 
@@ -440,4 +461,63 @@ export function calculateRawRiskScore(
     }
 
     return { totalScore, reasonsWithPriority, hasRealTimeData };
+}
+/**
+ * 🆕 公的な運行履歴（クローラーデータ）による最終補正
+ * @param currentProbability 
+ * @param input 
+ * @returns 補正後の確率と理由
+ */
+export function applyOfficialHistoryAdjustment(
+    currentProbability: number,
+    input: PredictionInput
+): {
+    adjustedProbability: number;
+    additionalReasons: Array<{ reason: string; priority: number }>;
+} {
+    const additionalReasons: Array<{ reason: string; priority: number }> = [];
+    if (!input.officialHistory || input.officialHistory.length === 0) {
+        return { adjustedProbability: currentProbability, additionalReasons };
+    }
+
+    let adjustedProbability = currentProbability;
+    const history = input.officialHistory;
+    const now = new Date();
+
+    // 1. 直近の運休状態の継続性チェック (Dynamic Cap / Floor)
+    // 過去6時間以内に「suspended」があった場合、リスクの下限を設ける
+    const recentSuspension = history.find(h => {
+        const hDate = new Date(`${h.date}T${h.time}`);
+        const diffHours = (now.getTime() - hDate.getTime()) / (1000 * 60 * 60);
+        return (h.status === 'suspended' || h.status === 'stopped') && diffHours <= 6;
+    });
+
+    if (recentSuspension && input.jrStatus?.status !== 'normal') {
+        // 公式が「平常」に戻っていない場合、気象が回復していてもリスクを高値で維持
+        if (adjustedProbability < 70) {
+            adjustedProbability = 70;
+            additionalReasons.push({
+                reason: `【公式履歴】過去6時間以内に運休が記録されています。復旧作業による影響を考慮しリスクを維持しています`,
+                priority: 2,
+            });
+        }
+    }
+
+    // 2. 遅延の拡大傾向チェック (Delay Bias)
+    const recentDelays = history.filter(h => h.status === 'delayed' || h.status === 'delay').slice(0, 3);
+    if (recentDelays.length >= 2) {
+        const firstDelay = recentDelays[0].delay_minutes || 0;
+        const secondDelay = recentDelays[1].delay_minutes || 0;
+
+        if (firstDelay > secondDelay && firstDelay > 0) {
+            // 遅延が拡大している場合、リスクを1.2倍に
+            adjustedProbability = Math.min(Math.round(adjustedProbability * 1.2), 100);
+            additionalReasons.push({
+                reason: `【公式履歴】直近の遅延が拡大傾向にあるため、運休リスクを上方修正しました`,
+                priority: 3,
+            });
+        }
+    }
+
+    return { adjustedProbability, additionalReasons };
 }

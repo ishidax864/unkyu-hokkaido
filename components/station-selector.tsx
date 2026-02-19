@@ -50,12 +50,40 @@ export function StationSelector({
         )
         : HOKKAIDO_STATIONS;
 
-    // 地域ごとにグループ化
-    const filteredByRegion = new Map<string, Station[]>();
-    filtered.forEach(s => {
-        const group = filteredByRegion.get(s.region) || [];
+    // 主要駅とその他のグループ化 (UI改善)
+    const majorStations = filtered.filter(s => s.isMajor);
+    const otherStations = filtered.filter(s => !s.isMajor);
+
+    const groups: { title: string; stations: Station[] }[] = [];
+
+    // 1. 主要駅グループを最上部に
+    if (majorStations.length > 0) {
+        groups.push({ title: '主要駅', stations: majorStations });
+    }
+
+    // 2. 地域ごとにグループ化（主要駅以外）
+    const regionalMap = new Map<string, Station[]>();
+    // 並び順を安定させるための地域順序
+    const regionOrder = ['道央', '道北', '道東', '道南'];
+
+    otherStations.forEach(s => {
+        const group = regionalMap.get(s.region) || [];
         group.push(s);
-        filteredByRegion.set(s.region, group);
+        regionalMap.set(s.region, group);
+    });
+
+    regionOrder.forEach(region => {
+        const stations = regionalMap.get(region);
+        if (stations && stations.length > 0) {
+            groups.push({ title: `${region}エリア`, stations });
+        }
+    });
+
+    // 定義外の地域があれば追加
+    Array.from(regionalMap.entries()).forEach(([region, stations]) => {
+        if (!regionOrder.includes(region)) {
+            groups.push({ title: `${region}エリア`, stations });
+        }
     });
 
     const handleFocusOrChange = () => {
@@ -127,10 +155,11 @@ export function StationSelector({
                                 <p className="text-sm text-[var(--muted)]">駅が見つかりませんでした</p>
                             </div>
                         ) : (
-                            Array.from(filteredByRegion.entries()).map(([region, stations]) => (
-                                <div key={region}>
-                                    <div className="px-3 py-1.5 text-[10px] font-black text-[var(--muted)] bg-[var(--background-secondary)]/50 sticky top-0 backdrop-blur-md">
-                                        {region}エリア
+                            groups.map(({ title, stations }) => (
+                                <div key={title}>
+                                    <div className="px-3 py-1.5 text-[10px] font-black text-[var(--muted)] bg-[var(--background-secondary)]/50 sticky top-0 backdrop-blur-md flex items-center gap-2">
+                                        <div className={`w-1 h-3 rounded-full ${title === '主要駅' ? 'bg-[var(--primary)]' : 'bg-gray-300'}`} />
+                                        {title}
                                     </div>
                                     {stations.map((station) => {
                                         const isSelected = selectedStation?.id === station.id;
