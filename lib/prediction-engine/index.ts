@@ -139,6 +139,23 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         reasonsWithPriority.push(...additionalReasons);
     }
 
+    // 🆕 再開済み（Post-Resumption）の強制補正
+    // 運転再開予定を過ぎている場合、気象スコアが高くても「運休」ステータス（70%以上）にならないようにキャップする
+    if (input.jrStatus?.resumptionTime) {
+        const resumption = new Date(input.jrStatus.resumptionTime);
+        const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+        if (target.getTime() >= resumption.getTime()) {
+            // 50% = 注意・遅延レベルに抑える
+            if (probability >= 70) {
+                probability = 50;
+                reasonsWithPriority.unshift({
+                    reason: `【公式発表】運転再開予定時刻（${input.jrStatus.resumptionTime.substring(11, 16)}）を過ぎているため、運行再開と予測します`,
+                    priority: 0
+                });
+            }
+        }
+    }
+
     // 🆕 6.5 公的な運行履歴による補正 (Crawler Integration)
     if (input.officialHistory) {
         const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input);
@@ -164,8 +181,20 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 運休中かどうかを判定
     // 🆕 「当日」かつ「公式が運休発表中」なら、検索対象時刻に関わらず「現在運休中」とみなす
     // これにより、未来の検索（例：20時）でも現在の運休状況を起点とした一貫した復旧予測が出るようになる
-    const isCurrentlySuspended = (input.targetDate === todayJST) && (input.jrStatus != null) &&
+    // 🆕 「当日」かつ「公式が運休発表中」かつ「再開時刻前（または再開未定）」なら、現在運休中とみなす
+    // これにより、未来の検索（例：20時）で再開済みの場合は運休扱いしないようにする
+    let isCurrentlySuspended = (input.targetDate === todayJST) && (input.jrStatus != null) &&
         (input.jrStatus.status === 'suspended' || input.jrStatus.status === 'cancelled');
+
+    if (isCurrentlySuspended && input.jrStatus?.resumptionTime) {
+        // 再開時刻があれば、ターゲット時刻と比較
+        const resumption = new Date(input.jrStatus.resumptionTime);
+        const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+        // ターゲット時刻が再開時刻以降なら、運休中ではないとみなす
+        if (target.getTime() >= resumption.getTime()) {
+            isCurrentlySuspended = false;
+        }
+    }
 
     // (Moved to earlier in the function)
 

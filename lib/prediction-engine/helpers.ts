@@ -135,7 +135,19 @@ export function determineMaxProbability(input: PredictionInput, isNearRealTime: 
 
     // JR公式情報がある場合
     if (input.jrStatus) {
-        if (input.jrStatus.status === 'cancelled' || input.jrStatus.status === 'suspended') {
+        let isSuspended = input.jrStatus.status === 'cancelled' || input.jrStatus.status === 'suspended';
+
+        // 🆕 再開時刻がターゲット時刻より前なら、運休ステータスによるキャップを解除する
+        if (isSuspended && input.jrStatus.resumptionTime) {
+            const resumption = new Date(input.jrStatus.resumptionTime);
+            // targetDateがYYYY-MM-DD、targetTimeがHH:MM形式と仮定
+            const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+            if (target.getTime() >= resumption.getTime()) {
+                isSuspended = false; // 再開済み扱い
+            }
+        }
+
+        if (isSuspended) {
             maxProbability = MAX_PREDICTION_WITH_CANCELLATION;
         } else if (input.jrStatus.status === 'delay') {
             maxProbability = MAX_PREDICTION_WITH_DELAY;
@@ -498,8 +510,19 @@ export function applyOfficialHistoryAdjustment(
     });
 
     if (recentSuspension && input.jrStatus?.status !== 'normal') {
+        // 🆕 再開時刻を過ぎている場合は、この「リスク維持」ロジックをスキップする
+        let hasResumed = false;
+        if (input.jrStatus?.resumptionTime) {
+            const resumption = new Date(input.jrStatus.resumptionTime);
+            const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+            if (target.getTime() >= resumption.getTime()) {
+                hasResumed = true;
+            }
+        }
+
         // 公式が「平常」に戻っていない場合、気象が回復していてもリスクを高値で維持
-        if (adjustedProbability < 70) {
+        // ただし、再開済みの場合は適用しない
+        if (!hasResumed && adjustedProbability < 70) {
             adjustedProbability = 70;
             additionalReasons.push({
                 reason: `【公式履歴】過去6時間以内に運休が記録されています。復旧作業による影響を考慮しリスクを維持しています`,
