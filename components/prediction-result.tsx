@@ -105,6 +105,31 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                     </div>
                 </div>
 
+                {/* 🆕 Action Status Display (Even in Recovery Mode) */}
+                {(() => {
+                    const status = evaluateActionDecision(result);
+                    const IconComponent = () => {
+                        if (status.iconType === 'x-circle') return <XCircle size={48} />;
+                        if (status.iconType === 'alert-triangle') return <AlertTriangle size={48} />;
+                        return <CheckCircle size={48} />;
+                    };
+
+                    return (
+                        <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
+                            <div className="flex justify-center mb-4 opacity-90">
+                                <IconComponent />
+                            </div>
+                            <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
+                            <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
+
+                            {/* Compact Risk Rate for Reference */}
+                            <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
+                                運休リスク: {result.probability}%
+                            </div>
+                        </div>
+                    );
+                })()}
+
                 {/* 復旧予測 (Main Feature for Recovery Mode) */}
                 <div className="mb-4">
                     <div className="bg-[var(--background-secondary)] rounded-xl p-5 text-center shadow-sm">
