@@ -49,11 +49,22 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         timeZone: 'Asia/Tokyo'
     }).format(new Date());
 
+    // 🆕 Non-Operating Hours Logic (00:00 - 05:00)
+    // If user queries late night, shift prediction to first train (06:00)
+    let effectiveTargetTime = input.targetTime || '00:00';
+    let isNonOperatingHour = false;
+    const targetHour = parseInt(effectiveTargetTime.split(':')[0]);
+
+    if (targetHour >= 0 && targetHour < 5) {
+        effectiveTargetTime = '06:00';
+        isNonOperatingHour = true;
+    }
+
     // 🆕 Centralized Status Logic - Call early to use constraints throughout
     const { status: baseStatus, isOfficialSuspended, maxProbabilityCap, overrideReason } = determineBaseStatus(
         input.jrStatus,
         input.targetDate,
-        input.targetTime || '00:00'
+        effectiveTargetTime
     );
 
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
@@ -69,7 +80,9 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     const isNearRealTime = diffMinutes <= 45;
 
     // 1. リスク要因の包括的評価
-    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(input, vulnerability, historicalMatch, isNearRealTime);
+    // 🆕 Use effectiveTargetTime for calculation (e.g. 06:00 instead of 02:00)
+    const calculationInput = { ...input, targetTime: effectiveTargetTime };
+    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(calculationInput, vulnerability, historicalMatch, isNearRealTime);
     let totalScore = rawScore;
     let reasonsWithPriority = [...rawReasons];
 
@@ -83,7 +96,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     });
 
     // 4. 時間帯・季節補正
-    const timeMultiplier = getTimeMultiplier(input.targetTime);
+    const timeMultiplier = getTimeMultiplier(effectiveTargetTime);
     const seasonMultiplier = getSeasonMultiplier();
     totalScore = totalScore * timeMultiplier * seasonMultiplier;
 
@@ -94,8 +107,16 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         });
     }
 
+    // 🆕 Add Non-Operating Hour Reason
+    if (isNonOperatingHour) {
+        reasonsWithPriority.unshift({
+            reason: `【営業時間外】始発（06:00頃）のリスクを予測しています`,
+            priority: 0
+        });
+    }
+
     // 5. 確率計算と上限適用
-    const maxProbability = determineMaxProbability(input, isNearRealTime);
+    const maxProbability = determineMaxProbability(calculationInput, isNearRealTime);
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
     // 🆕 Enforce Official Suspension Logic from Status Logic
