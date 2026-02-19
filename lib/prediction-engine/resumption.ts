@@ -150,6 +150,11 @@ export function calculateResumptionTime(
         startHour += (diffDays * 24);
     }
 
+    // 🆕 Guard against past times (Negative Hours)
+    // If the calculated start hour is strictly in the past relative to reference date (00:00), it might produce negative strings.
+    // However, logic above should define relative hour.
+    // Ensure we don't return negative time string.
+
     let resumeHour = startHour + buffer;
 
     // 7. Apply Nighttime Constraints (JR Hokkaido specific)
@@ -175,7 +180,16 @@ export function calculateResumptionTime(
     }
 
     // console.log(`[DEBUG] Final Resume Hour: ${resumeHour}, Rolled Days: ${Math.floor((startHour + buffer) / 24)}`);
-    const resumeTimeStr = `${String(Math.floor(resumeHour)).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
+    // 🆕 Handle negative hours gracefully (e.g. if resumption was yesterday)
+    // Normalize to 0-23 for display
+    let displayHour = Math.floor(resumeHour);
+    if (displayHour < 0) {
+        displayHour = (displayHour % 24 + 24) % 24;
+    } else {
+        displayHour = displayHour % 24;
+    }
+
+    const resumeTimeStr = `${String(displayHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
 
     // 🆕 Enhance reason with evidence
     const evidenceReason = `【根拠】気象状況が${safetyStartTime}頃に回復（風速・降雪が基準値以下）し、その後、${reason}を経て運転を再開する見込みです。`;

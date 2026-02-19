@@ -312,11 +312,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                 isOfficialOverride = true;
                 const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
 
-                // If not set yet, use this official time
-                if (!estimatedRecoveryTime) {
-                    estimatedRecoveryTime = `${resumptionHHMM}頃`
-                    recoveryRecommendation = `公式発表により、${resumptionHHMM}頃の運転再開が見込まれています`;
-                }
+                // Always use official time if available, overwriting any AI prediction
+                // 🆕 User Request: Prioritize official info absolutely
+                estimatedRecoveryTime = `${resumptionHHMM}頃`;
+                recoveryRecommendation = `公式発表により、${resumptionHHMM}頃の運転再開が見込まれています`;
 
                 // Also add to reasons if not present
                 if (!reasons.some(r => r.includes(resumptionHHMM))) {
