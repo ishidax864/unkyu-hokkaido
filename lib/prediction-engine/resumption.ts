@@ -89,6 +89,8 @@ export function calculateResumptionTime(
         buffer += snowBuffer;
 
         if (totalSnow >= 30) {
+            // 🆕 User Request: Heavy snow (>30cm) needs extra removal time
+            buffer += 2.0;
             reason = `大規模な除雪・排雪作業（${Math.ceil(buffer)}時間以上）`;
         } else if (totalSnow >= 10) {
             reason = `除雪・点検作業（${Math.ceil(buffer)}時間程度）`;

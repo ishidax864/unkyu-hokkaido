@@ -26,7 +26,7 @@ import {
     HEAVY_RAIN_THRESHOLD,
     MAX_PREDICTION_WITH_NORMAL_DATA,
 } from './constants';
-import { RISK_FACTORS } from './risk-factors';
+// import { RISK_FACTORS } from './risk-factors'; // Deprecated
 import { COMPOUND_RISK_MULTIPLIER } from './constants';
 
 // =====================
@@ -185,21 +185,25 @@ export function determineMaxProbability(input: PredictionInput, isNearRealTime: 
 // リスク要因の評価
 // =====================
 
+
+import { RiskEngine } from './risk-engine';
+
+// =====================
+// リスク要因の評価 (Refactored to use RiskEngine)
+// =====================
+
 /**
  * 全リスク要因を評価してスコアと理由を集計
  * @param input 予測入力データ
  * @param vuln 路線脆弱性データ
- * @param riskFactors リスク要因の配列
  * @returns 評価結果
  */
 export function evaluateRiskFactors(
     input: PredictionInput,
     vuln: VulnerabilityData,
-    riskFactors: RiskFactor[],
+    _riskFactors: any, // Deprecated, kept for signature compatibility if needed, but unused
     isNearRealTime: boolean = false
 ): RiskEvaluationResult {
-    let totalScore = 0;
-    const reasonsWithPriority: Array<{ reason: string; priority: number }> = [];
     let hasRealTimeData = false;
 
     // JR公式情報があれば優先（リアルタイム検索時のみ）
@@ -212,29 +216,17 @@ export function evaluateRiskFactors(
         hasRealTimeData = true;
     }
 
-    // 各リスク要因を評価
-    for (const factor of riskFactors) {
-        if (factor.condition(input, vuln)) {
-            // overrideWeightが定義されており、かつ値を返す場合はそれを使用する（過去事例マッチング等）
-            const override = factor.overrideWeight ? factor.overrideWeight(input, vuln) : null;
-            const weight = (override !== null) ? override : factor.weight(input, vuln);
-
-            const score = weight * vuln.vulnerabilityScore;
-            totalScore += score;
-
-            reasonsWithPriority.push({
-                reason: factor.reason(input),
-                priority: factor.priority,
-            });
-        }
-    }
+    // Use RiskEngine
+    const engine = new RiskEngine();
+    const { totalScore, reasons } = engine.calculateRisk(input, vuln);
 
     return {
         totalScore,
-        reasonsWithPriority,
+        reasonsWithPriority: reasons,
         hasRealTimeData,
     };
 }
+
 
 // =====================
 // 履歴データによる補正
@@ -444,7 +436,7 @@ export function calculateRawRiskScore(
     const enrichedInput = { ...input, historicalMatch };
 
     // 1. リスク要因の包括的評価
-    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, RISK_FACTORS, isNearRealTime);
+    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, null, isNearRealTime);
     let totalScore = bScore;
     const reasonsWithPriority = [...bReasons];
 
