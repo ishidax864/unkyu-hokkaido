@@ -13,7 +13,7 @@ export interface BaseStatusResult {
  * Handles resumption time logic and partial suspensions.
  */
 export function determineBaseStatus(
-    jrStatus: { status: string; resumptionTime?: string | null } | null | undefined,
+    jrStatus: { status: string; resumptionTime?: string | null; rawText?: string; statusText?: string } | null | undefined,
     targetDate: string,
     targetTime: string
 ): BaseStatusResult {
@@ -49,7 +49,7 @@ export function determineBaseStatus(
     }
 
     // 2. Check for Delay
-    if (jrStatus.status === 'delay' || jrStatus.status === 'delayed') {
+    if (jrStatus.status === 'delay') {
         return {
             status: '遅延',
             isOfficialSuspended: false,

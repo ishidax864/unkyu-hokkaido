@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
+
+export const dynamic = 'force-dynamic'; // 🆕 Disable caching for real-time predictions
 import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
 import { JRStatusItem, PredictionInput, JRStatus } from '@/lib/types';
 import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
