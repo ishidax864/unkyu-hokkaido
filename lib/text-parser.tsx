@@ -14,14 +14,21 @@ import React from 'react';
 export function extractResumptionTime(text: string, referenceDate: Date = new Date()): Date | null {
     if (!text) return null;
 
-    // Normalize text (full-width digits to half-width)
-    const normalized = text.replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    // Normalize text (full-width digits/colon to half-width)
+    const normalized = text
+        .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        .replace(/：/g, ':');
 
     // Common patterns for resumption time
     const patterns = [
         /(\d{1,2})時(\d{1,2})分頃?.*再開/, // 19時30分頃再開
         /(\d{1,2}):(\d{1,2}).*再開/,       // 19:30再開
         /(\d{1,2})時頃?.*再開/,           // 19時頃再開
+        // 🆕 Patterns for "from" (から) which implies resumption start
+        /(\d{1,2}):(\d{1,2})頃?から/,      // 18:00頃から
+        /(\d{1,2})時(\d{1,2})分頃?から/,   // 18時00分頃から
+        /(\d{1,2}):(\d{1,2})頃?以降/,      // 18:00頃以降
+        /(\d{1,2})時(\d{1,2})分頃?以降/,   // 18時00分頃以降
     ];
 
     for (const pattern of patterns) {

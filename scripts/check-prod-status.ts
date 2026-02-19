@@ -47,7 +47,7 @@ async function checkProdStatus() {
     } else {
         console.log('\n📋 Latest Route Status History:');
         status.forEach(s => {
-            console.log(`  - [${new Date(s.created_at).toLocaleString()}] Route: ${s.route_id} | Status: ${s.status} | Text: ${s.status_text?.substring(0, 50)}...`);
+            console.log(`  - [${new Date(s.created_at).toLocaleString()}] Route: ${s.route_id} | Status: ${s.status} | Text: ${(s.details || s.status_text || '').substring(0, 50)}...`);
         });
     }
 
