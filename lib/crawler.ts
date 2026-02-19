@@ -69,11 +69,26 @@ export async function runJRCrawler() {
                 }
 
                 if (matchedRouteId) {
-                    let status = 'normal';
-                    if (content.includes('運休') || content.includes('見合')) status = 'suspended';
-                    else if (content.includes('遅れ') || content.includes('遅延')) status = 'delayed';
+                    // 🆕 Status Determination Logic (Priority Implementation)
+                    // Priority: Suspended > Delay > Normal
+                    // Start with 'normal' (default) if keywords match, but let severe status override.
 
-                    if (content.includes('再開') || content.includes('平常')) status = 'normal';
+                    let status = 'normal';
+
+                    // 1. Check for Normal/Resumption keywords first (lowest priority)
+                    if (content.includes('再開') || content.includes('平常')) {
+                        status = 'normal';
+                    }
+
+                    // 2. Check for Delay (medium priority) - Overrides Normal
+                    if (content.includes('遅れ') || content.includes('遅延')) {
+                        status = 'delayed';
+                    }
+
+                    // 3. Check for Suspended (highest priority) - Overrides All
+                    if (content.includes('運休') || content.includes('見合')) {
+                        status = 'suspended';
+                    }
 
                     let cause = 'weather';
                     if (content.includes('雪')) cause = 'snow';
