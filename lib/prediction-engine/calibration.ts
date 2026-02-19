@@ -5,6 +5,7 @@ import { getTimeMultiplier, getSeasonMultiplier } from './risk-factors';
 interface CalibrationResult {
     probability: number;
     reasons: Array<{ reason: string; priority: number }>;
+    isOfficialOverride?: boolean; // 🆕 取得した公式情報に基づき予測が調整されたか
 }
 
 /**
@@ -19,7 +20,7 @@ export function applyAdaptiveCalibration(
     reasons: Array<{ reason: string; priority: number }>
 ): CalibrationResult {
     if (!input.jrStatus || !input.targetDate || !input.targetTime || !input.weather || !input.weather.surroundingHours) {
-        return { probability, reasons };
+        return { probability, reasons, isOfficialOverride: false };
     }
 
     const now = new Date();
@@ -28,7 +29,7 @@ export function applyAdaptiveCalibration(
 
     // Only apply if looking at near future (-1h to 12h)
     if (hoursFromNow < -1 || hoursFromNow > 12) {
-        return { probability, reasons };
+        return { probability, reasons, isOfficialOverride: false };
     }
 
     const currentStatus = input.jrStatus.status;
@@ -42,7 +43,7 @@ export function applyAdaptiveCalibration(
     const weatherNow = input.weather.surroundingHours.find(h => h.targetTime === nowHourStr) || input.weather;
 
     if (!weatherNow) {
-        return { probability, reasons };
+        return { probability, reasons, isOfficialOverride: false };
     }
 
     // Calculate raw score for NOW
@@ -69,7 +70,19 @@ export function applyAdaptiveCalibration(
 
     // Apply adjustment
     const previousProb = probability;
-    const newProbability = Math.floor(Math.min(Math.max(probability + adjustment, 0), 100));
+    let newProbability = Math.floor(Math.min(Math.max(probability + adjustment, 0), 100));
+
+    // 🆕 EXTREME WEATHER GUARD
+    // 強力な気象信号（突風18m/s以上 or 降雪3cm/h以上）がある場合は、
+    // 公式平常による抑制があったとしても、最低限のリスク値(30-40%)を維持する
+    const isExtremeWeather = ((weatherNow.windGust ?? 0) >= 18) || ((weatherNow.snowfall ?? 0) >= 3.0);
+    if (isExtremeWeather && adjustment < 0) {
+        // 修正後の確率が低すぎないかチェック
+        const minSafetyRisk = 30; // 30%は「遅延の可能性」レベル
+        if (newProbability < minSafetyRisk) {
+            newProbability = minSafetyRisk;
+        }
+    }
 
     // Add Reason if adjustment is significant
     if (Math.abs(adjustment) > 15) {
@@ -86,5 +99,7 @@ export function applyAdaptiveCalibration(
         }
     }
 
-    return { probability: newProbability, reasons };
+    const isOfficialOverride = Math.abs(adjustment) > 5; // 5%以上の調整があれば「影響あり」とみなす
+
+    return { probability: newProbability, reasons, isOfficialOverride };
 }

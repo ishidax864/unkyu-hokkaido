@@ -84,6 +84,33 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             const lastFetch = new Date(logs[0].fetched_at).getTime();
             const now = Date.now();
             if (now - lastFetch < 60 * 60 * 1000) { // 1 hour
+                // 🆕 Area-wide check
+                // Our route had no direct incident, but did anyone else in the same area?
+                // This protects against the crawler missing a regional warning.
+                if (routeDef && routeDef.validAreas) {
+                    const { data: areaIncidents } = await supabase
+                        .from('route_status_history')
+                        .select('status')
+                        .in('route_id', ROUTE_DEFINITIONS.filter(r =>
+                            r.validAreas && r.validAreas.some(a => routeDef.validAreas!.includes(a))
+                        ).map(r => r.routeId))
+                        .gte('created_at', since)
+                        .limit(5);
+
+                    const hasAreaIssues = areaIncidents && areaIncidents.some(ai => ai.status !== 'normal');
+                    if (hasAreaIssues) {
+                        return {
+                            routeId,
+                            routeName,
+                            status: 'partial' as any,
+                            description: '周辺路線で運休・遅延が発生しています',
+                            statusText: '周辺の運行状況に基づきリスクを算出しています',
+                            updatedAt: logs[0].fetched_at,
+                            source: 'official'
+                        } as any;
+                    }
+                }
+
                 return {
                     routeId,
                     routeName,

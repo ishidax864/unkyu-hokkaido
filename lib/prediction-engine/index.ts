@@ -22,7 +22,8 @@ import {
     applyHistoricalDataAdjustment,
     determineSuspensionReason,
     applyConfidenceFilter,
-    calculateRawRiskScore // 🆕
+    calculateRawRiskScore,
+    applyOfficialHistoryAdjustment // 🆕
 } from './helpers';
 
 import {
@@ -52,8 +53,15 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 0. 過去事例の事前抽出
     const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
 
+    // 0.5. 近傍検索判定 (Near Real-Time Check) 🆕
+    // 検索対象時刻が現在時刻から45分以内であれば「リアルタイム検索」とみなす
+    const now = new Date();
+    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00`);
+    const diffMinutes = Math.abs(targetDateTime.getTime() - now.getTime()) / (1000 * 60);
+    const isNearRealTime = diffMinutes <= 45;
+
     // 1. リスク要因の包括的評価
-    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(input, vulnerability, historicalMatch);
+    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(input, vulnerability, historicalMatch, isNearRealTime);
     let totalScore = rawScore;
     let reasonsWithPriority = [...rawReasons];
 
@@ -79,13 +87,18 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 5. 確率計算と上限適用
-    const maxProbability = determineMaxProbability(input);
+    const maxProbability = determineMaxProbability(input, isNearRealTime);
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
     // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
     const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority);
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
+
+    // 🆕 是否有官方情報的影響 (Before Confidence Filter as it might be affected by officialPart)
+    let isOfficialInfluenced = !!(input.jrStatus && input.jrStatus.status !== 'normal') ||
+        !!(input.officialHistory && input.officialHistory.length > 0) ||
+        (calibration.isOfficialOverride ?? false);
 
     // 🆕 Confidence Filter
     if (input.weather) {
@@ -95,7 +108,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             windSpeed: input.weather.windSpeed || 0,
             windGust: input.weather.windGust || 0,
             snowfall: input.weather.snowfall || 0,
-            jrStatus: input.jrStatus?.status
+            jrStatus: input.jrStatus?.status,
+            isNearRealTime // 🆕 Pass flag
         });
 
         if (filterResult.wasFiltered) {
@@ -105,6 +119,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                     reason: `【予測補正】${filterResult.reason}`,
                     priority: 20
                 });
+            }
+            // 🆕 If filtered because of Official Normal, mark it
+            if (input.jrStatus?.status === 'normal') {
+                isOfficialInfluenced = true;
             }
         }
     }
@@ -124,6 +142,13 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         reasonsWithPriority.push(...additionalReasons);
     }
 
+    // 🆕 6.5 公的な運行履歴による補正 (Crawler Integration)
+    if (input.officialHistory) {
+        const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input);
+        probability = adjustedProbability;
+        reasonsWithPriority.push(...additionalReasons);
+    }
+
     // 7. 最終的な理由リスト作成
     let reasons = reasonsWithPriority
         .sort((a, b) => a.priority - b.priority)
@@ -137,6 +162,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 運休中かどうかを判定
     const isCurrentlySuspended = input.jrStatus != null &&
         (input.jrStatus.status === 'suspended' || input.jrStatus.status === 'cancelled');
+
+    // (Moved to earlier in the function)
 
     // 復旧予測 (運休中、または運休リスクが高い場合に「もし運休したら？」を予測)
     let estimatedRecoveryTime: string | undefined;
@@ -279,7 +306,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             wind,
             snow
         },
-        officialStatus: input.jrStatus
+        officialStatus: input.jrStatus,
+        isOfficialInfluenced // 🆕 追加
     };
 }
 
@@ -291,14 +319,15 @@ export function calculateWeeklyForecast(
     weeklyWeather: WeatherForecast[],
     jrStatus?: JROperationStatus | null,
     crowdsourcedStatus?: CrowdsourcedStatus | null,
-    historicalData?: PredictionInput['historicalData'] | null
+    historicalData?: PredictionInput['historicalData'] | null,
+    officialHistory?: PredictionInput['officialHistory'] | null
 ): PredictionResult[] {
     // 🆕 Timezone fix: Use JST for today determination
     const today = new Intl.DateTimeFormat('sv-SE', {
         timeZone: 'Asia/Tokyo'
     }).format(new Date());
 
-    return weeklyWeather.map((weather, index) => {
+    return weeklyWeather.map((weather) => { // Removed unused 'index'
         // 今日、または過去（念のため）のデータであれば公式情報を反映
         const isToday = weather.date <= today;
 
@@ -310,7 +339,8 @@ export function calculateWeeklyForecast(
             weather,
             jrStatus: isToday ? jrStatus : null,
             crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
-            historicalData: historicalData
+            historicalData: historicalData,
+            officialHistory: isToday ? officialHistory : null
         });
     });
 }

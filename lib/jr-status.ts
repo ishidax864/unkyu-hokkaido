@@ -3,14 +3,10 @@
 import { logger } from './logger';
 import { JRStatus } from './types';
 
+import crawlerConfig from '../data/crawler-config.json';
+
 // JR北海道公式JSON URL (エリア別)
-export const JR_JSON_URLS = [
-    { id: '01', area: '札幌近郊' },
-    { id: '02', area: '道央' },
-    { id: '03', area: '道南' },
-    { id: '04', area: '道北' },
-    { id: '05', area: '道東' }
-];
+export const JR_JSON_URLS = crawlerConfig.areas;
 
 const BASE_URL = 'https://www3.jrhokkaido.co.jp/webunkou/json/area/area_';
 
@@ -22,93 +18,25 @@ interface RouteDefinition {
     validAreas?: string[]; // 🆕 エリアフィルタ (01:札幌, 02:道央, 03:道南, 04:道北, 05:道東)
 }
 
-export const ROUTE_DEFINITIONS: RouteDefinition[] = [
-    // 札幌圏・道央
-    {
-        name: '千歳線',
-        keywords: ['千歳線', 'エアポート', '新千歳空港'],
-        routeId: 'jr-hokkaido.chitose',
-        validAreas: ['01', '02']
-    },
-    {
-        name: '函館本線',
-        keywords: ['函館線', '函館本線', '小樽', '岩見沢', '滝川', 'ライラック', 'カムイ', '倶知安', 'ニセコ', '余市'], // 🆕 山線エリアの駅名を追加
-        routeId: 'jr-hokkaido.hakodate-main',
-        validAreas: ['01', '02', '04'] // 道南(03)は除外
-    },
-    {
-        name: '学園都市線',
-        keywords: ['学園都市線', '札沼線'],
-        routeId: 'jr-hokkaido.gakuentoshi',
-        validAreas: ['01']
-    },
-    {
-        name: '室蘭本線',
-        keywords: ['室蘭線', '室蘭本線', 'すずらん', '苫小牧', '東室蘭', '伊達紋別'],
-        routeId: 'jr-hokkaido.muroran-main',
-        validAreas: ['02', '03'] // 苫小牧(02)〜室蘭・長万部(03)
-    },
-
-    // 道南 (今回の修正対象)
-    {
-        name: '函館本線（道南）',
-        keywords: ['函館線', '函館本線', '長万部', '函館', '新函館北斗', '北斗', '大沼'],
-        routeId: 'jr-hokkaido.hakodate-south',
-        validAreas: ['03'] // 03:道南 のみ
-    },
-
-    // 道北
-    {
-        name: '宗谷本線',
-        keywords: ['宗谷線', '宗谷本線', '名寄', '稚内'],
-        routeId: 'jr-hokkaido.soya-main',
-        validAreas: ['04']
-    },
-    {
-        name: '石北本線',
-        keywords: ['石北線', '石北本線', '北見', '網走'],
-        routeId: 'jr-hokkaido.sekihoku-main',
-        validAreas: ['04', '05'] // 旭川(04)〜網走(05)
-    },
-    {
-        name: '富良野線',
-        keywords: ['富良野線'],
-        routeId: 'jr-hokkaido.furano',
-        validAreas: ['04']
-    },
-    {
-        name: '留萌本線',
-        keywords: ['留萌線', '留萌本線'],
-        routeId: 'jr-hokkaido.rumoi',
-        validAreas: ['04']
-    },
-
-    // 道東
-    {
-        name: '日高本線',
-        keywords: ['日高線', '日高本線'],
-        routeId: 'jr-hokkaido.hidaka',
-        validAreas: ['02', '05'] // 苫小牧(02)〜様似(05)
-    },
-    {
-        name: '石勝線',
-        keywords: ['石勝線', 'おおぞら', 'とかち', '南千歳'],
-        routeId: 'jr-hokkaido.sekisho',
-        validAreas: ['02', '05']
-    },
-    {
-        name: '根室本線',
-        keywords: ['根室線', '根室本線', '帯広', '釧路'],
-        routeId: 'jr-hokkaido.nemuro-main',
-        validAreas: ['02', '04', '05'] // 🆕 04(道北/富良野エリア)を追加
-    },
-    {
-        name: '釧網本線',
-        keywords: ['釧網線', '釧網本線'],
-        routeId: 'jr-hokkaido.senmo-main',
-        validAreas: ['05']
-    },
-];
+// 🆕 JSONから定義を生成
+export const ROUTE_DEFINITIONS: RouteDefinition[] = crawlerConfig.routeMatching.map(rm => ({
+    name: rm.id.split('.').pop() === 'chitose' ? '千歳線' :
+        rm.id.split('.').pop() === 'hakodate-main' ? '函館本線' :
+            rm.id.split('.').pop() === 'hakodate-south' ? '函館本線（道南）' :
+                rm.id.split('.').pop() === 'gakuentoshi' ? '学園都市線' :
+                    rm.id.split('.').pop() === 'muroran-main' ? '室蘭本線' :
+                        rm.id.split('.').pop() === 'soya-main' ? '宗谷本線' :
+                            rm.id.split('.').pop() === 'sekihoku-main' ? '石北本線' :
+                                rm.id.split('.').pop() === 'furano' ? '富良野線' :
+                                    rm.id.split('.').pop() === 'rumoi' ? '留萌本線' :
+                                        rm.id.split('.').pop() === 'hidaka' ? '日高本線' :
+                                            rm.id.split('.').pop() === 'sekisho' ? '石勝線' :
+                                                rm.id.split('.').pop() === 'nemuro-main' ? '根室本線' :
+                                                    rm.id.split('.').pop() === 'senmo-main' ? '釧網本線' : '当該路線',
+    keywords: rm.keywords,
+    routeId: rm.id,
+    validAreas: rm.areas
+}));
 
 export interface JROperationStatus {
     routeId: string;
@@ -133,14 +61,19 @@ export interface JROperationStatus {
 export function extractNumericalStatus(text: string): { delayMinutes?: number; recoveryTime?: string } {
     const result: { delayMinutes?: number; recoveryTime?: string } = {};
 
+    // 0. 全角数字を半角に変換し、不要な空白を削除
+    const normalized = text
+        .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        .replace(/\s+/g, '');
+
     // 1. 遅延分の抽出
-    const delayMatch = text.match(/(\d+)分(?:程度)?の?(?:遅れ|遅延)/);
+    const delayMatch = normalized.match(/(\d+)分.*?(?:遅れ|遅延)/);
     if (delayMatch) {
         result.delayMinutes = parseInt(delayMatch[1]);
     }
 
     // 2. 再開見込み時刻の抽出 (HH時mm分)
-    const recoveryMatch = text.match(/(\d{1,2})時(\d{1,2})分(?:頃)?(?:に)?(?:運転(?:を)?)?再開/);
+    const recoveryMatch = normalized.match(/(\d{1,2})時(\d{1,2})分.*再開/);
     if (recoveryMatch) {
         const h = recoveryMatch[1].padStart(2, '0');
         const m = recoveryMatch[2].padStart(2, '0');

@@ -17,13 +17,18 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Load Configuration from JSON
-const CONFIG_PATH = path.join(process.cwd(), 'data/crawler-config.json');
-const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+import { ROUTE_DEFINITIONS, JR_JSON_URLS as AREAS } from '../lib/jr-status';
 
-const AREAS = config.areas;
-const ROUTE_DEFINITIONS = config.routeMatching;
-const EXCLUDE_KEYWORDS = config.excludeKeywords;
+const EXCLUDE_KEYWORDS = [
+    "鹿",
+    "人身",
+    "信号",
+    "車両",
+    "線路支障",
+    "倒木",
+    "点検",
+    "工事"
+];
 
 async function fetchAreaStatus(area: typeof AREAS[0]) {
     console.log(`📡 Fetching ${area.name}...`);
@@ -62,16 +67,15 @@ async function fetchAreaStatus(area: typeof AREAS[0]) {
                 continue;
             }
 
-            let matchedRouteId = null;
+            const matchedRouteIds: string[] = [];
             for (const def of ROUTE_DEFINITIONS) {
-                if (!def.areas.includes(area.id)) continue;
+                if (def.validAreas && !def.validAreas.includes(area.id)) continue;
                 if (def.keywords.some(kw => text.includes(kw))) {
-                    matchedRouteId = def.id;
-                    break;
+                    matchedRouteIds.push(def.routeId);
                 }
             }
 
-            if (matchedRouteId) {
+            if (matchedRouteIds.length > 0) {
                 let status = 'normal';
                 if (text.includes('運休') || text.includes('見合')) status = 'suspended';
                 else if (text.includes('遅れ') || text.includes('遅延')) status = 'delayed';
@@ -86,20 +90,22 @@ async function fetchAreaStatus(area: typeof AREAS[0]) {
                 const date = new Date().toISOString().split('T')[0];
                 const time = new Date().toLocaleTimeString('en-US', { hour12: false });
 
-                const { error: insertError } = await supabase
-                    .from('route_status_history')
-                    .insert({
-                        date: date,
-                        time: time,
-                        route_id: matchedRouteId,
-                        status: status,
-                        cause: cause,
-                        details: text,
-                        crawler_log_id: logData.id
-                    });
+                for (const routeId of matchedRouteIds) {
+                    const { error: insertError } = await supabase
+                        .from('route_status_history')
+                        .insert({
+                            date: date,
+                            time: time,
+                            route_id: routeId,
+                            status: status,
+                            cause: cause,
+                            details: text,
+                            crawler_log_id: logData.id
+                        });
 
-                if (insertError) console.error(`Failed to insert status for ${matchedRouteId}:`, insertError);
-                else console.log(`✅ Saved: [${matchedRouteId}] ${status} (${cause})`);
+                    if (insertError) console.error(`Failed to insert status for ${routeId}:`, insertError);
+                    else console.log(`✅ Saved: [${routeId}] ${status} (${cause})`);
+                }
             }
         }
 
