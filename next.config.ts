@@ -100,6 +100,9 @@ const nextConfig: NextConfig = {
     // 出力設定
     output: 'standalone',
 
+    // サーバーサイド外部パッケージ
+    serverExternalPackages: ['onnxruntime-node'],
+
     // 実験的機能
     experimental: {},
 };
