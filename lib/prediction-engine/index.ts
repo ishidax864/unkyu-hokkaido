@@ -37,12 +37,25 @@ import {
 import { analyzeWeatherTrend } from '../recovery-prediction';
 import { calculateResumptionTime } from './resumption';
 import { applyAdaptiveCalibration } from './calibration'; // 🆕
+import { determineBaseStatus } from './status-logic'; // 🆕
 
 // ==========================================
 // Main Prediction Function
 // ==========================================
 
 export function calculateSuspensionRisk(input: PredictionInput): PredictionResult {
+    // 🆕 Timezone-aware today check (JST)
+    const todayJST = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Tokyo'
+    }).format(new Date());
+
+    // 🆕 Centralized Status Logic - Call early to use constraints throughout
+    const { status: baseStatus, isOfficialSuspended, maxProbabilityCap, overrideReason } = determineBaseStatus(
+        input.jrStatus,
+        input.targetDate,
+        input.targetTime || '00:00'
+    );
+
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
 
     // 0. 過去事例の事前抽出
@@ -85,12 +98,37 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     const maxProbability = determineMaxProbability(input, isNearRealTime);
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
+    // 🆕 Enforce Official Suspension Logic from Status Logic
+    if (isOfficialSuspended && input.targetDate === todayJST) {
+        // Force cancellation probability if officially suspended today
+        probability = 100;
+        reasonsWithPriority.unshift({
+            reason: '【公式発表】運休または運転見合わせが発表されています',
+            priority: 0
+        });
+    }
+
+    // 🆕 Apply Base Status Constraints (e.g. Resumed -> 50%)
+    if (maxProbabilityCap !== undefined) {
+        if (probability > maxProbabilityCap) {
+            probability = maxProbabilityCap;
+            if (overrideReason) {
+                // Remove generic high-risk reasons if we are capping
+                reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+                reasonsWithPriority.unshift({
+                    reason: overrideReason,
+                    priority: 0
+                });
+            }
+        }
+    }
+
     // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
     const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority);
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
 
-    // 🆕 是否有官方情報的影響 (Before Confidence Filter as it might be affected by officialPart)
+    // 🆕 是否有官方情報の影響 (Before Confidence Filter as it might be affected by officialPart)
     let isOfficialInfluenced = !!(input.jrStatus && input.jrStatus.status !== 'normal') ||
         !!(input.officialHistory && input.officialHistory.length > 0) ||
         (calibration.isOfficialOverride ?? false);
@@ -124,7 +162,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
     }
 
-    // Official Info Cap
+    // Official Info Cap - REFACTOR: Use baseStatus logic if already capped?
+    // Maintain existing logic for now but ensure it doesn't conflict
     if (probability === MAX_PREDICTION_WITH_NORMAL_DATA && input.jrStatus?.status === 'normal') {
         reasonsWithPriority.push({
             reason: '【公式情報】JR北海道より通常運行が発表されているため、予測リスクを抑制しています',
@@ -139,28 +178,16 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         reasonsWithPriority.push(...additionalReasons);
     }
 
-    // 🆕 再開済み（Post-Resumption）の強制補正
-    // 運転再開予定を過ぎている場合、気象スコアが高くても「運休」ステータス（70%以上）にならないようにキャップする
-    if (input.jrStatus?.resumptionTime) {
-        const resumption = new Date(input.jrStatus.resumptionTime);
-        const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
-        if (target.getTime() >= resumption.getTime()) {
-            // 50% = 注意・遅延レベルに抑える
-            if (probability >= 70) {
-                probability = 50;
-                reasonsWithPriority.unshift({
-                    reason: `【公式発表】運転再開予定時刻（${input.jrStatus.resumptionTime.substring(11, 16)}）を過ぎているため、運行再開と予測します`,
-                    priority: 0
-                });
-            }
-        }
-    }
-
     // 🆕 6.5 公的な運行履歴による補正 (Crawler Integration)
     if (input.officialHistory) {
         const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input);
         probability = adjustedProbability;
         reasonsWithPriority.push(...additionalReasons);
+    }
+
+    // Final check for resumption cap/base status constraints to prevent crawler history from breaking it
+    if (maxProbabilityCap !== undefined && probability > maxProbabilityCap) {
+        probability = maxProbabilityCap;
     }
 
     // 7. 最終的な理由リスト作成
@@ -173,30 +200,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         ? getConfidence(probability, reasons.length, hasRealTimeData)
         : 'low';
 
-    // 🆕 Timezone-aware today check (JST)
-    const todayJST = new Intl.DateTimeFormat('sv-SE', {
-        timeZone: 'Asia/Tokyo'
-    }).format(new Date());
-
     // 運休中かどうかを判定
-    // 🆕 「当日」かつ「公式が運休発表中」なら、検索対象時刻に関わらず「現在運休中」とみなす
-    // これにより、未来の検索（例：20時）でも現在の運休状況を起点とした一貫した復旧予測が出るようになる
-    // 🆕 「当日」かつ「公式が運休発表中」かつ「再開時刻前（または再開未定）」なら、現在運休中とみなす
-    // これにより、未来の検索（例：20時）で再開済みの場合は運休扱いしないようにする
-    let isCurrentlySuspended = (input.targetDate === todayJST) && (input.jrStatus != null) &&
-        (input.jrStatus.status === 'suspended' || input.jrStatus.status === 'cancelled');
-
-    if (isCurrentlySuspended && input.jrStatus?.resumptionTime) {
-        // 再開時刻があれば、ターゲット時刻と比較
-        const resumption = new Date(input.jrStatus.resumptionTime);
-        const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
-        // ターゲット時刻が再開時刻以降なら、運休中ではないとみなす
-        if (target.getTime() >= resumption.getTime()) {
-            isCurrentlySuspended = false;
-        }
-    }
-
-    // (Moved to earlier in the function)
+    const isCurrentlySuspended = isOfficialSuspended && (input.targetDate === todayJST);
 
     // 復旧予測 (運休中、または運休リスクが高い場合に「もし運休したら？」を予測)
     let estimatedRecoveryTime: string | undefined;

@@ -400,6 +400,16 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
     // 🆕 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
     const isWeakWeather = windSpeed < 12 && windGust < 15 && snowfall < 0.5;
 
+    // Exception for Extreme Weather (Blizzard/Storm) even if official is normal
+    // If windGust > 25 or Snowfall > 3, DO NOT FILTER
+    const isExtremeWeather = windGust >= 25 || snowfall >= 3;
+    if (isExtremeWeather) {
+        return {
+            filteredProbability: probability,
+            wasFiltered: false
+        };
+    }
+
     const isInFilterRange = isOfficialNormal
         ? (probability >= 10 && probability < 80)
         : (probability >= 30 && probability < 60);
