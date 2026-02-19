@@ -21,7 +21,7 @@ export async function runJRCrawler() {
 
     for (const area of JR_JSON_URLS) {
         const url = `${BASE_URL}${area.id}.json`;
-        console.log(`📡 Fetching ${area.area}...`);
+        console.log(`📡 Fetching ${area.name}...`);
 
         try {
             const response = await fetch(url, { cache: 'no-store' });
@@ -43,7 +43,7 @@ export async function runJRCrawler() {
                 .single();
 
             if (logError) {
-                logger.error(`❌ Failed to log raw JSON for ${area.area}:`, logError);
+                logger.error(`❌ Failed to log raw JSON for ${area.name}:`, logError);
                 continue;
             }
 
@@ -108,10 +108,10 @@ export async function runJRCrawler() {
                     }
                 }
             }
-            results.push({ area: area.area, saved: savedCount });
+            results.push({ area: area.name, saved: savedCount });
 
         } catch (e) {
-            logger.error(`❌ Error fetching ${area.area}:`, e);
+            logger.error(`❌ Error fetching ${area.name}:`, e);
             await supabase.from('crawler_logs').insert({
                 area_id: area.id,
                 raw_json: {},

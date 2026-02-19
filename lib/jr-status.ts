@@ -104,9 +104,9 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                     const cleanJson = text.replace(/^\uFEFF/, '');
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const data = JSON.parse(cleanJson) as any;
-                    return { area: area.area, id: area.id, data };
+                    return { name: area.name, id: area.id, data };
                 } catch (e) {
-                    logger.error(`Area ${area.area} fetch error:`, e);
+                    logger.error(`Area ${area.name} fetch error:`, e);
                     return null;
                 }
             })
@@ -114,7 +114,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
 
         for (const result of results) {
             if (!result || !result.data) continue;
-            const { area, id: areaId, data } = result;
+            const { name: areaName, id: areaId, data } = result;
 
             // 概況テキストから運休・遅延を判定
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,7 +151,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                             existing.status = status;
                             existing.statusText = description;
                             existing.rawText = cleanGaikyo; // 🆕
-                            existing.sourceArea = `${area} (${areaId})`; // 🆕
+                            existing.sourceArea = `${areaName} (${areaId})`; // 🆕
                         } else {
                             allItems.push({
                                 routeId: route.routeId,
@@ -160,7 +160,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                                 statusText: description,
                                 updatedAt: now,
                                 rawText: cleanGaikyo, // 🆕
-                                sourceArea: `${area} (${areaId})` // 🆕
+                                sourceArea: `${areaName} (${areaId})` // 🆕
                             });
                         }
                     }

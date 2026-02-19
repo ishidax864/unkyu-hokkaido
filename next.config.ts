@@ -101,9 +101,7 @@ const nextConfig: NextConfig = {
     output: 'standalone',
 
     // 実験的機能
-    experimental: {
-        optimizePackageImports: ['lucide-react'],
-    },
+    experimental: {},
 };
 
 export default nextConfig;
