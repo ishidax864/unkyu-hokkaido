@@ -164,12 +164,15 @@ export function getAlternativeRoutes(depId: string, arrId: string): AlternativeR
     if (directMatch) return directMatch.options as AlternativeRouteOption[];
 
     // 2. エリア一致のチェック
-    const areaMatch = (alternativeRoutesData as any[]).find(m => {
-        if (!m.fromArea || !m.toArea) return false;
-        const depInFrom = AREAS[m.fromArea]?.includes(depId);
-        const arrInTo = AREAS[m.toArea]?.includes(arrId);
-        const depInTo = AREAS[m.toArea]?.includes(depId);
-        const arrInFrom = AREAS[m.fromArea]?.includes(arrId);
+    const areaMatch = (alternativeRoutesData as Record<string, unknown>[]).find(m => {
+        const fromArea = m.fromArea as string | undefined;
+        const toArea = m.toArea as string | undefined;
+        if (!fromArea || !toArea) return false;
+
+        const depInFrom = AREAS[fromArea]?.includes(depId);
+        const arrInTo = AREAS[toArea]?.includes(arrId);
+        const depInTo = AREAS[toArea]?.includes(depId);
+        const arrInFrom = AREAS[fromArea]?.includes(arrId);
         return (depInFrom && arrInTo) || (depInTo && arrInFrom);
     });
 

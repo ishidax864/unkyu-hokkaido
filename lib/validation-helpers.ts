@@ -1,8 +1,4 @@
-/**
- * Centralized validation and sanitization helpers
- * Improves code reusability and consistency across API routes
- */
-
+import crypto from 'crypto';
 import { ValidationError } from './errors';
 
 /**
@@ -75,12 +71,8 @@ export async function hashIP(ip: string): Promise<string> {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-/**
- * Create secure hash from IP address (sync version using crypto module)
- */
 export function hashIPSync(ip: string): string {
-    // This will be imported differently in Node.js context
-    const crypto = require('crypto');
+    // Note: This function is intended for Node.js environments
     return crypto.createHash('sha256').update(ip).digest('hex');
 }
 

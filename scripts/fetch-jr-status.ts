@@ -76,11 +76,20 @@ async function fetchAreaStatus(area: typeof AREAS[0]) {
             }
 
             if (matchedRouteIds.length > 0) {
+                // 🆕 データのクリーンアップ（<BR>タグの除去）
+                const sanitizedDetails = text.replace(/<BR>/gi, '\n').trim();
+
                 let status = 'normal';
                 if (text.includes('運休') || text.includes('見合')) status = 'suspended';
                 else if (text.includes('遅れ') || text.includes('遅延')) status = 'delayed';
 
-                if (text.includes('再開') || text.includes('平常')) status = 'normal';
+                // 🆕 「再開」を含んでいても、「見込み」や「予定」の場合は 'suspended' を維持する
+                const isOnlyEstimation = (text.includes('再開') || text.includes('平常')) &&
+                    (text.includes('見込み') || text.includes('予定') || text.includes('計画'));
+
+                if (!isOnlyEstimation && (text.includes('再開') || text.includes('平常'))) {
+                    status = 'normal';
+                }
 
                 let cause = 'weather';
                 if (text.includes('雪')) cause = 'snow';
@@ -99,7 +108,7 @@ async function fetchAreaStatus(area: typeof AREAS[0]) {
                             route_id: routeId,
                             status: status,
                             cause: cause,
-                            details: text,
+                            details: sanitizedDetails,
                             crawler_log_id: logData.id
                         });
 

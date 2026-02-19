@@ -237,11 +237,11 @@ export function useRouteSearch() {
                 routeName: primaryRoute?.name || '',
                 targetDate: searchDate,
                 targetTime: targetTimeStr,
-                historicalData,
-                officialHistory,
                 jrStatus: isToday ? jrStatus : null, // メイン結果には「検索日が今日」の時のみ反映
                 crowdsourcedStatus: currentCrowdsourcedStatus,
-                timetableTrain: timetableTrain || undefined
+                timetableTrain: timetableTrain || undefined,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                officialHistory: officialHistory as any
             });
             setPrediction(result);
             finalPrediction = result;
@@ -260,14 +260,12 @@ export function useRouteSearch() {
                 jrStatus,
                 rtStatus,
                 historicalData,
-                officialHistory
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                officialHistory as any
             ));
         }
 
         // Helper: Time Shift & Risk Trend
-        // 🆕 終日運休等の場合は時間変更提案をしない
-        const isAllDaySuspension = finalPrediction ? (finalPrediction.estimatedRecoveryTime === '終日運休' || finalPrediction.isOfficialOverride) : false;
-
         const currentHour = parseInt(targetTimeStr.split(':')[0]);
         let bestShift: {
             time: string;

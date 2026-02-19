@@ -1,4 +1,4 @@
-import { cn, getRiskLevel, getRiskStyles, getRiskLabel } from '@/lib/ui-utils';
+import { cn, getRiskStyles, getRiskLabel } from '@/lib/ui-utils';
 
 interface StatusChipProps {
     risk: number;
@@ -52,7 +52,6 @@ export function StatusChip({
  */
 export function RiskDisplay({ risk }: { risk: number }) {
     const styles = getRiskStyles(risk);
-    const level = getRiskLevel(risk);
 
     return (
         <div

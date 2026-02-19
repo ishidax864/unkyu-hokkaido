@@ -16,6 +16,7 @@ export function applyAdaptiveCalibration(
     probability: number,
     input: PredictionInput,
     vulnerability: VulnerabilityData,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     historicalMatch: any,
     reasons: Array<{ reason: string; priority: number }>
 ): CalibrationResult {
@@ -71,6 +72,38 @@ export function applyAdaptiveCalibration(
     // Apply adjustment
     const previousProb = probability;
     let newProbability = Math.floor(Math.min(Math.max(probability + adjustment, 0), 100));
+
+    // 🆕 SUSPENSION LOCK: For same-day searches, if currently suspended, lock to 100%
+    // This ensures consistency across the entire day's timeline for active incidents.
+    const isToday = input.targetDate === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
+    if (isToday && (currentStatus === 'suspended' || currentStatus === 'cancelled')) {
+        // CHECK RESUMPTION TIME
+        // If resumption time is defined and targetTime is AFTER resumption, release lock.
+        let isAfterResumption = false;
+        if (input.jrStatus?.resumptionTime) {
+            const resumptionDate = new Date(input.jrStatus.resumptionTime);
+            if (targetDateTime.getTime() >= resumptionDate.getTime()) {
+                isAfterResumption = true;
+            }
+        }
+
+        if (!isAfterResumption) {
+            newProbability = 100;
+        } else {
+            // After resumption, the "Current Suspension" influence should be removed.
+            // We revert to the theoretical model risk, but keeping in mind that
+            // post-resumption usually entails delays, so we might want to floor it.
+            // For now, let's just use the base probability to ensure the chart shows the "Change".
+
+            newProbability = probability;
+
+            // Optional: If base probability is very low (e.g. 10%), maybe boost it slightly
+            // to reflect "post-resumption instability"?
+            // Let's cap it at a minimum of 30% ("Delay Risk") if usage is high?
+            // But for now, returning to 'probability' is exactly what the user asked for:
+            // "Why is it 100% vs 30%?" -> They expect 30% (trend) if that's what the forecast says.
+        }
+    }
 
     // 🆕 EXTREME WEATHER GUARD
     // 強力な気象信号（突風18m/s以上 or 降雪3cm/h以上）がある場合は、

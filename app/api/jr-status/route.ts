@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 import { JRStatusResponse } from '@/lib/types';
 import { logger } from '@/lib/logger';
-import { ExternalAPIError } from '@/lib/errors';
 
 // キャッシュ (型付け強化)
 interface CacheEntry {

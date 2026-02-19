@@ -7,7 +7,6 @@ import { findHistoricalMatch } from '../historical-data/suspension-patterns';
 
 // Refactored Modules
 import {
-    RISK_FACTORS,
     ROUTE_VULNERABILITY,
     DEFAULT_VULNERABILITY,
     getTimeMultiplier,
@@ -15,10 +14,7 @@ import {
 } from './risk-factors';
 
 import {
-    calculateCompoundRisk,
-    calculateWinterRisk,
     determineMaxProbability,
-    evaluateRiskFactors,
     applyHistoricalDataAdjustment,
     determineSuspensionReason,
     applyConfidenceFilter,
@@ -35,7 +31,6 @@ import {
 
 import {
     MAX_DISPLAY_REASONS,
-    COMPOUND_RISK_MULTIPLIER,
     MAX_PREDICTION_WITH_NORMAL_DATA
 } from './constants';
 
@@ -108,8 +103,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             windSpeed: input.weather.windSpeed || 0,
             windGust: input.weather.windGust || 0,
             snowfall: input.weather.snowfall || 0,
-            jrStatus: input.jrStatus?.status,
-            isNearRealTime // 🆕 Pass flag
+            officialStatus: input.jrStatus ? {
+                status: input.jrStatus.status,
+                resumptionTime: input.jrStatus.resumptionTime // 🆕
+            } : null, isNearRealTime // 🆕 Pass flag
         });
 
         if (filterResult.wasFiltered) {
@@ -159,8 +156,15 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         ? getConfidence(probability, reasons.length, hasRealTimeData)
         : 'low';
 
+    // 🆕 Timezone-aware today check (JST)
+    const todayJST = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Tokyo'
+    }).format(new Date());
+
     // 運休中かどうかを判定
-    const isCurrentlySuspended = input.jrStatus != null &&
+    // 🆕 「当日」かつ「公式が運休発表中」なら、検索対象時刻に関わらず「現在運休中」とみなす
+    // これにより、未来の検索（例：20時）でも現在の運休状況を起点とした一貫した復旧予測が出るようになる
+    const isCurrentlySuspended = (input.targetDate === todayJST) && (input.jrStatus != null) &&
         (input.jrStatus.status === 'suspended' || input.jrStatus.status === 'cancelled');
 
     // (Moved to earlier in the function)
@@ -179,8 +183,19 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
             // 🆕 Unified Resumption Logic
             if (input.weather && input.weather.surroundingHours) {
-                const futureForecasts = (input.targetTime && input.weather.surroundingHours.length > 0)
-                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= (input.targetTime || '00:00'))
+                // Fix: Recovery calculation should be anchored to "NOW" (or data update time), not the user's search target time.
+                // We must use JST because surroundingHours.targetTime is in JST (from Open-Meteo with &timezone=Asia/Tokyo).
+                const now = new Date();
+                const jstHour = parseInt(new Intl.DateTimeFormat('en-US', {
+                    hour: 'numeric',
+                    hour12: false,
+                    timeZone: 'Asia/Tokyo'
+                }).format(now));
+                const currentHourStr = `${String(jstHour).padStart(2, '0')}:00`;
+
+                // Use forecasts starting from the current hour to find the *next* recovery window
+                const futureForecasts = (input.weather.surroundingHours.length > 0)
+                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= currentHourStr)
                     : input.weather.surroundingHours;
 
                 if (futureForecasts.length > 0) {
@@ -210,9 +225,11 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                         recoveryRecommendation = resumption.reason;
 
                         if (isCurrentlySuspended) {
-                            reasons.unshift(`【復旧予測】${resumption.reason}`);
+                            // Clear existing generic reasons to make room for evidence
+                            reasons = reasons.filter(r => !r.includes('運休中') && !r.includes('復旧予測'));
+                            reasons.unshift(resumption.reason);
                             if (matchForResumption) {
-                                reasons.unshift(`【経験則】${matchForResumption.label}のパターンに合致。`);
+                                reasons.unshift(`【過去事例照合】${matchForResumption.label}のパターンに類似（${matchForResumption.consequences.recoveryTendency === 'slow' ? '長期化' : '標準的'}傾向）`);
                             }
                         }
                     }
@@ -242,8 +259,11 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             (text.includes('本日の運転') && text.includes('見合わせ'));
 
         if (isAllDaySuspension) {
-            estimatedRecoveryTime = '終日運休';
-            estimatedRecoveryHours = undefined; // 時間計算ではないためundefined
+            // Keep existing estimatedRecoveryTime if we have one (e.g. 16:00), 
+            // but mark the scale as all-day. Fallback to '終日運休' if none.
+            estimatedRecoveryTime = estimatedRecoveryTime || '終日運休';
+            estimatedRecoveryHours = undefined;
+            recoveryRecommendation = `JR北海道公式発表: ${text}`;
             recoveryRecommendation = `JR北海道公式発表: ${text}`;
             isOfficialOverride = true;
 
@@ -256,6 +276,21 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
             // 運休理由も公式情報で上書き
             suspensionReason = 'JR北海道公式発表による';
+        } else {
+            // 🆕 Partial Suspension / Reduced Service Detection
+            // 「本数を減らして」「間引き」「一部運休」などのキーワードがある場合
+            const partialKeywords = ['本数を減ら', '間引き', '一部運休', '大幅な遅れ'];
+            if (partialKeywords.some(k => text.includes(k))) {
+                isOfficialOverride = true;
+                // Force High Risk (Delay/Caution)
+                if (probability < 80) {
+                    probability = 80;
+                }
+                reasons.unshift(`【公式発表】${text}`); // Add official text as primary reason
+
+                // Clear low-confidence messages if any
+                reasons = reasons.filter(r => !r.includes('リスクを高める要因は検出されていません'));
+            }
         }
     }
 
@@ -331,7 +366,7 @@ export function calculateWeeklyForecast(
         // 今日、または過去（念のため）のデータであれば公式情報を反映
         const isToday = weather.date <= today;
 
-        return calculateSuspensionRisk({
+        const result = calculateSuspensionRisk({
             routeId,
             routeName,
             targetDate: weather.date,
@@ -342,6 +377,21 @@ export function calculateWeeklyForecast(
             historicalData: historicalData,
             officialHistory: isToday ? officialHistory : null
         });
+
+        // 🆕 Weekly Consistency Fix:
+        // If today matches logic in calculateSuspensionRisk (which it does via jrStatus), 
+        // verify if "Suspended" status was applied.
+        // If the 12:00 forecast was "Normal" but current status is "Suspended", force update for Today.
+        if (isToday && jrStatus && (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled')) {
+            // Even if resumption is scheduled for evening, the "Daily Summary" for today should probably reflect the *worst* state (Suspended)
+            // or at least be consistent with the main card.
+            // If main card says "Suspended", this should too.
+            result.probability = 100;
+            result.status = '運休中';
+            result.isCurrentlySuspended = true;
+        }
+
+        return result;
     });
 }
 

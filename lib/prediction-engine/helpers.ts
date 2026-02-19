@@ -105,11 +105,10 @@ export function calculateWinterRisk(
     }
 
     // 路線脆弱性に応じて5-10%のベースリスク
-    let winterBaseRisk = MIN_WINTER_RISK + (vuln.vulnerabilityScore - 0.8) * WINTER_RISK_COEFFICIENT;
+    const winterBaseRisk = MIN_WINTER_RISK + (vuln.vulnerabilityScore - 0.8) * WINTER_RISK_COEFFICIENT;
 
     // 🆕 冬季の朝（6時-9時）は除雪作業による遅延リスクを考慮してリスク底上げ (+5%)
-    const hour = targetDate ? new Date(targetDate).getHours() : 9; // targetTimeがあればそちらを使うべきだが、一旦簡易実装
-    // 注意: targetDateは "2024-01-01" 形式なので時間は取れない。呼び出し元で時間を考慮する必要がある。
+    // Note: targetDateは "2024-01-01" 形式なので時間は取れない。呼び出し元で時間を考慮する必要がある。
     // ここでは単純にベースを少し上げるだけに留めるか、呼び出し元(helpers.ts)で時間を渡すように変更する必要がある。
     // 今回は安全に、全体のベースを少し上げる調整にする。
 
@@ -348,12 +347,17 @@ export function determineSuspensionReason(
 // Confidence Filter (Wolf Boy Mitigation)
 // =====================
 
-interface ConfidenceFilterParams {
+export interface ConfidenceFilterParams {
     probability: number;
     totalScore: number;
     windSpeed: number;
     windGust: number;
     snowfall: number;
+    jrStatus?: string | null;
+    officialStatus?: { // 🆕
+        status: string;
+        resumptionTime?: string | null;
+    } | null;
     isNearRealTime?: boolean; // 🆕
 }
 
@@ -380,21 +384,21 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
     // フィルタ適用条件をチェック
     // 🆕 公式が平常（normal）かつ気象警報等がない場合、抑制をより広範囲に適用する
     const isOfficialNormal = jrStatus === "normal" && isNearRealTime;
-    
-    // 🆕 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
-    const isWeakWeather = windSpeed < 12 && windGust < 15 && snowfall < 0.5; 
 
-    const isInFilterRange = isOfficialNormal 
-        ? (probability >= 10 && probability < 80) 
+    // 🆕 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
+    const isWeakWeather = windSpeed < 12 && windGust < 15 && snowfall < 0.5;
+
+    const isInFilterRange = isOfficialNormal
+        ? (probability >= 10 && probability < 80)
         : (probability >= 30 && probability < 60);
-    
+
     const isLowScore = isOfficialNormal ? totalScore < 80 : totalScore < 40;
 
     if (isInFilterRange && isLowScore && isWeakWeather) {
         // 公式平常時の抑制率を緩和 (0.4 -> 0.7) 
         // Gusts > 18m/s (even if < 20) should have even less suppression
         const hasSignificantGust = windGust >= 18;
-        const suppressionRatio = isOfficialNormal ? (hasSignificantGust ? 0.85 : 0.7) : 0.8; 
+        const suppressionRatio = isOfficialNormal ? (hasSignificantGust ? 0.85 : 0.7) : 0.8;
         return {
             filteredProbability: Math.round(probability * suppressionRatio),
             wasFiltered: true,
@@ -411,6 +415,7 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
 export function calculateRawRiskScore(
     input: PredictionInput,
     vulnerability: VulnerabilityData,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     historicalMatch: any,
     isNearRealTime: boolean = false
 ): RiskEvaluationResult {

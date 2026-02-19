@@ -104,6 +104,7 @@ const nextConfig: NextConfig = {
     serverExternalPackages: ['onnxruntime-node'],
 
     // 実験的機能
+    // 実験的機能
     experimental: {},
 };
 

@@ -94,8 +94,6 @@ export function PredictionResults({
             <PredictionResultCard
                 result={prediction}
                 route={route}
-                targetDate={date}
-                targetTime={time}
             />
 
             {/* SNSシェア */}

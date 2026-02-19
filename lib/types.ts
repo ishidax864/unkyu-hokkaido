@@ -120,6 +120,7 @@ export interface PredictionResult {
     updatedAt?: string;
     rawText?: string;
     sourceArea?: string;
+    resumptionTime?: string | null; // 🆕
   } | null; // 🆕 公式運行情報 (実データ)
 }
 
@@ -167,6 +168,7 @@ export interface JRStatusItem {
   source: 'official' | 'rss' | 'mock';
   rawText?: string;
   sourceArea?: string; // 🆕
+  resumptionTime?: string | null; // 🆕 Date string (ISO) or HH:MM
 }
 
 export interface AIReasonRequest {
@@ -213,6 +215,7 @@ export interface PredictionInput {
     statusText?: string;
     updatedAt?: string;
     rawText?: string; // 🆕
+    resumptionTime?: string | null; // 🆕
   } | null;
   crowdsourcedStatus?: {
     consensusStatus: ReportType | 'unknown';

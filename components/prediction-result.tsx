@@ -1,10 +1,8 @@
-'use client';
-
-import { PredictionResult } from '@/lib/types';
-import { Route } from '@/lib/types';
-import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, TrendingUp, Clock, AlertOctagon, Users, ExternalLink } from 'lucide-react';
+import { PredictionResult, Route } from '@/lib/types';
+import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, Clock, AlertOctagon, ExternalLink, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
+import { formatStatusText, splitStatusText } from '@/lib/text-parser'; // 🆕
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -13,26 +11,19 @@ interface PredictionResultCardProps {
     targetTime: string; // HH:MM format 🆕
 }
 
-export function PredictionResultCard({ result, route, targetDate, targetTime }: PredictionResultCardProps) {
+export function PredictionResultCard({ result, route }: Omit<PredictionResultCardProps, 'targetTime' | 'targetDate'>) {
     const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended;
 
     // 当日かどうかを判定
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    const isToday = targetDate === today;
-
-    // 現在時刻周辺か判定 (+/- 1時間以内)
-    const isCurrentTimeSearch = (() => {
-        if (!isToday || !targetTime) return false;
-        const [h, m] = targetTime.split(':').map(Number);
-        const searchTime = new Date();
-        searchTime.setHours(h, m, 0, 0);
-        const diffMs = Math.abs(now.getTime() - searchTime.getTime());
-        return diffMs < 60 * 60 * 1000;
-    })();
+    // const now = new Date();
+    // const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    // const isToday = targetDate === today;
 
     // ユーザー要望: 現在時刻検索で公式情報がある場合は、％表示を隠す -> 要望変更: 予測結果も併せて表示したい
     const shouldHideRiskMeter = false; //isCurrentTimeSearch && !!result.officialStatus;
+
+    // Split text into summary and details - 🆕
+    const { summary: textSummary, details: textDetails } = splitStatusText(result.officialStatus?.rawText || '');
 
     // ステータスに応じた設定（信号色）
     const _getStatusConfig = () => {
@@ -80,22 +71,43 @@ export function PredictionResultCard({ result, route, targetDate, targetTime }: 
                         </div>
 
                         {/* ステータス表示 */}
-                        <div className="font-black text-xl flex items-center gap-2">
-                            {result.officialStatus.status === 'suspended' || result.officialStatus.status === 'cancelled' ? (
-                                <span className="text-red-600">🔴 運休・見合わせ</span>
-                            ) : result.officialStatus.status === 'delay' ? (
-                                <span className="text-yellow-600">🟡 遅延</span>
-                            ) : result.officialStatus.status === 'normal' ? (
-                                <span className="text-green-600">🟢 {result.officialStatus.statusText || '現在、遅れに関する情報はありません'}</span>
-                            ) : (
-                                <span className="text-gray-600">⚪ 情報なし</span>
-                            )}
-                        </div>
+                        {/* ステータス表示 - Determine color/icon from text keywords if status is 'normal'/ambiguous but text implies otherwise */}
+                        {(() => {
+                            const status = result.officialStatus.status;
+                            const text = textSummary || '';
 
-                        {/* 原文テキスト（あれば） */}
-                        {result.officialStatus.rawText && result.officialStatus.status !== 'normal' && (
-                            <div className="mt-2 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100">
-                                "{result.officialStatus.rawText}"
+                            // Determine override status
+                            let displayStatus: 'suspended' | 'delay' | 'normal' | 'unknown' = 'unknown';
+
+                            if (status === 'suspended' || status === 'cancelled') {
+                                displayStatus = 'suspended';
+                            } else if (text.includes('運休') || text.includes('見合わせ')) {
+                                displayStatus = 'suspended';
+                            } else if (status === 'delay' || text.includes('遅れ') || text.includes('遅延') || text.includes('減便') || text.includes('本数を減ら')) {
+                                displayStatus = 'delay';
+                            } else if (status === 'normal') {
+                                displayStatus = 'normal';
+                            }
+
+                            return (
+                                <div className="font-black text-xl flex items-center gap-2">
+                                    {displayStatus === 'suspended' ? (
+                                        <span className="text-red-600">🔴 運休・見合わせ</span>
+                                    ) : displayStatus === 'delay' ? (
+                                        <span className="text-yellow-600">🟡 遅延・減便</span>
+                                    ) : displayStatus === 'normal' ? (
+                                        <span className="text-green-600">🟢 {result.officialStatus.statusText || '現在、遅れに関する情報はありません'}</span>
+                                    ) : (
+                                        <span className="text-gray-600">⚪ 情報なし</span>
+                                    )}
+                                </div>
+                            );
+                        })()}
+
+                        {/* 原文テキスト（Summaryのみ） - 🆕 Detailsは下部へ */}
+                        {textSummary && result.officialStatus.status !== 'normal' && (
+                            <div className="mt-2 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100 whitespace-pre-wrap leading-relaxed">
+                                {formatStatusText(textSummary)}
                             </div>
                         )}
 
@@ -190,22 +202,39 @@ export function PredictionResultCard({ result, route, targetDate, targetTime }: 
 
 
                 {/* 詳細情報 */}
-                <div className="space-y-2 mb-4">
+                <div className="space-y-3 mb-4">
                     <div className="flex items-center gap-2 text-sm font-medium text-[var(--muted)]">
                         <Info className="w-4 h-4" />
                         状況
                     </div>
-                    <ul className="space-y-1.5">
-                        {result.reasons.map((reason, index) => (
-                            <li
-                                key={index}
-                                className="flex items-start gap-2 text-sm"
-                            >
-                                <span className="text-[var(--status-suspended)] mt-0.5">•</span>
-                                {reason}
-                            </li>
-                        ))}
-                    </ul>
+
+                    {/* 🆕 物理的エビデンス表示 */}
+                    <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-3 space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-500">【公式発表】運休・運転見合わせが発生しています</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-500">【運休中】気象条件のため運転を見合わせています</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs border-t border-blue-100 pt-1.5 mt-1.5 font-bold text-blue-800">
+                            <span>【復旧予測】{result.recoveryRecommendation || '安全確認・点検（1時間）'}</span>
+                        </div>
+                        {/* 🆕 ウェザーエビデンス */}
+                        <div className="text-[10px] text-gray-400 mt-1">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            現在の観測値: 風速 {(result as any).comparisonData?.wind.toFixed(1)}m/s / 降雪 {(result as any).comparisonData?.snow.toFixed(1)}cm/h
+                        </div>
+                    </div>
+
+                    {/* 🆕 公式詳細情報 (Details) */}
+                    {textDetails && (
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-3 space-y-1.5 mt-2">
+                            <div className="text-xs font-bold text-gray-500 mb-1">【詳細情報】</div>
+                            <div className="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">
+                                {formatStatusText(textDetails)}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* 公式情報へのリンク促進 */}
@@ -254,24 +283,69 @@ export function PredictionResultCard({ result, route, targetDate, targetTime }: 
                     </div>
 
                     {/* ステータス表示 */}
-                    <div className="font-black text-xl flex items-center gap-2">
-                        {result.officialStatus.status === 'suspended' || result.officialStatus.status === 'cancelled' ? (
-                            <span className="text-red-600">🔴 運休・見合わせ</span>
-                        ) : result.officialStatus.status === 'delay' ? (
-                            <span className="text-yellow-600">🟡 遅延</span>
-                        ) : result.officialStatus.status === 'normal' ? (
-                            <span className="text-green-600">🟢 {(result.officialStatus.statusText || '').replace(/。/g, '') || '現在、遅れに関する情報はありません'}</span>
-                        ) : (
-                            <span className="text-gray-600">⚪ 情報なし</span>
-                        )}
-                    </div>
+                    {/* ステータス表示 - Determine color/icon from text keywords if status is 'normal'/ambiguous but text implies otherwise */}
+                    {(() => {
+                        const status = result.officialStatus.status;
+                        const text = result.officialStatus.rawText || '';
 
-                    {/* 原文テキスト（あれば） */}
-                    {result.officialStatus.rawText && result.officialStatus.status !== 'normal' && (
-                        <div className="mt-2 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100 leading-relaxed">
-                            "{result.officialStatus.rawText}"
+                        // Determine override status
+                        let displayStatus: 'suspended' | 'delay' | 'normal' | 'unknown' = 'unknown';
+
+                        if (status === 'suspended' || status === 'cancelled') {
+                            displayStatus = 'suspended';
+                        } else if (text.includes('運休') || text.includes('見合わせ')) {
+                            displayStatus = 'suspended';
+                        } else if (status === 'delay' || text.includes('遅れ') || text.includes('遅延') || text.includes('減便') || text.includes('本数を減ら')) {
+                            displayStatus = 'delay';
+                        } else if (status === 'normal') {
+                            displayStatus = 'normal';
+                        }
+
+                        return (
+                            <div className="font-black text-xl flex items-center gap-2">
+                                {displayStatus === 'suspended' ? (
+                                    <span className="text-red-600">🔴 運休・見合わせ</span>
+                                ) : displayStatus === 'delay' ? (
+                                    <span className="text-yellow-600">🟡 遅延・減便</span>
+                                ) : displayStatus === 'normal' ? (
+                                    <span className="text-green-600">🟢 {(result.officialStatus.statusText || '').replace(/。/g, '') || '現在、遅れに関する情報はありません'}</span>
+                                ) : (
+                                    <span className="text-gray-600">⚪ 情報なし</span>
+                                )}
+                            </div>
+                        );
+                    })()}
+
+                    {/* 原文テキスト（Summaryのみ） - 🆕 Detailsは詳細セクションへ */}
+                    {textSummary && result.officialStatus.status !== 'normal' && (
+                        <div className="mt-2 bg-white p-2 rounded border border-gray-100">
+                            {formatStatusText(textSummary)}
                         </div>
                     )}
+
+                    {/* 🆕 AI復旧予測（公式に再開時刻がない場合のみ） */}
+                    {(result.officialStatus.status === 'suspended' || result.officialStatus.status === 'cancelled') &&
+                        !result.officialStatus.resumptionTime &&
+                        result.estimatedRecoveryTime && (
+                            <div className="mt-3 bg-indigo-50 border border-indigo-100 p-2 rounded flex items-start gap-2">
+                                <div className="mt-0.5 text-indigo-500">
+                                    <Clock size={16} />
+                                </div>
+                                <div>
+                                    <div className="text-xs font-bold text-indigo-700 flex items-center gap-1">
+                                        AI復旧予測
+                                        <span className="text-[9px] bg-white border border-indigo-200 px-1 rounded text-indigo-400 font-normal">参考値</span>
+                                    </div>
+                                    <div className="text-sm text-indigo-900 font-medium mt-0.5">
+                                        {result.estimatedRecoveryTime}
+                                        <span className="text-xs font-normal ml-1">に運転再開の見込み</span>
+                                    </div>
+                                    <div className="text-[10px] text-indigo-600 mt-1 leading-tight">
+                                        ※公式発表がないため、気象データから算出した予測値です。
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                     <div className="text-[10px] text-gray-400 text-right mt-1">
                         更新: {result.officialStatus.updatedAt ? new Date(result.officialStatus.updatedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
@@ -374,6 +448,18 @@ export function PredictionResultCard({ result, route, targetDate, targetTime }: 
                     <Info className="w-4 h-4" />
                     状況・要因
                 </div>
+
+                {/* 🆕 公式詳細情報 (Details) - ここに挿入 */}
+                {textDetails && (
+                    <div className="mb-3 bg-gray-50 border border-gray-100 rounded-lg p-3">
+                        <div className="text-xs font-bold text-gray-500 mb-1 flex items-center gap-1">
+                            <span>ℹ️</span> 運行情報の詳細
+                        </div>
+                        <div className="text-xs text-gray-600 leading-relaxed">
+                            {formatStatusText(textDetails)}
+                        </div>
+                    </div>
+                )}
                 <ul className="space-y-1.5">
                     {result.reasons.map((reason, index) => (
                         <li

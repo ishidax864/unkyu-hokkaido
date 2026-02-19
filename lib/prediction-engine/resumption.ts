@@ -177,11 +177,14 @@ export function calculateResumptionTime(
     // console.log(`[DEBUG] Final Resume Hour: ${resumeHour}, Rolled Days: ${Math.floor((startHour + buffer) / 24)}`);
     const resumeTimeStr = `${String(Math.floor(resumeHour)).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
 
+    // 🆕 Enhance reason with evidence
+    const evidenceReason = `【根拠】気象状況が${safetyStartTime}頃に回復（風速・降雪が基準値以下）し、その後、${reason}を経て運転を再開する見込みです。`;
+
     return {
         estimatedResumption: resumeTimeStr,
         safetyWindowStart: safetyStartTime,
         requiredBufferHours: buffer,
-        reason
+        reason: evidenceReason
     };
 }
 

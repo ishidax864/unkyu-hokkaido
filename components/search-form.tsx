@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { ArrowRight, Calendar, Clock, PlayCircle, Timer } from 'lucide-react';
 import { Station } from '@/lib/hokkaido-data';
@@ -207,7 +207,7 @@ export function SearchForm({
                 </button>
                 {showError && (
                     <p className="text-[10px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
-                        ※出発駅と到着駅を選択してください
+                        ※1週間以内の日付を選択してください
                     </p>
                 )}
             </div>

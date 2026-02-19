@@ -51,7 +51,6 @@ export async function runJRCrawler() {
             let savedCount = 0;
 
             for (const item of gaikyoList) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const content = (item.honbun || '') + (item.title || '');
                 if (!content) continue;
 

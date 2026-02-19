@@ -696,7 +696,7 @@ export async function getReportsList(limit: number = 50): Promise<DbResult<UserR
 export async function getOfficialRouteHistory(
     routeId: string,
     hoursBack: number = 24
-): Promise<DbResult<any[]>> {
+): Promise<DbResult<Record<string, unknown>[]>> {
     const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) {
         return { success: false, error: 'Supabase not configured' };
@@ -736,7 +736,7 @@ export async function getOfficialRouteHistory(
 }
 
 // 🆕 クローラーの稼働状況サマリーを取得
-export async function getCrawlerStatusSummary(): Promise<DbResult<any[]>> {
+export async function getCrawlerStatusSummary(): Promise<DbResult<Record<string, unknown>[]>> {
     const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) return { success: false, error: 'Supabase not configured' };
 

@@ -1,4 +1,4 @@
-import { Station, getStationById, estimateTaxiFare } from './hokkaido-data';
+import { getStationById, estimateTaxiFare } from './hokkaido-data';
 import stationFacilitiesData from '../data/station-facilities.json';
 
 // ===== 駅ごとの利用可能手段 =====
@@ -195,23 +195,4 @@ export function getAvailableAlternatives(
 
     // 優先度順にソート
     return options.sort((a, b) => a.priority - b.priority);
-}
-
-/**
- * タクシーの距離を計算
- */
-function calculateTaxiDistance(station1: Station, station2: Station): number | null {
-    if (!station1.lat || !station1.lon || !station2.lat || !station2.lon) {
-        return null;
-    }
-
-    // Haversine formula
-    const R = 6371;
-    const dLat = (station2.lat - station1.lat) * Math.PI / 180;
-    const dLon = (station2.lon - station1.lon) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) ** 2 +
-        Math.cos(station1.lat * Math.PI / 180) * Math.cos(station2.lat * Math.PI / 180) *
-        Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
 }

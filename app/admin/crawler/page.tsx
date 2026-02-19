@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -7,28 +8,36 @@ import { Badge } from '@/components/ui/badge';
 import {
     Activity,
     CheckCircle2,
-    XCircle,
-    Clock,
+    AlertTriangle,
     Database,
     TrendingUp,
-    RefreshCcw,
-    AlertTriangle
+    RefreshCcw
 } from 'lucide-react';
 
 const RelativeTime = ({ date }: { date: string }) => {
-    const [text, setText] = useState('');
-
-    useEffect(() => {
+    const getRelativeText = () => {
         const d = new Date(date);
         const now = new Date();
         const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
 
         const rtf = new Intl.RelativeTimeFormat('ja', { numeric: 'auto' });
 
-        if (diffInSeconds < 60) setText(rtf.format(-diffInSeconds, 'second'));
-        else if (diffInSeconds < 3600) setText(rtf.format(-Math.floor(diffInSeconds / 60), 'minute'));
-        else if (diffInSeconds < 86400) setText(rtf.format(-Math.floor(diffInSeconds / 3600), 'hour'));
-        else setText(d.toLocaleDateString());
+        let initialText = d.toLocaleDateString();
+        if (diffInSeconds < 60) initialText = rtf.format(-diffInSeconds, 'second');
+        else if (diffInSeconds < 3600) initialText = rtf.format(-Math.floor(diffInSeconds / 60), 'minute');
+        else if (diffInSeconds < 86400) initialText = rtf.format(-Math.floor(diffInSeconds / 3600), 'hour');
+
+        return initialText;
+    };
+
+    const [text, setText] = useState(() => getRelativeText());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setText(getRelativeText());
+        }, 30000); // Update every 30 seconds
+        return () => clearInterval(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [date]);
 
     return <span>{text}</span>;

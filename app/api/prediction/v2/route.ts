@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
-import { JRStatusItem, PredictionInput } from '@/lib/types';
+import { JRStatusItem, PredictionInput, JRStatus } from '@/lib/types';
+import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
 
 import { getAdminSupabaseClient } from '@/lib/supabase';
 import { ROUTE_DEFINITIONS } from '@/lib/jr-status';
@@ -14,12 +16,12 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             console.error('Missing Supabase credentials');
             return {
                 routeName: 'System',
-                status: 'delayed' as any,
+                status: 'delay', // Using 'delay' which is valid for JRStatus
                 description: 'System Error',
                 statusText: 'ERR: Admin Key Missing',
                 updatedAt: new Date().toISOString(),
                 source: 'official'
-            } as any;
+            } as unknown as JRStatusItem;
         }
 
         const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
@@ -39,27 +41,41 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
         if (dbError) {
             return {
                 routeName: routeName,
-                status: 'delayed' as any,
+                status: 'delay',
                 description: 'DB Error',
                 statusText: 'ERR: DB History Fetch Failed ' + dbError.message,
                 updatedAt: new Date().toISOString(),
                 source: 'official'
-            } as any;
+            } as unknown as JRStatusItem;
         }
 
         if (incidents && incidents.length > 0) {
             const latest = incidents[0];
             const description = latest.status === 'suspended' ? '運休・見合わせが発生しています' : latest.status === 'delayed' ? '遅延が発生しています' : '平常運転';
-            return {
+            let jrStatus: JRStatusItem = {
                 routeId,
                 routeName,
-                status: latest.status as any,
+                status: (latest.status === 'delayed' ? 'delay' : latest.status) as JRStatus,
                 description,
                 statusText: latest.details || description,
                 updatedAt: latest.timestamp || latest.created_at,
                 source: 'official',
                 rawText: latest.details
             };
+
+            // Ensure 'cancelled' is treated as 'suspended' for consistency
+            if (jrStatus.status === 'cancelled') {
+                jrStatus.status = 'suspended';
+            }
+
+            // 🆕 Attempt to extract resumption time
+            if (jrStatus.status === 'suspended' || jrStatus.status === 'delay') {
+                const extracted = extractResumptionTime(jrStatus.rawText || jrStatus.statusText || "");
+                if (extracted) {
+                    jrStatus.resumptionTime = extracted.toISOString();
+                }
+            }
+            return jrStatus;
         }
 
         // 2. If no incidents, check if crawler ran recently (< 1 hour)
@@ -72,12 +88,12 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
         if (logError) {
             return {
                 routeName: routeName,
-                status: 'delayed' as any,
+                status: 'delay',
                 description: 'DB Error',
                 statusText: 'ERR: Log Fetch Failed ' + logError.message,
                 updatedAt: new Date().toISOString(),
                 source: 'official'
-            } as any;
+            } as unknown as JRStatusItem;
         }
 
         if (logs && logs.length > 0) {
@@ -102,12 +118,12 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
                         return {
                             routeId,
                             routeName,
-                            status: 'partial' as any,
+                            status: 'partial',
                             description: '周辺路線で運休・遅延が発生しています',
                             statusText: '周辺の運行状況に基づきリスクを算出しています',
                             updatedAt: logs[0].fetched_at,
                             source: 'official'
-                        } as any;
+                        } as JRStatusItem;
                     }
                 }
 
@@ -123,22 +139,22 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             } else {
                 return {
                     routeName: routeName,
-                    status: 'delayed' as any,
+                    status: 'delay',
                     description: 'Stale Data',
                     statusText: `ERR: Data Stale (${Math.round((now - lastFetch) / 60000)}min old)`,
                     updatedAt: logs[0].fetched_at,
                     source: 'official'
-                } as any;
+                } as unknown as JRStatusItem;
             }
         } else {
             return {
                 routeName: routeName,
-                status: 'delayed' as any,
+                status: 'delay',
                 description: 'No Data',
                 statusText: 'ERR: No Crawler Logs Found',
                 updatedAt: new Date().toISOString(),
                 source: 'official'
-            } as any;
+            } as unknown as JRStatusItem;
         }
 
         return null;
@@ -146,12 +162,12 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
         console.error('JR Status Fetch Error:', e);
         return {
             routeName: 'System',
-            status: 'delayed' as any,
+            status: 'delay',
             description: 'Exception',
             statusText: 'ERR: Exception ' + (e.message || String(e)),
             updatedAt: new Date().toISOString(),
             source: 'official'
-        } as any;
+        } as unknown as JRStatusItem;
     }
 }
 

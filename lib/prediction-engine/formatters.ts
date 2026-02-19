@@ -58,7 +58,10 @@ export function filterOfficialText(text: string, routeName: string): string {
         !targetKeywords.some(k => r.includes(k) || k.includes(r))
     );
 
-    const lines = text.split(/[\n。]/).map(l => l.trim()).filter(l => l.length > 0);
+    // 🆕 <BR>タグを適切に処理（様々なバリエーションに対応）
+    const sanitizedText = text.replace(/<BR\s*\/?>/gi, '\n');
+
+    const lines = sanitizedText.split(/[\n。]/).map(l => l.trim()).filter(l => l.length > 0);
     const filteredLines = lines.filter(line => {
         if (line.includes('全区間') || line.includes('札幌圏') || line.includes('全道') || line.includes('特急')) return true;
 
