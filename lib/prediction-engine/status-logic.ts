@@ -4,6 +4,7 @@ import { JRStatusItem, OperationStatus } from '../types';
 export interface BaseStatusResult {
     status: OperationStatus | 'partial' | 'unknown';
     isOfficialSuspended: boolean;  // True if officially suspended AND not yet resumed
+    isPostResumptionChaos?: boolean; // 🆕 True if within chaos window after resumption
     maxProbabilityCap?: number;    // If set, cap probability at this value
     overrideReason?: string;       // Reason for the override
 }
@@ -15,7 +16,8 @@ export interface BaseStatusResult {
 export function determineBaseStatus(
     jrStatus: { status: string; resumptionTime?: string | null; rawText?: string; statusText?: string } | null | undefined,
     targetDate: string,
-    targetTime: string
+    targetTime: string,
+    snowDepth: number = 0 // 🆕 Added snowDepth for chaos buffer calculation
 ): BaseStatusResult {
     // Default: No official info or Normal
     if (!jrStatus) {
@@ -38,11 +40,29 @@ export function determineBaseStatus(
         // 🆕 Check if Resumption Time has passed
         if (jrStatus.resumptionTime) {
             const resumptionDate = new Date(jrStatus.resumptionTime);
-            // Add 1 hour buffer for "resumed but maybe delayed" state
-            // If target time is largely past resumption time, treat as Delay or Normal
-            const bufferTime = new Date(resumptionDate.getTime() + 60 * 60 * 1000); // +1 hour
 
-            if (targetDateTime > bufferTime) {
+            // 🆕 Post-Resumption Chaos Logic
+            // Base buffer: 2 hours
+            // Heavy Snow buffer (>30cm): +1 hour (Total 3 hours)
+            const chaosHours = snowDepth >= 30 ? 3 : 2;
+            const chaosEndTime = new Date(resumptionDate.getTime() + chaosHours * 60 * 60 * 1000);
+
+            // If target is AFTER resumption but BEFORE chaos end -> CHAOS STATE
+            if (targetDateTime >= resumptionDate && targetDateTime <= chaosEndTime) {
+                return {
+                    status: '遅延', // 'delay'
+                    isOfficialSuspended: false,
+                    isPostResumptionChaos: true, // 🆕
+                    maxProbabilityCap: undefined, // Let index.ts set specific chaos score (e.g. 50-60)
+                    overrideReason: `【混雑・遅延】運転再開直後（${chaosHours}時間以内）のため、大幅なダイヤ乱れや積み残しが予想されます`
+                };
+            }
+
+            // If target is AFTER chaos end -> NORMAL / DELAY (Standard Buffer)
+            // Still keep a small buffer (1 hour) for standard "Delay" status without chaos flag
+            const standardBufferTime = new Date(resumptionDate.getTime() + 60 * 60 * 1000); // +1 hour
+
+            if (targetDateTime > resumptionDate) {
                 // Downgrade to Delay (yellow) instead of Suspended (red)
                 return {
                     status: '遅延', // 'delay'

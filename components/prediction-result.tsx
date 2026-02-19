@@ -184,25 +184,59 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                 )}
             </div>
 
-            {/* 確率表示 (Hero Section) */}
-            <div className="text-center mb-8 relative">
-                <div className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">運休リスク</div>
+            {/* 🆕 Action Status Display (Hero Section) */}
+            {(() => {
+                const getActionStatus = () => {
+                    // 1. HOPELESS (Red): High Probability OR Suspended
+                    if (result.probability >= 70 || result.status === 'suspended' || result.status === 'cancelled' || result.status === '運休' || result.status === '運休中') {
+                        return {
+                            type: 'HOPELESS',
+                            title: '移動困難 (HOPELESS)',
+                            message: '今日の移動は諦めるか、別ルートを推奨します',
+                            bgColor: 'bg-red-500 text-white',
+                            icon: <XCircle size={48} />,
+                            subColor: 'bg-red-600'
+                        };
+                    }
+                    // 2. CHAOS (Orange): Chaos Flag OR Medium Probability
+                    if (result.isPostResumptionChaos || result.probability >= 40) {
+                        return {
+                            type: 'CHAOS',
+                            title: '泥沼状態 (CHAOS)',
+                            message: '動いてはいますが、地獄のような混雑と遅延です',
+                            bgColor: 'bg-orange-500 text-white',
+                            icon: <AlertTriangle size={48} />,
+                            subColor: 'bg-orange-600'
+                        };
+                    }
+                    // 3. SMOOTH (Green): Low Probability
+                    return {
+                        type: 'SMOOTH',
+                        title: '順調 (SMOOTH)',
+                        message: '今のところ定刻通り移動できそうです',
+                        bgColor: 'bg-green-500 text-white',
+                        icon: <CheckCircle size={48} />,
+                        subColor: 'bg-green-600'
+                    };
+                };
 
-                <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className={`text-6xl font-black ${getProbabilityTextColor()} tracking-tighter leading-none`}>
-                        {result.probability}
-                    </span>
-                    <span className={`text-2xl font-bold ${getProbabilityTextColor()} opacity-60`}>%</span>
-                </div>
+                const status = getActionStatus();
 
-                <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${getProgressColor()} text-white`}>
-                    {result.probability >= 50 ? <AlertTriangle size={16} /> : <CheckCircle size={16} />}
-                    {result.probability >= 70 ? '運休の可能性が高い' :
-                        result.probability >= 50 ? '運休・遅延に警戒' :
-                            result.probability >= 20 ? '遅延の可能性あり' :
-                                '平常運転の見込み'}
-                </div>
-            </div>
+                return (
+                    <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
+                        <div className="flex justify-center mb-4 opacity-90">
+                            {status.icon}
+                        </div>
+                        <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
+                        <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
+
+                        {/* Compact Risk Rate for Reference */}
+                        <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
+                            運休リスク: {result.probability}%
+                        </div>
+                    </div>
+                );
+            })()}
 
             {/* ユーザー報告（リアルタイム） - Compact */}
             {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minResumed > 0) && (

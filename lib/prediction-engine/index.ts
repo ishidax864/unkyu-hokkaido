@@ -61,10 +61,11 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 🆕 Centralized Status Logic - Call early to use constraints throughout
-    const { status: baseStatus, isOfficialSuspended, maxProbabilityCap, overrideReason } = determineBaseStatus(
+    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, maxProbabilityCap, overrideReason } = determineBaseStatus(
         input.jrStatus,
         input.targetDate,
-        effectiveTargetTime
+        effectiveTargetTime,
+        input.weather?.snowDepth // 🆕 Pass snowDepth
     );
 
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
@@ -139,8 +140,25 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
     }
 
+    // 🆕 Post-Resumption Chaos Logic
+    if (isPostResumptionChaos) {
+        // Force probability to 60% (Caution/Chaos level)
+        // This ensures it shows as Yellow/Orange in UI, not Green or Red
+        if (probability < 60) {
+            probability = 60;
+        }
+
+        if (overrideReason) {
+            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+            reasonsWithPriority.unshift({
+                reason: overrideReason,
+                priority: 0
+            });
+        }
+    }
+
     // 🆕 Apply Base Status Constraints (e.g. Resumed or Reduced)
-    if (maxProbabilityCap !== undefined) {
+    if (maxProbabilityCap !== undefined && !isPostResumptionChaos) {
         if (probability > maxProbabilityCap) {
             probability = maxProbabilityCap;
             if (overrideReason) {
@@ -428,7 +446,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             snow
         },
         officialStatus: input.jrStatus,
-        isOfficialInfluenced // 🆕 追加
+        isOfficialInfluenced, // 🆕 追加
+        isPostResumptionChaos // 🆕 追加
     };
 }
 
