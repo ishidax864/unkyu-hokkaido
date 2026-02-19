@@ -120,28 +120,139 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     const maxProbability = determineMaxProbability(calculationInput, isNearRealTime);
     let probability = Math.min(Math.round(totalScore), maxProbability);
 
+    // 運休中かどうかを判定
+    const isCurrentlySuspended = isOfficialSuspended && (input.targetDate === todayJST);
+
+    // 🆕 Early Recovery Prediction (Calculate this BEFORE forcing probability)
+    // This allows us to determine if the target time is AFTER the predicted recovery time
+    let estimatedRecoveryTime: string | undefined;
+    let estimatedRecoveryHours: number | undefined;
+    let recoveryRecommendation: string | undefined;
+    let suspensionReason: string | undefined;
+
+    // Run prediction if currently suspended OR risk is high enough to warrant simulation
+    if (input.weather && (isCurrentlySuspended || probability >= 40)) {
+        try {
+            const _weatherTrend = analyzeWeatherTrend(input.weather, []);
+            const rain = input.weather.precipitation || 0;
+            const wind = input.weather.windSpeed || 0; // Use local scope wind
+            const snow = input.weather.snowfall || 0;  // Use local scope snow
+            suspensionReason = determineSuspensionReason(wind, snow, rain);
+
+            // 🆕 Unified Resumption Logic
+            if (input.weather && input.weather.surroundingHours) {
+                const now = new Date();
+                const jstHour = parseInt(new Intl.DateTimeFormat('en-US', {
+                    hour: 'numeric',
+                    hour12: false,
+                    timeZone: 'Asia/Tokyo'
+                }).format(now));
+                const currentHourStr = `${String(jstHour).padStart(2, '0')}:00`;
+
+                const futureForecasts = (input.weather.surroundingHours.length > 0)
+                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= currentHourStr)
+                    : input.weather.surroundingHours;
+
+                if (futureForecasts.length > 0) {
+                    const peakSnow = Math.max(...input.weather.surroundingHours.map(h => h.snowfall || 0));
+                    const peakWind = Math.max(...input.weather.surroundingHours.map(h => h.windSpeed || 0));
+                    const peakGust = Math.max(...input.weather.surroundingHours.map(h => h.windGust || 0));
+                    const repWeather = input.weather.surroundingHours.find(h => (h.snowfall || 0) === peakSnow) || input.weather;
+
+                    const matchForResumption = findHistoricalMatch({
+                        ...repWeather,
+                        windSpeed: peakWind,
+                        windGust: peakGust
+                    });
+
+                    let eventStartHour = 6;
+                    if (input.jrStatus && input.jrStatus.updatedAt) {
+                        const updateTime = input.jrStatus.updatedAt.match(/(\d{1,2}):(\d{2})/);
+                        if (updateTime) eventStartHour = parseInt(updateTime[1]);
+                    }
+
+                    const resumption = calculateResumptionTime(futureForecasts, input.routeId, matchForResumption, eventStartHour, input.targetDate);
+
+                    if (resumption.estimatedResumption) {
+                        estimatedRecoveryTime = resumption.estimatedResumption;
+                        estimatedRecoveryHours = resumption.requiredBufferHours;
+                        recoveryRecommendation = resumption.reason;
+
+                        if (isCurrentlySuspended) {
+                            // Clear existing generic reasons
+                            reasonsWithPriority = reasonsWithPriority.filter(r => !r.reason.includes('運休中') && !r.reason.includes('復旧予測'));
+                            reasonsWithPriority.unshift({ reason: resumption.reason, priority: 5 });
+                            if (matchForResumption) {
+                                reasonsWithPriority.unshift({
+                                    reason: `【過去事例照合】${matchForResumption.label}のパターンに類似（${matchForResumption.consequences.recoveryTendency === 'slow' ? '長期化' : '標準的'}傾向）`,
+                                    priority: 6
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            logger.error('Failed to predict recovery time', { error: e });
+        }
+    }
+
     // 🆕 Enforce Official Suspension Logic from Status Logic
-    // If official status is Suspended, FORCE 100%
+    // If official status is Suspended, FORCE 100% UNLESS target time is safely after predicted recovery
+    let isFutureSafe = false;
+
     if (isOfficialSuspended && input.targetDate === todayJST) {
-        probability = 100;
-        // If we have an override reason (e.g. resumption info), favor that.
-        if (overrideReason) {
-            // Remove generic reasons
-            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
-            reasonsWithPriority.unshift({
-                reason: overrideReason,
-                priority: 0
-            });
-        } else {
-            reasonsWithPriority.unshift({
-                reason: '【公式発表】運休または運転見合わせが発表されています',
-                priority: 0
-            });
+        let shouldForceSuspension = true;
+
+        // Check if target time is after estimated recovery
+        // 1. Official Resumption Time (Absolute Priority)
+        // Note: determineBaseStatus usually handles official resumption, but if it fell through to 'Suspended',
+        // maybe the resumption time wasn't parsed or is future.
+        // But here we check AI Estimated Recovery Time as well.
+
+        if (estimatedRecoveryTime) {
+            // Simple string comparison for HH:MM (Assuming same day)
+            // If estimated recovery is "08:00" and target is "19:00", then "19:00" > "08:00"
+            // Add a buffer of 1 hour to be safe
+            // Parse times for comparison
+            const [recH, recM] = estimatedRecoveryTime.split(':').map(Number);
+            const [tgtH, tgtM] = effectiveTargetTime.split(':').map(Number);
+
+            const recMinutes = recH * 60 + recM;
+            const tgtMinutes = tgtH * 60 + tgtM;
+
+            // If target is at least 60 mins after recovery -> Safe to show risk score instead of forced suspension
+            if (tgtMinutes > recMinutes + 60) {
+                shouldForceSuspension = false;
+                isFutureSafe = true;
+            } else if (tgtMinutes > recMinutes) {
+                // Chaos window (0-60 mins after) -> Don't force 100%, but force high caution
+                shouldForceSuspension = false;
+                isFutureSafe = true;
+                // Chaos overrides below will handle the probability floor
+            }
+        }
+
+        if (shouldForceSuspension) {
+            probability = 100;
+            // If we have an override reason (e.g. resumption info), favor that.
+            if (overrideReason) {
+                reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+                reasonsWithPriority.unshift({
+                    reason: overrideReason,
+                    priority: 0
+                });
+            } else {
+                reasonsWithPriority.unshift({
+                    reason: '【公式発表】運休または運転見合わせが発表されています',
+                    priority: 0
+                });
+            }
         }
     }
 
     // 🆕 Post-Resumption Chaos Logic
-    if (isPostResumptionChaos) {
+    if (isPostResumptionChaos || (isFutureSafe && estimatedRecoveryTime)) {
         // Force probability to 60% (Caution/Chaos level)
         // This ensures it shows as Yellow/Orange in UI, not Green or Red
         if (probability < 60) {
@@ -149,10 +260,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
 
         if (overrideReason) {
-            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+            // ... existing override logic ...
+        }
+
+        // Add implicit chaos reason if not present
+        if (!isPostResumptionChaos && isFutureSafe) {
             reasonsWithPriority.unshift({
-                reason: overrideReason,
-                priority: 0
+                reason: `【ダイヤ乱れ警戒】運転再開（${estimatedRecoveryTime}予測）直後のため、遅れや運休のリスクが残ります`,
+                priority: 4
             });
         }
     }
@@ -162,7 +277,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         if (probability > maxProbabilityCap) {
             probability = maxProbabilityCap;
             if (overrideReason) {
-                // Remove generic high-risk reasons if we are capping
                 reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
                 reasonsWithPriority.unshift({
                     reason: overrideReason,
@@ -249,80 +363,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         ? getConfidence(probability, reasons.length, hasRealTimeData)
         : 'low';
 
-    // 運休中かどうかを判定
-    const isCurrentlySuspended = isOfficialSuspended && (input.targetDate === todayJST);
-
-    // 復旧予測 (運休中、または運休リスクが高い場合に「もし運休したら？」を予測)
-    let estimatedRecoveryTime: string | undefined;
-    let estimatedRecoveryHours: number | undefined;
-    let recoveryRecommendation: string | undefined;
-    let suspensionReason: string | undefined;
-
-    if (input.weather && (isCurrentlySuspended || probability >= 40)) { // 40%以上でシミュレーション
-        try {
-            const _weatherTrend = analyzeWeatherTrend(input.weather, []);
-            const rain = input.weather.precipitation || 0;
-            suspensionReason = determineSuspensionReason(wind, snow, rain);
-
-            // 🆕 Unified Resumption Logic
-            if (input.weather && input.weather.surroundingHours) {
-                // Fix: Recovery calculation should be anchored to "NOW" (or data update time), not the user's search target time.
-                // We must use JST because surroundingHours.targetTime is in JST (from Open-Meteo with &timezone=Asia/Tokyo).
-                const now = new Date();
-                const jstHour = parseInt(new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    hour12: false,
-                    timeZone: 'Asia/Tokyo'
-                }).format(now));
-                const currentHourStr = `${String(jstHour).padStart(2, '0')}:00`;
-
-                // Use forecasts starting from the current hour to find the *next* recovery window
-                const futureForecasts = (input.weather.surroundingHours.length > 0)
-                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= currentHourStr)
-                    : input.weather.surroundingHours;
-
-                if (futureForecasts.length > 0) {
-                    // 全体予報の中からピーク気象を特定して過去事例にマッチさせる
-                    const peakSnow = Math.max(...input.weather.surroundingHours.map(h => h.snowfall || 0));
-                    const peakWind = Math.max(...input.weather.surroundingHours.map(h => h.windSpeed || 0));
-                    const peakGust = Math.max(...input.weather.surroundingHours.map(h => h.windGust || 0));
-                    const repWeather = input.weather.surroundingHours.find(h => (h.snowfall || 0) === peakSnow) || input.weather;
-
-                    const matchForResumption = findHistoricalMatch({
-                        ...repWeather,
-                        windSpeed: peakWind,
-                        windGust: peakGust
-                    });
-
-                    let eventStartHour = 6;
-                    if (input.jrStatus && input.jrStatus.updatedAt) {
-                        const updateTime = input.jrStatus.updatedAt.match(/(\d{1,2}):(\d{2})/);
-                        if (updateTime) eventStartHour = parseInt(updateTime[1]);
-                    }
-
-                    const resumption = calculateResumptionTime(futureForecasts, input.routeId, matchForResumption, eventStartHour, input.targetDate);
-
-                    if (resumption.estimatedResumption) {
-                        estimatedRecoveryTime = resumption.estimatedResumption;
-                        estimatedRecoveryHours = resumption.requiredBufferHours;
-                        recoveryRecommendation = resumption.reason;
-
-                        if (isCurrentlySuspended) {
-                            // Clear existing generic reasons to make room for evidence
-                            reasons = reasons.filter(r => !r.includes('運休中') && !r.includes('復旧予測'));
-                            reasons.unshift(resumption.reason);
-                            if (matchForResumption) {
-                                reasons.unshift(`【過去事例照合】${matchForResumption.label}のパターンに類似（${matchForResumption.consequences.recoveryTendency === 'slow' ? '長期化' : '標準的'}傾向）`);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e) {
-            logger.error('Failed to predict recovery time', { error: e });
-        }
-    }
-
 
     // 🆕 公式情報の解析とオーバーライド (Official Info Override)
     // 気象データに基づく予測よりも、公式の「終日運休」等の発表を絶対的に優先する
@@ -405,11 +445,11 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     return {
         routeId: input.routeId,
         targetDate: input.targetDate,
-        probability: isCurrentlySuspended ? 100 : probability,
-        status: isCurrentlySuspended ? '運休中' : getStatusFromProbability(probability),
+        probability: (isCurrentlySuspended && !isFutureSafe) ? 100 : probability, // 🆕 Allow probability < 100 if future safe
+        status: (isCurrentlySuspended && !isFutureSafe) ? '運休中' : getStatusFromProbability(probability), // 🆕 Allow normal status if future safe
         confidence,
         // 公式オーバーライド時は既に詳細理由が入っているため、追加のプレフィックスは不要
-        reasons: (isCurrentlySuspended && !isOfficialOverride)
+        reasons: (isCurrentlySuspended && !isOfficialOverride && !isFutureSafe)
             ? [`【運休中】${suspensionReason || ''}運転を見合わせています`, ...reasons]
             : reasons,
         weatherImpact: getWeatherImpact(probability),
