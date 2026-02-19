@@ -16,7 +16,8 @@
         "test:visual:debug": "playwright test --debug",
         "db:check": "tsx scripts/db-integrity-check.ts",
         "security:check": "npm audit && echo 'Run: npx snyk test (requires Snyk account)'",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "postinstall": "if [ \"$VERCEL\" = \"1\" ]; then rm -rf node_modules/onnxruntime-node/bin/napi-v*/darwin node_modules/onnxruntime-node/bin/napi-v*/win32; fi"
     },
     "dependencies": {
         "@next/third-parties": "^16.1.6",
