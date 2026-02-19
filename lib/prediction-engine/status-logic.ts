@@ -30,7 +30,11 @@ export function determineBaseStatus(
     const targetDateTime = new Date(`${targetDate}T${targetTime}:00`);
 
     // 1. Check for Suspension / Cancellation
-    if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
+    // 🆕 Robust Fallback: Check raw text for '運休'/'見合わせ' even if status says 'normal' (crawler bug safeguard)
+    const rawText = jrStatus.rawText || jrStatus.statusText || '';
+    const hasSuspensionKeywords = rawText.includes('運休') || rawText.includes('見合わせ');
+
+    if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled' || hasSuspensionKeywords) {
         // 🆕 User Request: If official status is Suspended, FORCE SUSPENDED (100%)
         // Do NOT lower the risk even if targetTime > resumptionTime.
         // The resumption info will be used for display only.
