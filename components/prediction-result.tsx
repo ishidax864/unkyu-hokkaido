@@ -5,6 +5,7 @@ import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, Clock, AlertOct
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText } from '@/lib/text-parser';
+import { evaluateActionDecision } from '@/lib/action-decision';
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -17,26 +18,9 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended;
 
-    // ユーザー要望: 現在時刻検索で公式情報がある場合は、％表示を隠す -> 要望変更: 予測結果も併せて表示したい
-    const shouldHideRiskMeter = false;
-
     // Split text into summary and details
     const { summary: textSummary, details: textDetails } = splitStatusText(result.officialStatus?.rawText || '');
     const hasDetails = !!textSummary || !!textDetails;
-
-    // 確率に応じた色
-    const getProgressColor = () => {
-        if (result.probability >= 70) return 'bg-[var(--status-suspended)]';
-        if (result.probability >= 50) return 'bg-orange-500';
-        if (result.probability >= 20) return 'bg-[var(--status-warning)]';
-        return 'bg-[var(--status-normal)]';
-    };
-
-    const getProbabilityTextColor = () => {
-        if (result.probability >= 50) return 'text-[var(--status-suspended)]';
-        if (result.probability >= 20) return 'text-[var(--status-warning)]';
-        return 'text-[var(--status-normal)]';
-    };
 
     // 復旧予測モードの場合は別のUIを表示
     if (isRecoveryMode) {
@@ -186,46 +170,19 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
 
             {/* 🆕 Action Status Display (Hero Section) */}
             {(() => {
-                const getActionStatus = () => {
-                    // 1. CRITICAL (Red): High Probability OR Suspended
-                    if (result.probability >= 70 || result.status === 'suspended' || result.status === 'cancelled' || result.status === '運休' || result.status === '運休中') {
-                        return {
-                            type: 'CRITICAL',
-                            title: '移動困難 (High Risk)',
-                            message: '移動の延期、または代替手段の検討を強く推奨します',
-                            bgColor: 'bg-red-500 text-white',
-                            icon: <XCircle size={48} />,
-                            subColor: 'bg-red-600'
-                        };
-                    }
-                    // 2. CAUTION (Orange): Chaos Flag OR Medium Probability
-                    if (result.isPostResumptionChaos || result.probability >= 40) {
-                        return {
-                            type: 'CAUTION',
-                            title: 'ダイヤ乱れ警戒 (Caution)',
-                            message: '運転再開直後につき、大幅な遅れや混雑が予想されます',
-                            bgColor: 'bg-orange-500 text-white',
-                            icon: <AlertTriangle size={48} />,
-                            subColor: 'bg-orange-600'
-                        };
-                    }
-                    // 3. NORMAL (Green): Low Probability
-                    return {
-                        type: 'NORMAL',
-                        title: '平常運転見込み (Normal)',
-                        message: '現時点では定刻通りの運行が予測されます',
-                        bgColor: 'bg-green-500 text-white',
-                        icon: <CheckCircle size={48} />,
-                        subColor: 'bg-green-600'
-                    };
-                };
+                const status = evaluateActionDecision(result);
 
-                const status = getActionStatus();
+                // Helper to render icon based on type string
+                const IconComponent = () => {
+                    if (status.iconType === 'x-circle') return <XCircle size={48} />;
+                    if (status.iconType === 'alert-triangle') return <AlertTriangle size={48} />;
+                    return <CheckCircle size={48} />;
+                };
 
                 return (
                     <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
                         <div className="flex justify-center mb-4 opacity-90">
-                            {status.icon}
+                            <IconComponent />
                         </div>
                         <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
                         <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
@@ -327,4 +284,3 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
         </article>
     );
 }
-

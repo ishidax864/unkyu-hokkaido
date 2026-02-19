@@ -1,7 +1,7 @@
 
-const CACHE_NAME = 'unkyu-ai-v6';
-const STATIC_CACHE_NAME = 'unkyu-ai-static-v6';
-const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v6';
+const CACHE_NAME = 'unkyu-ai-v7';
+const STATIC_CACHE_NAME = 'unkyu-ai-static-v7';
+const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v7';
 
 // 静的アセット（常にキャッシュ）
 const STATIC_ASSETS = [
