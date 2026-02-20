@@ -4,7 +4,6 @@ import { PredictionResult, Route } from '@/lib/types';
 import { AlertOctagon, AlertTriangle, ArrowRight, CheckCircle, Info, MapPin, RefreshCw, Clock, XCircle, AlertCircle, ExternalLink, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
-import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText, extractSuspendedTrains } from '@/lib/text-parser';
 import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision';
 
