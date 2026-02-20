@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getCrawlerStatusSummary, getMLTrainingStats } from '@/lib/supabase';
+import { getMLTrainingStats } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -15,10 +15,21 @@ import {
     Snowflake,
     BarChart3,
     Database,
+    CheckCircle,
+    Clock,
 } from 'lucide-react';
 
+interface JRStatus {
+    routeId: string;
+    routeName: string;
+    status: string;
+    statusText: string;
+    rawText?: string;
+    sourceArea?: string;
+}
+
 export default function CrawlerMLPage() {
-    const [crawlerStatus, setCrawlerStatus] = useState<any[]>([]);
+    const [jrStatus, setJrStatus] = useState<JRStatus[]>([]);
     const [mlStats, setMlStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -27,13 +38,16 @@ export default function CrawlerMLPage() {
         setLoading(true);
         setError(null);
         try {
-            const [cRes, mRes] = await Promise.all([
-                getCrawlerStatusSummary(),
+            const [statusRes, mRes] = await Promise.all([
+                fetch('/api/admin/status'),
                 getMLTrainingStats(),
             ]);
-            if (cRes.success) setCrawlerStatus(cRes.data);
+            if (statusRes.ok) {
+                const data = await statusRes.json();
+                setJrStatus(data.items || []);
+            }
             if (mRes.success) setMlStats(mRes.data);
-            if (!cRes.success && !mRes.success) setError('データ取得に失敗しました');
+            if (!statusRes.ok && !mRes.success) setError('データ取得に失敗しました');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'エラーが発生しました');
         } finally {
@@ -43,12 +57,29 @@ export default function CrawlerMLPage() {
 
     useEffect(() => { fetchData(); }, []);
 
-    const areaName = (id: string) => {
-        const m: Record<string, string> = { '01': '札幌近郊', '02': '道央', '03': '道北', '04': '道東', '05': '道南' };
-        return m[id] || `エリア ${id}`;
+    const pct = (n: number, total: number) => total > 0 ? (n / total * 100).toFixed(1) : '0';
+
+    const statusIcon = (status: string) => {
+        if (status === 'suspended' || status === 'cancelled') return <AlertTriangle className="w-3.5 h-3.5" />;
+        if (status === 'delay') return <Clock className="w-3.5 h-3.5" />;
+        return <CheckCircle className="w-3.5 h-3.5" />;
     };
 
-    const pct = (n: number, total: number) => total > 0 ? (n / total * 100).toFixed(1) : '0';
+    const statusColor = (status: string) => {
+        if (status === 'suspended' || status === 'cancelled') return 'bg-red-500';
+        if (status === 'delay') return 'bg-yellow-500';
+        return 'bg-green-500';
+    };
+
+    const statusLabel = (status: string) => {
+        if (status === 'suspended' || status === 'cancelled') return '運休';
+        if (status === 'delay') return '遅延';
+        return '正常';
+    };
+
+    // 正常路線数
+    const normalCount = jrStatus.filter(s => s.status === 'normal').length;
+    const abnormalCount = jrStatus.length - normalCount;
 
     return (
         <div className="space-y-8 max-w-5xl">
@@ -56,7 +87,7 @@ export default function CrawlerMLPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">データ収集 & ML</h1>
-                    <p className="text-sm text-gray-500 mt-1">クローラー稼動状況と ML トレーニングデータの詳細</p>
+                    <p className="text-sm text-gray-500 mt-1">JR運行状況（リアルタイム）と ML トレーニングデータの詳細</p>
                 </div>
                 <button
                     onClick={fetchData}
@@ -74,35 +105,41 @@ export default function CrawlerMLPage() {
                 </div>
             )}
 
-            {/* ─── クローラー稼動一覧 ─── */}
+            {/* ─── JR運行状況（リアルタイム） ─── */}
             <Card>
                 <CardHeader className="pb-3">
                     <CardTitle className="text-base flex items-center gap-2">
                         <Activity className="w-5 h-5 text-green-600" />
-                        クローラー稼動状況
+                        JR 運行状況（リアルタイム取得）
+                        {!loading && jrStatus.length > 0 && (
+                            <span className="ml-auto text-sm font-normal text-gray-400">
+                                {abnormalCount > 0 ? (
+                                    <span className="text-red-500 font-bold">{abnormalCount} 路線に影響</span>
+                                ) : (
+                                    <span className="text-green-500">全路線正常</span>
+                                )}
+                            </span>
+                        )}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
                         <div className="py-6 text-center text-gray-400 animate-pulse">読み込み中...</div>
-                    ) : crawlerStatus.length === 0 ? (
-                        <div className="py-6 text-center text-gray-400">直近24時間のログなし</div>
+                    ) : jrStatus.length === 0 ? (
+                        <div className="py-6 text-center text-gray-400">運行情報を取得できませんでした</div>
                     ) : (
                         <div className="divide-y">
-                            {crawlerStatus.map((item, i) => (
-                                <div key={i} className="py-3 flex justify-between items-center">
-                                    <div>
-                                        <div className="font-semibold text-sm">{areaName(item.area_id)}</div>
-                                        <div className="text-[11px] text-gray-400">
-                                            {new Date(item.fetched_at).toLocaleString('ja-JP')}
+                            {jrStatus.map((item) => (
+                                <div key={item.routeId} className="py-3 flex justify-between items-center">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-semibold text-sm">{item.routeName}</div>
+                                        <div className="text-[11px] text-gray-400 truncate">
+                                            {item.statusText}
                                         </div>
-                                        {item.error_message && (
-                                            <div className="text-[11px] text-red-500 mt-1">{item.error_message}</div>
-                                        )}
                                     </div>
-                                    <Badge className={`border-none text-white text-[10px] ${item.status === 'success' ? 'bg-green-500' : 'bg-red-500'
-                                        }`}>
-                                        {item.status === 'success' ? '成功' : 'エラー'}
+                                    <Badge className={`border-none text-white text-[10px] shrink-0 ml-3 flex items-center gap-1 ${statusColor(item.status)}`}>
+                                        {statusIcon(item.status)}
+                                        {statusLabel(item.status)}
                                     </Badge>
                                 </div>
                             ))}
@@ -171,7 +208,6 @@ export default function CrawlerMLPage() {
                                         ))}
                                     </div>
                                     <div className="mt-3 text-[10px] text-gray-400">
-                                        {areaName(mlStats.latestWeather.area_id)} ·
                                         最終記録 {new Date(mlStats.latestWeather.recorded_at).toLocaleString('ja-JP')}
                                         {mlStats.oldestRecord && <> · 蓄積開始 {new Date(mlStats.oldestRecord).toLocaleDateString('ja-JP')}</>}
                                     </div>

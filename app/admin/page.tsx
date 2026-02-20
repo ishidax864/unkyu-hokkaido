@@ -13,7 +13,7 @@ import {
     MessageSquare,
     MapPin,
 } from 'lucide-react';
-import { UserFeedbackDB, getCrawlerStatusSummary, getMLTrainingStats } from '@/lib/supabase';
+import { UserFeedbackDB, getMLTrainingStats } from '@/lib/supabase';
 
 export default function AdminDashboard() {
     const [feedback, setFeedback] = useState<UserFeedbackDB[]>([]);
@@ -29,10 +29,10 @@ export default function AdminDashboard() {
         setIsLoading(true);
         setError(null);
         try {
-            const [statsRes, feedbackRes, crawlerRes, mlRes] = await Promise.all([
+            const [statsRes, feedbackRes, statusRes, mlRes] = await Promise.all([
                 fetch('/api/admin/stats'),
                 fetch('/api/admin/feedback'),
-                getCrawlerStatusSummary(),
+                fetch('/api/admin/status'),
                 getMLTrainingStats(),
             ]);
 
@@ -44,7 +44,11 @@ export default function AdminDashboard() {
                 const f = await feedbackRes.json();
                 setFeedback(f.items || []);
             }
-            if (crawlerRes.success) setCrawlerOk((crawlerRes.data as any[]).every((s) => s.status === 'success'));
+            if (statusRes.ok) {
+                const data = await statusRes.json();
+                const items = data.items || [];
+                setCrawlerOk(items.length > 0 && items.every((s: any) => s.status === 'normal'));
+            }
             if (mlRes.success) setMlTotal(mlRes.data.totalRows || 0);
         } catch {
             setError('データの取得に失敗しました');
