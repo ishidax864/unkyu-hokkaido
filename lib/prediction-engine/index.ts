@@ -140,6 +140,32 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     reasonsWithPriority.push(...recovery.recoveryReasons);
 
     let isFutureSafe = false;
+    let isPostRecoveryWindow = false;
+
+    // 🆕 AI予測の復旧時刻 vs ユーザーの検索時刻を比較
+    // 例: 復旧予測15:00 + 検索16:08 → 復旧後のダイヤ乱れモードへ切り替え
+    if (estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
+        const recoveryMatch = estimatedRecoveryTime.match(/(\d{1,2}):(\d{2})/);
+        const targetMatch = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
+        if (recoveryMatch && targetMatch) {
+            const recoveryMinutes = parseInt(recoveryMatch[1]) * 60 + parseInt(recoveryMatch[2]);
+            const targetMinutes = parseInt(targetMatch[1]) * 60 + parseInt(targetMatch[2]);
+            if (targetMinutes > recoveryMinutes) {
+                isFutureSafe = true;
+                isPostRecoveryWindow = true;
+                // 復旧後のダイヤ乱れレベルに確率を抑制（最大55%）
+                const postRecoveryMax = 55;
+                if (probability > postRecoveryMax) {
+                    probability = postRecoveryMax;
+                }
+                // 復旧済みの文脈に合った理由を追加
+                reasonsWithPriority.push({
+                    reason: `【復旧後】${estimatedRecoveryTime}に運転再開見込み。ダイヤ乱れや一部列車の遅延が残る可能性があります`,
+                    priority: 1
+                });
+            }
+        }
+    }
 
     // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
     const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority, isFutureSafe);
@@ -326,7 +352,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         isPartialSuspension,
         partialSuspensionText,
         isOfficialInfluenced,
-        isPostResumptionChaos
+        isPostResumptionChaos,
+        isPostRecoveryWindow
     };
 }
 

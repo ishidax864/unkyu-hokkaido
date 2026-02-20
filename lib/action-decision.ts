@@ -20,6 +20,25 @@ export interface ActionDecision {
  * Determines the Action Decision (Go/No-Go) status based on prediction result.
  */
 export function evaluateActionDecision(result: PredictionResult): ActionDecision {
+    // 0. POST-RECOVERY WINDOW: Target time is AFTER predicted recovery
+    //    e.g., recovery at 15:00 but user searches for 16:00
+    if (result.isPostRecoveryWindow) {
+        const time = result.estimatedRecoveryTime || '';
+        const isHighRisk = result.probability >= 40;
+        return {
+            type: isHighRisk ? 'HIGH_RISK' : 'CAUTION',
+            title: isHighRisk ? 'ダイヤ乱れ警戒' : 'ダイヤ乱れ注意',
+            message: '運転再開後のため、遅延や一部運休が残る可能性があります',
+            bgColor: isHighRisk ? 'bg-orange-500 text-white' : 'bg-amber-400 text-black',
+            subColor: isHighRisk ? 'bg-orange-600' : 'bg-amber-500',
+            iconType: isHighRisk ? 'alert-triangle' : 'info',
+            nextAction: time
+                ? `${time}に運転再開見込みです。再開後もダイヤが乱れ、接続列車に影響が出る可能性があります。時間に余裕を持って行動してください。`
+                : 'ダイヤが乱れています。接続列車の遅延に注意し、余裕を持ったスケジュールで行動してください。',
+            resumptionEstimate: time ? `【復旧見込 / AI予測】${time}` : undefined
+        };
+    }
+
     // 1. CRITICAL (Red): Very High Probability (>=80%) OR Official Suspension
     if (result.probability >= 80 ||
         result.status === 'suspended' ||

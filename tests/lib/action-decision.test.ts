@@ -92,7 +92,39 @@ describe('evaluateActionDecision', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 5 }));
             expect(result.type).toBe('NORMAL');
             expect(result.title).toBe('平常運転見込み');
-            expect(result.title).not.toContain('Normal');
+        });
+    });
+
+    describe('POST-RECOVERY WINDOW', () => {
+        it('復旧後ウィンドウ（高確率） → HIGH_RISK「ダイヤ乱れ警戒」', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 55,
+                isPostRecoveryWindow: true,
+                estimatedRecoveryTime: '15:00頃',
+            }));
+            expect(result.type).toBe('HIGH_RISK');
+            expect(result.title).toContain('ダイヤ乱れ');
+            expect(result.nextAction).toContain('15:00頃');
+            expect(result.nextAction).not.toContain('待機');
+        });
+
+        it('復旧後ウィンドウ（低確率） → CAUTION「ダイヤ乱れ注意」', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 25,
+                isPostRecoveryWindow: true,
+                estimatedRecoveryTime: '14:00頃',
+            }));
+            expect(result.type).toBe('CAUTION');
+            expect(result.title).toContain('ダイヤ乱れ注意');
+        });
+
+        it('CRITICALにならない — 復旧後なのに「移動困難」は矛盾', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 95,
+                isPostRecoveryWindow: true,
+                estimatedRecoveryTime: '15:00頃',
+            }));
+            expect(result.type).not.toBe('CRITICAL');
         });
     });
 });

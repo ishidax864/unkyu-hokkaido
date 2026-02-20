@@ -119,6 +119,7 @@ export interface PredictionResult {
   isOfficialOverride?: boolean; // 🆕 公式情報によるオーバーライドかどうか
   isOfficialInfluenced?: boolean; // 🆕 クローラー等の公的情報が予測に影響を与えたか
   isPostResumptionChaos?: boolean; // 🆕 運転再開直後の混乱状態か
+  isPostRecoveryWindow?: boolean; // 🆕 ユーザーの検索時刻が復旧予測時刻より後か
   officialStatus?: {
     status: JRStatus;
     statusText?: string;
