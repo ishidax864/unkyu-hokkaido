@@ -342,82 +342,55 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         : 'low';
 
 
-    // 🆕 公式情報の解析とオーバーライド (Official Info Override)
-    // 気象データに基づく予測よりも、公式の「終日運休」等の発表を絶対的に優先する
-    let isOfficialOverride = false;
+    // 🆕 公式情報の解析とオーバーライド (Official Info Override - Redesigned)
+    // Single Source of Truth: determineBaseStatus (calculated at start of function)
+    let isOfficialOverride = !!overrideReason;
 
-    if (input.jrStatus) {
-        let text = input.jrStatus.rawText || input.jrStatus.statusText || '';
+    // 1. Resumption Time Formatting (If official time exists)
+    if (input.jrStatus?.resumptionTime) {
+        const resumptionDate = new Date(input.jrStatus.resumptionTime);
+        const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
+        const now = new Date();
+        const today = now.getDate();
+        const resumptionDay = resumptionDate.getDate();
 
-        // 🆕 フィルタリング適用 (他路線の詳細情報を除外)
-        text = filterOfficialText(text, input.routeName);
-
-        // 終日運休・全区間運休パターン
-        const isAllDaySuspension =
-            text.includes('終日運休') ||
-            text.includes('終日運転見合わせ') ||
-            text.includes('全区間運休') ||
-            (text.includes('本日の運転') && text.includes('見合わせ'));
-
-        if (isAllDaySuspension) {
-            // ... (keep existing all-day logic) ...
-            estimatedRecoveryTime = estimatedRecoveryTime || '終日運休';
-            // ...
-        } else {
-            // 🆕 Check for Resumption Time from Status Logic (or parsed earlier)
-            if (input.jrStatus?.resumptionTime) {
-                isOfficialOverride = true;
-
-                // Format with date awareness
-                const resumptionDate = new Date(input.jrStatus.resumptionTime);
-                const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
-
-                const now = new Date();
-                const today = now.getDate();
-                const resumptionDay = resumptionDate.getDate();
-
-                let timeStr = `${resumptionHHMM}頃`;
-                if (resumptionDay !== today) {
-                    // Check if tomorrow
-                    const tomorrow = new Date(now);
-                    tomorrow.setDate(now.getDate() + 1);
-                    if (resumptionDay === tomorrow.getDate()) {
-                        timeStr = `明日 ${resumptionHHMM}頃`;
-                    } else {
-                        timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
-                    }
-                }
-
-                // Always use official time if available, overwriting any AI prediction
-                // 🆕 User Request: Prioritize official info absolutely
-                estimatedRecoveryTime = timeStr;
-                recoveryRecommendation = `公式発表により、${timeStr}の運転再開が見込まれています`;
-
-                // Also add to reasons if not present
-                if (!reasons.some(r => r.includes(resumptionHHMM))) {
-                    reasons.unshift(`【公式発表】${timeStr}運転再開見込み`);
-                }
+        let timeStr = `${resumptionHHMM}頃`;
+        if (resumptionDay !== today) {
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            if (resumptionDay === tomorrow.getDate()) {
+                timeStr = `明日 ${resumptionHHMM}頃`;
+            } else {
+                timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
             }
+        }
 
-            // 🆕 Partial Suspension / Reduced Service Detection
-            // Use the flag from status-logic to ensure consistency
-            if (isPartialSuspension) {
-                isOfficialOverride = true;
-                // Force Delay (Yellow/Orange) but NOT Suspended (Red)
-                // Thresholds: Cancelled >= 70, Suspended >= 65
-                // So we set to 60 to ensure "Delay" status.
-                if (probability < 60) {
-                    probability = 60;
-                }
-                const reasonText = (input.jrStatus?.rawText || input.jrStatus?.statusText || '一部運休');
-                // Only add reason if not already there
-                if (!reasons.some(r => r.includes(reasonText.substring(0, 10)))) {
-                    reasons.unshift(`【公式発表】${reasonText}`);
-                }
+        // Override predicted time with official time
+        estimatedRecoveryTime = timeStr;
+        isOfficialOverride = true;
 
-                // Clear low-confidence messages if any
-                reasons = reasons.filter(r => !r.includes('リスクを高める要因は検出されていません'));
-            }
+        // Determine scale if suspended
+        if (isCurrentlySuspended) {
+            // If override matches "All Day", handling is separate?
+            // Usually "All Day" doesn't have specific resumptionTime unless it's "Tomorrow 05:00"
+        }
+    } else if (input.jrStatus) {
+        // Check for "All Day Suspension" text pattern for estimatedRecoveryTime
+        const text = input.jrStatus.rawText || input.jrStatus.statusText || '';
+        if (text.includes('終日運休') || text.includes('終日運転見合わせ') || text.includes('全区間運休')) {
+            estimatedRecoveryTime = '終日運休';
+            isOfficialOverride = true;
+        }
+    }
+
+    // 2. Construct Reasons
+    if (isOfficialOverride && overrideReason) {
+        // Remove generic low-confidence messages
+        reasons = reasons.filter(r => !r.includes('リスクを高める要因は検出されていません'));
+
+        // Add the official reason (deduplicated)
+        if (!reasons.some(r => r === overrideReason)) {
+            reasons.unshift(overrideReason);
         }
     }
 
@@ -431,7 +404,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         probability: (isCurrentlySuspended && !isFutureSafe) ? 100 : probability, // 🆕 Allow probability < 100 if future safe
         status: (isCurrentlySuspended && !isFutureSafe) ? '運休中' : getStatusFromProbability(probability), // 🆕 Allow normal status if future safe
         confidence,
-        // 公式オーバーライド時は既に詳細理由が入っているため、追加のプレフィックスは不要
+        // If suspended, ensure the main reason reflects it
         reasons: (isCurrentlySuspended && !isOfficialOverride && !isFutureSafe)
             ? [`【運休中】${suspensionReason || ''}運転を見合わせています`, ...reasons]
             : reasons,
