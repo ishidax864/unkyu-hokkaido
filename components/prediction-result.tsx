@@ -16,394 +16,203 @@ interface PredictionResultCardProps {
 
 export function PredictionResultCard({ result, route }: Omit<PredictionResultCardProps, 'targetTime' | 'targetDate'>) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended || result.isPartialSuspension;
 
-    // Split text into summary and details
+    // 1. Evaluate Decision & Styles
+    const actionStatus = evaluateActionDecision(result);
     const { summary: textSummary, details: textDetails } = splitStatusText(result.officialStatus?.rawText || '');
-    const hasDetails = !!textSummary || !!textDetails;
+    const hasOfficialInfo = !!result.officialStatus;
 
-    // 復旧予測モードの場合は別のUIを表示
-    if (isRecoveryMode) {
-        return (
-            <article className="card p-4 border-2 border-[var(--status-suspended)]">
-                {/* 📡 現在の運行状況（JR公式） */}
-                {result.officialStatus && (
-                    <div className="mb-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="text-xs text-gray-500 flex items-center gap-1">
-                                <span>📡</span> JR公式発表
-                                <span className="text-[10px] text-gray-400">
-                                    {new Date(result.officialStatus.updatedAt || '').toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}更新
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* ステータス表示 - シンプル化 */}
-                        {(() => {
-                            const status = result.officialStatus.status;
-                            const text = textSummary || '';
-
-                            let displayStatus: 'suspended' | 'delay' | 'normal' | 'unknown' = 'unknown';
-
-                            if (status === 'suspended' || status === 'cancelled' || text.includes('運休') || text.includes('見合わせ')) {
-                                displayStatus = 'suspended';
-                            } else if (status === 'delay' || text.includes('遅れ') || text.includes('遅延')) {
-                                displayStatus = 'delay';
-                            } else if (status === 'normal') {
-                                displayStatus = 'normal';
-                            }
-
-                            return (
-                                <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 mb-2">
-                                    <div className="font-black text-xl flex items-center gap-2">
-                                        {displayStatus === 'suspended' ? (
-                                            <span className="text-red-600 flex items-center gap-2"><AlertOctagon className="w-6 h-6" /> 運休・見合わせ中</span>
-                                        ) : displayStatus === 'delay' ? (
-                                            <span className="text-yellow-600 flex items-center gap-2"><AlertCircle className="w-6 h-6" /> 遅延・ダイヤ乱れ</span>
-                                        ) : displayStatus === 'normal' ? (
-                                            <span className="text-green-600 flex items-center gap-2"><CheckCircle className="w-6 h-6" /> 平常運転</span>
-                                        ) : (
-                                            <span className="text-gray-600">⚪ 情報なし</span>
-                                        )}
-                                    </div>
-                                    {/* 原文サマリー（短縮版） */}
-                                    {textSummary && (
-                                        <div className="mt-2 text-sm text-gray-700 leading-snug">
-                                            {formatStatusText(textSummary)}
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })()}
-
-                        {/* 詳細アコーディオン */}
-                        {hasDetails && (
-                            <button
-                                onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-                                className="w-full flex items-center justify-center gap-1 text-xs text-gray-500 py-1 hover:bg-gray-50 rounded transition-colors"
-                            >
-                                {isDetailsOpen ? '詳細を隠す' : '詳細を表示'}
-                                {isDetailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                            </button>
-                        )}
-
-                        {isDetailsOpen && textDetails && (
-                            <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-3 rounded border border-gray-100 whitespace-pre-wrap leading-relaxed animate-in fade-in slide-in-from-top-1">
-                                {formatStatusText(textDetails)}
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* ヘッダー */}
-                <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                        <div className="route-color-bar h-10 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
-                        <div>
-                            <h3 className="font-bold text-lg leading-tight">{route.name}</h3>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 🆕 Action Status Display (Even in Recovery Mode) */}
-                {(() => {
-                    const status = evaluateActionDecision(result);
-
-                    const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
-                        switch (type) {
-                            case 'CRITICAL':
-                                return {
-                                    label: 'Suspended / High Risk',
-                                    labelColor: 'text-red-600',
-                                    pulseColor: 'bg-red-400',
-                                    dotColor: 'bg-red-500',
-                                    iconColor: 'text-red-600',
-                                    riskColor: 'text-red-700'
-                                };
-                            case 'CAUTION':
-                                return {
-                                    label: 'Caution / Delay',
-                                    labelColor: 'text-amber-600',
-                                    pulseColor: 'bg-amber-400',
-                                    dotColor: 'bg-amber-500',
-                                    iconColor: 'text-amber-600',
-                                    riskColor: 'text-amber-700'
-                                };
-                            case 'NORMAL':
-                            default:
-                                return {
-                                    label: 'Normal Operation',
-                                    labelColor: 'text-emerald-600',
-                                    pulseColor: 'bg-emerald-400',
-                                    dotColor: 'bg-emerald-500',
-                                    iconColor: 'text-emerald-500',
-                                    riskColor: 'text-gray-900'
-                                };
-                        }
-                    };
-
-                    const styles = getStatusStyles(status.type);
-
-                    return (
-                        <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                                <div>
-                                    <div className="flex items-center gap-2.5 mb-2">
-                                        <span className="relative flex h-2.5 w-2.5">
-                                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pulseColor}`}></span>
-                                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${styles.dotColor}`}></span>
-                                        </span>
-                                        <span className={`text-[10px] font-bold tracking-widest uppercase font-en ${styles.labelColor}`}>{styles.label}</span>
-                                    </div>
-                                    <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
-                                    <p className="text-sm font-medium text-gray-500">{status.message}</p>
-                                </div>
-
-                                <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
-                                    <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
-                                    <div className="flex items-baseline gap-0.5 sm:justify-end">
-                                        <span className={`text-3xl font-black tracking-tighter font-en ${styles.riskColor}`}>{result.probability}</span>
-                                        <span className="text-sm font-bold text-gray-400">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })()}
-
-                {/* 復旧予測 or 部分運休詳細 (Main Feature for Recovery Mode) */}
-                <div className="mb-4">
-                    <div className="bg-[var(--background-secondary)] rounded-xl p-5 text-center shadow-sm">
-                        {/* 🆕 部分運休の場合 */}
-                        {result.isPartialSuspension ? (
-                            <>
-                                <div className="text-xs font-bold text-amber-600 mb-1 uppercase tracking-wider flex items-center justify-center gap-1">
-                                    <Info className="w-3 h-3" /> 一部運休・詳細
-                                </div>
-                                <div className="text-left bg-white/50 p-3 rounded mt-2 border border-amber-100">
-                                    <div className="font-bold text-amber-700 text-sm mb-2">運行情報詳細</div>
-                                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
-                                        {formatStatusText(result.partialSuspensionText || result.officialStatus?.rawText || '詳細情報なし')}
-                                    </p>
-                                </div>
-                            </>
-                        ) : (
-                            /* 🚨 完全運休の場合（復旧予測） */
-                            <>
-                                <div className="text-xs font-bold text-[var(--muted)] mb-1 uppercase tracking-wider">AI復旧予測</div>
-                                <div className="flex items-center justify-center gap-2 mb-2">
-                                    <Clock className="w-6 h-6 text-[var(--status-suspended)]" />
-                                    <div className="text-3xl font-black text-[var(--status-suspended)]">
-                                        {result.estimatedRecoveryTime || '未定'}
-                                    </div>
-                                </div>
-
-                                {result.suspensionScale && (
-                                    <span className={cn(
-                                        "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2",
-                                        result.suspensionScale === 'all-day' ? "bg-red-100 text-red-700" :
-                                            result.suspensionScale === 'large' ? "bg-orange-100 text-orange-700" :
-                                                result.suspensionScale === 'medium' ? "bg-yellow-100 text-yellow-700" :
-                                                    "bg-blue-100 text-blue-700"
-                                    )}>
-                                        {result.suspensionScale === 'all-day' ? '終日運休の恐れ' :
-                                            result.suspensionScale === 'large' ? '大規模な運休' :
-                                                result.suspensionScale === 'medium' ? '半日程度の運休' :
-                                                    '一時的な見合わせ'}
-                                    </span>
-                                )}
-
-                                <div className="text-xs text-left bg-white/50 p-3 rounded mt-2 border border-black/5">
-                                    <div className="font-bold text-[var(--status-suspended)] mb-1">復旧シナリオ</div>
-                                    {result.recoveryRecommendation || '気象回復後の安全確認完了を待って再開'}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-
-                {/* 公式情報へのリンク */}
-                <a
-                    href={getJRStatusUrl(route.id).url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block bg-white border border-gray-200 rounded-lg p-3 text-sm text-center hover:bg-gray-50 transition-colors text-blue-600 font-bold"
-                >
-                    JR公式ページで確認 <ExternalLink className="inline w-3 h-3 ml-1" />
-                </a>
-            </article>
-        );
-    }
-
-    // 通常モード（運休リスク予測）
-    return (
-        <article className="card p-5">
-            {/* ヘッダー */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    <div className="route-color-bar h-10 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
-                    <h3 className="font-bold text-lg leading-tight">{route.name}</h3>
-                </div>
-                {/* 現在の公式ステータス (Mini Badge) */}
-                {result.officialStatus && result.officialStatus.status !== 'normal' && (
-                    <span className="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-1 rounded-full font-bold border border-yellow-200 truncate max-w-[120px]">
-                        公式: {result.officialStatus.statusText}
-                    </span>
-                )}
-            </div>
-
-            {/* 🆕 Action Status Display (Hero Section) */}
-            {(() => {
-                const status = evaluateActionDecision(result);
-
-                const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
-                    switch (type) {
-                        case 'CRITICAL':
-                            return {
-                                label: 'Suspended / High Risk',
-                                labelColor: 'text-red-600',
-                                pulseColor: 'bg-red-400',
-                                dotColor: 'bg-red-500',
-                                iconColor: 'text-red-600',
-                                riskColor: 'text-red-700'
-                            };
-                        case 'CAUTION':
-                            return {
-                                label: 'Caution / Delay',
-                                labelColor: 'text-amber-600',
-                                pulseColor: 'bg-amber-400',
-                                dotColor: 'bg-amber-500',
-                                iconColor: 'text-amber-600',
-                                riskColor: 'text-amber-700'
-                            };
-                        case 'NORMAL':
-                        default:
-                            return {
-                                label: 'Normal Operation',
-                                labelColor: 'text-emerald-600',
-                                pulseColor: 'bg-emerald-400',
-                                dotColor: 'bg-emerald-500',
-                                iconColor: 'text-emerald-500',
-                                riskColor: 'text-gray-900'
-                            };
-                    }
+    const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
+        switch (type) {
+            case 'CRITICAL':
+                return {
+                    bg: 'bg-red-50',
+                    border: 'border-red-100',
+                    text: 'text-red-900',
+                    accent: 'bg-red-600',
+                    icon: 'text-red-600',
+                    subtext: 'text-red-700'
                 };
+            case 'CAUTION':
+                return {
+                    bg: 'bg-amber-50',
+                    border: 'border-amber-100',
+                    text: 'text-amber-900',
+                    accent: 'bg-amber-500',
+                    icon: 'text-amber-600',
+                    subtext: 'text-amber-700'
+                };
+            case 'NORMAL':
+            default:
+                return {
+                    bg: 'bg-slate-50',
+                    border: 'border-slate-100',
+                    text: 'text-slate-900',
+                    accent: 'bg-emerald-500',
+                    icon: 'text-emerald-500',
+                    subtext: 'text-slate-600'
+                };
+        }
+    };
 
-                const styles = getStatusStyles(status.type);
+    const styles = getStatusStyles(actionStatus.type);
 
-                return (
-                    <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
-                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                            <div>
-                                <div className="flex items-center gap-2.5 mb-2">
-                                    <span className="relative flex h-2.5 w-2.5">
-                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pulseColor}`}></span>
-                                        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${styles.dotColor}`}></span>
+    return (
+        <article className={cn("relative overflow-hidden rounded-2xl bg-white shadow-sm border", styles.border)}>
+            {/* Top Color Accent */}
+            <div className={cn("h-1.5 w-full", styles.accent)} />
+
+            <div className="p-6">
+                {/* 1. Header: Route & Label */}
+                <div className="flex items-start justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                        <div className="h-8 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
+                        <h3 className="font-bold text-xl text-gray-900 tracking-tight">{route.name}</h3>
+                    </div>
+                    {/* Status Badge */}
+                    <span className={cn("px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase", styles.bg, styles.subtext, "border", styles.border)}>
+                        {actionStatus.type === 'CRITICAL' ? 'High Risk' : actionStatus.type === 'CAUTION' ? 'Caution' : 'Normal'}
+                    </span>
+                </div>
+
+                {/* 2. Hero: Decision & Metrics */}
+                <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-6 mb-8">
+                    <div>
+                        <h2 className={cn("text-3xl sm:text-4xl font-black mb-2 leading-tight", styles.text)}>
+                            {actionStatus.title}
+                        </h2>
+                        <p className={cn("text-sm font-medium", styles.subtext)}>
+                            {actionStatus.message}
+                        </p>
+                    </div>
+
+                    {/* Visual Meter */}
+                    <div className="flex items-center gap-1 self-end sm:self-center">
+                        {result.isCurrentlySuspended && !result.isPartialSuspension ? (
+                            <div className="flex flex-col items-end">
+                                <AlertOctagon className={cn("w-12 h-12 mb-1", styles.icon)} />
+                                <span className={cn("text-xs font-bold", styles.subtext)}>運転見合わせ</span>
+                            </div>
+                        ) : (
+                            <div className="text-right">
+                                <div className="flex items-baseline justify-end">
+                                    <span className={cn("text-5xl font-black tracking-tighter font-en", styles.text)}>
+                                        {result.probability}
                                     </span>
-                                    <span className={`text-[10px] font-bold tracking-widest uppercase font-en ${styles.labelColor}`}>{styles.label}</span>
+                                    <span className={cn("text-xl font-bold ml-0.5 opacity-60", styles.text)}>%</span>
                                 </div>
-                                <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
-                                <p className="text-sm font-medium text-gray-500">{status.message}</p>
-                            </div>
-
-                            <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
-                                <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
-                                <div className="flex items-baseline gap-0.5 sm:justify-end">
-                                    <span className={`text-3xl font-black tracking-tighter font-en ${styles.riskColor}`}>{result.probability}</span>
-                                    <span className="text-sm font-bold text-gray-400">%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })()}
-
-            {/* ユーザー報告（リアルタイム） - Compact */}
-            {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minResumed > 0) && (
-                <div className="mb-6 mx-2 bg-white/80 backdrop-blur-sm border border-red-100 rounded-lg p-3 shadow-sm animate-pulse">
-                    <div className="flex items-center gap-2 text-red-600 font-bold text-xs uppercase tracking-wider mb-1">
-                        <Users size={14} />
-                        <span className="flex-1">ユーザーからのリアルタイム報告</span>
-                        <span className="text-[10px] bg-red-100 px-1.5 py-0.5 rounded text-red-600">現在</span>
-                    </div>
-                    <div className="flex items-center gap-3 pl-1">
-                        {result.crowdStats.last15minStopped > 0 && (
-                            <div className="flex items-center gap-1 text-red-700 font-bold text-sm">
-                                <AlertOctagon size={14} />
-                                <span>停止: {result.crowdStats.last15minStopped}件</span>
-                            </div>
-                        )}
-                        {result.crowdStats.last15minDelayed > 0 && (
-                            <div className="flex items-center gap-1 text-yellow-700 font-bold text-sm">
-                                <Clock size={14} />
-                                <span>遅延: {result.crowdStats.last15minDelayed}件</span>
-                            </div>
-                        )}
-                        {result.crowdStats.last15minResumed > 0 && (
-                            <div className="flex items-center gap-1 text-green-700 font-bold text-sm">
-                                <CheckCircle size={14} />
-                                <span>再開: {result.crowdStats.last15minResumed}件</span>
+                                <div className={cn("text-xs font-bold uppercase tracking-widest", styles.icon)}>Risk Level</div>
                             </div>
                         )}
                     </div>
                 </div>
-            )}
 
-            {/* リスク要因リスト (Simplified) */}
-            <div className="mb-6">
-                <div className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">主な要因</div>
-                <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-                    {result.reasons.length > 0 ? (
-                        result.reasons.slice(0, 3).map((reason, index) => (
-                            <div key={index} className="flex items-start gap-2.5">
-                                <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${index === 0 ? 'bg-[var(--status-suspended)]' : 'bg-gray-300'}`} />
-                                <span className={`text-sm ${index === 0 ? 'font-bold text-gray-800' : 'text-gray-600'}`}>{reason}</span>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-sm text-gray-500 text-center py-2">特になし</div>
+                {/* 3. Primary Reason (The "Why") */}
+                <div className="mb-6">
+                    <div className={cn("rounded-xl p-4 flex items-start gap-3", styles.bg)}>
+                        {/* Icon based on status */}
+                        {actionStatus.type === 'CRITICAL' ? <AlertTriangle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
+                            actionStatus.type === 'CAUTION' ? <Info className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
+                                <CheckCircle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} />}
+
+                        <div className="space-y-1">
+                            {/* Prioritize Official Text as Reason if available */}
+                            <p className={cn("text-sm font-bold leading-relaxed", styles.text)}>
+                                {result.isOfficialOverride && textSummary ?
+                                    `【公式発表】 ${formatStatusText(textSummary)}` :
+                                    (result.reasons[0] || '特段のリスク要因は検出されていません')}
+                            </p>
+
+                            {/* Show timestamp if official */}
+                            {result.officialStatus && (
+                                <p className="text-[10px] text-gray-400">
+                                    {new Date(result.officialStatus.updatedAt || '').toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })} 現在
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* 4. Collapsible Details (Unified) */}
+                <div className="border-t border-gray-100 pt-4">
+                    <button
+                        onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                        className="w-full flex items-center justify-between py-2 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                    >
+                        <span>詳細情報・要因内訳</span>
+                        {isDetailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </button>
+
+                    {isDetailsOpen && (
+                        <div className="mt-4 space-y-6 animate-in fade-in slide-in-from-top-2">
+
+                            {/* Official Text Full */}
+                            {hasOfficialInfo && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">公式発表 (全文)</h4>
+                                    <div className="text-xs leading-relaxed text-gray-600 bg-gray-50 p-3 rounded-lg whitespace-pre-wrap">
+                                        {formatStatusText(result.officialStatus?.rawText || '')}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Recovery Info Logic */}
+                            {result.isCurrentlySuspended && !result.isPartialSuspension && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">復旧予測</h4>
+                                    <div className="bg-blue-50/50 rounded-lg p-3">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <Clock className="w-4 h-4 text-blue-600" />
+                                            <span className="font-bold text-blue-900 text-sm">
+                                                {result.estimatedRecoveryTime || '目処立たず'}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-blue-800">{result.recoveryRecommendation}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Risk Factors List */}
+                            {result.reasons.length > 1 && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">リスク要因</h4>
+                                    <ul className="space-y-2">
+                                        {result.reasons.slice(result.isOfficialOverride ? 0 : 1).map((r, i) => (
+                                            <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
+                                                <span className="block w-1.5 h-1.5 mt-1.5 rounded-full bg-gray-300 shrink-0" />
+                                                {r}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Crowd Reports */}
+                            {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0) && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">ユーザー報告 (直近15分)</h4>
+                                    <div className="flex gap-3 text-xs font-bold">
+                                        {result.crowdStats.last15minStopped > 0 && <span className="text-red-600">停止: {result.crowdStats.last15minStopped}件</span>}
+                                        {result.crowdStats.last15minDelayed > 0 && <span className="text-amber-600">遅延: {result.crowdStats.last15minDelayed}件</span>}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     )}
+                </div>
+
+                {/* Footer: Action */}
+                <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center">
+                    <a
+                        href={getJRStatusUrl(route.id).url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all shadow-sm hover:shadow active:scale-95"
+                    >
+                        JR公式ページで確認 <ExternalLink size={14} />
+                    </a>
                 </div>
             </div>
-
-            {/* 詳細ボタン */}
-            <button
-                onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-                className="w-full py-2.5 rounded-lg border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-            >
-                {isDetailsOpen ? '閉じる' : '詳細データ・公式情報'}
-                {isDetailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </button>
-
-            {/* 折りたたみ詳細エリア */}
-            {isDetailsOpen && (
-                <div className="mt-4 pt-4 border-t border-gray-100 animate-in fade-in slide-in-from-top-2 space-y-4">
-                    {/* 公式情報の詳細 */}
-                    {result.officialStatus && (
-                        <div>
-                            <div className="text-xs font-bold text-gray-400 mb-1">JR北海道 公式発表</div>
-                            <div className="text-xs bg-blue-50/50 p-2 rounded text-gray-700 leading-relaxed border border-blue-100">
-                                {formatStatusText(result.officialStatus.rawText || '情報なし')}
-                                <div className="text-[10px] text-right text-gray-400 mt-1">
-                                    {new Date(result.officialStatus.updatedAt || '').toLocaleTimeString()} 更新
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 残りのリスク要因 */}
-                    {result.reasons.length > 3 && (
-                        <div>
-                            <div className="text-xs font-bold text-gray-400 mb-1">その他の要因</div>
-                            <ul className="space-y-1 pl-2">
-                                {result.reasons.slice(3).map((r, i) => (
-                                    <li key={i} className="text-xs text-gray-500">• {r}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
-            )}
         </article>
     );
 }
