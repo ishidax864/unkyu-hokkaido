@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { PredictionResult, Route } from '@/lib/types';
-import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Info, Clock, AlertOctagon, ExternalLink, Users, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertOctagon, AlertTriangle, ArrowRight, CheckCircle, Info, MapPin, RefreshCw, Clock, XCircle, AlertCircle, ExternalLink, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText } from '@/lib/text-parser';
@@ -127,17 +127,29 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                                 actionStatus.type === 'CAUTION' ? <Info className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
                                     <CheckCircle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} />}
 
-                        <div className="space-y-1">
+                        <div className="space-y-3 w-full">
                             {/* Prioritize Official Text as Reason if available */}
                             <div className={cn("text-sm font-bold leading-relaxed", styles.text)}>
-                                {result.isOfficialOverride && textSummary ? (
-                                    <>
-                                        <span>【公式発表】 </span>
-                                        {formatStatusText(textSummary)}
-                                    </>
-                                ) : (
-                                    (result.reasons[0] || '特段のリスク要因は検出されていません')
+                                {result.isOfficialOverride && textSummary ?
+                                    <div className="flex flex-col gap-1">
+                                        <span className="inline-flex items-center gap-1.5"><span className="px-2 py-0.5 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表</span></span>
+                                        <span className="mt-1">{formatStatusText(textSummary)}</span>
+                                    </div> :
+                                    (result.reasons[0] || '特段のリスク要因は検出されていません')}
+                            </div>
+
+                            {/* 🆕 Actionable Advice & Resumption Info */}
+                            <div className="pt-3 border-t border-black/10 flex flex-col gap-2">
+                                {actionStatus.resumptionEstimate && (
+                                    <div className={cn("flex items-center gap-2 font-bold", styles.text)}>
+                                        <Clock className="w-4 h-4 shrink-0" />
+                                        <span>{actionStatus.resumptionEstimate}</span>
+                                    </div>
                                 )}
+                                <div className={cn("flex items-start gap-2 text-sm leading-relaxed", styles.subtext)}>
+                                    <span className="font-bold shrink-0">💡 次のアクション:</span>
+                                    <span>{actionStatus.nextAction}</span>
+                                </div>
                             </div>
 
                             {/* Show timestamp if official */}
