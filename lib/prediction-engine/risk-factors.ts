@@ -212,6 +212,19 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `積雪${input.weather?.snowfall}cm（軽微な影響の可能性）`,
         priority: 10,
     },
+    // 🆕 湿り雪（着雪・架線凍結リスク）
+    // 条件: 降雪があり、かつ気温が -1.0℃ 〜 +1.5℃ の範囲
+    // 理由: 水分を含んだ重い雪は架線やパンタグラフに付着しやすく、ポイント不転換も起きやすい
+    {
+        condition: (input) => {
+            const snow = input.weather?.snowfall ?? 0;
+            const temp = input.weather?.temperature ?? -99;
+            return snow > 0 && temp >= -1.0 && temp <= 1.5;
+        },
+        weight: () => 20, // 比較的高めのリスク（遅延要因）
+        reason: (input) => `気温${input.weather?.temperature}℃での降雪（湿った雪による着雪・ポイント不具合リスク）`,
+        priority: 4,
+    },
     // 🆕 積雪急増（スタックリスク）
     {
         condition: (input) => (input.weather?.snowDepthChange ?? 0) >= 3,

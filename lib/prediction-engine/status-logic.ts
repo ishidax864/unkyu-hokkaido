@@ -93,13 +93,13 @@ export function determineBaseStatus(
             }
         }
 
-        // 🆕 User Request: If official status is Suspended, FORCE SUSPENDED (100%)
-        // Do NOT lower the risk even if targetTime > resumptionTime.
-        // The resumption info will be used for display only.
+        // 🆕 User Request: Absolute Priority for Official Suspension
+        // If official status is Suspended, FORCE SUSPENDED (100%) until the resumption time.
+        // Do NOT allow "future safe" logic to lower this risk before the resumption time.
         return {
             status: '運休', // 'suspended'
             isOfficialSuspended: true,
-            maxProbabilityCap: undefined, // No cap, allow high risk (will be forced to 100 in index.ts)
+            maxProbabilityCap: undefined, // No cap, will be forced to 100
             overrideReason: jrStatus.resumptionTime
                 ? `【公式発表】運転見合わせ中（${jrStatus.resumptionTime.substring(11, 16)}頃再開見込み）`
                 : undefined

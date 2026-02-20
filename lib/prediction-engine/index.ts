@@ -204,55 +204,28 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 🆕 Enforce Official Suspension Logic from Status Logic
     // If official status is Suspended, FORCE 100% UNLESS target time is safely after predicted recovery
+    // 🆕 UPDATE: User requested Absolute Priority.
+    // If determineBaseStatus returned isOfficialSuspended=true, it means we are BEFORE the resumption time.
+    // So we MUST return 100%. No "Future Safe" check needed here because determineBaseStatus already handled the time check.
+
     let isFutureSafe = false;
 
     if (isOfficialSuspended && input.targetDate === todayJST) {
-        let shouldForceSuspension = true;
+        // Absolute Lock
+        probability = 100;
 
-        // Check if target time is after estimated recovery
-        // 1. Official Resumption Time (Absolute Priority)
-        // Note: determineBaseStatus usually handles official resumption, but if it fell through to 'Suspended',
-        // maybe the resumption time wasn't parsed or is future.
-        // But here we check AI Estimated Recovery Time as well.
-
-        if (estimatedRecoveryTime) {
-            // Simple string comparison for HH:MM (Assuming same day)
-            // If estimated recovery is "08:00" and target is "19:00", then "19:00" > "08:00"
-            // Add a buffer of 1 hour to be safe
-            // Parse times for comparison
-            const [recH, recM] = estimatedRecoveryTime.split(':').map(Number);
-            const [tgtH, tgtM] = effectiveTargetTime.split(':').map(Number);
-
-            const recMinutes = recH * 60 + recM;
-            const tgtMinutes = tgtH * 60 + tgtM;
-
-            // If target is at least 60 mins after recovery -> Safe to show risk score instead of forced suspension
-            if (tgtMinutes > recMinutes + 60) {
-                shouldForceSuspension = false;
-                isFutureSafe = true;
-            } else if (tgtMinutes > recMinutes) {
-                // Chaos window (0-60 mins after) -> Don't force 100%, but force high caution
-                shouldForceSuspension = false;
-                isFutureSafe = true;
-                // Chaos overrides below will handle the probability floor
-            }
-        }
-
-        if (shouldForceSuspension) {
-            probability = 100;
-            // If we have an override reason (e.g. resumption info), favor that.
-            if (overrideReason) {
-                reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
-                reasonsWithPriority.unshift({
-                    reason: overrideReason,
-                    priority: 0
-                });
-            } else {
-                reasonsWithPriority.unshift({
-                    reason: '【公式発表】運休または運転見合わせが発表されています',
-                    priority: 0
-                });
-            }
+        // Use the reason from status logic if available
+        if (overrideReason) {
+            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
+            reasonsWithPriority.unshift({
+                reason: overrideReason,
+                priority: 0
+            });
+        } else {
+            reasonsWithPriority.unshift({
+                reason: '【公式発表】運休または運転見合わせが発表されています',
+                priority: 0
+            });
         }
     }
 
