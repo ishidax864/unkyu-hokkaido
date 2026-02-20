@@ -34,7 +34,13 @@ export function determineBaseStatus(
     // 1. Check for Suspension / Cancellation
     // 🆕 Robust Fallback: Check raw text for '運休'/'見合わせ' even if status says 'normal' (crawler bug safeguard)
     const rawText = jrStatus.rawText || jrStatus.statusText || '';
-    const hasSuspensionKeywords = rawText.includes('運休') || rawText.includes('見合わせ');
+
+    // 🆕 Partial Suspension Check (Pre-filter)
+    // If text contains "some trains" or "partial", treat as Delay/Caution, NOT Suspended.
+    const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き'];
+    const isPartialSuspension = partialKeywords.some(k => rawText.includes(k));
+
+    const hasSuspensionKeywords = (rawText.includes('運休') || rawText.includes('見合わせ')) && !isPartialSuspension;
 
     if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled' || hasSuspensionKeywords) {
         // 🆕 Check if Resumption Time has passed
