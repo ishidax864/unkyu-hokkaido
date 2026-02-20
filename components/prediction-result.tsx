@@ -108,23 +108,64 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                 {/* 🆕 Action Status Display (Even in Recovery Mode) */}
                 {(() => {
                     const status = evaluateActionDecision(result);
-                    const IconComponent = () => {
-                        if (status.iconType === 'x-circle') return <XCircle size={48} />;
-                        if (status.iconType === 'alert-triangle') return <AlertTriangle size={48} />;
-                        return <CheckCircle size={48} />;
+
+                    const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
+                        switch (type) {
+                            case 'CRITICAL':
+                                return {
+                                    label: 'Suspended / High Risk',
+                                    labelColor: 'text-red-600',
+                                    pulseColor: 'bg-red-400',
+                                    dotColor: 'bg-red-500',
+                                    iconColor: 'text-red-600',
+                                    riskColor: 'text-red-700'
+                                };
+                            case 'CAUTION':
+                                return {
+                                    label: 'Caution / Delay',
+                                    labelColor: 'text-amber-600',
+                                    pulseColor: 'bg-amber-400',
+                                    dotColor: 'bg-amber-500',
+                                    iconColor: 'text-amber-600',
+                                    riskColor: 'text-amber-700'
+                                };
+                            case 'NORMAL':
+                            default:
+                                return {
+                                    label: 'Normal Operation',
+                                    labelColor: 'text-emerald-600',
+                                    pulseColor: 'bg-emerald-400',
+                                    dotColor: 'bg-emerald-500',
+                                    iconColor: 'text-emerald-500',
+                                    riskColor: 'text-gray-900'
+                                };
+                        }
                     };
 
-                    return (
-                        <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
-                            <div className="flex justify-center mb-4 opacity-90">
-                                <IconComponent />
-                            </div>
-                            <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
-                            <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
+                    const styles = getStatusStyles(status.type);
 
-                            {/* Compact Risk Rate for Reference */}
-                            <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
-                                運休リスク: {result.probability}%
+                    return (
+                        <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
+                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                                <div>
+                                    <div className="flex items-center gap-2.5 mb-2">
+                                        <span className="relative flex h-2.5 w-2.5">
+                                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pulseColor}`}></span>
+                                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${styles.dotColor}`}></span>
+                                        </span>
+                                        <span className={`text-[10px] font-bold tracking-widest uppercase font-en ${styles.labelColor}`}>{styles.label}</span>
+                                    </div>
+                                    <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
+                                    <p className="text-sm font-medium text-gray-500">{status.message}</p>
+                                </div>
+
+                                <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
+                                    <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
+                                    <div className="flex items-baseline gap-0.5 sm:justify-end">
+                                        <span className={`text-3xl font-black tracking-tighter font-en ${styles.riskColor}`}>{result.probability}</span>
+                                        <span className="text-sm font-bold text-gray-400">%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     );
@@ -197,52 +238,65 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
             {(() => {
                 const status = evaluateActionDecision(result);
 
-                // Helper to render icon based on type string
-                const IconComponent = () => {
-                    if (status.iconType === 'x-circle') return <XCircle size={48} />;
-                    if (status.iconType === 'alert-triangle') return <AlertTriangle size={48} />;
-                    return <CheckCircle size={48} />;
+                const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
+                    switch (type) {
+                        case 'CRITICAL':
+                            return {
+                                label: 'Suspended / High Risk',
+                                labelColor: 'text-red-600',
+                                pulseColor: 'bg-red-400',
+                                dotColor: 'bg-red-500',
+                                iconColor: 'text-red-600',
+                                riskColor: 'text-red-700'
+                            };
+                        case 'CAUTION':
+                            return {
+                                label: 'Caution / Delay',
+                                labelColor: 'text-amber-600',
+                                pulseColor: 'bg-amber-400',
+                                dotColor: 'bg-amber-500',
+                                iconColor: 'text-amber-600',
+                                riskColor: 'text-amber-700'
+                            };
+                        case 'NORMAL':
+                        default:
+                            return {
+                                label: 'Normal Operation',
+                                labelColor: 'text-emerald-600',
+                                pulseColor: 'bg-emerald-400',
+                                dotColor: 'bg-emerald-500',
+                                iconColor: 'text-emerald-500',
+                                riskColor: 'text-gray-900'
+                            };
+                    }
                 };
 
+                const styles = getStatusStyles(status.type);
+
                 return (
-                    status.type === 'NORMAL' ? (
-                        <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                                <div>
-                                    <div className="flex items-center gap-2.5 mb-2">
-                                        <span className="relative flex h-2.5 w-2.5">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                                        </span>
-                                        <span className="text-[10px] font-bold text-emerald-600 tracking-widest uppercase font-en">Normal Operation</span>
-                                    </div>
-                                    <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
-                                    <p className="text-sm font-medium text-gray-500">{status.message}</p>
+                    <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                            <div>
+                                <div className="flex items-center gap-2.5 mb-2">
+                                    <span className="relative flex h-2.5 w-2.5">
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${styles.pulseColor}`}></span>
+                                        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${styles.dotColor}`}></span>
+                                    </span>
+                                    <span className={`text-[10px] font-bold tracking-widest uppercase font-en ${styles.labelColor}`}>{styles.label}</span>
                                 </div>
+                                <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
+                                <p className="text-sm font-medium text-gray-500">{status.message}</p>
+                            </div>
 
-                                <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
-                                    <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
-                                    <div className="flex items-baseline gap-0.5 sm:justify-end">
-                                        <span className="text-3xl font-black text-gray-900 tracking-tighter font-en">{result.probability}</span>
-                                        <span className="text-sm font-bold text-gray-400">%</span>
-                                    </div>
+                            <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
+                                <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
+                                <div className="flex items-baseline gap-0.5 sm:justify-end">
+                                    <span className={`text-3xl font-black tracking-tighter font-en ${styles.riskColor}`}>{result.probability}</span>
+                                    <span className="text-sm font-bold text-gray-400">%</span>
                                 </div>
                             </div>
                         </div>
-                    ) : (
-                        <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
-                            <div className="flex justify-center mb-4 opacity-90">
-                                <IconComponent />
-                            </div>
-                            <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
-                            <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
-
-                            {/* Compact Risk Rate for Reference */}
-                            <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
-                                運休リスク: {result.probability}%
-                            </div>
-                        </div>
-                    )
+                    </div>
                 );
             })()}
 
