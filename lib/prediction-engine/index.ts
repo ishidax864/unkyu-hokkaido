@@ -60,17 +60,25 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         isNonOperatingHour = true;
     }
 
-    // 🆕 Centralized Status Logic - Call early to use constraints throughout
-    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, isPartialSuspension, partialSuspensionText, maxProbabilityCap, overrideReason } = determineBaseStatus(
+    // 🆕 Centralized Status Logic - Single Source of Truth for constraints
+    const {
+        status: baseStatus,
+        isOfficialSuspended,
+        isPostResumptionChaos,
+        isPartialSuspension,
+        partialSuspensionText,
+        minProbability,
+        maxProbability,
+        overrideReason
+    } = determineBaseStatus(
         input.jrStatus,
         input.targetDate,
         effectiveTargetTime,
-        input.weather?.snowDepth // 🆕 Pass snowDepth
+        input.weather?.snowDepth
     );
 
-
-
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
+    // ... (rest same until probability calculation) ...
 
     // 0. 過去事例の事前抽出
     const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
@@ -202,67 +210,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
     }
 
-    // 🆕 Enforce Official Suspension Logic from Status Logic
-    // If official status is Suspended, FORCE 100% UNLESS target time is safely after predicted recovery
-    // 🆕 UPDATE: User requested Absolute Priority.
-    // If determineBaseStatus returned isOfficialSuspended=true, it means we are BEFORE the resumption time.
-    // So we MUST return 100%. No "Future Safe" check needed here because determineBaseStatus already handled the time check.
-
     let isFutureSafe = false;
-
-    if (isOfficialSuspended && input.targetDate === todayJST) {
-        // Absolute Lock
-        probability = 100;
-
-        // Use the reason from status logic if available
-        if (overrideReason) {
-            reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
-            reasonsWithPriority.unshift({
-                reason: overrideReason,
-                priority: 0
-            });
-        } else {
-            reasonsWithPriority.unshift({
-                reason: '【公式発表】運休または運転見合わせが発表されています',
-                priority: 0
-            });
-        }
-    }
-
-    // 🆕 Post-Resumption Chaos Logic
-    if (isPostResumptionChaos || (isFutureSafe && estimatedRecoveryTime)) {
-        // Force probability to 60% (Caution/Chaos level)
-        // This ensures it shows as Yellow/Orange in UI, not Green or Red
-        if (probability < 60) {
-            probability = 60;
-        }
-
-        if (overrideReason) {
-            // ... existing override logic ...
-        }
-
-        // Add implicit chaos reason if not present
-        if (!isPostResumptionChaos && isFutureSafe) {
-            reasonsWithPriority.unshift({
-                reason: `【ダイヤ乱れ警戒】運転再開（${estimatedRecoveryTime}予測）直後のため、遅れや運休のリスクが残ります`,
-                priority: 4
-            });
-        }
-    }
-
-    // 🆕 Apply Base Status Constraints (e.g. Resumed or Reduced)
-    if (maxProbabilityCap !== undefined && !isPostResumptionChaos) {
-        if (probability > maxProbabilityCap) {
-            probability = maxProbabilityCap;
-            if (overrideReason) {
-                reasonsWithPriority = reasonsWithPriority.filter(r => r.priority > 5);
-                reasonsWithPriority.unshift({
-                    reason: overrideReason,
-                    priority: 0
-                });
-            }
-        }
-    }
 
     // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
     const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority, isFutureSafe);
@@ -326,10 +274,9 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         reasonsWithPriority.push(...additionalReasons);
     }
 
-    // Final check for resumption cap/base status constraints to prevent crawler history from breaking it
-    if (maxProbabilityCap !== undefined && probability > maxProbabilityCap) {
-        probability = maxProbabilityCap;
-    }
+    // 🆕 FINAL CLAMPING (Single Source of Truth)
+    // Ensures strict consistency between Main and Hourly forecasts by obeying status-logic bounds.
+    probability = Math.max(minProbability, Math.min(Math.round(probability), maxProbability));
 
     // 7. 最終的な理由リスト作成
     let reasons = reasonsWithPriority
