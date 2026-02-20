@@ -35,11 +35,20 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
             iconType: 'x-circle',
             nextAction: (() => {
                 const time = result.estimatedRecoveryTime;
+                const isOfficial = result.isOfficialOverride;
                 if (time?.includes('終日')) return '本日の移動は諦め、ホテルの確保や別ルート（バス等）を検討してください。';
-                if (time) return `運転再開（${time}）まで、駅ではなくカフェや屋内施設で待機することをお勧めします。`;
+                if (time) {
+                    const label = isOfficial ? '【公式発表】' : '【AI予測】';
+                    return `${label} 運転再開（${time}）まで、駅ではなくカフェや屋内施設で待機することをお勧めします。`;
+                }
                 return '最新の公式情報を確認し、無理な移動は控えてください。';
             })(),
-            resumptionEstimate: result.estimatedRecoveryTime ? `【復旧見込】${result.estimatedRecoveryTime}` : '復旧等の詳細情報なし'
+            resumptionEstimate: (() => {
+                const time = result.estimatedRecoveryTime;
+                if (!time) return '復旧等の詳細情報なし';
+                const label = result.isOfficialOverride ? '公式発表' : 'AI予測';
+                return `【復旧見込 / ${label}】${time}`;
+            })()
         };
     }
 
