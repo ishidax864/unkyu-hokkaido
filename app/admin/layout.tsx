@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutDashboard, MessageSquare, LogOut, Train } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, LogOut, Train, BrainCircuit } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -14,8 +14,9 @@ export default function AdminLayout({
 
     const navItems = [
         { href: '/admin', label: 'ダッシュボード', icon: LayoutDashboard },
-        { href: '/admin/status', label: '運行状況監視', icon: Train }, // 🆕
-        { href: '/admin/reports', label: '報告管理', icon: MessageSquare },
+        { href: '/admin/crawler', label: 'クローラー & ML', icon: BrainCircuit },
+        { href: '/admin/status', label: '運行状況監視', icon: Train },
+        { href: '/admin/reports', label: 'ユーザー報告', icon: MessageSquare },
     ];
 
     return (
@@ -68,11 +69,11 @@ export default function AdminLayout({
                     </h2>
                     <div className="flex items-center gap-4">
                         <div className="text-right">
-                            <div className="text-sm font-bold">Admin User</div>
-                            <div className="text-[10px] text-gray-500 uppercase">Super Admin</div>
+                            <div className="text-sm font-bold">管理者</div>
+                            <div className="text-[10px] text-gray-500">システム管理</div>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold">
-                            A
+                            管
                         </div>
                     </div>
                 </header>
