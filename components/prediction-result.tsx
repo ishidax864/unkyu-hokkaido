@@ -117,11 +117,16 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
 
                         <div className="space-y-1">
                             {/* Prioritize Official Text as Reason if available */}
-                            <p className={cn("text-sm font-bold leading-relaxed", styles.text)}>
-                                {result.isOfficialOverride && textSummary ?
-                                    `【公式発表】 ${formatStatusText(textSummary)}` :
-                                    (result.reasons[0] || '特段のリスク要因は検出されていません')}
-                            </p>
+                            <div className={cn("text-sm font-bold leading-relaxed", styles.text)}>
+                                {result.isOfficialOverride && textSummary ? (
+                                    <>
+                                        <span>【公式発表】 </span>
+                                        {formatStatusText(textSummary)}
+                                    </>
+                                ) : (
+                                    (result.reasons[0] || '特段のリスク要因は検出されていません')
+                                )}
+                            </div>
 
                             {/* Show timestamp if official */}
                             {result.officialStatus && (
