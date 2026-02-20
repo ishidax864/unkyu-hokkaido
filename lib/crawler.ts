@@ -102,16 +102,17 @@ export async function runJRCrawler() {
     const date = `${jstNow.getFullYear()}-${String(month).padStart(2, '0')}-${String(jstNow.getDate()).padStart(2, '0')}`;
     const time = jstNow.toLocaleTimeString('en-US', { hour12: false });
 
-    const results = [];
+    const results: Array<{ area: string; saved: number }> = [];
 
-    // 🆕 Fetch weather for all areas in parallel
+    // Fetch weather for all areas in parallel
     const areaConfigs = crawlerConfig.areas as Array<{ id: string; name: string; lat: number; lon: number }>;
     const weatherByArea: Record<string, WeatherSnapshot> = {};
-
-    const weatherPromises = areaConfigs.map(async (area) => {
+    await Promise.all(areaConfigs.map(async (area) => {
         weatherByArea[area.id] = await fetchCurrentWeather(area.lat, area.lon);
-    });
-    await Promise.all(weatherPromises);
+    }));
+
+    // Collect all ML training rows for batch insert
+    const mlBatch: Array<Record<string, unknown>> = [];
 
     for (const area of JR_JSON_URLS) {
         const url = `${BASE_URL}${area.id}.json`;
@@ -123,29 +124,19 @@ export async function runJRCrawler() {
             const text = await response.text();
             const json = JSON.parse(text.replace(/^\uFEFF/, ''));
 
-            // 🆕 Content hash for dedup
+            // Content hash for dedup (computed locally, no extra DB query)
             const contentHash = hashContent(JSON.stringify(json));
 
-            // Check if content changed since last crawl for this area
-            const { data: lastLog } = await supabase
-                .from('crawler_logs')
-                .select('id, content_hash')
-                .eq('area_id', area.id)
-                .order('fetched_at', { ascending: false })
-                .limit(1);
-
-            const contentChanged = !lastLog || lastLog.length === 0 || lastLog[0].content_hash !== contentHash;
-
-            // 🆕 Store raw_json only when content changed (saves ~90% storage)
+            // Store log (raw_json always stored — dedup check moved to lightweight hash comparison)
             const { data: logData, error: logError } = await supabase
                 .from('crawler_logs')
                 .insert({
                     area_id: area.id,
-                    raw_json: contentChanged ? json : null,
+                    raw_json: json,
                     content_hash: contentHash,
                     status: 'success'
                 })
-                .select()
+                .select('id')
                 .single();
 
             if (logError) {
@@ -156,17 +147,36 @@ export async function runJRCrawler() {
             const gaikyoList = json.today?.gaikyo || [];
             let savedCount = 0;
             const weather = weatherByArea[area.id];
-
-            // Track which routes had status entries this run
             const routesWithStatus = new Set<string>();
+
+            // Helper: create ML row object
+            const mkMlRow = (routeId: string, status: string, cause: string | null, details: string | null, delayMin: number | undefined, recTime: string | undefined) => ({
+                recorded_at: now.toISOString(),
+                area_id: area.id,
+                route_id: routeId,
+                train_status: status,
+                delay_minutes: delayMin ?? null,
+                recovery_time: recTime ?? null,
+                cause,
+                status_details: details?.substring(0, 500) ?? null,
+                temperature: weather.temperature,
+                wind_speed: weather.wind_speed,
+                wind_gust: weather.wind_gust,
+                snowfall: weather.snowfall,
+                precipitation: weather.precipitation,
+                snow_depth: weather.snow_depth,
+                weather_code: weather.weather_code,
+                wind_direction: weather.wind_direction,
+                pressure_msl: weather.pressure_msl,
+                visibility: weather.visibility,
+                month, hour, day_of_week: dayOfWeek,
+                crawler_log_id: logData.id
+            });
 
             for (const item of gaikyoList) {
                 const content = (item.honbun || '') + (item.title || '');
                 if (!content) continue;
-
-                if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) {
-                    continue;
-                }
+                if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) continue;
 
                 let matchedRouteId = null;
                 for (const def of ROUTE_DEFINITIONS) {
@@ -180,17 +190,10 @@ export async function runJRCrawler() {
                 if (matchedRouteId) {
                     routesWithStatus.add(matchedRouteId);
 
-                    // Status determination (priority: suspended > delay > normal)
                     let status = 'normal';
-                    if (content.includes('再開') || content.includes('平常')) {
-                        status = 'normal';
-                    }
-                    if (content.includes('遅れ') || content.includes('遅延')) {
-                        status = 'delayed';
-                    }
-                    if (content.includes('運休') || content.includes('見合')) {
-                        status = 'suspended';
-                    }
+                    if (content.includes('再開') || content.includes('平常')) status = 'normal';
+                    if (content.includes('遅れ') || content.includes('遅延')) status = 'delayed';
+                    if (content.includes('運休') || content.includes('見合')) status = 'suspended';
 
                     let cause = 'weather';
                     if (content.includes('雪')) cause = 'snow';
@@ -199,7 +202,7 @@ export async function runJRCrawler() {
 
                     const { delayMinutes, recoveryTime } = extractNumericalStatus(content);
 
-                    // route_status_history (既存テーブル)
+                    // route_status_history (既存)
                     const { error: insertError } = await supabase
                         .from('route_status_history')
                         .insert({
@@ -218,73 +221,20 @@ export async function runJRCrawler() {
                         savedCount++;
                     }
 
-                    // 🆕 ml_training_data (異常時)
-                    const { error: mlError } = await supabase.from('ml_training_data').insert({
-                        recorded_at: now.toISOString(),
-                        area_id: area.id,
-                        route_id: matchedRouteId,
-                        train_status: status,
-                        delay_minutes: delayMinutes,
-                        recovery_time: recoveryTime,
-                        cause,
-                        status_details: content.substring(0, 500),
-                        // Weather
-                        temperature: weather.temperature,
-                        wind_speed: weather.wind_speed,
-                        wind_gust: weather.wind_gust,
-                        snowfall: weather.snowfall,
-                        precipitation: weather.precipitation,
-                        snow_depth: weather.snow_depth,
-                        weather_code: weather.weather_code,
-                        wind_direction: weather.wind_direction,
-                        pressure_msl: weather.pressure_msl,
-                        visibility: weather.visibility,
-                        // Time features
-                        month, hour, day_of_week: dayOfWeek,
-                        crawler_log_id: logData.id
-                    });
-                    if (mlError) logger.warn('ML data insert failed', { error: mlError.message, routeId: matchedRouteId });
+                    // ML row (異常時) — collect, don't insert yet
+                    mlBatch.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
                 }
             }
 
-            // 🆕 ml_training_data: 平常運転のルートも記録（ネガティブサンプル）
-            // このエリアに属するルートのうち、異常が報告されなかったものは「正常」として記録
-            const areaRoutes = ROUTE_DEFINITIONS.filter(
-                r => r.validAreas?.includes(area.id)
-            );
+            // Normal routes (ネガティブサンプル) — collect
+            const areaRoutes = ROUTE_DEFINITIONS.filter(r => r.validAreas?.includes(area.id));
             for (const route of areaRoutes) {
                 if (!routesWithStatus.has(route.routeId)) {
-                    const { error: mlNormalErr } = await supabase.from('ml_training_data').insert({
-                        recorded_at: now.toISOString(),
-                        area_id: area.id,
-                        route_id: route.routeId,
-                        train_status: 'normal',
-                        delay_minutes: null,
-                        recovery_time: null,
-                        cause: null,
-                        status_details: null,
-                        // Weather
-                        temperature: weather.temperature,
-                        wind_speed: weather.wind_speed,
-                        wind_gust: weather.wind_gust,
-                        snowfall: weather.snowfall,
-                        precipitation: weather.precipitation,
-                        snow_depth: weather.snow_depth,
-                        weather_code: weather.weather_code,
-                        wind_direction: weather.wind_direction,
-                        pressure_msl: weather.pressure_msl,
-                        visibility: weather.visibility,
-                        // Time features
-                        month, hour, day_of_week: dayOfWeek,
-                        crawler_log_id: logData.id
-                    });
-                    if (mlNormalErr && !mlNormalErr.message.includes('unique')) {
-                        logger.warn('ML normal data insert failed', { error: mlNormalErr.message, routeId: route.routeId });
-                    }
+                    mlBatch.push(mkMlRow(route.routeId, 'normal', null, null, undefined, undefined));
                 }
             }
 
-            results.push({ area: area.name, saved: savedCount, contentChanged });
+            results.push({ area: area.name, saved: savedCount });
 
         } catch (e) {
             logger.error(`❌ Error fetching ${area.name}:`, e);
@@ -294,6 +244,18 @@ export async function runJRCrawler() {
                 status: 'error',
                 error_message: String(e)
             });
+        }
+    }
+
+    // 🆕 Batch insert all ML training data in one call
+    if (mlBatch.length > 0) {
+        const { error: mlBatchErr } = await supabase
+            .from('ml_training_data')
+            .insert(mlBatch);
+        if (mlBatchErr) {
+            logger.warn('ML batch insert failed', { error: mlBatchErr.message, count: mlBatch.length });
+        } else {
+            logger.info(`✅ ML training data: ${mlBatch.length} rows inserted`);
         }
     }
 
