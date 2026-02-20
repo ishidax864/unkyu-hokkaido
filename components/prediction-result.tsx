@@ -205,18 +205,34 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                 };
 
                 return (
-                    <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
-                        <div className="flex justify-center mb-4 opacity-90">
-                            <IconComponent />
-                        </div>
-                        <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
-                        <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
+                    status.type === 'NORMAL' ? (
+                        <div className="mb-8 text-center animate-in fade-in slide-in-from-bottom-2 py-4">
+                            <div className="flex items-center justify-center gap-3 mb-2">
+                                <CheckCircle className="text-emerald-500 w-8 h-8" strokeWidth={2.5} />
+                                <h2 className="text-2xl font-black text-gray-800 tracking-tight">{status.title}</h2>
+                            </div>
 
-                        {/* Compact Risk Rate for Reference */}
-                        <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
-                            運休リスク: {result.probability}%
+                            <p className="text-gray-500 text-sm font-medium mb-4">{status.message}</p>
+
+                            <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-gray-50 border border-gray-100">
+                                <span className="text-xs font-bold text-gray-400">運休リスク</span>
+                                <span className="text-lg font-black text-gray-700">{result.probability}%</span>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className={`rounded-2xl p-6 mb-8 text-center shadow-lg transform transition-all hover:scale-[1.02] ${status.bgColor}`}>
+                            <div className="flex justify-center mb-4 opacity-90">
+                                <IconComponent />
+                            </div>
+                            <h2 className="text-3xl font-black mb-2 tracking-tight">{status.title}</h2>
+                            <p className="font-bold opacity-90 text-sm mb-4">{status.message}</p>
+
+                            {/* Compact Risk Rate for Reference */}
+                            <div className={`inline-block px-4 py-1 rounded-full text-xs font-bold ${status.subColor} bg-opacity-30`}>
+                                運休リスク: {result.probability}%
+                            </div>
+                        </div>
+                    )
                 );
             })()}
 
