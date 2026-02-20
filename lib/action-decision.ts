@@ -60,7 +60,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     }
 
     // 3. CAUTION (Yellow): Medium Probability (20-49%) OR Chaos Flag
-    if (result.isPostResumptionChaos || result.probability >= 20 || result.status === 'delay' || result.status === 'delayed') {
+    if (result.isPostResumptionChaos || result.probability >= 20 || result.status === 'delayed' || result.status === '遅延') {
         return {
             type: 'CAUTION',
             title: '注意 (Caution)',

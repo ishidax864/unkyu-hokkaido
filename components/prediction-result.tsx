@@ -5,7 +5,7 @@ import { AlertOctagon, AlertTriangle, ArrowRight, CheckCircle, Info, MapPin, Ref
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText } from '@/lib/text-parser';
-import { evaluateActionDecision } from '@/lib/action-decision';
+import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision';
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -22,7 +22,7 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
     const { summary: textSummary, details: textDetails } = splitStatusText(result.officialStatus?.rawText || '');
     const hasOfficialInfo = !!result.officialStatus;
 
-    const getStatusStyles = (type: 'CRITICAL' | 'CAUTION' | 'NORMAL') => {
+    const getStatusStyles = (type: ActionStatusType) => {
         switch (type) {
             case 'CRITICAL':
                 return {
