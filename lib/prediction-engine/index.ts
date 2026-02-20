@@ -127,8 +127,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 5. 確率計算と上限適用
-    const maxProbability = determineMaxProbability(calculationInput, isNearRealTime);
-    let probability = Math.min(Math.round(totalScore), maxProbability);
+    const weatherMaxProbability = determineMaxProbability(calculationInput, isNearRealTime);
+    let probability = Math.min(Math.round(totalScore), weatherMaxProbability);
 
     // 運休中かどうかを判定
     const isCurrentlySuspended = isOfficialSuspended && (input.targetDate === todayJST);
@@ -262,7 +262,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 6. 履歴データによる補正
     if (input.historicalData) {
-        const { adjustedProbability, additionalReasons } = applyHistoricalDataAdjustment(probability, maxProbability, input.historicalData);
+        const { adjustedProbability, additionalReasons } = applyHistoricalDataAdjustment(probability, weatherMaxProbability, input.historicalData);
         probability = Math.round(adjustedProbability);
         reasonsWithPriority.push(...additionalReasons);
     }
@@ -435,19 +435,6 @@ export function calculateWeeklyForecast(
             historicalData: historicalData,
             officialHistory: isToday ? officialHistory : null
         });
-
-        // 🆕 Weekly Consistency Fix:
-        // If today matches logic in calculateSuspensionRisk (which it does via jrStatus), 
-        // verify if "Suspended" status was applied.
-        // If the 12:00 forecast was "Normal" but current status is "Suspended", force update for Today.
-        if (isToday && jrStatus && (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') && !result.isPartialSuspension) {
-            // Even if resumption is scheduled for evening, the "Daily Summary" for today should probably reflect the *worst* state (Suspended)
-            // or at least be consistent with the main card.
-            // If main card says "Suspended", this should too.
-            result.probability = 100;
-            result.status = '運休中';
-            result.isCurrentlySuspended = true;
-        }
 
         return result;
     });
