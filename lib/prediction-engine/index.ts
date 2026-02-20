@@ -501,20 +501,16 @@ export function calculateWeeklyForecast(
         // 今日、または過去（念のため）のデータであれば公式情報を反映
         const isToday = weather.date <= today;
 
-        // Check if status should persist to future dates (Suspended or Partial)
-        // Suspensions and Partial Suspensions are treated as persistent until updated/resumed
-        const statusText = jrStatus?.rawText || jrStatus?.statusText || '';
-        const isSuspended = jrStatus?.status === 'suspended' || jrStatus?.status === 'cancelled';
-        const isPartial = ['一部', '部分', '減便', '本数を減ら', '間引き'].some(k => statusText.includes(k));
-        const shouldPropagateStatus = isSuspended || isPartial;
-
+        // Only apply official status to TODAY. Future days should rely on weather prediction
+        // unless we parse explicit "until date X" text (which is rare/complex).
+        // Blind propagation causes "60%" floor for sunny days in future.
         const result = calculateSuspensionRisk({
             routeId,
             routeName,
             targetDate: weather.date,
             targetTime: '12:00', // 週間予測は正午基準
             weather,
-            jrStatus: (isToday || shouldPropagateStatus) ? jrStatus : null,
+            jrStatus: isToday ? jrStatus : null,
             crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
             historicalData: historicalData,
             officialHistory: isToday ? officialHistory : null
