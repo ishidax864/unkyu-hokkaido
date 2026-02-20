@@ -14,7 +14,7 @@ export default function AdminLayout({
 
     const navItems = [
         { href: '/admin', label: 'ダッシュボード', icon: LayoutDashboard },
-        { href: '/admin/crawler', label: 'クローラー & ML', icon: BrainCircuit },
+        { href: '/admin/crawler', label: 'データ収集 & ML', icon: BrainCircuit },
         { href: '/admin/status', label: '運行状況監視', icon: Train },
         { href: '/admin/reports', label: 'ユーザー報告', icon: MessageSquare },
     ];
