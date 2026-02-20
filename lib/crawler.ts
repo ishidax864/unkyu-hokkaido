@@ -124,15 +124,24 @@ export async function runJRCrawler() {
             const text = await response.text();
             const json = JSON.parse(text.replace(/^\uFEFF/, ''));
 
-            // Content hash for dedup (computed locally, no extra DB query)
+            // Content hash for dedup
             const contentHash = hashContent(JSON.stringify(json));
 
-            // Store log (raw_json always stored — dedup check moved to lightweight hash comparison)
+            // Check if content changed since last crawl
+            const { data: lastLog } = await supabase
+                .from('crawler_logs')
+                .select('content_hash')
+                .eq('area_id', area.id)
+                .order('fetched_at', { ascending: false })
+                .limit(1);
+            const contentChanged = !lastLog?.length || lastLog[0].content_hash !== contentHash;
+
+            // Store raw_json only when content changed (saves ~97% storage)
             const { data: logData, error: logError } = await supabase
                 .from('crawler_logs')
                 .insert({
                     area_id: area.id,
-                    raw_json: json,
+                    raw_json: contentChanged ? json : null,
                     content_hash: contentHash,
                     status: 'success'
                 })
