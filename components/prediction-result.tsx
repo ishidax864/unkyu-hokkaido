@@ -33,12 +33,21 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                     icon: 'text-red-600',
                     subtext: 'text-red-700'
                 };
+            case 'HIGH_RISK':
+                return {
+                    bg: 'bg-orange-50',
+                    border: 'border-orange-100',
+                    text: 'text-orange-900',
+                    accent: 'bg-orange-500',
+                    icon: 'text-orange-600',
+                    subtext: 'text-orange-700'
+                };
             case 'CAUTION':
                 return {
                     bg: 'bg-amber-50',
                     border: 'border-amber-100',
                     text: 'text-amber-900',
-                    accent: 'bg-amber-500',
+                    accent: 'bg-amber-400',
                     icon: 'text-amber-600',
                     subtext: 'text-amber-700'
                 };
@@ -71,7 +80,9 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                     </div>
                     {/* Status Badge */}
                     <span className={cn("px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase", styles.bg, styles.subtext, "border", styles.border)}>
-                        {actionStatus.type === 'CRITICAL' ? 'High Risk' : actionStatus.type === 'CAUTION' ? 'Caution' : 'Normal'}
+                        {actionStatus.type === 'CRITICAL' ? 'Severe' :
+                            actionStatus.type === 'HIGH_RISK' ? 'High Risk' :
+                                actionStatus.type === 'CAUTION' ? 'Caution' : 'Normal'}
                     </span>
                 </div>
 
@@ -111,9 +122,10 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                 <div className="mb-6">
                     <div className={cn("rounded-xl p-4 flex items-start gap-3", styles.bg)}>
                         {/* Icon based on status */}
-                        {actionStatus.type === 'CRITICAL' ? <AlertTriangle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
-                            actionStatus.type === 'CAUTION' ? <Info className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
-                                <CheckCircle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} />}
+                        {actionStatus.type === 'CRITICAL' ? <AlertOctagon className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
+                            actionStatus.type === 'HIGH_RISK' ? <AlertTriangle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
+                                actionStatus.type === 'CAUTION' ? <Info className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
+                                    <CheckCircle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} />}
 
                         <div className="space-y-1">
                             {/* Prioritize Official Text as Reason if available */}

@@ -218,7 +218,9 @@ export function useRouteSearch() {
                         } else {
                             // Full Suspension: 100% ("Severe")
                             mlResult.probability = 100;
-                            mlResult.level = 'severe'; // critical/severe
+                            // mlResult.level is ConfidenceLevel ('high'|'medium'|'low'), NOT Risk Level. 
+                            // So 'high' confidence is appropriate for a certain suspension.
+                            mlResult.level = 'high';
                             mlResult.status = 'suspended';
                             mlResult.isOfficialOverride = true;
                         }
