@@ -107,11 +107,6 @@ const jsonLd = {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "JPY"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.5",
-    "ratingCount": "100" // プロトタイプとしてのダミー値
   }
 };
 

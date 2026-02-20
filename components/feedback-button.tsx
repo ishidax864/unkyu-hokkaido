@@ -8,7 +8,7 @@ export function FeedbackButton() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50">
             {isOpen ? (
                 <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-[calc(100vw-3rem)] sm:w-[400px] animate-in slide-in-from-bottom-4 duration-300">
                     <FeedbackForm onClose={() => setIsOpen(false)} />

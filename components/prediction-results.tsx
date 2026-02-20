@@ -59,7 +59,7 @@ export function PredictionResults({
             {/* ヘッダー：駅名表示とお気に入り */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none">RESULT</span>
+                    <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none">予測結果</span>
                     <h2 className="text-xl font-black text-gray-900 leading-none">
                         {depStation.name} → {arrStation.name}
                     </h2>

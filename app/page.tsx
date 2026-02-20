@@ -35,11 +35,7 @@ export default function Home() {
     refreshRealtimeStatus, // 🆕
   } = useRouteSearch();
 
-  const _handleRefresh = () => {
-    sendGAEvent('event', 'refresh_status', { route: selectedRouteId });
-    refreshRealtimeStatus();
-  };
-  void _handleRefresh; // reserved for future use
+
 
   // 初期化ロジック（天気、現在地、警報、時刻）
   const {
@@ -91,7 +87,7 @@ export default function Home() {
             <span className="text-xs opacity-80 ml-1">JR予報</span>
           </div>
           <div className="text-right text-sm">
-            <div className="opacity-80 text-xs">札幌</div>
+            <div className="opacity-80 text-xs">{locationName || '北海道'}</div>
             <div className="font-bold text-sm sm:text-base">{currentTime}</div>
           </div>
         </div>
@@ -125,7 +121,7 @@ export default function Home() {
               <Cloud className="w-5 h-5 text-[var(--muted)]" aria-hidden="true" />
               <div>
                 <h2 id="weather-summary-title" className="font-medium text-sm flex items-center gap-2">
-                  今日の天気（{locationName}）
+                  今日の天気（{locationName.replace(/（.*?）/, '')}）
                   {userLocation && <MapPin className="w-3 h-3 text-[var(--primary)]" aria-hidden="true" />}
                 </h2>
                 <div className="text-xs text-[var(--muted)]">

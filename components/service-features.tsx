@@ -5,7 +5,7 @@ export function ServiceFeatures() {
         <section className="py-8 md:py-12 border-t border-[var(--border)]" aria-labelledby="features-heading">
             <div className="text-center mb-10">
                 <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-xs font-bold mb-3 tracking-wide">
-                    WHY UNKYU HOKKAIDO?
+                    運休北海道の特徴
                 </span>
                 <h2 id="features-heading" className="text-2xl md:text-3xl font-bold text-[var(--foreground)] leading-tight mb-4">
                     もう、雪の駅で<br className="md:hidden" />待ちぼうけはしない。
@@ -63,15 +63,15 @@ export function ServiceFeatures() {
                             <h3 className="font-bold text-base md:text-lg">予測精度の実績</h3>
                         </div>
                         <p className="text-xs md:text-sm text-[var(--muted)] leading-relaxed">
-                            過去500件以上の災害級・大雪事例を用いたバックテストにおいて、正解率85%超を達成。<br />
-                            <span className="text-[10px] opacity-80">※安全最優先のため、悪天候でも運行できた稀な例外（外れ値）を除外し、厳しめに判定しています。</span>
+                            過去の災害級・大雪事例を用いた社内検証において、高い的中精度を確認しています。<br />
+                            <span className="text-[10px] opacity-80">※安全最優先のため、悪天候でも運行できた稀な例外（外れ値）を除外し、厳しめに判定しています。本サービスは参考情報であり、実際の運行状況はJR北海道公式サイトでご確認ください。</span>
                         </p>
                     </div>
                     <div className="flex-shrink-0 w-full md:w-auto mt-4 md:mt-0">
                         <div className="flex items-center justify-center bg-white px-6 py-4 rounded-lg border border-gray-200 shadow-sm">
                             <div className="text-center">
-                                <div className="text-[10px] text-[var(--muted)] mb-0.5">正解率</div>
-                                <div className="text-2xl font-bold text-blue-600">85<span className="text-sm font-normal ml-0.5">%超</span></div>
+                                <div className="text-[10px] text-[var(--muted)] mb-0.5">的中精度</div>
+                                <div className="text-2xl font-bold text-blue-600">高精度</div>
                             </div>
                         </div>
                     </div>

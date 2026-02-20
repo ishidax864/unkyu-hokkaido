@@ -17,7 +17,14 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
     let message = isToday ? '通常通り帰宅できそうです。' : '指定の日時は通常通り移動できそうです。';
     let _icon = <Coffee className="w-5 h-5 text-green-600" />;
 
-    if (prob >= 70) {
+    // Align thresholds with evaluateActionDecision to avoid contradiction
+    const isSuspended = prediction.isCurrentlySuspended ||
+        prediction.status === 'suspended' ||
+        prediction.status === 'cancelled' ||
+        prediction.status === '運休' ||
+        prediction.status === '運休中';
+
+    if (prob >= 70 || isSuspended) {
         status = 'critical';
         if (isToday) {
             message = '帰宅困難になる可能性が高いです。今すぐ帰るか、駅近くのホテル確保を強く推奨します。';
@@ -25,7 +32,7 @@ export function ReturnTripAdvisor({ prediction }: ReturnTripAdvisorProps) {
             message = '指定の日時は運休リスクが非常に高く、帰宅困難になる恐れがあります。宿泊の準備や予定の変更を強く推奨します。';
         }
         _icon = <Hotel className="w-5 h-5 text-red-600" />;
-    } else if (prob >= 30) {
+    } else if (prob >= 30 || prediction.isPartialSuspension || prediction.status === 'delayed' || prediction.status === '遅延') {
         status = 'warning';
         if (isToday) {
             message = '夜遅くなると運休リスクが高まります。余裕を持った行動を推奨します。';

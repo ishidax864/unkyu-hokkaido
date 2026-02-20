@@ -169,7 +169,7 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                                         <div className={cn("pt-4 border-t border-black/5 flex items-start gap-3")}>
                                             <span className="text-xl shrink-0">💡</span>
                                             <div>
-                                                <p className={cn("text-[10px] font-bold opacity-60 mb-0.5 uppercase tracking-wider", styles.subtext)}>RECOMMENDED ACTION</p>
+                                                <p className={cn("text-[10px] font-bold opacity-60 mb-0.5 tracking-wider", styles.subtext)}>推奨アクション</p>
                                                 <p className={cn("text-sm font-bold leading-relaxed", styles.text)}>
                                                     {actionStatus.nextAction}
                                                 </p>
