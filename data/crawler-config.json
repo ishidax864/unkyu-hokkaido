@@ -3,27 +3,37 @@
         {
             "id": "01",
             "name": "札幌近郊",
-            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_01.json"
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_01.json",
+            "lat": 43.0687,
+            "lon": 141.3508
         },
         {
             "id": "02",
             "name": "道央",
-            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_02.json"
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_02.json",
+            "lat": 42.9236,
+            "lon": 141.6139
         },
         {
             "id": "03",
             "name": "道南",
-            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_03.json"
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_03.json",
+            "lat": 41.7736,
+            "lon": 140.7266
         },
         {
             "id": "04",
             "name": "道北",
-            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_04.json"
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_04.json",
+            "lat": 43.7709,
+            "lon": 142.3650
         },
         {
             "id": "05",
             "name": "道東",
-            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_05.json"
+            "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_05.json",
+            "lat": 42.9236,
+            "lon": 143.1966
         }
     ],
     "routeMatching": [

@@ -2,28 +2,25 @@ name: JR Hokkaido Crawler
 
 on:
   schedule:
-    # 20分おきに実行 (UTC時間)
-    - cron: '*/20 * * * *'
-  # 手動実行も許可
-  workflow_dispatch:
+    # JR運行時間帯: JST 5:00-23:00 = UTC 20:00-14:00
+    # 15分毎に実行
+    - cron: '*/15 20-23 * * *'  # UTC 20:00-23:45 (JST 5:00-8:45)
+    - cron: '*/15 0-14 * * *'   # UTC 0:00-14:45 (JST 9:00-23:45)
+  workflow_dispatch: # 手動実行用
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+      - name: Trigger Crawler
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRAWLER_URL }}")
           
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run Crawler
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npx tsx scripts/fetch-jr-status.ts
+          if [ "$response" -ne 200 ]; then
+            echo "❌ Crawler returned HTTP $response"
+            exit 1
+          fi
+          echo "✅ Crawler executed successfully"
