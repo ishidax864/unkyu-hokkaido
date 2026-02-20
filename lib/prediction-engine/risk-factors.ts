@@ -433,9 +433,11 @@ export function getTimeMultiplier(time?: string): number {
     return TIME_MULTIPLIERS[hour] || 1.0;
 }
 
-// 季節補正を取得
+// 季節補正を取得（JST対応）
 export function getSeasonMultiplier(): number {
-    const month = new Date().getMonth() + 1;
+    const month = parseInt(new Intl.DateTimeFormat('en-US', {
+        month: 'numeric', timeZone: 'Asia/Tokyo'
+    }).format(new Date()));
     // 厳冬期（1-2月）
     if (month === 1 || month === 2) return 1.1;
     // 冬季（12月、3月）

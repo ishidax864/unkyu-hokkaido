@@ -183,8 +183,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 🆕 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
     let isOfficialInfluenced = false;
 
-    // 🆕 Confidence Filter
-    if (input.weather) {
+    // 🆕 Confidence Filter（部分運休中・復旧後ウィンドウではバイパス）
+    if (input.weather && !isPartialSuspension && !isPostRecoveryWindow) {
         const filterResult = applyConfidenceFilter({
             probability,
             totalScore,
@@ -193,8 +193,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             snowfall: input.weather.snowfall || 0,
             officialStatus: input.jrStatus ? {
                 status: input.jrStatus.status,
-                resumptionTime: input.jrStatus.resumptionTime // 🆕
-            } : null, isNearRealTime // 🆕 Pass flag
+                resumptionTime: input.jrStatus.resumptionTime
+            } : null, isNearRealTime
         });
 
         if (filterResult.wasFiltered) {
@@ -232,9 +232,22 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 🆕 6.5 公的な運行履歴による補正 (Crawler Integration)
     if (input.officialHistory) {
-        const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input);
+        const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input, isPostRecoveryWindow);
         probability = adjustedProbability;
         reasonsWithPriority.push(...additionalReasons);
+    }
+
+    // 🆕 Post-recovery 再キャップ（後段のcalibration/historyで引き上げられた値を再抑制）
+    if (isPostRecoveryWindow && effectiveTargetTime) {
+        // estimatedRecoveryTime は後段で公式時刻に上書きされる前の値を使う
+        // ここでは初期のAI予測値を使ってキャップを再適用
+        const recoveryMatch2 = (estimatedRecoveryTime || '').match(/(\d{1,2}):(\d{2})/);
+        const targetMatch2 = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
+        if (recoveryMatch2 && targetMatch2) {
+            const hoursAfter = ((parseInt(targetMatch2[1]) * 60 + parseInt(targetMatch2[2])) - (parseInt(recoveryMatch2[1]) * 60 + parseInt(recoveryMatch2[2]))) / 60;
+            const postRecoveryCap = Math.max(15, Math.round(55 - Math.max(0, hoursAfter) * 10));
+            probability = Math.min(probability, postRecoveryCap);
+        }
     }
 
     // 🆕 FINAL CLAMPING (Single Source of Truth)
@@ -272,6 +285,17 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                 timeStr = `明日 ${resumptionHHMM}頃`;
             } else {
                 timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
+            }
+        }
+
+        // 🆕 Fix 2: 公式resumptionTimeでもisPostRecoveryWindowを発火
+        // AI予測だけでなく、公式の再開時刻もpost-recoveryの判定に使う
+        if (effectiveTargetTime) {
+            const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00`);
+            if (targetDateTime.getTime() > resumptionDate.getTime()) {
+                isPostRecoveryWindow = true;
+                isFutureSafe = true;
+                minProbability = 0;
             }
         }
 

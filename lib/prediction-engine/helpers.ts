@@ -488,7 +488,8 @@ export function calculateRawRiskScore(
  */
 export function applyOfficialHistoryAdjustment(
     currentProbability: number,
-    input: PredictionInput
+    input: PredictionInput,
+    isPostRecoveryWindow: boolean = false
 ): {
     adjustedProbability: number;
     additionalReasons: Array<{ reason: string; priority: number }>;
@@ -522,8 +523,8 @@ export function applyOfficialHistoryAdjustment(
         }
 
         // 公式が「平常」に戻っていない場合、気象が回復していてもリスクを高値で維持
-        // ただし、再開済みの場合は適用しない
-        if (!hasResumed && adjustedProbability < 70) {
+        // ただし、再開済みの場合、または復旧後ウィンドウの場合は適用しない
+        if (!hasResumed && !isPostRecoveryWindow && adjustedProbability < 70) {
             adjustedProbability = 70;
             additionalReasons.push({
                 reason: `【公式履歴】過去6時間以内に運休が記録されています。復旧作業による影響を考慮しリスクを維持しています`,

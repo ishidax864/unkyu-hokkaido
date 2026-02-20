@@ -41,7 +41,10 @@ export function applyAdaptiveCalibration(
     else if (currentStatus === 'normal') actualRiskNow = 0;
 
     // 2. Calculate Theoretical Risk Now (Model's view of right now)
-    const nowHourStr = now.getHours().toString().padStart(2, '0') + ':00';
+    const jstHour = parseInt(new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric', hour12: false, timeZone: 'Asia/Tokyo'
+    }).format(now));
+    const nowHourStr = jstHour.toString().padStart(2, '0') + ':00';
     const weatherNow = input.weather.surroundingHours.find(h => h.targetTime === nowHourStr) || input.weather;
 
     if (!weatherNow) {
