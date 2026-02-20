@@ -824,3 +824,63 @@ export async function getAverageAccuracyScore(): Promise<DbResult<{
         return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
     }
 }
+
+// ML Training Dataの統計情報を取得（管理者用）
+export async function getMLTrainingStats(): Promise<DbResult<{
+    totalRows: number;
+    todayRows: number;
+    statusBreakdown: { normal: number; delayed: number; suspended: number };
+    latestWeather: { area_id: string; temperature: number | null; wind_speed: number | null; snowfall: number | null; snow_depth: number | null; recorded_at: string } | null;
+    estimatedStorageMB: number;
+    oldestRecord: string | null;
+}>> {
+    const client = getAdminSupabaseClient() || getSupabaseClient();
+    if (!client) return { success: false, error: 'Supabase not configured' };
+
+    try {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        const [totalRes, todayRes, statusRes, latestRes, oldestRes] = await Promise.all([
+            client.from('ml_training_data').select('id', { count: 'exact', head: true }),
+            client.from('ml_training_data').select('id', { count: 'exact', head: true })
+                .gte('recorded_at', todayStart.toISOString()),
+            client.from('ml_training_data').select('train_status'),
+            client.from('ml_training_data')
+                .select('area_id, temperature, wind_speed, snowfall, snow_depth, recorded_at')
+                .order('recorded_at', { ascending: false })
+                .limit(1)
+                .single(),
+            client.from('ml_training_data')
+                .select('recorded_at')
+                .order('recorded_at', { ascending: true })
+                .limit(1)
+                .single(),
+        ]);
+
+        const totalRows = totalRes.count || 0;
+        const todayRows = todayRes.count || 0;
+
+        const statuses = statusRes.data || [];
+        const statusBreakdown = {
+            normal: statuses.filter(s => s.train_status === 'normal').length,
+            delayed: statuses.filter(s => s.train_status === 'delayed').length,
+            suspended: statuses.filter(s => s.train_status === 'suspended').length,
+        };
+
+        return {
+            success: true,
+            data: {
+                totalRows,
+                todayRows,
+                statusBreakdown,
+                latestWeather: latestRes.data || null,
+                estimatedStorageMB: Math.round(totalRows * 0.2 / 1024 * 100) / 100, // ~200 bytes/row
+                oldestRecord: oldestRes.data?.recorded_at || null,
+            }
+        };
+    } catch (error) {
+        logger.error('Failed to fetch ML training stats', { error });
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+}
