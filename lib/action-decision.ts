@@ -55,7 +55,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
             nextAction: result.isPartialSuspension
                 ? '一部列車が運休しています。駅の掲示板やアナウンスで乗車予定の列車を確認してください。'
                 : '運休のリスクが高まっています。こまめに運行状況を確認し、早めの移動を心がけてください。',
-            resumptionEstimate: result.partialSuspensionText // Use partial text as estimate substitute
+            resumptionEstimate: undefined // Avoid duplicating text; specific trains are listed below
         };
     }
 
