@@ -218,13 +218,24 @@ export function useRouteSearch() {
         }
 
         // Helper: Weekly Calculation
-        // 週間予測用。ここでは jrStatus が今日のものであるため、calculateWeeklyForecast 側で正しく「今日」の行に適用される
+        // 🆕 API v2のofficialStatus（サーバー側で取得）を優先使用
+        // サーバー側はSupabaseのエリア広域チェックを含むため、より正確に周辺路線の影響を検出する
         if (weeklyWeather.length > 0) {
+            const weeklyJrStatus = finalPrediction?.officialStatus
+                ? {
+                    routeId: routeId,
+                    routeName: finalPrediction.officialStatus.statusText || primaryRoute?.name || '',
+                    status: finalPrediction.officialStatus.status,
+                    statusText: finalPrediction.officialStatus.statusText || '',
+                    updatedAt: finalPrediction.officialStatus.updatedAt || '',
+                    rawText: finalPrediction.officialStatus.rawText,
+                }
+                : jrStatus;
             setWeeklyPredictions(calculateWeeklyForecast(
                 routeId,
                 primaryRoute?.name || '',
                 weeklyWeather,
-                jrStatus,
+                weeklyJrStatus,
                 rtStatus,
                 historicalData,
                 officialHistory
