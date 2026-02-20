@@ -10,18 +10,20 @@ export interface ActionDecision {
     bgColor: string;
     subColor: string;
     iconType: 'x-circle' | 'alert-triangle' | 'check-circle' | 'info';
-    nextAction: string; // 🆕 Specific actionable advice (e.g., "Wait in cafe", "Book hotel")
-    resumptionEstimate?: string; // 🆕 "15:00頃再開見込" or "終日運休"
+    nextAction: string;
+    resumptionEstimate?: string;
 }
 
 /**
- * Determines the Action Decision (Go/No-Go) status based on prediction result.
+ * ユーザーが「一発で判断できる」アクション決定を生成する。
+ * 曖昧な「駅で確認してください」ではなく、具体的な行動を提示する。
  */
 export function evaluateActionDecision(result: PredictionResult): ActionDecision {
+    const recoveryTime = result.estimatedRecoveryTime;
+    const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
+
     // 0. POST-RECOVERY WINDOW: Target time is AFTER predicted recovery
-    //    e.g., recovery at 15:00 but user searches for 16:00
     if (result.isPostRecoveryWindow) {
-        const time = result.estimatedRecoveryTime || '';
         const isHighRisk = result.probability >= 40;
         return {
             type: isHighRisk ? 'HIGH_RISK' : 'CAUTION',
@@ -30,10 +32,10 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
             bgColor: isHighRisk ? 'bg-orange-500 text-white' : 'bg-amber-400 text-black',
             subColor: isHighRisk ? 'bg-orange-600' : 'bg-amber-500',
             iconType: isHighRisk ? 'alert-triangle' : 'info',
-            nextAction: time
-                ? `${time}に運転再開見込みです。再開後もダイヤが乱れ、接続列車に影響が出る可能性があります。時間に余裕を持って行動してください。`
-                : 'ダイヤが乱れています。接続列車の遅延に注意し、余裕を持ったスケジュールで行動してください。',
-            resumptionEstimate: time ? `【復旧見込 / AI予測】${time}` : undefined
+            nextAction: recoveryTime
+                ? `${recoveryTime}に運転再開済みですが、ダイヤが乱れています。通常より1本早い列車を目指してください。`
+                : 'ダイヤが乱れています。通常より1本早い列車に乗るか、代替手段をご検討ください。',
+            resumptionEstimate: recoveryTime ? `【復旧済 / ${recoveryLabel}】${recoveryTime}` : undefined
         };
     }
 
@@ -45,26 +47,26 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
         result.status === '運休中') {
         return {
             type: 'CRITICAL',
-            title: '移動困難',
-            message: '移動の延期、または代替手段の検討を強く推奨します',
+            title: '運転見合わせ中',
+            message: (() => {
+                if (result.suspensionReason) return `原因: ${result.suspensionReason}`;
+                return '列車の運行が止まっています';
+            })(),
             bgColor: 'bg-red-500 text-white',
             subColor: 'bg-red-600',
             iconType: 'x-circle',
             nextAction: (() => {
-                const time = result.estimatedRecoveryTime;
-                const isOfficial = result.isOfficialOverride;
-                if (time?.includes('終日')) return '本日の移動は諦め、ホテルの確保や別ルート（バス等）を検討してください。';
-                if (time) {
-                    const label = isOfficial ? '【公式発表】' : '【AI予測】';
-                    return `${label} 運転再開（${time}）まで、駅ではなくカフェや屋内施設で待機することをお勧めします。`;
+                if (recoveryTime?.includes('終日')) {
+                    return '本日中の復旧は見込めません。バス・タクシー等の代替手段か、出発を翌日に変更してください。';
                 }
-                return '最新の公式情報を確認し、無理な移動は控えてください。';
+                if (recoveryTime) {
+                    return `【${recoveryLabel}】${recoveryTime}に運転再開見込みです。それまでカフェ等で待機するか、下記の代替ルートをご検討ください。`;
+                }
+                return '復旧の目処が立っていません。代替手段（バス・タクシー）をご検討ください。';
             })(),
             resumptionEstimate: (() => {
-                const time = result.estimatedRecoveryTime;
-                if (!time) return '復旧等の詳細情報なし';
-                const label = result.isOfficialOverride ? '公式発表' : 'AI予測';
-                return `【復旧見込 / ${label}】${time}`;
+                if (!recoveryTime) return '復旧見込: 未定';
+                return `【復旧見込 / ${recoveryLabel}】${recoveryTime}`;
             })()
         };
     }
@@ -73,15 +75,23 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     if (result.probability >= 50 || result.isPartialSuspension) {
         return {
             type: 'HIGH_RISK',
-            title: '警戒',
-            message: '大幅な遅れや運休の可能性があります。最新情報を確認してください',
+            title: result.isPartialSuspension ? '一部区間で運休中' : '運休リスク高',
+            message: result.isPartialSuspension
+                ? '一部の列車が運休しています。運行中の列車で移動可能ですが、遅延の可能性があります'
+                : '運休が発生する可能性が高い状況です',
             bgColor: 'bg-orange-500 text-white',
             subColor: 'bg-orange-600',
             iconType: 'alert-triangle',
-            nextAction: result.isPartialSuspension
-                ? '一部列車が運休しています。駅の掲示板やアナウンスで乗車予定の列車を確認してください。'
-                : '運休のリスクが高まっています。こまめに運行状況を確認し、早めの移動を心がけてください。',
-            resumptionEstimate: undefined // Avoid duplicating text; specific trains are listed below
+            nextAction: (() => {
+                if (result.isPartialSuspension && recoveryTime) {
+                    return `【${recoveryLabel}】${recoveryTime}頃に通常ダイヤに戻る見込みです。急ぎの場合は代替手段をご検討ください。`;
+                }
+                if (result.isPartialSuspension) {
+                    return '運行中の列車がありますが、大幅な遅延が予想されます。時間に余裕がない場合は、下記の代替ルートが確実です。';
+                }
+                return '1本早い列車に乗るか、代替手段の準備をおすすめします。こまめに運行状況を確認してください。';
+            })(),
+            resumptionEstimate: recoveryTime ? `【復旧見込 / ${recoveryLabel}】${recoveryTime}` : undefined
         };
     }
 
@@ -89,26 +99,28 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     if (result.isPostResumptionChaos || result.probability >= 20 || result.status === 'delayed' || result.status === '遅延') {
         return {
             type: 'CAUTION',
-            title: '注意',
-            message: '一部列車に遅れが生じる可能性があります',
-            bgColor: 'bg-amber-400 text-black', // Yellow needs black text for contrast
+            title: result.isPostResumptionChaos ? 'ダイヤ乱れ中' : '遅延リスクあり',
+            message: result.isPostResumptionChaos
+                ? '運転再開後でダイヤが乱れています'
+                : '遅延が発生する可能性があります。時間に余裕を持ってください',
+            bgColor: 'bg-amber-400 text-black',
             subColor: 'bg-amber-500',
             iconType: 'info',
             nextAction: result.isPostResumptionChaos
-                ? 'ダイヤが乱れています。接続列車に乗り継げない可能性があるため、余裕を持ったスケジュールで行動してください。'
-                : '数分〜数十分の遅れが発生する可能性があります。時間は余裕を持って行動してください。',
-            resumptionEstimate: result.estimatedRecoveryTime ? `【再開済み】${result.estimatedRecoveryTime}に運転再開` : undefined
+                ? '列車は動いていますが、接続に遅れが出ています。乗り継ぎがある場合は1本前の列車をおすすめします。'
+                : '通常通り利用できる見込みですが、10〜30分程度の遅れが出る場合があります。余裕を持って出発してください。',
+            resumptionEstimate: recoveryTime ? `【再開済み】${recoveryTime}に運転再開` : undefined
         };
     }
 
     // 4. NORMAL (Green): Low Probability (<20%)
     return {
         type: 'NORMAL',
-        title: '平常運転見込み',
-        message: '現時点では定刻通りの運行が予測されます',
+        title: '平常運転',
+        message: '現時点では定刻通りの運行が見込まれます',
         bgColor: 'bg-emerald-500 text-white',
         subColor: 'bg-emerald-600',
         iconType: 'check-circle',
-        nextAction: 'いつも通りご利用いただけます。気象急変には念のためご注意ください。'
+        nextAction: '通常通りご利用いただけます。天候の急変に備え、出発前にもう一度確認すると安心です。'
     };
 }

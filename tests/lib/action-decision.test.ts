@@ -23,7 +23,7 @@ describe('evaluateActionDecision', () => {
         it('should return CRITICAL for probability >= 80', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 85 }));
             expect(result.type).toBe('CRITICAL');
-            expect(result.title).toBe('移動困難');
+            expect(result.title).toBe('運転見合わせ中');
             expect(result.title).not.toContain('Severe');
         });
 
@@ -40,15 +40,26 @@ describe('evaluateActionDecision', () => {
             }));
             expect(result.type).toBe('CRITICAL');
             expect(result.nextAction).toContain('15:30頃');
+            expect(result.nextAction).toContain('運転再開見込み');
         });
 
-        it('should advise hotel for 終日運休', () => {
+        it('should advise alternatives for 終日運休', () => {
             const result = evaluateActionDecision(makePrediction({
                 probability: 100,
                 status: '運休中',
                 estimatedRecoveryTime: '終日運休',
             }));
-            expect(result.nextAction).toContain('ホテル');
+            expect(result.nextAction).toContain('復旧は見込めません');
+            expect(result.nextAction).toContain('代替手段');
+        });
+
+        it('should advise alternatives when no recovery time', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 100,
+                status: '運休中',
+            }));
+            expect(result.nextAction).toContain('代替手段');
+            expect(result.resumptionEstimate).toContain('未定');
         });
     });
 
@@ -56,14 +67,32 @@ describe('evaluateActionDecision', () => {
         it('should return HIGH_RISK for probability >= 50', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 60 }));
             expect(result.type).toBe('HIGH_RISK');
-            expect(result.title).toBe('警戒');
+            expect(result.title).toBe('運休リスク高');
             expect(result.title).not.toContain('High Risk');
         });
 
         it('should return HIGH_RISK for partial suspension regardless of probability', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 10, isPartialSuspension: true }));
             expect(result.type).toBe('HIGH_RISK');
-            expect(result.nextAction).toContain('一部列車');
+            expect(result.title).toBe('一部区間で運休中');
+        });
+
+        it('should show recovery time for partial suspension when available', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 10,
+                isPartialSuspension: true,
+                estimatedRecoveryTime: '14:00頃',
+            }));
+            expect(result.nextAction).toContain('14:00頃');
+            expect(result.nextAction).toContain('通常ダイヤに戻る');
+        });
+
+        it('should suggest alternatives for partial suspension without recovery time', () => {
+            const result = evaluateActionDecision(makePrediction({
+                probability: 10,
+                isPartialSuspension: true,
+            }));
+            expect(result.nextAction).toContain('代替ルート');
         });
     });
 
@@ -71,14 +100,15 @@ describe('evaluateActionDecision', () => {
         it('should return CAUTION for probability >= 20', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 30 }));
             expect(result.type).toBe('CAUTION');
-            expect(result.title).toBe('注意');
+            expect(result.title).toBe('遅延リスクあり');
             expect(result.title).not.toContain('Caution');
         });
 
         it('should return CAUTION for post-resumption chaos', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 5, isPostResumptionChaos: true }));
             expect(result.type).toBe('CAUTION');
-            expect(result.nextAction).toContain('乗り継げない');
+            expect(result.title).toBe('ダイヤ乱れ中');
+            expect(result.nextAction).toContain('1本前の列車');
         });
 
         it('should return CAUTION for 遅延 status', () => {
@@ -91,7 +121,8 @@ describe('evaluateActionDecision', () => {
         it('should return NORMAL for probability < 20', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 5 }));
             expect(result.type).toBe('NORMAL');
-            expect(result.title).toBe('平常運転見込み');
+            expect(result.title).toBe('平常運転');
+            expect(result.nextAction).toContain('通常通り');
         });
     });
 
@@ -105,7 +136,7 @@ describe('evaluateActionDecision', () => {
             expect(result.type).toBe('HIGH_RISK');
             expect(result.title).toContain('ダイヤ乱れ');
             expect(result.nextAction).toContain('15:00頃');
-            expect(result.nextAction).not.toContain('待機');
+            expect(result.nextAction).toContain('運転再開済み');
         });
 
         it('復旧後ウィンドウ（低確率） → CAUTION「ダイヤ乱れ注意」', () => {

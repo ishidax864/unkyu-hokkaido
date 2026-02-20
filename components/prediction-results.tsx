@@ -92,26 +92,7 @@ export function PredictionResults({
                 route={route}
             />
 
-            {/* SNSシェア */}
-            <ShareCard
-                prediction={prediction}
-                routeName={route.name}
-                departureStation={depStation.name}
-                arrivalStation={arrStation.name}
-            />
-
-            {/* 状況報告（当日のみ） */}
-            {isToday && (
-                <ReportButtons
-                    routeId={selectedRouteId}
-                    routeName={route.name}
-                    onReport={handleReport}
-                    counts={realtimeStatus?.last15minCounts}
-                />
-            )}
-
-
-            {/* 代替ルート提案: リスク30%以上または部分運休時 */}
+            {/* 代替ルート提案: アクションに直結する情報を最優先 */}
             {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
                 <AlternativeRoutes
                     originalRoute={route}
@@ -124,17 +105,19 @@ export function PredictionResults({
                 />
             )}
 
-            {/* 宿泊提案: リスク30%以上または部分運休時 */}
-            {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
-                <HotelSuggestions
-                    hotels={getHotelsForStation(arrStation.id)}
-                    arrivalStationName={arrStation.name}
-                />
-            )}
-
             {/* 時間帯別リスク推移 */}
             {riskTrend && riskTrend.length > 0 && (
                 <HourlyRiskChart data={riskTrend} />
+            )}
+
+            {/* 状況報告（当日のみ） */}
+            {isToday && (
+                <ReportButtons
+                    routeId={selectedRouteId}
+                    routeName={route.name}
+                    onReport={handleReport}
+                    counts={realtimeStatus?.last15minCounts}
+                />
             )}
 
             {/* 週間予測 */}
@@ -142,6 +125,22 @@ export function PredictionResults({
                 <WeeklyForecastChart
                     predictions={weeklyPredictions}
                     weather={weather}
+                />
+            )}
+
+            {/* SNSシェア */}
+            <ShareCard
+                prediction={prediction}
+                routeName={route.name}
+                departureStation={depStation.name}
+                arrivalStation={arrStation.name}
+            />
+
+            {/* 宿泊提案: リスク30%以上または部分運休時 */}
+            {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
+                <HotelSuggestions
+                    hotels={getHotelsForStation(arrStation.id)}
+                    arrivalStationName={arrStation.name}
                 />
             )}
         </section>
