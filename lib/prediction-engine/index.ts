@@ -65,7 +65,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         isPostResumptionChaos,
         isPartialSuspension,
         partialSuspensionText,
-        minProbability,
+        minProbability: baseMinProbability,
         maxProbability,
         overrideReason
     } = determineBaseStatus(
@@ -74,6 +74,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         effectiveTargetTime,
         input.weather?.snowDepth
     );
+    let minProbability = baseMinProbability;
 
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
     // ... (rest same until probability calculation) ...
@@ -153,11 +154,18 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             if (targetMinutes > recoveryMinutes) {
                 isFutureSafe = true;
                 isPostRecoveryWindow = true;
-                // 復旧後のダイヤ乱れレベルに確率を抑制（最大55%）
-                const postRecoveryMax = 55;
+
+                // 復旧後の経過時間に応じてダイヤ乱れリスクを逓減
+                const hoursAfterRecovery = (targetMinutes - recoveryMinutes) / 60;
+                // 直後(0h)=55%, 1h後=45%, 2h後=35%, 3h後=25%, 4h+後=15%
+                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterRecovery * 10));
                 if (probability > postRecoveryMax) {
                     probability = postRecoveryMax;
                 }
+
+                // 🔑 部分運休のminProbabilityフロアを無効化（復旧後なのに60%固定を防ぐ）
+                minProbability = 0;
+
                 // 復旧済みの文脈に合った理由を追加
                 reasonsWithPriority.push({
                     reason: `【復旧後】${estimatedRecoveryTime}に運転再開見込み。ダイヤ乱れや一部列車の遅延が残る可能性があります`,
