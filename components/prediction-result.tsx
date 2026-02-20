@@ -118,48 +118,68 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                     </div>
                 </div>
 
-                {/* 3. Primary Reason (The "Why") */}
+                {/* 3. Primary Reason (The "Why") & Impact */}
                 <div className="mb-6">
-                    <div className={cn("rounded-xl p-4 flex items-start gap-3", styles.bg)}>
-                        {/* Icon based on status */}
-                        {actionStatus.type === 'CRITICAL' ? <AlertOctagon className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
-                            actionStatus.type === 'HIGH_RISK' ? <AlertTriangle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
-                                actionStatus.type === 'CAUTION' ? <Info className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} /> :
-                                    <CheckCircle className={cn("w-5 h-5 shrink-0 mt-0.5", styles.icon)} />}
+                    {/* Calculate suspended trains once */}
+                    {(() => {
+                        const suspendedTrains = extractSuspendedTrains(result.officialStatus?.rawText || '');
+                        const hasSpecificImpact = suspendedTrains.length > 0;
 
-                        <div className="space-y-3 w-full">
-                            {/* Prioritize Official Text as Reason if available */}
-                            <div className={cn("text-sm font-bold leading-relaxed", styles.text)}>
-                                {result.isOfficialOverride && textSummary ?
-                                    <div className="flex flex-col gap-1">
-                                        <span className="inline-flex items-center gap-1.5"><span className="px-2 py-0.5 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表</span></span>
-                                        <span className="mt-1">{formatStatusText(textSummary)}</span>
-                                    </div> :
-                                    (result.reasons[0] || '特段のリスク要因は検出されていません')}
-                            </div>
-
-                            {/* 🆕 Actionable Advice & Resumption Info */}
-                            <div className="pt-3 border-t border-black/10 flex flex-col gap-2">
-                                {actionStatus.resumptionEstimate && (
-                                    <div className={cn("flex items-center gap-2 font-bold", styles.text)}>
-                                        <Clock className="w-4 h-4 shrink-0" />
-                                        <span>{actionStatus.resumptionEstimate}</span>
+                        return (
+                            <div className={cn("rounded-xl p-5 border-l-4 shadow-sm", styles.bg, styles.border)}>
+                                <div className="flex items-start gap-4">
+                                    {/* Icon */}
+                                    <div className={cn("p-2 rounded-full shrink-0", "bg-white/60")}>
+                                        {actionStatus.type === 'CRITICAL' ? <AlertOctagon className={cn("w-6 h-6", styles.icon)} /> :
+                                            actionStatus.type === 'HIGH_RISK' ? <AlertTriangle className={cn("w-6 h-6", styles.icon)} /> :
+                                                actionStatus.type === 'CAUTION' ? <Info className={cn("w-6 h-6", styles.icon)} /> :
+                                                    <CheckCircle className={cn("w-6 h-6", styles.icon)} />}
                                     </div>
-                                )}
-                                <div className={cn("flex items-start gap-2 text-sm leading-relaxed", styles.subtext)}>
-                                    <span className="font-bold shrink-0">💡 次のアクション:</span>
-                                    <span>{actionStatus.nextAction}</span>
+
+                                    <div className="space-y-4 w-full">
+                                        {/* Main Content: Specific List OR Generic Summary */}
+                                        {hasSpecificImpact ? (
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="px-2 py-0.5 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表 (抜粋)</span>
+                                                </div>
+                                                <ul className="space-y-2.5">
+                                                    {suspendedTrains.map((train, i) => (
+                                                        <li key={i} className={cn("text-base font-bold leading-snug flex items-start gap-2", styles.text)}>
+                                                            <span className={cn("block w-1.5 h-1.5 mt-2 rounded-full opacity-70 bg-current")} />
+                                                            {train}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ) : (
+                                            <div className={cn("text-base font-bold leading-relaxed", styles.text)}>
+                                                {result.isOfficialOverride ? (
+                                                    <div>
+                                                        <span className="inline-block px-2 py-0.5 mb-2 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表</span>
+                                                        <div>{formatStatusText(textSummary)}</div>
+                                                    </div>
+                                                ) : (
+                                                    result.reasons[0] || '特段のリスク要因は検出されていません'
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Actionable Advice Footer */}
+                                        <div className={cn("pt-4 border-t border-black/5 flex items-start gap-3")}>
+                                            <span className="text-xl shrink-0">💡</span>
+                                            <div>
+                                                <p className={cn("text-[10px] font-bold opacity-60 mb-0.5 uppercase tracking-wider", styles.subtext)}>RECOMMENDED ACTION</p>
+                                                <p className={cn("text-sm font-bold leading-relaxed", styles.text)}>
+                                                    {actionStatus.nextAction}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Show timestamp if official */}
-                            {result.officialStatus && (
-                                <p className="text-[10px] text-gray-400">
-                                    {new Date(result.officialStatus.updatedAt || '').toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })} 現在
-                                </p>
-                            )}
-                        </div>
-                    </div>
+                        );
+                    })()}
                 </div>
 
                 {/* 4. Collapsible Details (Unified) */}
@@ -199,27 +219,6 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                                         <p className="text-xs text-blue-800">{result.recoveryRecommendation}</p>
                                     </div>
                                 </div>
-                            )}
-
-                            {/* 🆕 Suspended Trains List (Partial or Full) */}
-                            {hasOfficialInfo && (result.isPartialSuspension || result.isCurrentlySuspended) && (
-                                (() => {
-                                    const suspendedTrains = extractSuspendedTrains(result.officialStatus?.rawText || '');
-                                    if (suspendedTrains.length === 0) return null;
-                                    return (
-                                        <div>
-                                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">運休・影響範囲の詳細</h4>
-                                            <ul className="space-y-2 bg-red-50/50 rounded-lg p-3 border border-red-100">
-                                                {suspendedTrains.map((train, i) => (
-                                                    <li key={i} className="flex items-start gap-2 text-sm text-red-900 font-medium leading-relaxed">
-                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                                                        <span>{train}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    );
-                                })()
                             )}
 
                             {/* Risk Factors List */}
