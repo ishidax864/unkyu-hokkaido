@@ -27,10 +27,10 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
     // 高さ計算用
 
     const getBarColor = (risk: number) => {
-        if (risk >= 70) return 'bg-[var(--status-suspended)]';
-        if (risk >= 50) return 'bg-orange-500';
-        if (risk >= 20) return 'bg-[var(--status-warning)]';
-        return 'bg-blue-300'; // 低リスクは青系で安心感を
+        if (risk >= 80) return 'bg-red-600';     // Severe
+        if (risk >= 50) return 'bg-orange-500';  // High Risk
+        if (risk >= 20) return 'bg-amber-400';   // Caution
+        return 'bg-emerald-400';                 // Normal
     };
 
     return (
@@ -50,7 +50,9 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
                             {/* リスク値ラベル */}
                             <span className={cn(
                                 "text-xs font-bold mb-1",
-                                item.risk >= 50 ? "text-red-600" : "text-[var(--muted)]"
+                                item.risk >= 80 ? "text-red-700" :
+                                    item.risk >= 50 ? "text-orange-700" :
+                                        item.risk >= 20 ? "text-amber-700" : "text-slate-500"
                             )}>
                                 {item.risk}%
                             </span>

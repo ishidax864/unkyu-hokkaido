@@ -48,18 +48,19 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
         return `${month}/${day}(${weekday})`;
     };
 
-    // リスクに応じた色
+    // リスクに応じた色 (Bar Background)
     const getRiskColor = (prob: number) => {
-        if (prob >= 70) return 'bg-[var(--status-suspended)]';
-        if (prob >= 50) return 'bg-orange-500';
-        if (prob >= 20) return 'bg-[var(--status-warning)]';
-        return 'bg-[var(--status-normal)]';
+        if (prob >= 80) return 'bg-red-600';     // Severe
+        if (prob >= 50) return 'bg-orange-500';  // High Risk
+        if (prob >= 20) return 'bg-amber-400';   // Caution
+        return 'bg-emerald-500';                 // Normal
     };
 
     const getRiskTextColor = (prob: number) => {
-        if (prob >= 50) return 'text-[var(--status-suspended)]';
-        if (prob >= 20) return 'text-[var(--status-warning)]';
-        return 'text-[var(--status-normal)]';
+        if (prob >= 80) return 'text-red-700';
+        if (prob >= 50) return 'text-orange-700';
+        if (prob >= 20) return 'text-amber-700';
+        return 'text-slate-600';
     };
 
     return (
@@ -131,18 +132,23 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
             </div>
 
             {/* 凡例 */}
-            <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-dashed border-gray-200">
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
-                    <div className="w-2 h-2 rounded-full bg-[var(--status-normal)]" />
-                    <span>低リスク</span>
+            {/* 凡例 */}
+            <div className="flex flex-wrap text-center items-center justify-center gap-4 mt-6 pt-4 border-t border-dashed border-gray-200">
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    <span>通常 (0-20%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
-                    <div className="w-2 h-2 rounded-full bg-[var(--status-warning)]" />
-                    <span>中リスク</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span>注意 (20-50%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
-                    <div className="w-2 h-2 rounded-full bg-[var(--status-suspended)]" />
-                    <span>高リスク</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                    <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                    <span>要警戒 (50-80%)</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-600" />
+                    <span>運休高確率 (80%+)</span>
                 </div>
             </div>
         </section>

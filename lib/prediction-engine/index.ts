@@ -517,7 +517,7 @@ export function calculateWeeklyForecast(
         // If today matches logic in calculateSuspensionRisk (which it does via jrStatus), 
         // verify if "Suspended" status was applied.
         // If the 12:00 forecast was "Normal" but current status is "Suspended", force update for Today.
-        if (isToday && jrStatus && (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled')) {
+        if (isToday && jrStatus && (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') && !result.isPartialSuspension) {
             // Even if resumption is scheduled for evening, the "Daily Summary" for today should probably reflect the *worst* state (Suspended)
             // or at least be consistent with the main card.
             // If main card says "Suspended", this should too.
