@@ -31,7 +31,7 @@ export class OtherFactorsStrategy implements RiskFactorStrategy {
         }
 
         // 2. Thunder Advisory
-        if (input.weather?.warnings.some(w => w.type === '雷注意報')) {
+        if (input.weather?.warnings?.some(w => w.type === '雷注意報')) {
             score += THUNDER_ADVISORY_SCORE;
             reasons.push({ reason: '雷注意報が発令されています', priority: 11 }); // Priority was 11 in original
         }

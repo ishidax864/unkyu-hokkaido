@@ -7,25 +7,50 @@ const runTest = () => {
     // Case 1: Partial Suspension Text
     const partialText = "函館線 小樽駅構内で、昨日からの降雪にともなう除雪作業に時間を要したため、一部の列車に運休・遅れが出ています。";
 
-    // Using determineBaseStatus directly
-    const result = determineBaseStatus(
-        {
-            status: 'delay', // Official API/Crawler might say 'delay' or 'normal' but text has 'unkyu'
+    const input = {
+        routeId: 'jr-hokkaido.hakodate-main',
+        routeName: '函館本線',
+        targetDate: '2026-02-20',
+        targetTime: '10:30',
+        jrStatus: {
+            status: 'delay',
             rawText: partialText,
             statusText: partialText
         },
-        '2026-02-20',
-        '10:30'
-    );
+        weather: {
+            // Mock minimal weather to trigger recovery calculation if not suppressed
+            date: '2026-02-20',
+            surroundingHours: [{
+                targetTime: '10:00',
+                windSpeed: 25, // Bad weather
+                snowfall: 0
+            }, {
+                targetTime: '11:00',
+                windSpeed: 5, // Good weather (Recovery trigger)
+                snowfall: 0,
+                warnings: [], // Fix crash
+                weather: 'Cloudy',
+                tempMax: 0, tempMin: 0, precipitation: 0,
+                windGust: 5, windDirection: 0, pressure: 1000,
+                weatherCode: 3
+            }],
+            warnings: [] // Fix crash
+        }
+    } as any;
+
+    const { calculateSuspensionRisk } = require('../lib/prediction-engine');
+    const result = calculateSuspensionRisk(input);
 
     console.log(`Input Text: "${partialText}"`);
     console.log(`Result Status: ${result.status}`);
-    console.log(`Is Official Suspended: ${result.isOfficialSuspended}`);
+    console.log(`Result Recovery Time: ${result.estimatedRecoveryTime}`);
 
-    if (result.status === '運休' || result.isOfficialSuspended) {
+    if (result.status === '運休') {
         console.error("FAIL: Partial suspension treated as Total Suspension!");
+    } else if (result.estimatedRecoveryTime) {
+        console.error("FAIL: Recovery Time should be null for Partial Suspension! Got: " + result.estimatedRecoveryTime);
     } else {
-        console.log("PASS: Partial suspension treated as Delay/Caution.");
+        console.log("PASS: Partial suspension treated as Delay/Caution AND Recovery Time suppressed.");
     }
 };
 

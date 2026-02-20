@@ -5,6 +5,7 @@ export interface BaseStatusResult {
     status: OperationStatus | 'partial' | 'unknown';
     isOfficialSuspended: boolean;  // True if officially suspended AND not yet resumed
     isPostResumptionChaos?: boolean; // 🆕 True if within chaos window after resumption
+    isPartialSuspension?: boolean;   // 🆕 True if "Partial Suspension" detected (suppress recovery time)
     maxProbabilityCap?: number;    // If set, cap probability at this value
     overrideReason?: string;       // Reason for the override
 }
@@ -40,7 +41,18 @@ export function determineBaseStatus(
     const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き'];
     const isPartialSuspension = partialKeywords.some(k => rawText.includes(k));
 
-    const hasSuspensionKeywords = (rawText.includes('運休') || rawText.includes('見合わせ')) && !isPartialSuspension;
+    if (isPartialSuspension) {
+        return {
+            status: '遅延', // 'delay'
+            isOfficialSuspended: false,
+            // 🆕 Signal Partial Suspension to suppress "Recovery Time"
+            isPartialSuspension: true,
+            maxProbabilityCap: undefined, // Let weather decide risk
+            overrideReason: `【一部運休・遅延】一部の列車に運休・遅れが出ています（運行中）`
+        };
+    }
+
+    const hasSuspensionKeywords = (rawText.includes('運休') || rawText.includes('見合わせ'));
 
     if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled' || hasSuspensionKeywords) {
         // 🆕 Check if Resumption Time has passed

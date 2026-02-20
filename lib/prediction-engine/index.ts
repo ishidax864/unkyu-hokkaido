@@ -61,12 +61,15 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 🆕 Centralized Status Logic - Call early to use constraints throughout
-    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, maxProbabilityCap, overrideReason } = determineBaseStatus(
+    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, isPartialSuspension, maxProbabilityCap, overrideReason } = determineBaseStatus(
         input.jrStatus,
         input.targetDate,
         effectiveTargetTime,
         input.weather?.snowDepth // 🆕 Pass snowDepth
     );
+
+    // ... (rest of code)
+
 
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
 
@@ -188,6 +191,9 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                                     priority: 6
                                 });
                             }
+                        }
+                        if (isPartialSuspension) {
+                            estimatedRecoveryTime = undefined;
                         }
                     }
                 }
@@ -422,15 +428,20 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             }
 
             // 🆕 Partial Suspension / Reduced Service Detection
-            // 「本数を減らして」「間引き」「一部運休」などのキーワードがある場合
-            const partialKeywords = ['本数を減ら', '間引き', '一部運休', '大幅な遅れ'];
-            if (partialKeywords.some(k => text.includes(k))) {
+            // Use the flag from status-logic to ensure consistency
+            if (isPartialSuspension) {
                 isOfficialOverride = true;
-                // Force High Risk (Delay/Caution)
-                if (probability < 80) {
-                    probability = 80;
+                // Force Delay (Yellow/Orange) but NOT Suspended (Red)
+                // Thresholds: Cancelled >= 70, Suspended >= 65
+                // So we set to 60 to ensure "Delay" status.
+                if (probability < 60) {
+                    probability = 60;
                 }
-                reasons.unshift(`【公式発表】${text}`); // Add official text as primary reason
+                const reasonText = (input.jrStatus?.rawText || input.jrStatus?.statusText || '一部運休');
+                // Only add reason if not already there
+                if (!reasons.some(r => r.includes(reasonText.substring(0, 10)))) {
+                    reasons.unshift(`【公式発表】${reasonText}`);
+                }
 
                 // Clear low-confidence messages if any
                 reasons = reasons.filter(r => !r.includes('リスクを高める要因は検出されていません'));

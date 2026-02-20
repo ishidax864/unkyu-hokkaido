@@ -37,7 +37,7 @@ export class SnowStrategy implements RiskFactorStrategy {
         const depthChange = input.weather?.snowDepthChange ?? 0;
 
         // 1. Heavy Snow Warning
-        if (input.weather?.warnings.some(w => w.type === '大雪警報')) {
+        if (input.weather?.warnings?.some(w => w.type === '大雪警報')) {
             let warningScore = HEAVY_SNOW_WARNING_SCORE;
             if (input.historicalMatch?.id === 'disaster-snow-sapporo' || input.historicalMatch?.id === 'record-intense-snow') {
                 warningScore = 100;

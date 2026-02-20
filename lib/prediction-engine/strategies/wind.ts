@@ -32,7 +32,7 @@ export class WindStrategy implements RiskFactorStrategy {
         const reasons: { reason: string; priority: number }[] = [];
 
         // 1. Storm Warning
-        if (input.weather?.warnings.some(w => w.type === '暴風警報')) {
+        if (input.weather?.warnings?.some(w => w.type === '暴風警報')) {
             let warningScore = STORM_WARNING_SCORE;
             if (input.historicalMatch?.id === 'explosive-cyclogenesis' || input.historicalMatch?.id === 'heavy-wind-low-pressure') {
                 warningScore = 100;

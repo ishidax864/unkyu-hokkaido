@@ -21,7 +21,7 @@ export class RainStrategy implements RiskFactorStrategy {
         const reasons: { reason: string; priority: number }[] = [];
 
         // 1. Heavy Rain Warning
-        if (input.weather?.warnings.some(w => w.type === '大雨警報')) {
+        if (input.weather?.warnings?.some(w => w.type === '大雨警報')) {
             score = Math.max(score, HEAVY_RAIN_WARNING_SCORE);
             reasons.push({ reason: '大雨警報が発令されています', priority: 3 });
         }
