@@ -22,6 +22,17 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     const recoveryTime = result.estimatedRecoveryTime;
     const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
 
+    // ユーザー報告によるコンテキスト追加
+    const crowd = result.crowdStats;
+    let crowdPrefix = '';
+    if (crowd) {
+        if (crowd.last15minStopped >= 3) {
+            crowdPrefix = `⚡ ユーザー${crowd.last15minStopped}人が「止まっている」と報告しています。`;
+        } else if (crowd.last15minDelayed >= 3) {
+            crowdPrefix = `⚡ ユーザー${crowd.last15minDelayed}人が「遅延」と報告しています。`;
+        }
+    }
+
     // 0. POST-RECOVERY WINDOW: Target time is AFTER predicted recovery
     if (result.isPostRecoveryWindow) {
         const isHighRisk = result.probability >= 40;
@@ -56,13 +67,16 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
             subColor: 'bg-red-600',
             iconType: 'x-circle',
             nextAction: (() => {
-                if (recoveryTime?.includes('終日')) {
-                    return '本日中の復旧は見込めません。バス・タクシー等の代替手段か、出発を翌日に変更してください。';
-                }
-                if (recoveryTime) {
-                    return `【${recoveryLabel}】${recoveryTime}に運転再開見込みです。それまでカフェ等で待機するか、下記の代替ルートをご検討ください。`;
-                }
-                return '復旧の目処が立っていません。代替手段（バス・タクシー）をご検討ください。';
+                const base = (() => {
+                    if (recoveryTime?.includes('終日')) {
+                        return '本日中の復旧は見込めません。バス・タクシー等の代替手段か、出発を翌日に変更してください。';
+                    }
+                    if (recoveryTime) {
+                        return `【${recoveryLabel}】${recoveryTime}に運転再開見込みです。それまでカフェ等で待機するか、下記の代替ルートをご検討ください。`;
+                    }
+                    return '復旧の目処が立っていません。代替手段（バス・タクシー）をご検討ください。';
+                })();
+                return crowdPrefix ? `${crowdPrefix}${base}` : base;
             })(),
             resumptionEstimate: (() => {
                 if (!recoveryTime) return '復旧見込: 未定';
@@ -83,13 +97,16 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
             subColor: 'bg-orange-600',
             iconType: 'alert-triangle',
             nextAction: (() => {
-                if (result.isPartialSuspension && recoveryTime) {
-                    return `【${recoveryLabel}】${recoveryTime}頃に通常ダイヤに戻る見込みです。急ぎの場合は代替手段をご検討ください。`;
-                }
-                if (result.isPartialSuspension) {
-                    return '運行中の列車がありますが、大幅な遅延が予想されます。時間に余裕がない場合は、下記の代替ルートが確実です。';
-                }
-                return '1本早い列車に乗るか、代替手段の準備をおすすめします。こまめに運行状況を確認してください。';
+                const base = (() => {
+                    if (result.isPartialSuspension && recoveryTime) {
+                        return `【${recoveryLabel}】${recoveryTime}頃に通常ダイヤに戻る見込みです。急ぎの場合は代替手段をご検討ください。`;
+                    }
+                    if (result.isPartialSuspension) {
+                        return '運行中の列車がありますが、大幅な遅延が予想されます。時間に余裕がない場合は、下記の代替ルートが確実です。';
+                    }
+                    return '1本早い列車に乗るか、代替手段の準備をおすすめします。こまめに運行状況を確認してください。';
+                })();
+                return crowdPrefix ? `${crowdPrefix}${base}` : base;
             })(),
             resumptionEstimate: recoveryTime ? `【復旧見込 / ${recoveryLabel}】${recoveryTime}` : undefined
         };

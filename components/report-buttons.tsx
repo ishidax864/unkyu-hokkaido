@@ -11,7 +11,7 @@ import {
     Send
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { sendGAEvent } from '@next/third-parties/google'; // 🆕
+import { sendGAEvent } from '@next/third-parties/google';
 
 interface ReportButtonsProps {
     routeId: string;
@@ -34,11 +34,38 @@ const REPORT_OPTIONS = [
     { type: 'normal' as const, label: '平常運転', icon: CheckCircle, className: 'status-normal' },
 ];
 
+function getConsensusSummary(counts: ReportButtonsProps['counts']): { text: string; type: 'stopped' | 'delayed' | 'crowded' | 'normal' | null } | null {
+    if (!counts) return null;
+    const total = counts.stopped + counts.delayed + counts.crowded + counts.resumed;
+    if (total === 0) return null;
+
+    // Find the dominant report type
+    const max = Math.max(counts.stopped, counts.delayed, counts.crowded, counts.resumed);
+    if (max < 1) return null;
+
+    if (counts.stopped === max && counts.stopped >= 1) {
+        return { text: `${counts.stopped}人が「止まっている」と報告`, type: 'stopped' };
+    }
+    if (counts.delayed === max && counts.delayed >= 1) {
+        return { text: `${counts.delayed}人が「遅延している」と報告`, type: 'delayed' };
+    }
+    if (counts.crowded === max && counts.crowded >= 1) {
+        return { text: `${counts.crowded}人が「混雑している」と報告`, type: 'crowded' };
+    }
+    if (counts.resumed === max && counts.resumed >= 1) {
+        return { text: `${counts.resumed}人が「平常運転」と報告`, type: 'normal' };
+    }
+    return null;
+}
+
 export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }: ReportButtonsProps) {
     const [selectedType, setSelectedType] = useState<ReportType | null>(null);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+
+    const consensus = getConsensusSummary(counts);
+    const totalReports = counts ? (counts.stopped + counts.delayed + counts.crowded + counts.resumed) : 0;
 
     const handleTypeSelect = (type: ReportType) => {
         if (selectedType === type) {
@@ -52,7 +79,6 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
         if (!selectedType) return;
 
         setIsSubmitting(true);
-        // 🆕 GA4イベント送信
         sendGAEvent('event', 'report_submit', {
             report_type: selectedType,
             route_name: routeName,
@@ -74,24 +100,45 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
 
     return (
         <div className="card p-4">
-            <div className="flex items-center gap-2 mb-3">
-                <MessageSquare className="w-4 h-4 text-[var(--muted)]" />
-                <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">
-                    {routeName}の状況を報告
-                </span>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <span className="text-xs font-bold text-gray-800">
+                        みんなのリアルタイム報告
+                    </span>
+                </div>
+                {totalReports > 0 && (
+                    <span className="text-[10px] font-medium text-gray-400">
+                        直近2時間: {totalReports}件
+                    </span>
+                )}
             </div>
 
-            {/* 報告ボタン群 */}
-            <div className="bg-blue-50/50 rounded-lg p-3 border border-blue-100">
-                <div className="text-xs font-bold text-blue-800 mb-2 text-center">
-                    今の状況をみんなにシェアしよう！
+            {/* Consensus Summary — The key feedback to other users */}
+            {consensus && (
+                <div className={cn(
+                    "flex items-center gap-2 rounded-lg px-3 py-2 mb-3 text-xs font-bold border",
+                    consensus.type === 'stopped' ? 'bg-red-50 text-red-700 border-red-200' :
+                        consensus.type === 'delayed' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                            consensus.type === 'crowded' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                                'bg-emerald-50 text-emerald-700 border-emerald-200'
+                )}>
+                    <Users className="w-3.5 h-3.5 shrink-0" />
+                    <span>{consensus.text}</span>
+                </div>
+            )}
+
+            {/* Report Buttons */}
+            <div className="rounded-lg p-3 border border-gray-100 bg-gray-50/50">
+                <div className="text-[10px] font-medium text-gray-500 mb-2 text-center">
+                    あなたの報告が他のユーザーの判断を助けます
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     {REPORT_OPTIONS.map((option) => {
                         const Icon = option.icon;
                         const isSelected = selectedType === option.type;
 
-                        // バッジ表示用のカウントを取得
                         let count = 0;
                         if (counts) {
                             if (option.type === 'stopped') count = counts.stopped;
@@ -116,7 +163,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                                 <Icon className={cn("w-4 h-4", isSelected ? "" : "text-gray-400")} />
                                 {option.label}
 
-                                {/* カウントバッジ */}
+                                {/* Count Badge */}
                                 {count > 0 && (
                                     <span className={cn(
                                         "absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] flex items-center justify-center text-[10px] font-bold rounded-full border shadow-sm px-1 z-10",
@@ -135,7 +182,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                 </div>
             </div>
 
-            {/* 報告完了メッセージ */}
+            {/* Submitted Feedback */}
             {submitted && (
                 <div className="flex items-center justify-center gap-2 text-[var(--status-normal)] py-2 mb-1 animate-in fade-in slide-in-from-top-1">
                     <ThumbsUp className="w-5 h-5" />
@@ -143,9 +190,9 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                 </div>
             )}
 
-            {/* コメント入力 */}
+            {/* Comment Input */}
             {selectedType && !submitted && (
-                <div className="space-y-3">
+                <div className="space-y-3 mt-3">
                     <input
                         type="text"
                         placeholder="状況を詳しく教えてください（任意）"

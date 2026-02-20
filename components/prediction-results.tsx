@@ -92,7 +92,17 @@ export function PredictionResults({
                 route={route}
             />
 
-            {/* 代替ルート提案: アクションに直結する情報を最優先 */}
+            {/* ユーザー報告（当日のみ）— 予測直後に配置して報告を促進 */}
+            {isToday && (
+                <ReportButtons
+                    routeId={selectedRouteId}
+                    routeName={route.name}
+                    onReport={handleReport}
+                    counts={realtimeStatus?.last15minCounts}
+                />
+            )}
+
+            {/* 代替ルート提案: アクションに直結する情報 */}
             {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
                 <AlternativeRoutes
                     originalRoute={route}
@@ -108,16 +118,6 @@ export function PredictionResults({
             {/* 時間帯別リスク推移 */}
             {riskTrend && riskTrend.length > 0 && (
                 <HourlyRiskChart data={riskTrend} />
-            )}
-
-            {/* 状況報告（当日のみ） */}
-            {isToday && (
-                <ReportButtons
-                    routeId={selectedRouteId}
-                    routeName={route.name}
-                    onReport={handleReport}
-                    counts={realtimeStatus?.last15minCounts}
-                />
             )}
 
             {/* 週間予測 */}

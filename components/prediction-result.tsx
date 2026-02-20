@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText, extractSuspendedTrains } from '@/lib/text-parser';
 import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision';
+import { GoNoGoBadge } from './go-no-go-badge';
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -89,6 +90,11 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                             actionStatus.type === 'HIGH_RISK' ? '高リスク' :
                                 actionStatus.type === 'CAUTION' ? '注意' : '平常'}
                     </span>
+                </div>
+
+                {/* 1.5. Go/No-Go Badge — THE answer */}
+                <div className="mb-6">
+                    <GoNoGoBadge result={result} />
                 </div>
 
                 {/* 2. Hero: Decision & Metrics */}
