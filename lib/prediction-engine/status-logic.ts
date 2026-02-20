@@ -63,11 +63,11 @@ export function determineBaseStatus(
             const standardBufferTime = new Date(resumptionDate.getTime() + 60 * 60 * 1000); // +1 hour
 
             if (targetDateTime > resumptionDate) {
-                // Downgrade to Delay (yellow) instead of Suspended (red)
+                // Downgrade to Delay (yellow) baseline, but allow higher risks if weather persists
                 return {
                     status: '遅延', // 'delay'
                     isOfficialSuspended: false,
-                    maxProbabilityCap: 60,
+                    maxProbabilityCap: undefined, // 🆕 Allow higher risk (e.g. re-suspension) based on weather
                     overrideReason: `【公式】運転再開（${jrStatus.resumptionTime.substring(11, 16)}頃再開）後の遅延・ダイヤ乱れの可能性があります`
                 };
             }
