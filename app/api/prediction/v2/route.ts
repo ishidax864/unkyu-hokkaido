@@ -4,11 +4,13 @@ import { fetchHourlyWeatherForecast } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic'; // 🆕 Disable caching for real-time predictions
 import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
+import { logger } from '@/lib/logger';
 import { JRStatusItem, PredictionInput, JRStatus } from '@/lib/types';
 import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
 
-import { getAdminSupabaseClient } from '@/lib/supabase';
+import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory } from '@/lib/supabase';
 import { ROUTE_DEFINITIONS } from '@/lib/jr-status';
+import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
 
 // Helper to fetch JR Status (Debug Version)
 async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
@@ -147,31 +149,64 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { routeId, date, time, lat, lon } = body;
 
-        // Parallel fetch
+        // Parallel fetch: all data sources at once for minimal latency
         const dateTime = `${date}T${time}:00`;
         const coordinates = (lat != null && lon != null) ? { lat: Number(lat), lon: Number(lon) } : undefined;
 
-        const [weather, jrStatus] = await Promise.all([
+        // 🆕 Check if searching for today (crowdsourced/history only relevant for today)
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const isToday = date === todayStr;
+
+        const [weather, jrStatus, historicalResult, officialHistoryResult, crowdsourcedResult] = await Promise.all([
             fetchHourlyWeatherForecast(routeId, dateTime, coordinates).catch(e => {
-                console.error(e);
+                logger.error('Weather fetch failed', e);
                 return null;
             }),
-            _fetchJRStatus(routeId)
+            _fetchJRStatus(routeId),
+            // 🆕 Historical suspension rate from user reports
+            getHistoricalSuspensionRate(routeId).catch(e => {
+                logger.warn('Historical data fetch failed', e);
+                return { success: false, data: null };
+            }),
+            // 🆕 Official route history from crawler data (last 24h)
+            getOfficialRouteHistory(routeId, 24).catch(e => {
+                logger.warn('Official history fetch failed', e);
+                return { success: false, data: null };
+            }),
+            // 🆕 Crowdsourced user reports (only for today)
+            isToday ? aggregateCrowdsourcedStatusAsync(routeId).catch(e => {
+                logger.warn('Crowdsourced status fetch failed', e);
+                return null;
+            }) : Promise.resolve(null)
         ]);
 
         if (!weather) {
             return NextResponse.json({ error: 'Weather fetch failed' }, { status: 500 });
         }
 
+        // 🆕 Assemble all data sources
+        const historicalData = historicalResult?.success && historicalResult?.data
+            ? historicalResult.data : null;
+        const officialHistory = officialHistoryResult?.success && officialHistoryResult?.data
+            ? officialHistoryResult.data : null;
+        const crowdsourcedStatus = crowdsourcedResult && crowdsourcedResult.reportCount > 0
+            ? {
+                consensusStatus: crowdsourcedResult.consensusStatus,
+                reportCount: crowdsourcedResult.reportCount,
+                last15minCounts: crowdsourcedResult.last15minCounts
+            } : null;
+
         const input: PredictionInput = {
             weather,
             routeId,
-            routeName: jrStatus?.routeName || '当該路線', // Fallback name
+            routeName: jrStatus?.routeName || '当該路線',
             targetDate: date,
             targetTime: time,
-            historicalData: null, // API generally doesn't check historical here or needs fetch
+            historicalData,
             jrStatus: jrStatus,
-            crowdsourcedStatus: null
+            crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
+            officialHistory: isToday ? officialHistory as any : null
         };
 
         const result = calculateSuspensionRisk(input);
@@ -227,9 +262,10 @@ export async function POST(req: NextRequest) {
                         routeName: jrStatus?.routeName || '当該路線',
                         targetDate: date,
                         targetTime: checkTime,
-                        historicalData: null,
+                        historicalData,
                         jrStatus: jrStatus,
-                        crowdsourcedStatus: null,
+                        crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
+                        officialHistory: isToday ? officialHistory as any : null,
                         timetableTrain: undefined
                     });
                     hourRisk = r.probability;
@@ -259,7 +295,17 @@ export async function POST(req: NextRequest) {
 
         result.trend = trend;
 
-        return NextResponse.json(result);
+        // 🆕 Attach enriched data for client-side weekly forecast (avoids redundant fetches)
+        const enrichedResult = {
+            ...result,
+            _serverData: {
+                historicalData,
+                officialHistory,
+                crowdsourcedStatus: isToday ? crowdsourcedStatus : null
+            }
+        };
+
+        return NextResponse.json(enrichedResult);
 
     } catch (error) {
         console.error('Prediction API Error:', error);

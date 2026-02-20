@@ -156,29 +156,10 @@ export function useRouteSearch() {
         // 検索日が今日の場合のみ、メインの計算用にStatusを使用する
         const currentCrowdsourcedStatus = isToday ? rtStatus : null;
 
-        // 🆕 過去30日の運休履歴、および公的ステータス履歴を取得
-        let historicalData = null;
-        let officialHistory = null;
-        if (routeId) {
-            try {
-                // Dynamic import to avoid server-side module issues
-                const { getHistoricalSuspensionRate, getOfficialRouteHistory } = await import('@/lib/supabase');
-
-                // 1. ユーザー報告ベースの統計
-                const historyResult = await getHistoricalSuspensionRate(routeId);
-                if (historyResult.success && historyResult.data) {
-                    historicalData = historyResult.data;
-                }
-
-                // 2. 🆕 クローラーベースの公的履歴（直近24時間）
-                const officialRes = await getOfficialRouteHistory(routeId, 24);
-                if (officialRes.success && officialRes.data) {
-                    officialHistory = officialRes.data;
-                }
-            } catch (e) {
-                logger.warn('History data fetch failed', { error: e });
-            }
-        }
+        // 🆕 過去30日の運休履歴、および公的ステータス履歴は v2 API がサーバー側で取得済み
+        // クライアント側での冗長な取得を廃止
+        let historicalData: any = null;
+        let officialHistory: any = null;
 
         // ML Prediction (Server-side)
         // Now authorizes the server as the single source of truth for both Main Result and Trend.
@@ -199,10 +180,15 @@ export function useRouteSearch() {
             });
 
             if (apiRes.ok) {
-                const mlResult: PredictionResult & { trend?: HourlyRiskData[] } = await apiRes.json();
+                const mlResult: PredictionResult & { trend?: HourlyRiskData[]; _serverData?: any } = await apiRes.json();
 
-                // サーバー側の /api/prediction/v2 が calculateSuspensionRisk + jrStatus を
-                // 込み済みで返すため、クライアント側での上書きは不要（二重適用防止）
+                // 🆕 サーバーから取得した enriched data を利用
+                if (mlResult._serverData) {
+                    historicalData = mlResult._serverData.historicalData;
+                    officialHistory = mlResult._serverData.officialHistory;
+                    // crowdsourcedStatus is already included in the main prediction
+                }
+
                 setPrediction(mlResult);
                 finalPrediction = mlResult;
 
@@ -222,7 +208,7 @@ export function useRouteSearch() {
                 routeName: primaryRoute?.name || '',
                 targetDate: searchDate,
                 targetTime: targetTimeStr,
-                jrStatus: isToday ? jrStatus : null, // メイン結果には「検索日が今日」の時のみ反映
+                jrStatus: isToday ? jrStatus : null,
                 crowdsourcedStatus: currentCrowdsourcedStatus,
                 timetableTrain: timetableTrain || undefined,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -230,9 +216,6 @@ export function useRouteSearch() {
             });
             setPrediction(result);
             finalPrediction = result;
-
-            // Fallback Trend Gen (Simplified)
-            // ... (We could add fallback trend gen here if needed, but keeping it simple for now)
         }
 
         // Helper: Weekly Calculation
