@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  --font-en: var(--font-inter), sans-serif;
 }
 
 :root {

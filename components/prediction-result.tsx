@@ -206,17 +206,27 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
 
                 return (
                     status.type === 'NORMAL' ? (
-                        <div className="mb-8 text-center animate-in fade-in slide-in-from-bottom-2 py-4">
-                            <div className="flex items-center justify-center gap-3 mb-2">
-                                <CheckCircle className="text-emerald-500 w-8 h-8" strokeWidth={2.5} />
-                                <h2 className="text-2xl font-black text-gray-800 tracking-tight">{status.title}</h2>
-                            </div>
+                        <div className="mb-8 pt-2 pb-6 border-b border-gray-100 animate-in fade-in slide-in-from-bottom-2">
+                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                                <div>
+                                    <div className="flex items-center gap-2.5 mb-2">
+                                        <span className="relative flex h-2.5 w-2.5">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                        </span>
+                                        <span className="text-[10px] font-bold text-emerald-600 tracking-widest uppercase font-en">Normal Operation</span>
+                                    </div>
+                                    <h2 className="text-3xl font-black text-gray-900 leading-tight tracking-tight mb-2">{status.title}</h2>
+                                    <p className="text-sm font-medium text-gray-500">{status.message}</p>
+                                </div>
 
-                            <p className="text-gray-500 text-sm font-medium mb-4">{status.message}</p>
-
-                            <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-gray-50 border border-gray-100">
-                                <span className="text-xs font-bold text-gray-400">運休リスク</span>
-                                <span className="text-lg font-black text-gray-700">{result.probability}%</span>
+                                <div className="flex items-center gap-4 bg-gray-50/50 px-5 py-3 rounded-xl sm:block sm:bg-transparent sm:px-0 sm:py-0 sm:text-right">
+                                    <div className="text-xs font-bold text-gray-400 mb-0.5">運休リスク</div>
+                                    <div className="flex items-baseline gap-0.5 sm:justify-end">
+                                        <span className="text-3xl font-black text-gray-900 tracking-tighter font-en">{result.probability}</span>
+                                        <span className="text-sm font-bold text-gray-400">%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ) : (
