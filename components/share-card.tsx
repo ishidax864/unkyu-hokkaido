@@ -19,8 +19,9 @@ export function ShareCard({ prediction, routeName, departureStation, arrivalStat
 
     // シェアテキスト生成
     const getShareText = () => {
-        const riskLevel = prediction.probability >= 50 ? '⚠️高' :
-            prediction.probability >= 20 ? '⚡中' : '✅低';
+        const riskLevel = prediction.probability >= 80 ? '🚫危険' :
+            prediction.probability >= 50 ? '⚠️高' :
+                prediction.probability >= 20 ? '⚡中' : '✅低';
 
         const statusEmoji = prediction.status === '運休' ? '🚫' :
             prediction.status === '運転見合わせ' ? '⚠️' :
@@ -29,7 +30,7 @@ export function ShareCard({ prediction, routeName, departureStation, arrivalStat
         const date = new Date(prediction.targetDate);
         const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
 
-        return `【運休AI 予測】${dateStr}
+        return `【運休北海道 予測】${dateStr}
 ${departureStation}→${arrivalStation}（${routeName}）
 
 ${statusEmoji} 運休リスク: ${prediction.probability}%（${riskLevel}）
@@ -37,9 +38,9 @@ ${statusEmoji} 運休リスク: ${prediction.probability}%（${riskLevel}）
 ${prediction.reasons[0] || ''}
 
 運行予報を確認する：
-https://unkyu-hokkaido.jp
+https://unkyu-ai.vercel.app
 
-#運休AI #JR北海道 #運休予測`;
+#運休北海道 #JR北海道 #運休予測`;
     };
 
     // クリップボードにコピー
@@ -63,7 +64,7 @@ https://unkyu-hokkaido.jp
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: '運休AI 予測結果',
+                    title: '運休北海道 予測結果',
                     text,
                     url: window.location.href,
                 });

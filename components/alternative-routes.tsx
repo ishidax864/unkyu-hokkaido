@@ -96,11 +96,11 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                         <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2">
                             <div className={cn(
                                 "p-1.5 rounded-md",
-                                advice.type === 'critical' ? "bg-red-100 text-red-600" :
+                                advice.type === 'critical' || advice.type === 'alert' ? "bg-red-100 text-red-600" :
                                     advice.type === 'warning' ? "bg-orange-100 text-orange-600" :
                                         "bg-green-100 text-green-600"
                             )}>
-                                {advice.type === 'critical' ? <AlertTriangle className="w-4 h-4" /> :
+                                {advice.type === 'critical' || advice.type === 'alert' ? <AlertTriangle className="w-4 h-4" /> :
                                     advice.type === 'warning' ? <Clock className="w-4 h-4" /> :
                                         <Train className="w-4 h-4" />}
                             </div>
@@ -110,7 +110,7 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
                         <div className="p-4">
                             <h4 className={cn(
                                 "font-bold text-base mb-2",
-                                advice.type === 'critical' ? "text-red-800" :
+                                advice.type === 'critical' || advice.type === 'alert' ? "text-red-800" :
                                     advice.type === 'warning' ? "text-orange-800" :
                                         "text-green-800"
                             )}>

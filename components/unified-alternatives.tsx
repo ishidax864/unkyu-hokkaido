@@ -126,7 +126,7 @@ export function UnifiedAlternativesCard({
             {/* Logic: TimeShift > Subway > Standard Routes */}
             {(timeShiftSuggestion?.difference ?? 0) >= 15 ? (
                 <div className="bg-white border border-emerald-100 rounded-lg p-4 sm:p-5 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
-                    <RibbonBadge variant="success">RECOMMENDED</RibbonBadge>
+                    <RibbonBadge variant="success">おすすめ</RibbonBadge>
                     <div className="flex items-start gap-3 sm:gap-4">
                         <div className="p-2.5 sm:p-3 bg-emerald-50 rounded-lg text-emerald-600 shrink-0">
                             <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -144,7 +144,7 @@ export function UnifiedAlternativesCard({
                 </div>
             ) : showGenericSubway && facilities?.hasSubway && facilities?.subwayLines ? (
                 <div className="bg-white border border-emerald-100 rounded-lg p-4 sm:p-5 shadow-sm ring-1 ring-emerald-500/20 relative overflow-hidden">
-                    <RibbonBadge variant="success">RECOMMENDED</RibbonBadge>
+                    <RibbonBadge variant="success">おすすめ</RibbonBadge>
                     <div className="flex items-start gap-3 sm:gap-4">
                         <div className="p-2.5 sm:p-3 bg-emerald-50 rounded-lg text-emerald-600 shrink-0">
                             <Train className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -247,7 +247,7 @@ export function UnifiedAlternativesCard({
                                             "text-xs sm:text-sm font-mono",
                                             taxiInfo?.isHighCost ? "text-red-600 font-bold" : "text-gray-600"
                                         )}>
-                                            {taxiInfo ? `¥${taxiInfo.estimatedFare.toLocaleString()}~` : 'ESTIMATE'}
+                                            {taxiInfo ? `¥${taxiInfo.estimatedFare.toLocaleString()}~` : '見積もり中'}
                                         </div>
                                         {taxiInfo?.isHighCost && (
                                             <div className="text-xs text-gray-500">長距離</div>

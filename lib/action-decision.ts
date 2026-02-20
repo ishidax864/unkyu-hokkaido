@@ -1,7 +1,5 @@
 
 import { PredictionResult } from './types';
-import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
-import React from 'react';
 
 export type ActionStatusType = 'CRITICAL' | 'HIGH_RISK' | 'CAUTION' | 'NORMAL';
 

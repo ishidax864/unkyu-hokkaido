@@ -1,7 +1,7 @@
 'use client';
 
 import { Hotel } from '@/lib/hotel-data';
-import { ExternalLink, Hotel as HotelIcon, Star, MapPin } from 'lucide-react';
+import { ExternalLink, Hotel as HotelIcon, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface HotelSuggestionsProps {
@@ -41,15 +41,9 @@ export function HotelSuggestions({ hotels, arrivalStationName }: HotelSuggestion
                         className="group flex flex-col sm:flex-row gap-3 p-4 bg-white rounded-xl border border-amber-200 hover:border-amber-400 hover:shadow-md transition-all"
                     >
                         <div className="flex-1">
-                            <div className="flex items-start justify-between mb-1">
-                                <h4 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
-                                    {hotel.name}
-                                </h4>
-                                <div className="flex items-center gap-1 text-xs font-bold text-amber-600">
-                                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                                    <span>高評価</span>
-                                </div>
-                            </div>
+                            <h4 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
+                                {hotel.name}
+                            </h4>
                             <p className="text-xs text-gray-600 mb-2 leading-relaxed">
                                 {hotel.description}
                             </p>
