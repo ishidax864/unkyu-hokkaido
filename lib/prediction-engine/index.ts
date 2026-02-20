@@ -143,9 +143,39 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     let isFutureSafe = false;
     let isPostRecoveryWindow = false;
 
-    // 🆕 AI予測の復旧時刻 vs ユーザーの検索時刻を比較
-    // 例: 復旧予測15:00 + 検索16:08 → 復旧後のダイヤ乱れモードへ切り替え
-    if (estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
+    // 🆕 公式 resumptionTime vs ユーザー検索時刻の早期チェック
+    // determineBaseStatus の chaos window (minProbability=60) を上書きするために、
+    // calibration/clamping の前にここで判定する必要がある
+    if (input.jrStatus?.resumptionTime && effectiveTargetTime) {
+        const officialResumptionDate = new Date(input.jrStatus.resumptionTime);
+        const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00`);
+        if (targetDateTime.getTime() > officialResumptionDate.getTime()) {
+            const hoursAfterOfficial = (targetDateTime.getTime() - officialResumptionDate.getTime()) / (1000 * 60 * 60);
+
+            isPostRecoveryWindow = true;
+
+            if (hoursAfterOfficial >= 1) {
+                // 1時間以上経過 → chaos window のminProbabilityを解除してpost-recoveryキャップを適用
+                isFutureSafe = true;
+                minProbability = 0;
+
+                // 公式再開時刻からの経過時間に応じてキャップ (1h=45%, 2h=35%, 3h=25%, 4h+=15%)
+                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterOfficial * 10));
+                if (probability > postRecoveryMax) {
+                    probability = postRecoveryMax;
+                }
+
+                reasonsWithPriority.push({
+                    reason: `【復旧後】${input.jrStatus.resumptionTime.substring(11, 16)}頃に運転再開見込み。ダイヤ乱れに注意`,
+                    priority: 1
+                });
+            }
+            // 1時間未満: isPostRecoveryWindow=true だが minProbability はchaos window側を維持
+        }
+    }
+
+    // 🆕 AI予測の復旧時刻 vs ユーザーの検索時刻を比較（公式がない場合のフォールバック）
+    if (!isPostRecoveryWindow && estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
         const recoveryMatch = estimatedRecoveryTime.match(/(\d{1,2}):(\d{2})/);
         const targetMatch = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
         if (recoveryMatch && targetMatch) {
@@ -285,17 +315,6 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                 timeStr = `明日 ${resumptionHHMM}頃`;
             } else {
                 timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
-            }
-        }
-
-        // 🆕 Fix 2: 公式resumptionTimeでもisPostRecoveryWindowを発火
-        // AI予測だけでなく、公式の再開時刻もpost-recoveryの判定に使う
-        if (effectiveTargetTime) {
-            const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00`);
-            if (targetDateTime.getTime() > resumptionDate.getTime()) {
-                isPostRecoveryWindow = true;
-                isFutureSafe = true;
-                minProbability = 0;
             }
         }
 

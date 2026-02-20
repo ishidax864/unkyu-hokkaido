@@ -152,11 +152,11 @@ export const SUSPENSION_SNOW_THRESHOLD = 15;
 // 積雪深（累積）関連の閾値 🆕
 // =====================
 
-/** 中程度の積雪深（cm） - 遅延リスク (30 -> 15) */
-export const MODERATE_SNOW_DEPTH_THRESHOLD = 15;
+/** 中程度の積雪深（cm） - 遅延リスク (15 -> 25: 北海道の冬は20cm程度の積雪は日常) */
+export const MODERATE_SNOW_DEPTH_THRESHOLD = 25;
 
-/** 中程度の積雪深スコア (13 -> 20) */
-export const MODERATE_SNOW_DEPTH_SCORE = 20;
+/** 中程度の積雪深スコア (20 -> 15: 25-40cmは注意レベル) */
+export const MODERATE_SNOW_DEPTH_SCORE = 15;
 
 /** 危険な積雪深（cm） - 運休リスク (80 -> 40) */
 export const CRITICAL_SNOW_DEPTH_THRESHOLD = 40;
