@@ -219,7 +219,7 @@ export async function runJRCrawler() {
                     }
 
                     // 🆕 ml_training_data (異常時)
-                    await supabase.from('ml_training_data').insert({
+                    const { error: mlError } = await supabase.from('ml_training_data').insert({
                         recorded_at: now.toISOString(),
                         area_id: area.id,
                         route_id: matchedRouteId,
@@ -242,9 +242,8 @@ export async function runJRCrawler() {
                         // Time features
                         month, hour, day_of_week: dayOfWeek,
                         crawler_log_id: logData.id
-                    }).then(({ error }) => {
-                        if (error) logger.warn('ML data insert failed', { error: error.message, routeId: matchedRouteId });
                     });
+                    if (mlError) logger.warn('ML data insert failed', { error: mlError.message, routeId: matchedRouteId });
                 }
             }
 
@@ -255,7 +254,7 @@ export async function runJRCrawler() {
             );
             for (const route of areaRoutes) {
                 if (!routesWithStatus.has(route.routeId)) {
-                    await supabase.from('ml_training_data').insert({
+                    const { error: mlNormalErr } = await supabase.from('ml_training_data').insert({
                         recorded_at: now.toISOString(),
                         area_id: area.id,
                         route_id: route.routeId,
@@ -278,11 +277,10 @@ export async function runJRCrawler() {
                         // Time features
                         month, hour, day_of_week: dayOfWeek,
                         crawler_log_id: logData.id
-                    }).then(({ error }) => {
-                        if (error && !error.message.includes('unique')) {
-                            logger.warn('ML normal data insert failed', { error: error.message, routeId: route.routeId });
-                        }
                     });
+                    if (mlNormalErr && !mlNormalErr.message.includes('unique')) {
+                        logger.warn('ML normal data insert failed', { error: mlNormalErr.message, routeId: route.routeId });
+                    }
                 }
             }
 
