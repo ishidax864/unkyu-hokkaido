@@ -169,8 +169,8 @@ export async function runJRCrawler() {
                 wind_direction: weather.wind_direction,
                 pressure_msl: weather.pressure_msl,
                 visibility: weather.visibility,
-                month, hour, day_of_week: dayOfWeek,
-                crawler_log_id: logData.id
+                month, hour, day_of_week: dayOfWeek
+                // Note: crawler_log_id skipped due to type mismatch (UUID vs BIGINT)
             });
 
             for (const item of gaikyoList) {

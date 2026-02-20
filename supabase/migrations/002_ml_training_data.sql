@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS ml_training_data (
     day_of_week INTEGER,      -- 0=日, 1=月, ..., 6=土
     
     -- 参照
-    crawler_log_id BIGINT
+    crawler_log_id UUID
 );
 
 -- インデックス
