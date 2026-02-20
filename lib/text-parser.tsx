@@ -178,7 +178,13 @@ export function extractSuspendedTrains(text: string): string[] {
             // text: "大雪のため、特急ライラックが運休" -> "特急ライラックが運休"
             let content = segment;
             // Remove typical prefix reasons
-            content = content.replace(/^.*(ため|より|影響で)、/, '');
+            content = content.replace(/^.*(ため|より|影響で|要したため|伴い|伴う)、/, '');
+
+            // 🆕 Filter out generic statements that don't specify *which* trains
+            // Must contain specific keywords like Train Name, Type, Line, Section, Travel direction
+            if (!content.match(/特急|快速|普通|ライラック|カムイ|エアポート|宗谷|オホーツク|ニセコ|すずらん|北斗|とかち|おおぞら|号|線|間|行き|発|上り|下り/)) {
+                continue;
+            }
 
             suspendedLines.push(content);
         }
