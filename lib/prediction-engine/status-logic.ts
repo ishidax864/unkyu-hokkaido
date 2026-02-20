@@ -6,6 +6,7 @@ export interface BaseStatusResult {
     isOfficialSuspended: boolean;  // True if officially suspended AND not yet resumed
     isPostResumptionChaos?: boolean; // 🆕 True if within chaos window after resumption
     isPartialSuspension?: boolean;   // 🆕 True if "Partial Suspension" detected (suppress recovery time)
+    partialSuspensionText?: string;  // 🆕 Official text describing the partial suspension
     maxProbabilityCap?: number;    // If set, cap probability at this value
     overrideReason?: string;       // Reason for the override
 }
@@ -47,8 +48,9 @@ export function determineBaseStatus(
             isOfficialSuspended: false,
             // 🆕 Signal Partial Suspension to suppress "Recovery Time"
             isPartialSuspension: true,
+            partialSuspensionText: rawText, // 🆕 Pass the raw text for display
             maxProbabilityCap: undefined, // Let weather decide risk
-            overrideReason: `【一部運休・遅延】一部の列車に運休・遅れが出ています（運行中）`
+            overrideReason: `【一部運休・詳細】${rawText}` // Use raw text for reason too
         };
     }
 

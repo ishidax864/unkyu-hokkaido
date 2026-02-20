@@ -16,7 +16,7 @@ interface PredictionResultCardProps {
 
 export function PredictionResultCard({ result, route }: Omit<PredictionResultCardProps, 'targetTime' | 'targetDate'>) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended;
+    const isRecoveryMode = result.mode === 'recovery' || result.isCurrentlySuspended || result.isPartialSuspension;
 
     // Split text into summary and details
     const { summary: textSummary, details: textDetails } = splitStatusText(result.officialStatus?.rawText || '');
@@ -171,36 +171,54 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                     );
                 })()}
 
-                {/* 復旧予測 (Main Feature for Recovery Mode) */}
+                {/* 復旧予測 or 部分運休詳細 (Main Feature for Recovery Mode) */}
                 <div className="mb-4">
                     <div className="bg-[var(--background-secondary)] rounded-xl p-5 text-center shadow-sm">
-                        <div className="text-xs font-bold text-[var(--muted)] mb-1 uppercase tracking-wider">AI復旧予測</div>
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                            <Clock className="w-6 h-6 text-[var(--status-suspended)]" />
-                            <div className="text-3xl font-black text-[var(--status-suspended)]">
-                                {result.estimatedRecoveryTime || '未定'}
-                            </div>
-                        </div>
+                        {/* 🆕 部分運休の場合 */}
+                        {result.isPartialSuspension ? (
+                            <>
+                                <div className="text-xs font-bold text-amber-600 mb-1 uppercase tracking-wider flex items-center justify-center gap-1">
+                                    <Info className="w-3 h-3" /> 一部運休・詳細
+                                </div>
+                                <div className="text-left bg-white/50 p-3 rounded mt-2 border border-amber-100">
+                                    <div className="font-bold text-amber-700 text-sm mb-2">運行情報詳細</div>
+                                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+                                        {formatStatusText(result.partialSuspensionText || result.officialStatus?.rawText || '詳細情報なし')}
+                                    </p>
+                                </div>
+                            </>
+                        ) : (
+                            /* 🚨 完全運休の場合（復旧予測） */
+                            <>
+                                <div className="text-xs font-bold text-[var(--muted)] mb-1 uppercase tracking-wider">AI復旧予測</div>
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <Clock className="w-6 h-6 text-[var(--status-suspended)]" />
+                                    <div className="text-3xl font-black text-[var(--status-suspended)]">
+                                        {result.estimatedRecoveryTime || '未定'}
+                                    </div>
+                                </div>
 
-                        {result.suspensionScale && (
-                            <span className={cn(
-                                "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2",
-                                result.suspensionScale === 'all-day' ? "bg-red-100 text-red-700" :
-                                    result.suspensionScale === 'large' ? "bg-orange-100 text-orange-700" :
-                                        result.suspensionScale === 'medium' ? "bg-yellow-100 text-yellow-700" :
-                                            "bg-blue-100 text-blue-700"
-                            )}>
-                                {result.suspensionScale === 'all-day' ? '終日運休の恐れ' :
-                                    result.suspensionScale === 'large' ? '大規模な運休' :
-                                        result.suspensionScale === 'medium' ? '半日程度の運休' :
-                                            '一時的な見合わせ'}
-                            </span>
+                                {result.suspensionScale && (
+                                    <span className={cn(
+                                        "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2",
+                                        result.suspensionScale === 'all-day' ? "bg-red-100 text-red-700" :
+                                            result.suspensionScale === 'large' ? "bg-orange-100 text-orange-700" :
+                                                result.suspensionScale === 'medium' ? "bg-yellow-100 text-yellow-700" :
+                                                    "bg-blue-100 text-blue-700"
+                                    )}>
+                                        {result.suspensionScale === 'all-day' ? '終日運休の恐れ' :
+                                            result.suspensionScale === 'large' ? '大規模な運休' :
+                                                result.suspensionScale === 'medium' ? '半日程度の運休' :
+                                                    '一時的な見合わせ'}
+                                    </span>
+                                )}
+
+                                <div className="text-xs text-left bg-white/50 p-3 rounded mt-2 border border-black/5">
+                                    <div className="font-bold text-[var(--status-suspended)] mb-1">復旧シナリオ</div>
+                                    {result.recoveryRecommendation || '気象回復後の安全確認完了を待って再開'}
+                                </div>
+                            </>
                         )}
-
-                        <div className="text-xs text-left bg-white/50 p-3 rounded mt-2 border border-black/5">
-                            <div className="font-bold text-[var(--status-suspended)] mb-1">復旧シナリオ</div>
-                            {result.recoveryRecommendation || '気象回復後の安全確認完了を待って再開'}
-                        </div>
                     </div>
                 </div>
 

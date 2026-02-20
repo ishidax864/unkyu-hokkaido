@@ -47,10 +47,12 @@ const runTest = () => {
 
     if (result.status === '運休') {
         console.error("FAIL: Partial suspension treated as Total Suspension!");
-    } else if (result.estimatedRecoveryTime) {
-        console.error("FAIL: Recovery Time should be null for Partial Suspension! Got: " + result.estimatedRecoveryTime);
+    } else if (!result.isPartialSuspension) {
+        console.error("FAIL: isPartialSuspension flag is Missing or False!");
+    } else if (result.partialSuspensionText !== partialText) {
+        console.error(`FAIL: partialSuspensionText mismatch! Expected: "${partialText}", Got: "${result.partialSuspensionText}"`);
     } else {
-        console.log("PASS: Partial suspension treated as Delay/Caution AND Recovery Time suppressed.");
+        console.log("PASS: Partial suspension treated as Delay/Caution, Recovery Time suppressed, and Text preserved.");
     }
 };
 

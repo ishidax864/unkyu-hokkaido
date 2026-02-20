@@ -61,14 +61,13 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 🆕 Centralized Status Logic - Call early to use constraints throughout
-    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, isPartialSuspension, maxProbabilityCap, overrideReason } = determineBaseStatus(
+    const { status: baseStatus, isOfficialSuspended, isPostResumptionChaos, isPartialSuspension, partialSuspensionText, maxProbabilityCap, overrideReason } = determineBaseStatus(
         input.jrStatus,
         input.targetDate,
         effectiveTargetTime,
         input.weather?.snowDepth // 🆕 Pass snowDepth
     );
 
-    // ... (rest of code)
 
 
     const vulnerability = ROUTE_VULNERABILITY[input.routeId] || DEFAULT_VULNERABILITY;
@@ -496,7 +495,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             wind,
             snow
         },
-        officialStatus: input.jrStatus,
+        officialStatus: input.jrStatus ? {
+            status: input.jrStatus.status,
+            statusText: input.jrStatus.statusText,
+            updatedAt: input.jrStatus.updatedAt || '',
+            rawText: input.jrStatus.rawText
+        } : undefined,
+        isPartialSuspension: isPartialSuspension, // 🆕
+        partialSuspensionText: partialSuspensionText, // 🆕
         isOfficialInfluenced, // 🆕 追加
         isPostResumptionChaos // 🆕 追加
     };

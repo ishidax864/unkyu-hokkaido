@@ -98,6 +98,10 @@ export interface PredictionResult {
   isCurrentlySuspended: boolean;
   estimatedRecoveryTime?: string;  // 例: "13:00頃", "18:30頃"
   estimatedRecoveryHours?: number | string; // 🆕 時間単位（0.5, 1, 3, 6, 12）または '終日運休'
+
+  // 🆕 部分運休・減便情報
+  isPartialSuspension?: boolean; // 一部運休モードかどうか
+  partialSuspensionText?: string; // 公式テキストの抜粋（表示用）
   suspensionScale?: 'small' | 'medium' | 'large' | 'all-day'; // 🆕 運休規模（ユーザーへの直感的な伝達用）
   recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
   suspensionReason?: string;  // 運休の原因
