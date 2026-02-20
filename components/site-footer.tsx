@@ -23,7 +23,7 @@ export function SiteFooter() {
                 <div className="pt-4">
                     <p className="mb-0.5 text-[10px]">天気データ: Open-Meteo API</p>
                     <p className="mb-2 text-[10px] opacity-60">※本サイトはアフィリエイト広告（楽天トラベル等）を利用しています</p>
-                    <p className="font-en text-[10px]">&copy; 2026 運休北海道 - Unkyu Hokkaido AI <span className="opacity-50 ml-1">v7.3</span></p>
+                    <p className="font-en text-[10px]">&copy; 2026 運休北海道 - Unkyu Hokkaido AI <span className="opacity-50 ml-1">v7.4</span></p>
                 </div>
             </div>
         </footer>
