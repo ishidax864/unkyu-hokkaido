@@ -4,7 +4,8 @@ import { PredictionResult, Route } from '@/lib/types';
 import { AlertOctagon, AlertTriangle, ArrowRight, CheckCircle, Info, MapPin, RefreshCw, Clock, XCircle, AlertCircle, ExternalLink, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
-import { formatStatusText, splitStatusText } from '@/lib/text-parser';
+import { getJRStatusUrl } from '@/lib/hokkaido-data';
+import { formatStatusText, splitStatusText, extractSuspendedTrains } from '@/lib/text-parser';
 import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision';
 
 interface PredictionResultCardProps {
@@ -199,6 +200,27 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                                         <p className="text-xs text-blue-800">{result.recoveryRecommendation}</p>
                                     </div>
                                 </div>
+                            )}
+
+                            {/* 🆕 Suspended Trains List (Partial or Full) */}
+                            {hasOfficialInfo && (result.isPartialSuspension || result.isCurrentlySuspended) && (
+                                (() => {
+                                    const suspendedTrains = extractSuspendedTrains(result.officialStatus?.rawText || '');
+                                    if (suspendedTrains.length === 0) return null;
+                                    return (
+                                        <div>
+                                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">運休・影響範囲の詳細</h4>
+                                            <ul className="space-y-2 bg-red-50/50 rounded-lg p-3 border border-red-100">
+                                                {suspendedTrains.map((train, i) => (
+                                                    <li key={i} className="flex items-start gap-2 text-sm text-red-900 font-medium leading-relaxed">
+                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                                                        <span>{train}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    );
+                                })()
                             )}
 
                             {/* Risk Factors List */}

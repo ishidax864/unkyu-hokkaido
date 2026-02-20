@@ -143,3 +143,47 @@ export function splitStatusText(text: string): { summary: string; details: strin
     return { summary, details };
 }
 
+/**
+ * Extracts list of suspended trains or sections from text.
+ * Returns array of strings describing the suspension targets.
+ * e.g. ["特急ライラック1号", "普通列車 滝川〜旭川間"]
+ */
+export function extractSuspendedTrains(text: string): string[] {
+    if (!text) return [];
+
+    // Normalize
+    const normalized = text
+        .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        .replace(/：/g, ':')
+        .replace(/<BR>/gi, '\n')
+        .replace(/<br>/gi, '\n');
+
+    // Split into sentences/lines
+    const segments = normalized.split(/[。\n]+/).map(s => s.trim()).filter(s => s.length > 0);
+
+    const suspendedLines: string[] = [];
+
+    for (const segment of segments) {
+        // Check for suspension keywords
+        if (segment.match(/運休|部分運休|間引き|本数を減ら|運転を見合わせ/)) {
+            // Exclude resumption or past tense if likely
+            // "運転再開しました" -> exclude
+            // "運転再開の見込み" -> exclude (covers "resumption is expected")? No, "Suspended until..." is valid.
+            // "運転再開" usually implies positive news, but "運転再開は未定" (Undecided) is negative.
+            // Safe filter: if it says "運転再開" AND NOT "未定" or "見込", exclude?
+            // Safer: Just exclude "運転再開しました" or "再開しています".
+            if (segment.match(/再開し|再開しま|再開して/)) continue;
+
+            // Clean up: remove "ため、" (Reason) if at start?
+            // text: "大雪のため、特急ライラックが運休" -> "特急ライラックが運休"
+            let content = segment;
+            // Remove typical prefix reasons
+            content = content.replace(/^.*(ため|より|影響で)、/, '');
+
+            suspendedLines.push(content);
+        }
+    }
+
+    return Array.from(new Set(suspendedLines));
+}
+
