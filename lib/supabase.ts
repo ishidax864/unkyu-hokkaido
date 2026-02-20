@@ -692,7 +692,8 @@ export async function getReportsList(limit: number = 50): Promise<DbResult<UserR
         };
     }
 }
-// 🆕 クローラーが取得した公的な運行履歴を取得
+
+// クローラーが取得した公的な運行履歴を取得
 export async function getOfficialRouteHistory(
     routeId: string,
     hoursBack: number = 24
@@ -723,8 +724,6 @@ export async function getOfficialRouteHistory(
             );
         }
 
-        // さらに正確な時間フィルター（created_at または date+time でフィルタリング）
-        // 簡易的に返却
         return { success: true, data: data || [] };
     } catch (error) {
         logger.error('Failed to fetch official status history', { error, routeId });
@@ -735,13 +734,12 @@ export async function getOfficialRouteHistory(
     }
 }
 
-// 🆕 クローラーの稼働状況サマリーを取得
+
 export async function getCrawlerStatusSummary(): Promise<DbResult<Record<string, unknown>[]>> {
     const client = getAdminSupabaseClient() || getSupabaseClient();
     if (!client) return { success: false, error: 'Supabase not configured' };
 
     try {
-        // 各エリアの最新のログを取得
         const { data, error } = await client
             .from('crawler_logs')
             .select('area_id, status, fetched_at, error_message')
@@ -749,7 +747,7 @@ export async function getCrawlerStatusSummary(): Promise<DbResult<Record<string,
 
         if (error) throw error;
 
-        // エリアごとに最新の1件を抽出（SQLでDISTINCT ONが使えればベストだがJSで行う）
+        // エリアごとに最新の1件を抽出
         const latestPerArea = new Map();
         (data || []).forEach(log => {
             if (!latestPerArea.has(log.area_id)) {
@@ -764,7 +762,7 @@ export async function getCrawlerStatusSummary(): Promise<DbResult<Record<string,
     }
 }
 
-// 🆕 精度向上（公的情報の寄与）の統計を取得
+// 精度向上（公的情報の寄与）の統計を取得（管理者用）
 export async function getAccuracyImpactStats(): Promise<DbResult<{
     total: number;
     influenced: number;
@@ -774,8 +772,7 @@ export async function getAccuracyImpactStats(): Promise<DbResult<{
     if (!client) return { success: false, error: 'Supabase not configured' };
 
     try {
-        const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(); // 直近7日間
-
+        const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
         const { data, error } = await client
             .from('prediction_history')
             .select('is_official_influenced')
@@ -788,11 +785,7 @@ export async function getAccuracyImpactStats(): Promise<DbResult<{
 
         return {
             success: true,
-            data: {
-                total,
-                influenced,
-                ratio: total > 0 ? (influenced / total) * 100 : 0
-            }
+            data: { total, influenced, ratio: total > 0 ? (influenced / total) * 100 : 0 }
         };
     } catch (error) {
         logger.error('Failed to fetch accuracy impact stats', { error });
@@ -800,67 +793,7 @@ export async function getAccuracyImpactStats(): Promise<DbResult<{
     }
 }
 
-// 🆕 過去の予測と実績を照合してスコアリングする
-export async function matchPredictionsWithActualOutcomes(): Promise<DbResult<{ processedCount: number }>> {
-    const client = getAdminSupabaseClient() || getSupabaseClient();
-    if (!client) return { success: false, error: 'Supabase not configured' };
-
-    try {
-        // 1. スコアがまだついていない、かつ作成から2時間以上経過した予測を取得（実績が確定している頃合い）
-        const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-        const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-
-        const { data: predictions, error: pError } = await client
-            .from('prediction_history')
-            .select('*')
-            .is('accuracy_score', null)
-            .gte('created_at', twelveHoursAgo)
-            .lte('created_at', twoHoursAgo);
-
-        if (pError) throw pError;
-        if (!predictions || predictions.length === 0) return { success: true, data: { processedCount: 0 } };
-
-        let processedCount = 0;
-
-        for (const pred of predictions) {
-            // 2. この路線の、予測時刻付近の公的ステータスを取得
-            const predTime = new Date(pred.created_at);
-            const dateStr = predTime.toISOString().split('T')[0];
-
-            const { data: actuals, error: aError } = await client
-                .from('route_status_history')
-                .select('status')
-                .eq('route_id', pred.route_id)
-                .eq('date', dateStr)
-                .order('time', { ascending: false });
-
-            if (aError || !actuals || actuals.length === 0) continue;
-
-            const actualStatus = actuals[0].status;
-
-            // 3. スコア計算 (外部化した共有ロジックを使用)
-            const score = calculateAccuracyScore(pred.probability, actualStatus as JRStatus);
-
-            // 4. DB更新
-            await client
-                .from('prediction_history')
-                .update({
-                    actual_status: actualStatus,
-                    accuracy_score: Math.min(100, Math.max(0, score))
-                })
-                .eq('id', pred.id);
-
-            processedCount++;
-        }
-
-        return { success: true, data: { processedCount } };
-    } catch (error) {
-        logger.error('Failed to match predictions with outcomes', { error });
-        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-    }
-}
-
-// 🆕 平均的中スコアを取得
+// 平均的中スコアを取得（管理者用）
 export async function getAverageAccuracyScore(): Promise<DbResult<{
     averageScore: number;
     scoredCount: number;
@@ -870,7 +803,6 @@ export async function getAverageAccuracyScore(): Promise<DbResult<{
 
     try {
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-
         const { data, error } = await client
             .from('prediction_history')
             .select('accuracy_score')
@@ -885,10 +817,7 @@ export async function getAverageAccuracyScore(): Promise<DbResult<{
 
         return {
             success: true,
-            data: {
-                averageScore: Math.round(average * 10) / 10,
-                scoredCount: total
-            }
+            data: { averageScore: Math.round(average * 10) / 10, scoredCount: total }
         };
     } catch (error) {
         logger.error('Failed to fetch average accuracy score', { error });

@@ -3,11 +3,10 @@ import { saveReportToSupabase } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 import crypto from 'crypto';
 import {
-    validateReportType,
     isNonEmptyString,
-    sanitizeString,
     extractIP
 } from '@/lib/validation-helpers';
+import { sanitizeString, isValidReportType as validateReportType } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
     try {
@@ -23,6 +22,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid reportType' }, { status: 400 });
         }
 
+        // The DB only stores the 4 active report types (not 'resumed')
+        const dbReportType = reportType as 'stopped' | 'delayed' | 'crowded' | 'normal';
+
         // 2. Security: Get real IP and Hash it (Server-side)
         const forwarded = req.headers.get('x-forwarded-for');
         const ip = extractIP(forwarded);
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
         // 4. Save to DB
         const result = await saveReportToSupabase({
             route_id: routeId,
-            report_type: reportType,
+            report_type: dbReportType,
             comment: sanitizedComment,
             ip_hash: ipHash
         });

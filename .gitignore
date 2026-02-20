@@ -44,3 +44,10 @@ next-env.d.ts
 *.csv
 *.pkl
 .env*.local
+
+# Development output artifacts
+backtest_results*.txt
+verification_report*.csv
+accuracy_report*.md
+recovery_results.json
+lint_output.txt

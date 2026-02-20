@@ -16,14 +16,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
         const supabase = getAdminSupabaseClient();
         if (!supabase) {
             console.error('Missing Supabase credentials');
-            return {
-                routeName: 'System',
-                status: 'delay', // Using 'delay' which is valid for JRStatus
-                description: 'System Error',
-                statusText: 'ERR: Admin Key Missing',
-                updatedAt: new Date().toISOString(),
-                source: 'official'
-            } as unknown as JRStatusItem;
+            return null;
         }
 
         const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
@@ -41,14 +34,8 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             .limit(1);
 
         if (dbError) {
-            return {
-                routeName: routeName,
-                status: 'delay',
-                description: 'DB Error',
-                statusText: 'ERR: DB History Fetch Failed ' + dbError.message,
-                updatedAt: new Date().toISOString(),
-                source: 'official'
-            } as unknown as JRStatusItem;
+            console.error('DB Error fetching route_status_history:', dbError.message);
+            return null;
         }
 
         if (incidents && incidents.length > 0) {
@@ -88,14 +75,8 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             .limit(1);
 
         if (logError) {
-            return {
-                routeName: routeName,
-                status: 'delay',
-                description: 'DB Error',
-                statusText: 'ERR: Log Fetch Failed ' + logError.message,
-                updatedAt: new Date().toISOString(),
-                source: 'official'
-            } as unknown as JRStatusItem;
+            console.error('DB Error fetching crawler_logs:', logError.message);
+            return null;
         }
 
         if (logs && logs.length > 0) {
@@ -149,27 +130,15 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
                 } as unknown as JRStatusItem;
             }
         } else {
-            return {
-                routeName: routeName,
-                status: 'delay',
-                description: 'No Data',
-                statusText: 'ERR: No Crawler Logs Found',
-                updatedAt: new Date().toISOString(),
-                source: 'official'
-            } as unknown as JRStatusItem;
+            // クローラーログがないまたはデータが古い -> nullを返し気象予測のみで判定する
+            return null;
         }
 
         return null;
-    } catch (e: any) {
-        console.error('JR Status Fetch Error:', e);
-        return {
-            routeName: 'System',
-            status: 'delay',
-            description: 'Exception',
-            statusText: 'ERR: Exception ' + (e.message || String(e)),
-            updatedAt: new Date().toISOString(),
-            source: 'official'
-        } as unknown as JRStatusItem;
+    } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error('JR Status Fetch Error:', msg);
+        return null;
     }
 }
 

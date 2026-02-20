@@ -201,7 +201,6 @@ import { RiskEngine } from './risk-engine';
 export function evaluateRiskFactors(
     input: PredictionInput,
     vuln: VulnerabilityData,
-    _riskFactors: any, // Deprecated, kept for signature compatibility if needed, but unused
     isNearRealTime: boolean = false
 ): RiskEvaluationResult {
     let hasRealTimeData = false;
@@ -436,7 +435,7 @@ export function calculateRawRiskScore(
     const enrichedInput = { ...input, historicalMatch };
 
     // 1. リスク要因の包括的評価
-    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, null, isNearRealTime);
+    const { totalScore: bScore, reasonsWithPriority: bReasons, hasRealTimeData } = evaluateRiskFactors(enrichedInput, vulnerability, isNearRealTime);
     let totalScore = bScore;
     const reasonsWithPriority = [...bReasons];
 

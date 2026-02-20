@@ -1,6 +1,6 @@
 'use client';
 
-import { PredictionResult, HourlyRiskData } from '@/lib/types';
+import { PredictionResult, HourlyRiskData, WeatherForecast, PredictionInput, TimeShiftSuggestion } from '@/lib/types';
 import { Station, getRouteById } from '@/lib/hokkaido-data';
 import { getHotelsForStation } from '@/lib/hotel-data';
 import { PredictionResultCard } from './prediction-result';
@@ -17,19 +17,15 @@ interface PredictionResultsProps {
     prediction: PredictionResult;
     selectedRouteId: string | null;
     date: string;
-    time: string; // 🆕
+    time: string;
     depStation: Station | null;
     arrStation: Station | null;
     riskTrend: HourlyRiskData[] | null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    realtimeStatus: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    timeShiftSuggestion: any;
+    realtimeStatus: PredictionInput['crowdsourcedStatus'];
+    timeShiftSuggestion: TimeShiftSuggestion | null;
     weeklyPredictions: PredictionResult[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    weather: any[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    handleReport: (type: any, comment?: string) => void;
+    weather: WeatherForecast[];
+    handleReport: (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string) => void;
     isFavorite: (depId: string, arrId: string) => boolean;
     addFavorite: (depId: string, arrId: string, depName: string, arrName: string) => void;
     removeFavorite: (id: string) => void;
@@ -115,8 +111,8 @@ export function PredictionResults({
             )}
 
 
-            {/* 代替ルート提案 */}
-            {prediction.probability >= 30 && (
+            {/* 代替ルート提案: リスク30%以上または部分運休時 */}
+            {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
                 <AlternativeRoutes
                     originalRoute={route}
                     predictionResult={prediction}
@@ -128,10 +124,8 @@ export function PredictionResults({
                 />
             )}
 
-            {/* 宿泊提案 */}
-
-            {/* 宿泊提案 */}
-            {prediction.probability >= 30 && (
+            {/* 宿泊提案: リスク30%以上または部分運休時 */}
+            {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
                 <HotelSuggestions
                     hotels={getHotelsForStation(arrStation.id)}
                     arrivalStationName={arrStation.name}

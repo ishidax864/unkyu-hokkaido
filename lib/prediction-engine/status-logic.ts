@@ -36,7 +36,7 @@ export function determineBaseStatus(
     const rawText = jrStatus.rawText || jrStatus.statusText || '';
 
     // 1. Partial Suspension Detection (High Priority)
-    const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き', '一部区間', '区間運休'];
+    const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き', '一部区間', '区間運休', '一部運休', '減便', '列車を一部'];
     const isPartialSuspension = partialKeywords.some(k => rawText.includes(k)) || jrStatus.status === 'partial';
 
     if (isPartialSuspension) {

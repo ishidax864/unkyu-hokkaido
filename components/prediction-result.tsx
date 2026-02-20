@@ -79,10 +79,10 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                         <h3 className="font-bold text-xl text-gray-900 tracking-tight">{route.name}</h3>
                     </div>
                     {/* Status Badge */}
-                    <span className={cn("px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase", styles.bg, styles.subtext, "border", styles.border)}>
-                        {actionStatus.type === 'CRITICAL' ? 'Severe' :
-                            actionStatus.type === 'HIGH_RISK' ? 'High Risk' :
-                                actionStatus.type === 'CAUTION' ? 'Caution' : 'Normal'}
+                    <span className={cn("px-3 py-1 rounded-full text-xs font-bold tracking-wider", styles.bg, styles.subtext, "border", styles.border)}>
+                        {actionStatus.type === 'CRITICAL' ? '重大' :
+                            actionStatus.type === 'HIGH_RISK' ? '高リスク' :
+                                actionStatus.type === 'CAUTION' ? '注意' : '平常'}
                     </span>
                 </div>
 
@@ -112,7 +112,7 @@ export function PredictionResultCard({ result, route }: Omit<PredictionResultCar
                                     </span>
                                     <span className={cn("text-xl font-bold ml-0.5 opacity-60", styles.text)}>%</span>
                                 </div>
-                                <div className={cn("text-xs font-bold uppercase tracking-widest", styles.icon)}>Risk Level</div>
+                                <div className={cn("text-xs font-bold uppercase tracking-widest", styles.icon)}>リスクレベル</div>
                             </div>
                         )}
                     </div>

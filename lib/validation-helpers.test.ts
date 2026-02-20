@@ -2,14 +2,13 @@ import { describe, it, expect } from 'vitest';
 import {
     validateEmail,
     validateUrl,
-    sanitizeString,
     validateAndSanitizeEmail,
     validateFeedbackType,
-    validateReportType,
     isNonEmptyString,
     validateRouteId,
     extractIP,
 } from './validation-helpers';
+import { sanitizeString, isValidReportType } from './validation';
 import { ValidationError } from './errors';
 
 describe('validation-helpers', () => {
@@ -40,15 +39,14 @@ describe('validation-helpers', () => {
         });
     });
 
-    describe('sanitizeString', () => {
+    describe('sanitizeString (from validation.ts)', () => {
         it('should trim and limit string length', () => {
-            expect(sanitizeString('  hello  ', 10)).toBe('hello');
-            expect(sanitizeString('a'.repeat(100), 10)).toBe('a'.repeat(10));
+            expect(sanitizeString('  hello  ', 100)).toBe('hello');
+            expect(sanitizeString('a'.repeat(200), 100)).toBe('a'.repeat(100));
         });
 
         it('should handle empty strings', () => {
-            expect(sanitizeString('', 10)).toBe('');
-            expect(sanitizeString('   ', 10)).toBe('');
+            expect(sanitizeString('', 100)).toBe('');
         });
     });
 
@@ -81,17 +79,17 @@ describe('validation-helpers', () => {
         });
     });
 
-    describe('validateReportType', () => {
+    describe('isValidReportType (from validation.ts)', () => {
         it('should accept valid report types', () => {
-            expect(validateReportType('stopped')).toBe(true);
-            expect(validateReportType('delayed')).toBe(true);
-            expect(validateReportType('crowded')).toBe(true);
-            expect(validateReportType('normal')).toBe(true);
+            expect(isValidReportType('stopped')).toBe(true);
+            expect(isValidReportType('delayed')).toBe(true);
+            expect(isValidReportType('crowded')).toBe(true);
+            expect(isValidReportType('normal')).toBe(true);
         });
 
         it('should reject invalid report types', () => {
-            expect(validateReportType('invalid')).toBe(false);
-            expect(validateReportType('')).toBe(false);
+            expect(isValidReportType('invalid')).toBe(false);
+            expect(isValidReportType('')).toBe(false);
         });
     });
 

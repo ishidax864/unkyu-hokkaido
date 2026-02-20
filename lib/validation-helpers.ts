@@ -22,17 +22,10 @@ export function validateUrl(url: string): boolean {
 }
 
 /**
- * Sanitize string input by trimming and limiting length
- */
-export function sanitizeString(input: string, maxLength: number): string {
-    return input.trim().slice(0, maxLength);
-}
-
-/**
  * Validate and sanitize email (throws ValidationError if invalid)
  */
 export function validateAndSanitizeEmail(email: string): string {
-    const sanitized = sanitizeString(email, 255);
+    const sanitized = email.trim().slice(0, 255);
     if (!validateEmail(sanitized)) {
         throw new ValidationError('email', 'Invalid email format');
     }
@@ -47,13 +40,6 @@ export function validateFeedbackType(type: string): type is 'bug' | 'improvement
 }
 
 /**
- * Validate report type
- */
-export function validateReportType(type: string): type is 'stopped' | 'delayed' | 'crowded' | 'normal' {
-    return ['stopped', 'delayed', 'crowded', 'normal'].includes(type);
-}
-
-/**
  * Type guard for non-empty string
  */
 export function isNonEmptyString(value: unknown): value is string {
@@ -61,7 +47,7 @@ export function isNonEmptyString(value: unknown): value is string {
 }
 
 /**
- * Create secure hash from IP address (SHA-256)
+ * Create secure hash from IP address (SHA-256, async)
  */
 export async function hashIP(ip: string): Promise<string> {
     const encoder = new TextEncoder();
@@ -71,18 +57,18 @@ export async function hashIP(ip: string): Promise<string> {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+/**
+ * Create secure hash from IP address (SHA-256, sync — Node.js only)
+ */
 export function hashIPSync(ip: string): string {
-    // Note: This function is intended for Node.js environments
     return crypto.createHash('sha256').update(ip).digest('hex');
 }
 
 /**
- * Validate route ID format
+ * Validate route ID format (alphanumeric with optional hyphens/dots)
  */
 export function validateRouteId(routeId: string): boolean {
-    // Route IDs should be alphanumeric with optional hyphens
-    const routeIdRegex = /^[a-zA-Z0-9-]+$/;
-    return routeIdRegex.test(routeId);
+    return /^[a-zA-Z0-9.-]+$/.test(routeId);
 }
 
 /**

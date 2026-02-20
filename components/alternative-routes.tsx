@@ -82,12 +82,6 @@ export function AlternativeRoutes({ originalRoute, predictionResult, departureSt
         return { trafficWarning: warning };
     }, [predictionResult]);
 
-    // 時間表示フォーマッター (例: "+20分" -> "❄️約40分")
-
-    // 時間表示フォーマッター (例: "+20分" -> "❄️約40分")
-
-
-
     return (
         <section aria-labelledby="alternative-routes-title">
             <div className="flex items-center gap-2 mb-4 px-1">

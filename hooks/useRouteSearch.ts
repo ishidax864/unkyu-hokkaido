@@ -201,38 +201,8 @@ export function useRouteSearch() {
             if (apiRes.ok) {
                 const mlResult: PredictionResult & { trend?: HourlyRiskData[] } = await apiRes.json();
 
-                // 検索日が今日の場合のみ、公式情報をメイン結果に上書きする
-                if (isToday && jrStatus) {
-                    // Check for Partial Suspension first
-                    const partialKeywords = ['一部', '部分', '減便', '本数を減ら', '間引き'];
-                    const isPartial = partialKeywords.some(k => jrStatus.rawText?.includes(k));
-
-                    // Overlay JR Status info (Realtime override)
-                    if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
-                        if (isPartial) {
-                            // Partial Suspension: Cap at 75% ("High Risk")
-                            mlResult.probability = 75;
-                            mlResult.level = 'high';
-                            mlResult.status = 'delayed'; // Treat as delayed/partial for UI
-                            mlResult.isPartialSuspension = true;
-                        } else {
-                            // Full Suspension: 100% ("Severe")
-                            mlResult.probability = 100;
-                            // mlResult.level is ConfidenceLevel ('high'|'medium'|'low'), NOT Risk Level. 
-                            // So 'high' confidence is appropriate for a certain suspension.
-                            mlResult.level = 'high';
-                            mlResult.status = 'suspended';
-                            mlResult.isOfficialOverride = true;
-                        }
-                        mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
-                    } else if (jrStatus.status === 'delay') {
-                        if (mlResult.probability < 80) mlResult.probability = 80;
-                        mlResult.level = 'high';
-                        mlResult.status = 'delayed';
-                        mlResult.reasons.unshift(`【公式発表】${jrStatus.statusText}`);
-                    }
-                }
-
+                // サーバー側の /api/prediction/v2 が calculateSuspensionRisk + jrStatus を
+                // 込み済みで返すため、クライアント側での上書きは不要（二重適用防止）
                 setPrediction(mlResult);
                 finalPrediction = mlResult;
 

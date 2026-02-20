@@ -5,10 +5,10 @@ import crypto from 'crypto';
 import {
     validateFeedbackType,
     isNonEmptyString,
-    sanitizeString,
     validateAndSanitizeEmail,
     extractIP
 } from '@/lib/validation-helpers';
+import { sanitizeString } from '@/lib/validation';
 import { ValidationError } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {

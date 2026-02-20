@@ -25,8 +25,7 @@ import {
 import {
     getStatusFromProbability,
     getConfidence,
-    getWeatherImpact,
-    filterOfficialText
+    getWeatherImpact
 } from './formatters';
 
 import {
@@ -34,33 +33,32 @@ import {
     MAX_PREDICTION_WITH_NORMAL_DATA
 } from './constants';
 
-import { analyzeWeatherTrend } from '../recovery-prediction';
-import { calculateResumptionTime } from './resumption';
 import { applyAdaptiveCalibration } from './calibration'; // 🆕
 import { determineBaseStatus } from './status-logic'; // 🆕
+
+import {
+    preparePredictionInput
+} from './preparation';
+
+import {
+    predictRecovery
+} from './recovery-logic';
 
 // ==========================================
 // Main Prediction Function
 // ==========================================
 
 export function calculateSuspensionRisk(input: PredictionInput): PredictionResult {
-    // 🆕 Timezone-aware today check (JST)
-    const todayJST = new Intl.DateTimeFormat('sv-SE', {
-        timeZone: 'Asia/Tokyo'
-    }).format(new Date());
+    // 1. Input Normalization & Context Preparation
+    const {
+        effectiveTargetTime,
+        isNonOperatingHour,
+        todayJST,
+        isNearRealTime,
+        calculationInput
+    } = preparePredictionInput(input);
 
-    // 🆕 Non-Operating Hours Logic (00:00 - 05:00)
-    // If user queries late night, shift prediction to first train (06:00)
-    let effectiveTargetTime = input.targetTime || '00:00';
-    let isNonOperatingHour = false;
-    const targetHour = parseInt(effectiveTargetTime.split(':')[0]);
-
-    if (targetHour >= 0 && targetHour < 5) {
-        effectiveTargetTime = '06:00';
-        isNonOperatingHour = true;
-    }
-
-    // 🆕 Centralized Status Logic - Single Source of Truth for constraints
+    // 2. Centralized Status Logic (Single Source of Truth)
     const {
         status: baseStatus,
         isOfficialSuspended,
@@ -83,22 +81,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // 0. 過去事例の事前抽出
     const historicalMatch = input.weather ? findHistoricalMatch(input.weather) : null;
 
-    // 0.5. 近傍検索判定 (Near Real-Time Check) 🆕
-    // 検索対象時刻が現在時刻から45分以内であれば「リアルタイム検索」とみなす
-    const now = new Date();
-    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00`);
-    const diffMinutes = Math.abs(targetDateTime.getTime() - now.getTime()) / (1000 * 60);
-    const isNearRealTime = diffMinutes <= 45;
-
-    // 1. リスク要因の包括的評価
-    // 🆕 Use effectiveTargetTime for calculation (e.g. 06:00 instead of 02:00)
-    const calculationInput = { ...input, targetTime: effectiveTargetTime };
-    const { totalScore: rawScore, reasonsWithPriority: rawReasons, hasRealTimeData } = calculateRawRiskScore(calculationInput, vulnerability, historicalMatch, isNearRealTime);
+    // 3. Risk Factor Evaluation
+    const {
+        totalScore: rawScore,
+        reasonsWithPriority: rawReasons,
+        hasRealTimeData
+    } = calculateRawRiskScore(calculationInput, vulnerability, historicalMatch, isNearRealTime);
     let totalScore = rawScore;
     let reasonsWithPriority = [...rawReasons];
-
-    const wind = input.weather?.windSpeed ?? 0;
-    const snow = input.weather?.snowfall ?? 0;
 
     logger.debug('Risk factors evaluated', {
         routeId: input.routeId,
@@ -130,85 +120,24 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     const weatherMaxProbability = determineMaxProbability(calculationInput, isNearRealTime);
     let probability = Math.min(Math.round(totalScore), weatherMaxProbability);
 
-    // 運休中かどうかを判定
     const isCurrentlySuspended = isOfficialSuspended && (input.targetDate === todayJST);
 
-    // 🆕 Early Recovery Prediction (Calculate this BEFORE forcing probability)
-    // This allows us to determine if the target time is AFTER the predicted recovery time
-    let estimatedRecoveryTime: string | undefined;
-    let estimatedRecoveryHours: number | undefined;
-    let recoveryRecommendation: string | undefined;
-    let suspensionReason: string | undefined;
+    // 6. Recovery Simulation
+    const recovery = predictRecovery(
+        calculationInput,
+        probability,
+        isCurrentlySuspended,
+        isPartialSuspension || false
+    );
 
-    // Run prediction if currently suspended OR risk is high enough to warrant simulation
-    if (input.weather && (isCurrentlySuspended || probability >= 40)) {
-        try {
-            const _weatherTrend = analyzeWeatherTrend(input.weather, []);
-            const rain = input.weather.precipitation || 0;
-            const wind = input.weather.windSpeed || 0; // Use local scope wind
-            const snow = input.weather.snowfall || 0;  // Use local scope snow
-            suspensionReason = determineSuspensionReason(wind, snow, rain);
+    let {
+        estimatedRecoveryTime,
+        estimatedRecoveryHours,
+        recoveryRecommendation,
+        suspensionReason
+    } = recovery;
 
-            // 🆕 Unified Resumption Logic
-            if (input.weather && input.weather.surroundingHours) {
-                const now = new Date();
-                const jstHour = parseInt(new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    hour12: false,
-                    timeZone: 'Asia/Tokyo'
-                }).format(now));
-                const currentHourStr = `${String(jstHour).padStart(2, '0')}:00`;
-
-                const futureForecasts = (input.weather.surroundingHours.length > 0)
-                    ? input.weather.surroundingHours.filter(h => (h.targetTime || '00:00') >= currentHourStr)
-                    : input.weather.surroundingHours;
-
-                if (futureForecasts.length > 0) {
-                    const peakSnow = Math.max(...input.weather.surroundingHours.map(h => h.snowfall || 0));
-                    const peakWind = Math.max(...input.weather.surroundingHours.map(h => h.windSpeed || 0));
-                    const peakGust = Math.max(...input.weather.surroundingHours.map(h => h.windGust || 0));
-                    const repWeather = input.weather.surroundingHours.find(h => (h.snowfall || 0) === peakSnow) || input.weather;
-
-                    const matchForResumption = findHistoricalMatch({
-                        ...repWeather,
-                        windSpeed: peakWind,
-                        windGust: peakGust
-                    });
-
-                    let eventStartHour = 6;
-                    if (input.jrStatus && input.jrStatus.updatedAt) {
-                        const updateTime = input.jrStatus.updatedAt.match(/(\d{1,2}):(\d{2})/);
-                        if (updateTime) eventStartHour = parseInt(updateTime[1]);
-                    }
-
-                    const resumption = calculateResumptionTime(futureForecasts, input.routeId, matchForResumption, eventStartHour, input.targetDate);
-
-                    if (resumption.estimatedResumption) {
-                        estimatedRecoveryTime = resumption.estimatedResumption;
-                        estimatedRecoveryHours = resumption.requiredBufferHours;
-                        recoveryRecommendation = resumption.reason;
-
-                        if (isCurrentlySuspended) {
-                            // Clear existing generic reasons
-                            reasonsWithPriority = reasonsWithPriority.filter(r => !r.reason.includes('運休中') && !r.reason.includes('復旧予測'));
-                            reasonsWithPriority.unshift({ reason: resumption.reason, priority: 5 });
-                            if (matchForResumption) {
-                                reasonsWithPriority.unshift({
-                                    reason: `【過去事例照合】${matchForResumption.label}のパターンに類似（${matchForResumption.consequences.recoveryTendency === 'slow' ? '長期化' : '標準的'}傾向）`,
-                                    priority: 6
-                                });
-                            }
-                        }
-                        if (isPartialSuspension) {
-                            estimatedRecoveryTime = undefined;
-                        }
-                    }
-                }
-            }
-        } catch (e) {
-            logger.error('Failed to predict recovery time', { error: e });
-        }
-    }
+    reasonsWithPriority.push(...recovery.recoveryReasons);
 
     let isFutureSafe = false;
 
@@ -217,10 +146,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
 
-    // 🆕 是否有官方情報の影響 (Before Confidence Filter as it might be affected by officialPart)
-    let isOfficialInfluenced = !!(input.jrStatus && input.jrStatus.status !== 'normal') ||
-        !!(input.officialHistory && input.officialHistory.length > 0) ||
-        (calibration.isOfficialOverride ?? false);
+    // 🆕 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
+    let isOfficialInfluenced = false;
 
     // 🆕 Confidence Filter
     if (input.weather) {
@@ -244,12 +171,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                     priority: 20
                 });
             }
-            // 🆕 If filtered because of Official Normal, mark it
-            if (input.jrStatus?.status === 'normal') {
-                isOfficialInfluenced = true;
-            }
         }
     }
+
+    // isOfficialInfluenced: JR公式情報・履歴・キャリブレーションのいずれかが予測に影響した場合に true
+    isOfficialInfluenced =
+        !!(input.jrStatus && input.jrStatus.status !== 'normal') ||
+        !!(input.officialHistory && input.officialHistory.length > 0) ||
+        (calibration.isOfficialOverride ?? false);
 
     // Official Info Cap - REFACTOR: Use baseStatus logic if already capped?
     // Maintain existing logic for now but ensure it doesn't conflict
@@ -385,8 +314,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             last15minResumed: input.crowdsourcedStatus.last15minCounts.resumed
         } : undefined,
         comparisonData: {
-            wind,
-            snow
+            wind: input.weather?.windSpeed ?? 0,
+            snow: input.weather?.snowfall ?? 0
         },
         officialStatus: input.jrStatus ? {
             status: input.jrStatus.status,
@@ -394,10 +323,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
             updatedAt: input.jrStatus.updatedAt || '',
             rawText: input.jrStatus.rawText
         } : undefined,
-        isPartialSuspension: isPartialSuspension, // 🆕
-        partialSuspensionText: partialSuspensionText, // 🆕
-        isOfficialInfluenced, // 🆕 追加
-        isPostResumptionChaos // 🆕 追加
+        isPartialSuspension,
+        partialSuspensionText,
+        isOfficialInfluenced,
+        isPostResumptionChaos
     };
 }
 

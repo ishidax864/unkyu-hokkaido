@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getCrawlerStatusSummary, getAccuracyImpactStats } from '@/lib/supabase';
+import { getCrawlerStatusSummary, getAccuracyImpactStats, getAverageAccuracyScore } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -56,7 +56,7 @@ export default function CrawlerMonitoringPage() {
             const [statusRes, impactRes, accuracyRes] = await Promise.all([
                 getCrawlerStatusSummary(),
                 getAccuracyImpactStats(),
-                import('@/lib/supabase').then(m => m.getAverageAccuracyScore()) // 🆕
+                getAverageAccuracyScore()
             ]);
 
             if (statusRes.success) setStatusSummary(statusRes.data);

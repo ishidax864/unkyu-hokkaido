@@ -28,7 +28,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
         result.status === '運休中') {
         return {
             type: 'CRITICAL',
-            title: '移動困難 (Severe)',
+            title: '移動困難',
             message: '移動の延期、または代替手段の検討を強く推奨します',
             bgColor: 'bg-red-500 text-white',
             subColor: 'bg-red-600',
@@ -47,7 +47,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     if (result.probability >= 50 || result.isPartialSuspension) {
         return {
             type: 'HIGH_RISK',
-            title: '警戒 (High Risk)',
+            title: '警戒',
             message: '大幅な遅れや運休の可能性があります。最新情報を確認してください',
             bgColor: 'bg-orange-500 text-white',
             subColor: 'bg-orange-600',
@@ -63,7 +63,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     if (result.isPostResumptionChaos || result.probability >= 20 || result.status === 'delayed' || result.status === '遅延') {
         return {
             type: 'CAUTION',
-            title: '注意 (Caution)',
+            title: '注意',
             message: '一部列車に遅れが生じる可能性があります',
             bgColor: 'bg-amber-400 text-black', // Yellow needs black text for contrast
             subColor: 'bg-amber-500',
@@ -78,7 +78,7 @@ export function evaluateActionDecision(result: PredictionResult): ActionDecision
     // 4. NORMAL (Green): Low Probability (<20%)
     return {
         type: 'NORMAL',
-        title: '平常運転見込み (Normal)',
+        title: '平常運転見込み',
         message: '現時点では定刻通りの運行が予測されます',
         bgColor: 'bg-emerald-500 text-white',
         subColor: 'bg-emerald-600',

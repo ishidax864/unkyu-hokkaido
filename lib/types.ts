@@ -289,3 +289,10 @@ export interface HourlyRiskData {
   isTarget: boolean; // 検索対象の時刻かどうか
   isCurrent?: boolean; // isTargetと重複するが、明確化のため
 }
+
+export interface TimeShiftSuggestion {
+  time: string;
+  risk: number;
+  difference: number; // 分単位
+  isEarlier: boolean;
+}
