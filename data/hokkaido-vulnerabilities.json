@@ -23,42 +23,35 @@
             ]
         ]
     },
-    "jr-hokkaido.gakuentoshi": {
-        "windThreshold": 15,
-        "snowThreshold": 4,
-        "vulnerabilityScore": 1.1,
-        "description": "一部単線区間あり",
-        "hasDeerRisk": true
-    },
-    "jr-hokkaido.muroran": {
+    "jr-hokkaido.muroran-main": {
         "windThreshold": 16,
         "snowThreshold": 4,
         "vulnerabilityScore": 1.3,
         "description": "海沿い区中で強風の影響受けやすい",
         "hasDeerRisk": true
     },
-    "jr-hokkaido.sekihoku": {
+    "jr-hokkaido.sekihoku-main": {
         "windThreshold": 23,
         "snowThreshold": 3,
         "vulnerabilityScore": 1.6,
         "description": "山間部多く積雪・強風に弱い",
         "hasDeerRisk": true
     },
-    "jr-hokkaido.soya": {
+    "jr-hokkaido.soya-main": {
         "windThreshold": 25,
         "snowThreshold": 3,
         "vulnerabilityScore": 1.8,
         "description": "最北端路線、風に強い",
         "hasDeerRisk": true
     },
-    "jr-hokkaido.nemuro": {
+    "jr-hokkaido.nemuro-main": {
         "windThreshold": 23,
         "snowThreshold": 3,
         "vulnerabilityScore": 1.5,
         "description": "長距離路線、部分運休が発生しやすい",
         "hasDeerRisk": true
     },
-    "jr-hokkaido.senmo": {
+    "jr-hokkaido.senmo-main": {
         "windThreshold": 14,
         "snowThreshold": 3,
         "vulnerabilityScore": 1.6,
@@ -92,5 +85,19 @@
         "vulnerabilityScore": 1.3,
         "description": "内陸部、積雪の影響",
         "hasDeerRisk": true
+    },
+    "jr-hokkaido.hakodate-south": {
+        "windThreshold": 20,
+        "snowThreshold": 4,
+        "vulnerabilityScore": 1.2,
+        "description": "道南沿岸、比較的安定",
+        "hasDeerRisk": false
+    },
+    "jr-hokkaido.sassho": {
+        "windThreshold": 16,
+        "snowThreshold": 4,
+        "vulnerabilityScore": 1.2,
+        "description": "札幌近郊、積雪の影響",
+        "hasDeerRisk": false
     }
 }

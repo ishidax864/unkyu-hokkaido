@@ -158,8 +158,8 @@ export function useRouteSearch() {
 
         // 🆕 過去30日の運休履歴、および公的ステータス履歴は v2 API がサーバー側で取得済み
         // クライアント側での冗長な取得を廃止
-        let historicalData: any = null;
-        let officialHistory: any = null;
+        let historicalData: PredictionInput['historicalData'] = null;
+        let officialHistory: PredictionInput['officialHistory'] = null;
 
         // ML Prediction (Server-side)
         // Now authorizes the server as the single source of truth for both Main Result and Trend.
@@ -180,12 +180,12 @@ export function useRouteSearch() {
             });
 
             if (apiRes.ok) {
-                const mlResult: PredictionResult & { trend?: HourlyRiskData[]; _serverData?: any } = await apiRes.json();
+                const mlResult: PredictionResult & { trend?: HourlyRiskData[]; _serverData?: Record<string, unknown> } = await apiRes.json();
 
                 // 🆕 サーバーから取得した enriched data を利用
                 if (mlResult._serverData) {
-                    historicalData = mlResult._serverData.historicalData;
-                    officialHistory = mlResult._serverData.officialHistory;
+                    historicalData = mlResult._serverData.historicalData as PredictionInput['historicalData'];
+                    officialHistory = mlResult._serverData.officialHistory as PredictionInput['officialHistory'];
                     // crowdsourcedStatus is already included in the main prediction
                 }
 
@@ -211,8 +211,7 @@ export function useRouteSearch() {
                 jrStatus: isToday ? jrStatus : null,
                 crowdsourcedStatus: currentCrowdsourcedStatus,
                 timetableTrain: timetableTrain || undefined,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                officialHistory: officialHistory as any
+                officialHistory: officialHistory
             });
             setPrediction(result);
             finalPrediction = result;
@@ -228,8 +227,7 @@ export function useRouteSearch() {
                 jrStatus,
                 rtStatus,
                 historicalData,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                officialHistory as any
+                officialHistory
             ));
         }
 
@@ -271,7 +269,7 @@ export function useRouteSearch() {
                         bestShift = {
                             time: bestOption.time,
                             risk: bestOption.risk,
-                            difference: diff * 60, // minutes (rough)
+                            difference: currentRisk - bestOption.risk, // リスク差分（％ポイント）
                             isEarlier: false
                         };
                     }

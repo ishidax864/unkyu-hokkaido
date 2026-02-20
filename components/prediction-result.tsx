@@ -10,11 +10,9 @@ import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision'
 interface PredictionResultCardProps {
     result: PredictionResult;
     route: Route;
-    targetDate: string; // YYYY-MM-DD format
-    targetTime: string; // HH:MM format
 }
 
-export function PredictionResultCard({ result, route }: Omit<PredictionResultCardProps, 'targetTime' | 'targetDate'>) {
+export function PredictionResultCard({ result, route }: PredictionResultCardProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
     // 1. Evaluate Decision & Styles

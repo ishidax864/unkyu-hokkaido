@@ -138,7 +138,7 @@ export function UnifiedAlternativesCard({
                             <p className="text-xs sm:text-sm text-gray-600 mb-1">
                                 運休リスク: <span className="font-bold text-emerald-600">{timeShiftSuggestion?.risk}%</span>（通常より{timeShiftSuggestion?.difference}% 低い）
                             </p>
-                            <p className="text-xs text-gray-500">現在時刻より早い時間への変更が最も確実です。</p>
+                            <p className="text-xs text-gray-500">リスクが低い時間帯への変更が確実です。</p>
                         </div>
                     </div>
                 </div>

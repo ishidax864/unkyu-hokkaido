@@ -259,15 +259,15 @@ export async function runJRCrawler() {
     // 🆕 Batch insert all ML training data in one call
     let mlResult: { inserted: number; error?: string } = { inserted: 0 };
     if (mlBatch.length > 0) {
-        console.log(`[ML] Attempting batch insert: ${mlBatch.length} rows`);
+        logger.info(`[ML] Attempting batch insert: ${mlBatch.length} rows`);
         const { error: mlBatchErr } = await supabase
             .from('ml_training_data')
             .insert(mlBatch);
         if (mlBatchErr) {
-            console.error(`[ML] Batch insert FAILED: ${mlBatchErr.message}`, mlBatchErr.code, mlBatchErr.details);
+            logger.error(`[ML] Batch insert FAILED: ${mlBatchErr.message}`, { code: mlBatchErr.code, details: mlBatchErr.details });
             mlResult = { inserted: 0, error: mlBatchErr.message };
         } else {
-            console.log(`[ML] ✅ ${mlBatch.length} rows inserted`);
+            logger.info(`[ML] ✅ ${mlBatch.length} rows inserted`);
             mlResult = { inserted: mlBatch.length };
         }
     }

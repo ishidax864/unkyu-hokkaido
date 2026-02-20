@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { RISK_FACTORS, DEFAULT_VULNERABILITY } from '../../lib/prediction-engine/risk-factors';
-import { PredictionInput, WeatherData } from '../../types';
+import { PredictionInput, WeatherForecast } from '@/lib/types';
 
 // Mock helpers if needed, but RISK_FACTORS mostly uses pure functions or constants
 // We might need to mock getJRStatusWeight or getRecencyWeight if they are complex, 
@@ -9,7 +9,7 @@ import { PredictionInput, WeatherData } from '../../types';
 describe('RISK_FACTORS', () => {
     const mockVulnerability = DEFAULT_VULNERABILITY;
 
-    const createMockInput = (weather: Partial<WeatherData>): PredictionInput => ({
+    const createMockInput = (weather: Partial<WeatherForecast>): PredictionInput => ({
         routeId: 'test-route',
         routeName: 'Test Route',
         targetDate: '2024-01-01',
@@ -23,13 +23,13 @@ describe('RISK_FACTORS', () => {
             precipitation: 0,
             warnings: [],
             ...weather
-        } as WeatherData,
+        } as WeatherForecast,
     });
 
     it('should trigger Storm Warning score', () => {
         const factor = RISK_FACTORS.find(f => f.priority === 1)!;
         const input = createMockInput({
-            warnings: [{ type: '暴風警報', level: 'warning' }]
+            warnings: [{ type: '暴風警報', area: '北海道', issuedAt: '2024-01-01T00:00:00Z' }]
         });
 
         expect(factor.condition(input, mockVulnerability)).toBe(true);
@@ -40,7 +40,7 @@ describe('RISK_FACTORS', () => {
     it('should trigger Heavy Snow Warning score', () => {
         const factor = RISK_FACTORS.find(f => f.priority === 2)!;
         const input = createMockInput({
-            warnings: [{ type: '大雪警報', level: 'warning' }]
+            warnings: [{ type: '大雪警報', area: '北海道', issuedAt: '2024-01-01T00:00:00Z' }]
         });
 
         expect(factor.condition(input, mockVulnerability)).toBe(true);

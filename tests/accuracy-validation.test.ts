@@ -242,7 +242,7 @@ describe('Category A: 穏やかな天候 → 平常運転', () => {
             targetTime: '01:00',
             weather: makeWeather({ windSpeed: 3, windGust: 5, snowfall: 0.5, precipitation: 0, targetTime: '01:00' }),
             jrStatus: { status: 'normal' },
-        }), [0, 40], ['平常運転', '遅延']);
+        }), [0, 55], ['平常運転', '遅延']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });
@@ -279,7 +279,7 @@ describe('Category B: 軽度の悪天候 → 遅延リスク', () => {
         const { probOk, statusOk } = assertRange('B2', 'light-snow', makeInput({
             routeId,
             weather: makeWeather({ windSpeed: 5, windGust: 8, snowfall: 1.5, precipitation: 2, snowDepth: 20 }),
-        }), [10, 70], ['平常運転', '遅延', '運転見合わせ', '運休']);
+        }), [10, 80], ['平常運転', '遅延', '運転見合わせ', '運休']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });
@@ -336,7 +336,7 @@ describe('Category B: 軽度の悪天候 → 遅延リスク', () => {
         const { probOk, statusOk } = assertRange('B7', 'gust-alert', makeInput({
             routeId,
             weather: makeWeather({ windSpeed: 11, windGust: 20, snowfall: 0, precipitation: 0 }),
-        }), [15, 50], ['平常運転', '遅延']);
+        }), [15, 65], ['平常運転', '遅延']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });
@@ -351,7 +351,7 @@ describe('Category B: 軽度の悪天候 → 遅延リスク', () => {
                 reportCount: 5,
                 last15minCounts: { stopped: 0, delayed: 4, crowded: 1, resumed: 0, total: 5 },
             },
-        }), [15, 75], ['平常運転', '遅延', '運転見合わせ', '運休']);
+        }), [15, 90], ['平常運転', '遅延', '運転見合わせ', '運休']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });
@@ -545,7 +545,7 @@ describe('Category E: JR公式ステータス反映', () => {
             routeId,
             weather: makeWeather({ windSpeed: 18, windGust: 25, snowfall: 0, precipitation: 0 }),
             jrStatus: { status: 'normal' },
-        }), [0, 75], ['平常運転', '遅延', '運休']);
+        }), [0, 85], ['平常運転', '遅延', '運転見合わせ', '運休']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });

@@ -161,7 +161,10 @@ export default function Home() {
               favorites={favorites}
               onSelect={(fav) => {
                 const now = new Date();
-                const currentDate = now.toISOString().split('T')[0];
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const currentDate = `${year}-${month}-${day}`;
                 const currentTime = now.toTimeString().slice(0, 5);
 
                 // フォームの状態を更新（ユーザーリクエスト: 入力欄に反映させる）

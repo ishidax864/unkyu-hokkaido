@@ -3,15 +3,8 @@
  * Centralized utilities for consistent styling and responsive design
  */
 
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-/**
- * Merge Tailwind classes with proper precedence
- */
-export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+// cn() は lib/utils.ts に統一 — 二重定義を防止
+export { cn } from '@/lib/utils';
 
 /**
  * Risk level classification
