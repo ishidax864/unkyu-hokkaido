@@ -18,7 +18,8 @@ export function applyAdaptiveCalibration(
     vulnerability: VulnerabilityData,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     historicalMatch: any,
-    reasons: Array<{ reason: string; priority: number }>
+    reasons: Array<{ reason: string; priority: number }>,
+    isFutureSafe?: boolean // 🆕
 ): CalibrationResult {
     if (!input.jrStatus || !input.targetDate || !input.targetTime || !input.weather || !input.weather.surroundingHours) {
         return { probability, reasons, isOfficialOverride: false };
@@ -87,7 +88,7 @@ export function applyAdaptiveCalibration(
             }
         }
 
-        if (!isAfterResumption) {
+        if (!isAfterResumption && !isFutureSafe) {
             newProbability = 100;
         } else {
             // After resumption, the "Current Suspension" influence should be removed.

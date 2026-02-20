@@ -257,7 +257,7 @@ export async function fetchHourlyWeatherForecast(
         // 前後12時間のデータを抽出（タイムシフト提案・グラフ用）
         const surroundingHours: WeatherForecast[] = [];
         for (let i = -12; i <= 12; i++) {
-            if (i === 0) continue;
+            // if (i === 0) continue; // 🆕 Include target hour to avoid data hole!
             const targetIdx = closestIndex + i;
             if (targetIdx >= 0 && targetIdx < data.hourly.time.length) {
                 const hTime = data.hourly.time[targetIdx];

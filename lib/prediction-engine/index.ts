@@ -287,7 +287,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     }
 
     // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
-    const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority);
+    const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority, isFutureSafe);
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
 
