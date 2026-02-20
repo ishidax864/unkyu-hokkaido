@@ -49,7 +49,7 @@ export function determineBaseStatus(
             // 🆕 Signal Partial Suspension to suppress "Recovery Time"
             isPartialSuspension: true,
             partialSuspensionText: rawText, // 🆕 Pass the raw text for display
-            maxProbabilityCap: undefined, // Let weather decide risk
+            maxProbabilityCap: 75, // 🆕 Cap at 75% so it doesn't show as "Severe/Suspended" (which is 80%+)
             overrideReason: `【一部運休・詳細】${rawText}` // Use raw text for reason too
         };
     }
