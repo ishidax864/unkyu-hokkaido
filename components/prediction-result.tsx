@@ -1,12 +1,182 @@
 
 import { useState } from 'react';
 import { PredictionResult, Route } from '@/lib/types';
-import { AlertOctagon, AlertTriangle, CheckCircle, Info, Clock, XCircle, ExternalLink, ChevronDown, ChevronUp, ArrowDown } from 'lucide-react';
+import { AlertOctagon, AlertTriangle, CheckCircle, Clock, XCircle, ExternalLink, ChevronDown, ChevronUp, ArrowDown, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText, extractSuspendedTrains } from '@/lib/text-parser';
-import { evaluateActionDecision, ActionStatusType } from '@/lib/action-decision';
-import { GoNoGoBadge } from './go-no-go-badge';
+
+// ────────────────────────────────────────────
+// Verdict System: ONE card, ONE story
+// ────────────────────────────────────────────
+
+type VerdictLevel = 'GO' | 'CAUTION' | 'HIGH' | 'CRITICAL';
+
+interface VerdictConfig {
+    level: VerdictLevel;
+    verdict: string;        // THE hero text — the only thing that matters
+    evidence: string;       // Why we say this — one line
+    cardBg: string;
+    cardBorder: string;
+    textPrimary: string;
+    textSecondary: string;
+    accentBar: string;
+    detailsBg: string;
+    detailsBorder: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    icon: typeof CheckCircle;
+}
+
+function buildVerdict(result: PredictionResult): VerdictConfig {
+    const prob = result.probability;
+    const crowd = result.crowdStats;
+    const recoveryTime = result.estimatedRecoveryTime;
+    const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
+
+    // Build evidence fragments
+    const evidenceParts: string[] = [];
+
+    // ── CRITICAL: 運休中 or >= 80% ──
+    if (result.isCurrentlySuspended && !result.isPartialSuspension || prob >= 80 ||
+        result.status === 'suspended' || result.status === 'cancelled' ||
+        result.status === '運休' || result.status === '運休中') {
+
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1) {
+            evidenceParts.push(`${crowd.last15minStopped}人のユーザーが確認済み`);
+        }
+        if (result.suspensionReason) {
+            evidenceParts.push(`原因: ${result.suspensionReason}`);
+        }
+        if (recoveryTime) {
+            evidenceParts.push(`復旧見込: ${recoveryTime}（${recoveryLabel}）`);
+        } else {
+            evidenceParts.push('復旧の目処は立っていません');
+        }
+
+        return {
+            level: 'CRITICAL',
+            verdict: recoveryTime?.includes('終日')
+                ? '本日は運休 — 代替手段をお使いください'
+                : '運休中 — 代替手段をお使いください',
+            evidence: evidenceParts.join(' · '),
+            cardBg: 'bg-gradient-to-br from-red-600 to-red-700',
+            cardBorder: 'border-red-800/30',
+            textPrimary: 'text-white',
+            textSecondary: 'text-red-100',
+            accentBar: 'bg-red-500',
+            detailsBg: 'bg-red-800/20',
+            detailsBorder: 'border-red-400/20',
+            ctaPrimary: 'bg-white text-red-700 hover:bg-red-50',
+            ctaSecondary: 'border-white/40 text-white hover:bg-white/10',
+            icon: XCircle,
+        };
+    }
+
+    // ── HIGH: 50-79% or Partial Suspension ──
+    if (prob >= 50 || result.isPartialSuspension) {
+        if (result.isPartialSuspension) {
+            evidenceParts.push('一部の列車が停止中');
+        } else {
+            evidenceParts.push(`運休リスク ${prob}%`);
+        }
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1) {
+            evidenceParts.push(`${crowd.last15minStopped}人が停止を報告`);
+        } else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+        }
+        if (recoveryTime) {
+            evidenceParts.push(`復旧見込: ${recoveryTime}`);
+        }
+
+        return {
+            level: 'HIGH',
+            verdict: '代替手段で移動してください',
+            evidence: evidenceParts.join(' · '),
+            cardBg: 'bg-gradient-to-br from-orange-500 to-orange-600',
+            cardBorder: 'border-orange-700/30',
+            textPrimary: 'text-white',
+            textSecondary: 'text-orange-100',
+            accentBar: 'bg-orange-400',
+            detailsBg: 'bg-orange-800/20',
+            detailsBorder: 'border-orange-400/20',
+            ctaPrimary: 'bg-white text-orange-700 hover:bg-orange-50',
+            ctaSecondary: 'border-white/40 text-white hover:bg-white/10',
+            icon: AlertTriangle,
+        };
+    }
+
+    // ── POST-RECOVERY ──
+    if (result.isPostRecoveryWindow) {
+        evidenceParts.push('運転再開後のダイヤ乱れ');
+        if (recoveryTime) evidenceParts.push(`${recoveryTime}に再開`);
+        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+        }
+
+        return {
+            level: 'CAUTION',
+            verdict: '遅延に注意してください',
+            evidence: evidenceParts.join(' · '),
+            cardBg: 'bg-gradient-to-br from-amber-400 to-amber-500',
+            cardBorder: 'border-amber-600/30',
+            textPrimary: 'text-amber-950',
+            textSecondary: 'text-amber-800',
+            accentBar: 'bg-amber-300',
+            detailsBg: 'bg-amber-700/10',
+            detailsBorder: 'border-amber-600/20',
+            ctaPrimary: 'bg-amber-950 text-white hover:bg-amber-900',
+            ctaSecondary: 'border-amber-800/40 text-amber-900 hover:bg-amber-600/10',
+            icon: AlertTriangle,
+        };
+    }
+
+    // ── CAUTION: 20-49% or delayed ──
+    if (prob >= 20 || result.isPostResumptionChaos || result.status === 'delayed' || result.status === '遅延') {
+        evidenceParts.push(`運休リスク ${prob}%`);
+        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+        }
+
+        return {
+            level: 'CAUTION',
+            verdict: '遅延に注意してください',
+            evidence: evidenceParts.join(' · ') || '10〜30分程度の遅延の可能性があります',
+            cardBg: 'bg-gradient-to-br from-amber-400 to-amber-500',
+            cardBorder: 'border-amber-600/30',
+            textPrimary: 'text-amber-950',
+            textSecondary: 'text-amber-800',
+            accentBar: 'bg-amber-300',
+            detailsBg: 'bg-amber-700/10',
+            detailsBorder: 'border-amber-600/20',
+            ctaPrimary: 'bg-amber-950 text-white hover:bg-amber-900',
+            ctaSecondary: 'border-amber-800/40 text-amber-900 hover:bg-amber-600/10',
+            icon: AlertTriangle,
+        };
+    }
+
+    // ── GO: < 20% ──
+    return {
+        level: 'GO',
+        verdict: '予定通り運行中',
+        evidence: `リスク ${prob}% — 通常通りご利用いただけます`,
+        cardBg: 'bg-white',
+        cardBorder: 'border-emerald-200',
+        textPrimary: 'text-gray-900',
+        textSecondary: 'text-gray-500',
+        accentBar: 'bg-emerald-500',
+        detailsBg: 'bg-gray-50',
+        detailsBorder: 'border-gray-200',
+        ctaPrimary: 'bg-emerald-600 text-white hover:bg-emerald-700',
+        ctaSecondary: 'border-gray-300 text-gray-700 hover:bg-gray-50',
+        icon: CheckCircle,
+    };
+}
+
+
+// ────────────────────────────────────────────
+// The Card
+// ────────────────────────────────────────────
 
 interface PredictionResultCardProps {
     result: PredictionResult;
@@ -16,249 +186,162 @@ interface PredictionResultCardProps {
 export function PredictionResultCard({ result, route }: PredictionResultCardProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-    // 1. Evaluate Decision & Styles
-    const actionStatus = evaluateActionDecision(result);
+    const v = buildVerdict(result);
+    const Icon = v.icon;
+    const isColoredCard = v.level !== 'GO';
+
     const { summary: textSummary } = splitStatusText(result.officialStatus?.rawText || '');
     const hasOfficialInfo = !!result.officialStatus;
     const suspendedTrains = extractSuspendedTrains(result.officialStatus?.rawText || '');
-    const hasSpecificImpact = suspendedTrains.length > 0;
-
-    const getStatusStyles = (type: ActionStatusType) => {
-        switch (type) {
-            case 'CRITICAL':
-                return {
-                    bg: 'bg-red-50',
-                    border: 'border-red-100',
-                    text: 'text-red-900',
-                    accent: 'bg-red-600',
-                    icon: 'text-red-600',
-                    subtext: 'text-red-700',
-                    actionBg: 'bg-red-600 hover:bg-red-700',
-                };
-            case 'HIGH_RISK':
-                return {
-                    bg: 'bg-orange-50',
-                    border: 'border-orange-100',
-                    text: 'text-orange-900',
-                    accent: 'bg-orange-500',
-                    icon: 'text-orange-600',
-                    subtext: 'text-orange-700',
-                    actionBg: 'bg-orange-600 hover:bg-orange-700',
-                };
-            case 'CAUTION':
-                return {
-                    bg: 'bg-amber-50',
-                    border: 'border-amber-100',
-                    text: 'text-amber-900',
-                    accent: 'bg-amber-400',
-                    icon: 'text-amber-600',
-                    subtext: 'text-amber-700',
-                    actionBg: 'bg-amber-600 hover:bg-amber-700',
-                };
-            case 'NORMAL':
-            default:
-                return {
-                    bg: 'bg-slate-50',
-                    border: 'border-slate-100',
-                    text: 'text-slate-900',
-                    accent: 'bg-emerald-500',
-                    icon: 'text-emerald-500',
-                    subtext: 'text-slate-600',
-                    actionBg: 'bg-emerald-600 hover:bg-emerald-700',
-                };
-        }
-    };
-
-    const styles = getStatusStyles(actionStatus.type);
-    const showRecoveryProminent = (result.isCurrentlySuspended || result.isPartialSuspension || result.isPostRecoveryWindow) && result.estimatedRecoveryTime;
-    const showAlternativesCTA = actionStatus.type === 'CRITICAL' || actionStatus.type === 'HIGH_RISK';
+    const showAlternativesCTA = v.level === 'CRITICAL' || v.level === 'HIGH';
 
     return (
-        <article className={cn("relative overflow-hidden rounded-2xl bg-white shadow-sm border", styles.border)}>
-            {/* Top Color Accent */}
-            <div className={cn("h-1.5 w-full", styles.accent)} />
+        <article className={cn(
+            "relative overflow-hidden rounded-2xl shadow-lg border transition-all",
+            v.cardBg, v.cardBorder
+        )}>
+            {/* Top accent bar */}
+            <div className={cn("h-1.5 w-full", v.accentBar)} />
 
             <div className="p-6">
-                {/* 1. Header: Route & Label */}
-                <div className="flex items-start justify-between mb-8">
-                    <div className="flex items-center gap-3">
-                        <div className="h-8 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
-                        <h3 className="font-bold text-xl text-gray-900 tracking-tight">{route.name}</h3>
-                    </div>
-                    <span className={cn("px-3 py-1 rounded-full text-xs font-bold tracking-wider", styles.bg, styles.subtext, "border", styles.border)}>
-                        {actionStatus.type === 'CRITICAL' ? '重大' :
-                            actionStatus.type === 'HIGH_RISK' ? '高リスク' :
-                                actionStatus.type === 'CAUTION' ? '注意' : '平常'}
+                {/* ① Route Label */}
+                <div className="flex items-center gap-2.5 mb-5">
+                    <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
+                    <span className={cn("text-sm font-bold tracking-tight", isColoredCard ? v.textSecondary : 'text-gray-500')}>
+                        {route.name}
                     </span>
                 </div>
 
-                {/* 1.5. Go/No-Go Badge — THE answer */}
-                <div className="mb-6">
-                    <GoNoGoBadge result={result} />
+                {/* ② THE VERDICT — The only thing that matters */}
+                <div className="flex items-start gap-4 mb-4">
+                    <Icon className={cn("w-8 h-8 shrink-0 mt-0.5", v.textPrimary, isColoredCard ? 'opacity-90' : '')} />
+                    <h2 className={cn("text-2xl sm:text-3xl font-black leading-tight tracking-tight", v.textPrimary)}>
+                        {v.verdict}
+                    </h2>
                 </div>
 
-                {/* 2. Hero: Decision & Metrics */}
-                <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-6 mb-6">
-                    <div>
-                        <h2 className={cn("text-3xl sm:text-4xl font-black mb-2 leading-tight", styles.text)}>
-                            {actionStatus.title}
-                        </h2>
-                        <p className={cn("text-sm font-medium", styles.subtext)}>
-                            {actionStatus.message}
-                        </p>
-                    </div>
+                {/* ③ Evidence Line — WHY we say this */}
+                <p className={cn("text-sm font-medium leading-relaxed mb-5 pl-12", v.textSecondary)}>
+                    {v.evidence}
+                </p>
 
-                    {/* Visual Meter */}
-                    <div className="flex items-center gap-1 self-end sm:self-center">
-                        {result.isCurrentlySuspended && !result.isPartialSuspension ? (
-                            <div className="flex flex-col items-end">
-                                <AlertOctagon className={cn("w-12 h-12 mb-1", styles.icon)} />
-                                <span className={cn("text-xs font-bold", styles.subtext)}>運転見合わせ</span>
-                            </div>
-                        ) : (
-                            <div className="text-right">
-                                <div className="flex items-baseline justify-end">
-                                    <span className={cn("text-5xl font-black tracking-tighter font-en", styles.text)}>
-                                        {result.probability}
-                                    </span>
-                                    <span className={cn("text-xl font-bold ml-0.5 opacity-60", styles.text)}>%</span>
-                                </div>
-                                <div className={cn("text-xs font-bold uppercase tracking-widest", styles.icon)}>リスクレベル</div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* 3. Recovery Timeline (PROMOTED — always visible when available) */}
-                {showRecoveryProminent && (
-                    <div className="mb-6 rounded-xl bg-blue-50 border border-blue-100 p-4">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="p-1.5 rounded-full bg-blue-100">
-                                <Clock className="w-5 h-5 text-blue-600" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">
-                                    {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'}
-                                </p>
-                                <p className="text-xl font-black text-blue-900 leading-tight">
-                                    {result.estimatedRecoveryTime}
-                                </p>
-                            </div>
-                            {!result.isPostRecoveryWindow && (
-                                <span className="ml-auto px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">
-                                    {result.isOfficialOverride ? '公式発表' : 'AI予測'}
-                                </span>
-                            )}
+                {/* ④ Suspended trains list (if official data has specifics) */}
+                {suspendedTrains.length > 0 && (
+                    <div className={cn("rounded-lg p-3 mb-5 border", v.detailsBg, v.detailsBorder)}>
+                        <div className="flex items-center gap-2 mb-2">
+                            <span className={cn(
+                                "px-2 py-0.5 rounded text-[10px] font-bold",
+                                isColoredCard ? "bg-white/20 text-white" : "bg-gray-800 text-white"
+                            )}>公式発表</span>
                         </div>
-                        {result.recoveryRecommendation && (
-                            <p className="text-xs text-blue-700 leading-relaxed pl-10">
-                                {result.recoveryRecommendation}
-                            </p>
+                        <ul className="space-y-1.5">
+                            {suspendedTrains.map((train, i) => (
+                                <li key={i} className={cn("text-sm font-bold leading-snug flex items-start gap-2", v.textPrimary)}>
+                                    <span className="block w-1.5 h-1.5 mt-2 rounded-full bg-current opacity-60" />
+                                    {train}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                {/* ⑤ Supporting data: probability + recovery */}
+                <div className={cn(
+                    "flex items-center gap-4 text-xs font-bold mb-5 px-3 py-2.5 rounded-lg border",
+                    v.detailsBg, v.detailsBorder
+                )}>
+                    {/* Probability (demoted to small supporting info) */}
+                    <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
+                        <span className="opacity-60">📊</span>
+                        <span>AI予測 {result.probability}%</span>
+                    </div>
+
+                    {/* Recovery time */}
+                    {result.estimatedRecoveryTime && (
+                        <>
+                            <span className={cn("opacity-30", v.textSecondary)}>|</span>
+                            <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
+                                <Clock className="w-3.5 h-3.5 opacity-60" />
+                                <span>
+                                    {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
+                                    {result.isOfficialOverride && (
+                                        <span className="opacity-60 ml-1">(公式)</span>
+                                    )}
+                                </span>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Crowd count */}
+                    {result.crowdStats && result.crowdStats.last15minReportCount > 0 && (
+                        <>
+                            <span className={cn("opacity-30", v.textSecondary)}>|</span>
+                            <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
+                                <Users className="w-3.5 h-3.5 opacity-60" />
+                                <span>報告 {result.crowdStats.last15minReportCount}件</span>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* ⑥ CTAs — What to do NOW */}
+                {showAlternativesCTA && (
+                    <div className="space-y-2.5 mb-5">
+                        <a
+                            href="#alternative-routes-title"
+                            className={cn(
+                                "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl text-sm font-black transition-all shadow-sm active:scale-[0.98]",
+                                v.ctaPrimary
+                            )}
+                        >
+                            🚌 代替ルートを見る <ArrowDown size={14} />
+                        </a>
+                        {result.estimatedRecoveryTime && !result.estimatedRecoveryTime.includes('終日') && (
+                            <button
+                                className={cn(
+                                    "flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-sm font-bold border transition-all active:scale-[0.98]",
+                                    v.ctaSecondary
+                                )}
+                            >
+                                🕐 復旧まで待つ（{result.estimatedRecoveryTime}頃）
+                            </button>
                         )}
                     </div>
                 )}
 
-                {/* 4. Action Card — What to do NOW */}
-                <div className={cn("rounded-xl p-5 border-l-4 shadow-sm", styles.bg, styles.border)}>
-                    <div className="flex items-start gap-4">
-                        {/* Icon */}
-                        <div className={cn("p-2 rounded-full shrink-0", "bg-white/60")}>
-                            {actionStatus.type === 'CRITICAL' ? <XCircle className={cn("w-6 h-6", styles.icon)} /> :
-                                actionStatus.type === 'HIGH_RISK' ? <AlertTriangle className={cn("w-6 h-6", styles.icon)} /> :
-                                    actionStatus.type === 'CAUTION' ? <Info className={cn("w-6 h-6", styles.icon)} /> :
-                                        <CheckCircle className={cn("w-6 h-6", styles.icon)} />}
-                        </div>
-
-                        <div className="space-y-3 w-full">
-                            {/* Official suspended trains list */}
-                            {hasSpecificImpact && (
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="px-2 py-0.5 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表 (抜粋)</span>
-                                    </div>
-                                    <ul className="space-y-2.5">
-                                        {suspendedTrains.map((train, i) => (
-                                            <li key={i} className={cn("text-base font-bold leading-snug flex items-start gap-2", styles.text)}>
-                                                <span className={cn("block w-1.5 h-1.5 mt-2 rounded-full opacity-70 bg-current")} />
-                                                {train}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            {/* Official summary (non-specific) */}
-                            {!hasSpecificImpact && result.isOfficialOverride && (
-                                <div className={cn("text-base font-bold leading-relaxed", styles.text)}>
-                                    <span className="inline-block px-2 py-0.5 mb-2 rounded-sm bg-black/80 text-white text-[10px] font-bold">公式発表</span>
-                                    <div>{formatStatusText(textSummary)}</div>
-                                </div>
-                            )}
-
-                            {/* Primary reason (weather-based) */}
-                            {!hasSpecificImpact && !result.isOfficialOverride && (
-                                <div className={cn("text-base font-bold leading-relaxed", styles.text)}>
-                                    {result.reasons[0] || '特段のリスク要因は検出されていません'}
-                                </div>
-                            )}
-
-                            {/* NEXT ACTION — the key deliverable */}
-                            <div className={cn("pt-3 border-t border-black/5")}>
-                                <p className={cn("text-xs font-bold opacity-60 mb-1 tracking-wider", styles.subtext)}>
-                                    {actionStatus.type === 'NORMAL' ? '✅ 判定' : '⚡ あなたの次のアクション'}
-                                </p>
-                                <p className={cn("text-sm font-bold leading-relaxed", styles.text)}>
-                                    {actionStatus.nextAction}
-                                </p>
-                            </div>
-
-                            {/* CTA: Scroll to alternatives */}
-                            {showAlternativesCTA && (
-                                <a
-                                    href="#alternative-routes-title"
-                                    className={cn(
-                                        "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold text-white transition-all shadow-sm active:scale-95",
-                                        styles.actionBg
-                                    )}
-                                >
-                                    代替ルート・行動提案を見る <ArrowDown size={14} />
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* 5. Collapsible Details */}
-                <div className="border-t border-gray-100 pt-4 mt-6">
+                {/* ⑦ Collapsible Details */}
+                <div className={cn("border-t pt-3", isColoredCard ? 'border-white/15' : 'border-gray-100')}>
                     <button
                         onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-                        className="w-full flex items-center justify-between py-2 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                        className={cn(
+                            "w-full flex items-center justify-between py-1.5 text-xs font-bold transition-colors",
+                            isColoredCard ? 'text-white/60 hover:text-white/90' : 'text-gray-400 hover:text-gray-700'
+                        )}
                     >
-                        <span>詳細情報・要因内訳</span>
-                        {isDetailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        <span>詳しい分析を見る</span>
+                        {isDetailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
 
                     {isDetailsOpen && (
-                        <div className="mt-4 space-y-6 animate-in fade-in slide-in-from-top-2">
-
+                        <div className="mt-3 space-y-4 animate-in fade-in slide-in-from-top-2">
                             {/* Official Text Full */}
                             {hasOfficialInfo && (
                                 <div>
-                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">公式発表 (全文)</h4>
-                                    <div className="text-xs leading-relaxed text-gray-600 bg-gray-50 p-3 rounded-lg whitespace-pre-wrap">
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>公式発表 (全文)</h4>
+                                    <div className={cn("text-xs leading-relaxed p-3 rounded-lg whitespace-pre-wrap border", v.detailsBg, v.detailsBorder, v.textSecondary)}>
                                         {formatStatusText(result.officialStatus?.rawText || '')}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Risk Factors List */}
-                            {result.reasons.length > 1 && (
+                            {/* Risk Factors */}
+                            {result.reasons.length > 0 && (
                                 <div>
-                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">リスク要因</h4>
-                                    <ul className="space-y-2">
-                                        {result.reasons.slice(result.isOfficialOverride ? 0 : 1).map((r, i) => (
-                                            <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                                                <span className="block w-1.5 h-1.5 mt-1.5 rounded-full bg-gray-300 shrink-0" />
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>リスク要因</h4>
+                                    <ul className="space-y-1.5">
+                                        {result.reasons.map((r, i) => (
+                                            <li key={i} className={cn("flex items-start gap-2 text-xs", v.textSecondary)}>
+                                                <span className="block w-1 h-1 mt-1.5 rounded-full bg-current opacity-40 shrink-0" />
                                                 {r}
                                             </li>
                                         ))}
@@ -266,13 +349,14 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                                 </div>
                             )}
 
-                            {/* Crowd Reports */}
-                            {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0) && (
+                            {/* Crowd Report Detail */}
+                            {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minCrowded > 0) && (
                                 <div>
-                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">ユーザー報告 (直近15分)</h4>
-                                    <div className="flex gap-3 text-xs font-bold">
-                                        {result.crowdStats.last15minStopped > 0 && <span className="text-red-600">停止: {result.crowdStats.last15minStopped}件</span>}
-                                        {result.crowdStats.last15minDelayed > 0 && <span className="text-amber-600">遅延: {result.crowdStats.last15minDelayed}件</span>}
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>ユーザー報告 (直近15分)</h4>
+                                    <div className={cn("flex gap-3 text-xs font-bold", v.textSecondary)}>
+                                        {result.crowdStats.last15minStopped > 0 && <span>🔴 停止: {result.crowdStats.last15minStopped}件</span>}
+                                        {result.crowdStats.last15minDelayed > 0 && <span>🟡 遅延: {result.crowdStats.last15minDelayed}件</span>}
+                                        {result.crowdStats.last15minCrowded > 0 && <span>🟠 混雑: {result.crowdStats.last15minCrowded}件</span>}
                                     </div>
                                 </div>
                             )}
@@ -280,15 +364,20 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     )}
                 </div>
 
-                {/* Footer: JR Official Link */}
-                <div className="mt-6 pt-4 border-t border-gray-100 flex justify-center">
+                {/* ⑧ JR Official Link */}
+                <div className={cn("mt-4 pt-3 border-t flex justify-center", isColoredCard ? 'border-white/15' : 'border-gray-100')}>
                     <a
                         href={getJRStatusUrl(route.id).url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all shadow-sm hover:shadow active:scale-95"
+                        className={cn(
+                            "inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all active:scale-95",
+                            isColoredCard
+                                ? 'bg-white/15 text-white hover:bg-white/25 border border-white/20'
+                                : 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm'
+                        )}
                     >
-                        JR公式ページで確認 <ExternalLink size={14} />
+                        JR公式ページで確認 <ExternalLink size={12} />
                     </a>
                 </div>
             </div>
