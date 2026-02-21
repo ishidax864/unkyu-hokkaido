@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { PredictionResult, Route } from '@/lib/types';
-import { AlertOctagon, AlertTriangle, CheckCircle, Clock, XCircle, ExternalLink, ChevronDown, ChevronUp, ArrowDown, Users } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, XCircle, ExternalLink, ChevronDown, ChevronUp, ArrowDown, Users, Shield, Train } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, splitStatusText, extractSuspendedTrains } from '@/lib/text-parser';
@@ -14,17 +14,21 @@ type VerdictLevel = 'GO' | 'CAUTION' | 'HIGH' | 'CRITICAL';
 
 interface VerdictConfig {
     level: VerdictLevel;
-    verdict: string;        // THE hero text — the only thing that matters
-    evidence: string;       // Why we say this — one line
-    cardBg: string;
-    cardBorder: string;
-    textPrimary: string;
-    textSecondary: string;
-    accentBar: string;
-    detailsBg: string;
-    detailsBorder: string;
+    verdict: string;
+    evidence: string;
+    // Visual styles
+    cardStyle: string;
+    iconBg: string;
+    textHero: string;
+    textSub: string;
+    textMuted: string;
+    pillStyle: string;
+    glassBg: string;
+    glassBorder: string;
     ctaPrimary: string;
     ctaSecondary: string;
+    ringColor: string;
+    dividerColor: string;
     icon: typeof CheckCircle;
 }
 
@@ -34,143 +38,172 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     const recoveryTime = result.estimatedRecoveryTime;
     const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
 
-    // Build evidence fragments
     const evidenceParts: string[] = [];
 
-    // ── CRITICAL: 運休中 or >= 80% ──
+    // ── CRITICAL: 運休中 ──
     if (result.isCurrentlySuspended && !result.isPartialSuspension || prob >= 80 ||
         result.status === 'suspended' || result.status === 'cancelled' ||
         result.status === '運休' || result.status === '運休中') {
 
-        if (crowd?.last15minStopped && crowd.last15minStopped >= 1) {
-            evidenceParts.push(`${crowd.last15minStopped}人のユーザーが確認済み`);
-        }
-        if (result.suspensionReason) {
-            evidenceParts.push(`原因: ${result.suspensionReason}`);
-        }
-        if (recoveryTime) {
-            evidenceParts.push(`復旧見込: ${recoveryTime}（${recoveryLabel}）`);
-        } else {
-            evidenceParts.push('復旧の目処は立っていません');
-        }
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
+            evidenceParts.push(`${crowd.last15minStopped}人が現地で確認`);
+        if (result.suspensionReason)
+            evidenceParts.push(result.suspensionReason);
+        if (recoveryTime)
+            evidenceParts.push(`復旧見込 ${recoveryTime}（${recoveryLabel}）`);
+        else
+            evidenceParts.push('復旧未定');
 
         return {
             level: 'CRITICAL',
             verdict: recoveryTime?.includes('終日')
-                ? '本日は運休 — 代替手段をお使いください'
-                : '運休中 — 代替手段をお使いください',
+                ? '本日は終日運休です'
+                : '現在、運休しています',
             evidence: evidenceParts.join(' · '),
-            cardBg: 'bg-gradient-to-br from-red-600 to-red-700',
-            cardBorder: 'border-red-800/30',
-            textPrimary: 'text-white',
-            textSecondary: 'text-red-100',
-            accentBar: 'bg-red-500',
-            detailsBg: 'bg-red-800/20',
-            detailsBorder: 'border-red-400/20',
-            ctaPrimary: 'bg-white text-red-700 hover:bg-red-50',
-            ctaSecondary: 'border-white/40 text-white hover:bg-white/10',
+            cardStyle: 'bg-gradient-to-b from-rose-950 via-red-900 to-red-950',
+            iconBg: 'bg-red-500/20 ring-1 ring-red-400/30',
+            textHero: 'text-white',
+            textSub: 'text-red-200',
+            textMuted: 'text-red-300/70',
+            pillStyle: 'bg-red-500/20 text-red-200 ring-1 ring-red-400/20',
+            glassBg: 'bg-white/[0.06] backdrop-blur-sm',
+            glassBorder: 'border-white/[0.08]',
+            ctaPrimary: 'bg-white text-red-900 hover:bg-white/90 shadow-lg shadow-black/20',
+            ctaSecondary: 'bg-white/10 text-white/90 hover:bg-white/15 ring-1 ring-white/15',
+            ringColor: 'stroke-red-400',
+            dividerColor: 'border-white/10',
             icon: XCircle,
         };
     }
 
-    // ── HIGH: 50-79% or Partial Suspension ──
+    // ── HIGH: 50-79% or Partial ──
     if (prob >= 50 || result.isPartialSuspension) {
-        if (result.isPartialSuspension) {
+        if (result.isPartialSuspension)
             evidenceParts.push('一部の列車が停止中');
-        } else {
-            evidenceParts.push(`運休リスク ${prob}%`);
-        }
-        if (crowd?.last15minStopped && crowd.last15minStopped >= 1) {
-            evidenceParts.push(`${crowd.last15minStopped}人が停止を報告`);
-        } else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
+            evidenceParts.push(`${crowd.last15minStopped}人が現地で確認`);
+        else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
-        }
-        if (recoveryTime) {
-            evidenceParts.push(`復旧見込: ${recoveryTime}`);
-        }
+        if (recoveryTime)
+            evidenceParts.push(`復旧見込 ${recoveryTime}`);
 
         return {
             level: 'HIGH',
-            verdict: '代替手段で移動してください',
+            verdict: '代替手段での移動を推奨',
             evidence: evidenceParts.join(' · '),
-            cardBg: 'bg-gradient-to-br from-orange-500 to-orange-600',
-            cardBorder: 'border-orange-700/30',
-            textPrimary: 'text-white',
-            textSecondary: 'text-orange-100',
-            accentBar: 'bg-orange-400',
-            detailsBg: 'bg-orange-800/20',
-            detailsBorder: 'border-orange-400/20',
-            ctaPrimary: 'bg-white text-orange-700 hover:bg-orange-50',
-            ctaSecondary: 'border-white/40 text-white hover:bg-white/10',
+            cardStyle: 'bg-gradient-to-b from-orange-950 via-orange-900 to-amber-950',
+            iconBg: 'bg-orange-500/20 ring-1 ring-orange-400/30',
+            textHero: 'text-white',
+            textSub: 'text-orange-200',
+            textMuted: 'text-orange-300/70',
+            pillStyle: 'bg-orange-500/20 text-orange-200 ring-1 ring-orange-400/20',
+            glassBg: 'bg-white/[0.06] backdrop-blur-sm',
+            glassBorder: 'border-white/[0.08]',
+            ctaPrimary: 'bg-white text-orange-900 hover:bg-white/90 shadow-lg shadow-black/20',
+            ctaSecondary: 'bg-white/10 text-white/90 hover:bg-white/15 ring-1 ring-white/15',
+            ringColor: 'stroke-orange-400',
+            dividerColor: 'border-white/10',
             icon: AlertTriangle,
         };
     }
 
     // ── POST-RECOVERY ──
     if (result.isPostRecoveryWindow) {
-        evidenceParts.push('運転再開後のダイヤ乱れ');
+        evidenceParts.push('ダイヤ乱れ継続中');
         if (recoveryTime) evidenceParts.push(`${recoveryTime}に再開`);
-        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
-        }
 
         return {
             level: 'CAUTION',
-            verdict: '遅延に注意してください',
+            verdict: '運行中ですが遅延に注意',
             evidence: evidenceParts.join(' · '),
-            cardBg: 'bg-gradient-to-br from-amber-400 to-amber-500',
-            cardBorder: 'border-amber-600/30',
-            textPrimary: 'text-amber-950',
-            textSecondary: 'text-amber-800',
-            accentBar: 'bg-amber-300',
-            detailsBg: 'bg-amber-700/10',
-            detailsBorder: 'border-amber-600/20',
-            ctaPrimary: 'bg-amber-950 text-white hover:bg-amber-900',
-            ctaSecondary: 'border-amber-800/40 text-amber-900 hover:bg-amber-600/10',
+            cardStyle: 'bg-gradient-to-b from-amber-950 via-yellow-900 to-amber-950',
+            iconBg: 'bg-amber-500/20 ring-1 ring-amber-400/30',
+            textHero: 'text-white',
+            textSub: 'text-amber-200',
+            textMuted: 'text-amber-300/70',
+            pillStyle: 'bg-amber-500/20 text-amber-200 ring-1 ring-amber-400/20',
+            glassBg: 'bg-white/[0.06] backdrop-blur-sm',
+            glassBorder: 'border-white/[0.08]',
+            ctaPrimary: 'bg-white text-amber-900 hover:bg-white/90 shadow-lg shadow-black/20',
+            ctaSecondary: 'bg-white/10 text-white/90 hover:bg-white/15 ring-1 ring-white/15',
+            ringColor: 'stroke-amber-400',
+            dividerColor: 'border-white/10',
             icon: AlertTriangle,
         };
     }
 
-    // ── CAUTION: 20-49% or delayed ──
+    // ── CAUTION: 20-49% ──
     if (prob >= 20 || result.isPostResumptionChaos || result.status === 'delayed' || result.status === '遅延') {
-        evidenceParts.push(`運休リスク ${prob}%`);
-        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1) {
+        evidenceParts.push(`運休の可能性 ${prob}%`);
+        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
-        }
 
         return {
             level: 'CAUTION',
-            verdict: '遅延に注意してください',
-            evidence: evidenceParts.join(' · ') || '10〜30分程度の遅延の可能性があります',
-            cardBg: 'bg-gradient-to-br from-amber-400 to-amber-500',
-            cardBorder: 'border-amber-600/30',
-            textPrimary: 'text-amber-950',
-            textSecondary: 'text-amber-800',
-            accentBar: 'bg-amber-300',
-            detailsBg: 'bg-amber-700/10',
-            detailsBorder: 'border-amber-600/20',
-            ctaPrimary: 'bg-amber-950 text-white hover:bg-amber-900',
-            ctaSecondary: 'border-amber-800/40 text-amber-900 hover:bg-amber-600/10',
+            verdict: '遅延・運休に注意してください',
+            evidence: evidenceParts.join(' · ') || '天候の変化により遅延の可能性があります',
+            cardStyle: 'bg-gradient-to-b from-amber-950 via-yellow-900 to-amber-950',
+            iconBg: 'bg-amber-500/20 ring-1 ring-amber-400/30',
+            textHero: 'text-white',
+            textSub: 'text-amber-200',
+            textMuted: 'text-amber-300/70',
+            pillStyle: 'bg-amber-500/20 text-amber-200 ring-1 ring-amber-400/20',
+            glassBg: 'bg-white/[0.06] backdrop-blur-sm',
+            glassBorder: 'border-white/[0.08]',
+            ctaPrimary: 'bg-white text-amber-900 hover:bg-white/90 shadow-lg shadow-black/20',
+            ctaSecondary: 'bg-white/10 text-white/90 hover:bg-white/15 ring-1 ring-white/15',
+            ringColor: 'stroke-amber-400',
+            dividerColor: 'border-white/10',
             icon: AlertTriangle,
         };
     }
 
-    // ── GO: < 20% ──
+    // ── GO ──
     return {
         level: 'GO',
-        verdict: '予定通り運行中',
-        evidence: `リスク ${prob}% — 通常通りご利用いただけます`,
-        cardBg: 'bg-white',
-        cardBorder: 'border-emerald-200',
-        textPrimary: 'text-gray-900',
-        textSecondary: 'text-gray-500',
-        accentBar: 'bg-emerald-500',
-        detailsBg: 'bg-gray-50',
-        detailsBorder: 'border-gray-200',
-        ctaPrimary: 'bg-emerald-600 text-white hover:bg-emerald-700',
-        ctaSecondary: 'border-gray-300 text-gray-700 hover:bg-gray-50',
+        verdict: '通常通り運行しています',
+        evidence: `運休の可能性は低く、安心してご利用いただけます`,
+        cardStyle: 'bg-gradient-to-b from-emerald-950 via-emerald-900 to-teal-950',
+        iconBg: 'bg-emerald-500/20 ring-1 ring-emerald-400/30',
+        textHero: 'text-white',
+        textSub: 'text-emerald-200',
+        textMuted: 'text-emerald-300/70',
+        pillStyle: 'bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/20',
+        glassBg: 'bg-white/[0.06] backdrop-blur-sm',
+        glassBorder: 'border-white/[0.08]',
+        ctaPrimary: 'bg-white text-emerald-900 hover:bg-white/90 shadow-lg shadow-black/20',
+        ctaSecondary: 'bg-white/10 text-white/90 hover:bg-white/15 ring-1 ring-white/15',
+        ringColor: 'stroke-emerald-400',
+        dividerColor: 'border-white/10',
         icon: CheckCircle,
     };
+}
+
+
+// ────────────────────────────────────────────
+// Risk Ring — SVG circular progress
+// ────────────────────────────────────────────
+
+function RiskRing({ probability, strokeClass, size = 56 }: { probability: number; strokeClass: string; size?: number }) {
+    const r = (size - 6) / 2;
+    const circumference = 2 * Math.PI * r;
+    const offset = circumference - (probability / 100) * circumference;
+
+    return (
+        <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+            <svg width={size} height={size} className="-rotate-90">
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="currentColor" strokeWidth={3} className="text-white/10" />
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={3} strokeLinecap="round"
+                    className={strokeClass}
+                    strokeDasharray={circumference} strokeDashoffset={offset}
+                    style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
+                />
+            </svg>
+            <span className="absolute text-xs font-black text-white/90">{probability}%</span>
+        </div>
+    );
 }
 
 
@@ -188,56 +221,63 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
 
     const v = buildVerdict(result);
     const Icon = v.icon;
-    const isColoredCard = v.level !== 'GO';
 
-    const { summary: textSummary } = splitStatusText(result.officialStatus?.rawText || '');
     const hasOfficialInfo = !!result.officialStatus;
     const suspendedTrains = extractSuspendedTrains(result.officialStatus?.rawText || '');
     const showAlternativesCTA = v.level === 'CRITICAL' || v.level === 'HIGH';
 
     return (
         <article className={cn(
-            "relative overflow-hidden rounded-2xl shadow-lg border transition-all",
-            v.cardBg, v.cardBorder
+            "relative overflow-hidden rounded-2xl shadow-2xl shadow-black/30 transition-all",
+            v.cardStyle
         )}>
-            {/* Top accent bar */}
-            <div className={cn("h-1.5 w-full", v.accentBar)} />
+            {/* Subtle noise texture overlay */}
+            <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjYSkiIG9wYWNpdHk9IjEiLz48L3N2Zz4=')] pointer-events-none" />
 
-            <div className="p-6">
-                {/* ① Route Label */}
-                <div className="flex items-center gap-2.5 mb-5">
-                    <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
-                    <span className={cn("text-sm font-bold tracking-tight", isColoredCard ? v.textSecondary : 'text-gray-500')}>
-                        {route.name}
-                    </span>
+            <div className="relative p-6 sm:p-7">
+                {/* ① Header: Route + Risk Ring */}
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className={cn("p-2 rounded-xl", v.iconBg)}>
+                            <Train className="w-4 h-4 text-white/80" />
+                        </div>
+                        <div>
+                            <p className={cn("text-[11px] font-bold uppercase tracking-widest", v.textMuted)}>路線状況</p>
+                            <p className={cn("text-base font-bold", v.textSub)}>{route.name}</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <RiskRing probability={result.probability} strokeClass={v.ringColor} />
+                        <span className={cn("text-[9px] font-bold tracking-wider", v.textMuted)}>運休リスク</span>
+                    </div>
                 </div>
 
-                {/* ② THE VERDICT — The only thing that matters */}
-                <div className="flex items-start gap-4 mb-4">
-                    <Icon className={cn("w-8 h-8 shrink-0 mt-0.5", v.textPrimary, isColoredCard ? 'opacity-90' : '')} />
-                    <h2 className={cn("text-2xl sm:text-3xl font-black leading-tight tracking-tight", v.textPrimary)}>
-                        {v.verdict}
-                    </h2>
+                {/* ② THE VERDICT */}
+                <div className="mb-4">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className={cn("p-1.5 rounded-lg", v.iconBg)}>
+                            <Icon className="w-5 h-5 text-white" />
+                        </div>
+                        <h2 className={cn("text-xl sm:text-2xl font-black leading-tight tracking-tight", v.textHero)}>
+                            {v.verdict}
+                        </h2>
+                    </div>
+                    <p className={cn("text-sm font-medium leading-relaxed pl-[42px]", v.textSub)}>
+                        {v.evidence}
+                    </p>
                 </div>
 
-                {/* ③ Evidence Line — WHY we say this */}
-                <p className={cn("text-sm font-medium leading-relaxed mb-5 pl-12", v.textSecondary)}>
-                    {v.evidence}
-                </p>
-
-                {/* ④ Suspended trains list (if official data has specifics) */}
+                {/* ③ Suspended trains (glass card) */}
                 {suspendedTrains.length > 0 && (
-                    <div className={cn("rounded-lg p-3 mb-5 border", v.detailsBg, v.detailsBorder)}>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className={cn(
-                                "px-2 py-0.5 rounded text-[10px] font-bold",
-                                isColoredCard ? "bg-white/20 text-white" : "bg-gray-800 text-white"
-                            )}>公式発表</span>
+                    <div className={cn("rounded-xl p-4 mb-4 border", v.glassBg, v.glassBorder)}>
+                        <div className="flex items-center gap-2 mb-2.5">
+                            <Shield className="w-3.5 h-3.5 text-white/50" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-white/50">公式発表</span>
                         </div>
                         <ul className="space-y-1.5">
                             {suspendedTrains.map((train, i) => (
-                                <li key={i} className={cn("text-sm font-bold leading-snug flex items-start gap-2", v.textPrimary)}>
-                                    <span className="block w-1.5 h-1.5 mt-2 rounded-full bg-current opacity-60" />
+                                <li key={i} className="text-sm font-bold text-white/90 leading-snug flex items-start gap-2.5">
+                                    <span className="block w-1 h-1 mt-2 rounded-full bg-white/40" />
                                     {train}
                                 </li>
                             ))}
@@ -245,52 +285,35 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     </div>
                 )}
 
-                {/* ⑤ Supporting data: probability + recovery */}
-                <div className={cn(
-                    "flex items-center gap-4 text-xs font-bold mb-5 px-3 py-2.5 rounded-lg border",
-                    v.detailsBg, v.detailsBorder
-                )}>
-                    {/* Probability (demoted to small supporting info) */}
-                    <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
-                        <span className="opacity-60">📊</span>
-                        <span>AI予測 {result.probability}%</span>
-                    </div>
-
-                    {/* Recovery time */}
+                {/* ④ Supporting metrics (glass pill row) */}
+                <div className={cn("flex flex-wrap gap-2 mb-5")}>
                     {result.estimatedRecoveryTime && (
-                        <>
-                            <span className={cn("opacity-30", v.textSecondary)}>|</span>
-                            <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
-                                <Clock className="w-3.5 h-3.5 opacity-60" />
-                                <span>
-                                    {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
-                                    {result.isOfficialOverride && (
-                                        <span className="opacity-60 ml-1">(公式)</span>
-                                    )}
-                                </span>
-                            </div>
-                        </>
+                        <div className={cn("inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold", v.pillStyle)}>
+                            <Clock className="w-3 h-3 opacity-70" />
+                            {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
+                        </div>
                     )}
-
-                    {/* Crowd count */}
                     {result.crowdStats && result.crowdStats.last15minReportCount > 0 && (
-                        <>
-                            <span className={cn("opacity-30", v.textSecondary)}>|</span>
-                            <div className={cn("flex items-center gap-1.5", v.textSecondary)}>
-                                <Users className="w-3.5 h-3.5 opacity-60" />
-                                <span>報告 {result.crowdStats.last15minReportCount}件</span>
-                            </div>
-                        </>
+                        <div className={cn("inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold", v.pillStyle)}>
+                            <Users className="w-3 h-3 opacity-70" />
+                            {result.crowdStats.last15minReportCount}人が報告
+                        </div>
+                    )}
+                    {result.isOfficialOverride && (
+                        <div className={cn("inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold", v.pillStyle)}>
+                            <Shield className="w-3 h-3 opacity-70" />
+                            JR公式情報
+                        </div>
                     )}
                 </div>
 
-                {/* ⑥ CTAs — What to do NOW */}
+                {/* ⑤ CTAs */}
                 {showAlternativesCTA && (
                     <div className="space-y-2.5 mb-5">
                         <a
                             href="#alternative-routes-title"
                             className={cn(
-                                "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl text-sm font-black transition-all shadow-sm active:scale-[0.98]",
+                                "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl text-sm font-black transition-all active:scale-[0.98]",
                                 v.ctaPrimary
                             )}
                         >
@@ -299,7 +322,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                         {result.estimatedRecoveryTime && !result.estimatedRecoveryTime.includes('終日') && (
                             <button
                                 className={cn(
-                                    "flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-sm font-bold border transition-all active:scale-[0.98]",
+                                    "flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-sm font-bold transition-all active:scale-[0.98]",
                                     v.ctaSecondary
                                 )}
                             >
@@ -309,13 +332,13 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     </div>
                 )}
 
-                {/* ⑦ Collapsible Details */}
-                <div className={cn("border-t pt-3", isColoredCard ? 'border-white/15' : 'border-gray-100')}>
+                {/* ⑥ Collapsible Details */}
+                <div className={cn("border-t pt-3", v.dividerColor)}>
                     <button
                         onClick={() => setIsDetailsOpen(!isDetailsOpen)}
                         className={cn(
                             "w-full flex items-center justify-between py-1.5 text-xs font-bold transition-colors",
-                            isColoredCard ? 'text-white/60 hover:text-white/90' : 'text-gray-400 hover:text-gray-700'
+                            v.textMuted, "hover:text-white/70"
                         )}
                     >
                         <span>詳しい分析を見る</span>
@@ -324,23 +347,21 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
 
                     {isDetailsOpen && (
                         <div className="mt-3 space-y-4 animate-in fade-in slide-in-from-top-2">
-                            {/* Official Text Full */}
                             {hasOfficialInfo && (
                                 <div>
-                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>公式発表 (全文)</h4>
-                                    <div className={cn("text-xs leading-relaxed p-3 rounded-lg whitespace-pre-wrap border", v.detailsBg, v.detailsBorder, v.textSecondary)}>
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textMuted)}>公式発表 (全文)</h4>
+                                    <div className={cn("text-xs leading-relaxed p-3 rounded-lg whitespace-pre-wrap border", v.glassBg, v.glassBorder, v.textSub)}>
                                         {formatStatusText(result.officialStatus?.rawText || '')}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Risk Factors */}
                             {result.reasons.length > 0 && (
                                 <div>
-                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>リスク要因</h4>
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textMuted)}>リスク要因</h4>
                                     <ul className="space-y-1.5">
                                         {result.reasons.map((r, i) => (
-                                            <li key={i} className={cn("flex items-start gap-2 text-xs", v.textSecondary)}>
+                                            <li key={i} className={cn("flex items-start gap-2 text-xs", v.textSub)}>
                                                 <span className="block w-1 h-1 mt-1.5 rounded-full bg-current opacity-40 shrink-0" />
                                                 {r}
                                             </li>
@@ -349,14 +370,13 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                                 </div>
                             )}
 
-                            {/* Crowd Report Detail */}
                             {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minCrowded > 0) && (
                                 <div>
-                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textSecondary)}>ユーザー報告 (直近15分)</h4>
-                                    <div className={cn("flex gap-3 text-xs font-bold", v.textSecondary)}>
-                                        {result.crowdStats.last15minStopped > 0 && <span>🔴 停止: {result.crowdStats.last15minStopped}件</span>}
-                                        {result.crowdStats.last15minDelayed > 0 && <span>🟡 遅延: {result.crowdStats.last15minDelayed}件</span>}
-                                        {result.crowdStats.last15minCrowded > 0 && <span>🟠 混雑: {result.crowdStats.last15minCrowded}件</span>}
+                                    <h4 className={cn("text-[10px] font-bold uppercase tracking-wider mb-1.5", v.textMuted)}>ユーザー報告 (直近15分)</h4>
+                                    <div className={cn("flex gap-3 text-xs font-bold", v.textSub)}>
+                                        {result.crowdStats.last15minStopped > 0 && <span>🔴 停止 {result.crowdStats.last15minStopped}件</span>}
+                                        {result.crowdStats.last15minDelayed > 0 && <span>🟡 遅延 {result.crowdStats.last15minDelayed}件</span>}
+                                        {result.crowdStats.last15minCrowded > 0 && <span>🟠 混雑 {result.crowdStats.last15minCrowded}件</span>}
                                     </div>
                                 </div>
                             )}
@@ -364,18 +384,13 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     )}
                 </div>
 
-                {/* ⑧ JR Official Link */}
-                <div className={cn("mt-4 pt-3 border-t flex justify-center", isColoredCard ? 'border-white/15' : 'border-gray-100')}>
+                {/* ⑦ JR Official Link */}
+                <div className={cn("mt-4 pt-3 border-t flex justify-center", v.dividerColor)}>
                     <a
                         href={getJRStatusUrl(route.id).url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={cn(
-                            "inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all active:scale-95",
-                            isColoredCard
-                                ? 'bg-white/15 text-white hover:bg-white/25 border border-white/20'
-                                : 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm'
-                        )}
+                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-white/60 hover:text-white/90 bg-white/[0.06] hover:bg-white/10 ring-1 ring-white/10 transition-all active:scale-95"
                     >
                         JR公式ページで確認 <ExternalLink size={12} />
                     </a>
