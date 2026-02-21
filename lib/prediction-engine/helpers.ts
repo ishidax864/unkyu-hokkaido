@@ -332,12 +332,31 @@ export function getRecencyWeight(updatedAt: string | undefined): number {
 export function determineSuspensionReason(
     wind: number,
     snow: number,
-    rain: number
+    rain: number,
+    officialRawText?: string
 ): string {
-    // 優先順位: 雪 > 風 > 雨
-    if (snow >= 3) { // 3cm/hはかなり強い雪（constantsのHEAVY_SNOW_MIN相当だが未定義、一旦3で維持か、補正）
+    // 1. JR公式テキストから理由を抽出（最優先）
+    if (officialRawText) {
+        const text = officialRawText;
+        if (text.includes('除雪作業') || text.includes('除雪')) return '除雪作業のため';
+        if (text.includes('人身事故')) return '人身事故のため';
+        if (text.includes('車両点検') || text.includes('車両故障') || text.includes('車両トラブル')) return '車両トラブルのため';
+        if (text.includes('信号') && (text.includes('確認') || text.includes('故障') || text.includes('トラブル'))) return '信号トラブルのため';
+        if (text.includes('設備点検') || text.includes('設備')) return '設備点検のため';
+        if (text.includes('地震')) return '地震の影響のため';
+        if (text.includes('倒木')) return '倒木のため';
+        if (text.includes('踏切')) return '踏切トラブルのため';
+        if (text.includes('暴風') || text.includes('強風')) return '強風のため';
+        if (text.includes('大雪')) return '大雪のため';
+        if (text.includes('大雨') || text.includes('豪雨')) return '大雨のため';
+        if (text.includes('高波')) return '高波のため';
+        if (text.includes('濃霧')) return '濃霧のため';
+    }
+
+    // 2. フォールバック: 気象データの閾値で推測
+    if (snow >= 3) {
         return '大雪のため';
-    } else if (wind >= 20) { // 20m/s以上（constantsの遅延/運休ライン）
+    } else if (wind >= 20) {
         return '強風のため';
     } else if (rain >= HEAVY_RAIN_THRESHOLD) {
         return '大雨のため';

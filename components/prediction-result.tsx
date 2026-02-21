@@ -40,6 +40,9 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     const crowd = result.crowdStats;
     const recoveryTime = result.estimatedRecoveryTime;
     const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
+    const recoveryHours = typeof result.estimatedRecoveryHours === 'number'
+        ? result.estimatedRecoveryHours
+        : undefined;
 
     const evidenceParts: string[] = [];
 
@@ -57,11 +60,21 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
         else
             evidenceParts.push('復旧未定');
 
+        // サブ分岐: 復旧時間に応じたverdict
+        let verdict: string;
+        if (recoveryTime?.includes('終日')) {
+            verdict = '本日は終日運休です';
+        } else if (recoveryHours !== undefined && recoveryHours <= 0.5) {
+            verdict = 'まもなく復旧します';
+        } else if (recoveryHours !== undefined && recoveryHours <= 2) {
+            verdict = '運転見合わせ中';
+        } else {
+            verdict = '現在、運休しています';
+        }
+
         return {
             level: 'CRITICAL',
-            verdict: recoveryTime?.includes('終日')
-                ? '本日は終日運休です'
-                : '現在、運休しています',
+            verdict,
             evidence: evidenceParts.join(' · '),
             borderAccent: 'border-l-red-500',
             headerBg: 'bg-red-50',
@@ -89,11 +102,16 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
         else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
         if (recoveryTime)
-            evidenceParts.push(`復旧見込 ${recoveryTime}`);
+            evidenceParts.push(`復旧見込 ${recoveryTime}（${recoveryLabel}）`);
+
+        // サブ分岐: 部分運休 vs 高リスク
+        const verdict = result.isPartialSuspension
+            ? '一部列車は動いています'
+            : '1本早い列車がおすすめ';
 
         return {
             level: 'HIGH',
-            verdict: '代替手段での移動を推奨',
+            verdict,
             evidence: evidenceParts.join(' · '),
             borderAccent: 'border-l-orange-500',
             headerBg: 'bg-orange-50',
@@ -115,13 +133,18 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     // ── POST-RECOVERY ──
     if (result.isPostRecoveryWindow) {
         evidenceParts.push('ダイヤ乱れ継続中');
-        if (recoveryTime) evidenceParts.push(`${recoveryTime}に再開`);
+        if (recoveryTime) evidenceParts.push(`${recoveryTime}に再開（${recoveryLabel}）`);
         if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
 
+        // サブ分岐: 復旧からの経過時間
+        const verdict = (recoveryHours !== undefined && recoveryHours >= 1)
+            ? 'ほぼ通常ダイヤに回復'
+            : '運行中ですが遅延に注意';
+
         return {
             level: 'CAUTION',
-            verdict: '運行中ですが遅延に注意',
+            verdict,
             evidence: evidenceParts.join(' · '),
             borderAccent: 'border-l-amber-500',
             headerBg: 'bg-amber-50',
@@ -142,14 +165,29 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
 
     // ── CAUTION ──
     if (prob >= 20 || result.isPostResumptionChaos || result.status === 'delayed' || result.status === '遅延') {
-        evidenceParts.push(`運休の可能性 ${prob}%`);
         if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
             evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
 
+        // サブ分岐: リスク度合い
+        let verdict: string;
+        let evidenceDefault: string;
+        if (result.isPostResumptionChaos) {
+            verdict = 'ダイヤ乱れ中';
+            evidenceDefault = '運転再開後のダイヤ乱れが続いています';
+        } else if (prob >= 30) {
+            verdict = '1本早い列車がおすすめ';
+            evidenceDefault = `運休の可能性 ${prob}% — 天候の影響で遅延や一部運休の可能性があります`;
+            evidenceParts.push(`運休の可能性 ${prob}%`);
+        } else {
+            verdict = '遅延の可能性あり';
+            evidenceDefault = `運休の可能性 ${prob}% — 余裕を持って出発してください`;
+            evidenceParts.push(`運休の可能性 ${prob}%`);
+        }
+
         return {
             level: 'CAUTION',
-            verdict: '遅延・運休に注意してください',
-            evidence: evidenceParts.join(' · ') || '天候の変化により遅延の可能性があります',
+            verdict,
+            evidence: evidenceParts.join(' · ') || evidenceDefault,
             borderAccent: 'border-l-amber-500',
             headerBg: 'bg-amber-50',
             iconColor: 'text-amber-600',
@@ -168,10 +206,18 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     }
 
     // ── GO ──
+    // サブ分岐: 10%以上 vs 10%未満
+    const verdict = prob >= 10
+        ? '通常通り運行しています'
+        : '安心してご利用いただけます';
+    const evidence = prob >= 10
+        ? '運休リスクは低いですが、天候の変化にご注意ください'
+        : '運休の可能性は非常に低く、安心してご利用いただけます';
+
     return {
         level: 'GO',
-        verdict: '通常通り運行しています',
-        evidence: '運休の可能性は低く、安心してご利用いただけます',
+        verdict,
+        evidence,
         borderAccent: 'border-l-emerald-500',
         headerBg: 'bg-emerald-50',
         iconColor: 'text-emerald-600',
@@ -301,6 +347,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                         <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border", v.pillBg, v.pillText, v.pillBorder)}>
                             <Clock className="w-3 h-3" />
                             {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
+                            <span className="text-[10px] font-medium opacity-70">（{result.isOfficialOverride ? '公式発表' : 'AI予測'}）</span>
                         </span>
                     )}
                     {result.crowdStats && result.crowdStats.last15minReportCount > 0 && (

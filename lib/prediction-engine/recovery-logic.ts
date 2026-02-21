@@ -40,7 +40,8 @@ export function predictRecovery(
         const wind = weather.windSpeed || 0;
         const snow = weather.snowfall || 0;
 
-        suspensionReason = determineSuspensionReason(wind, snow, rain);
+        const officialRawText = input.jrStatus?.rawText || input.jrStatus?.statusText || undefined;
+        suspensionReason = determineSuspensionReason(wind, snow, rain, officialRawText);
 
         if (weather.surroundingHours && weather.surroundingHours.length > 0) {
             const now = new Date();
