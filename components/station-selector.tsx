@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
 import { MapPin, ChevronDown, Search } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface StationSelectorProps {
     label: string;
@@ -102,7 +101,7 @@ export function StationSelector({
                             setStation(null);
                             setQuery('');
                         }}
-                        className="text-[10px] text-[var(--primary)] font-bold hover:underline"
+                        className="text-[11px] text-[var(--primary)] font-bold hover:underline"
                     >
                         リセット
                     </button>
@@ -141,69 +140,64 @@ export function StationSelector({
                 </button>
             </div>
 
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-50 mt-1 w-full max-h-72 overflow-y-auto bg-white border border-[var(--border)] rounded-xl shadow-xl backdrop-blur-sm border-t-0"
-                    >
-                        {filtered.length === 0 ? (
-                            <div className="p-8 text-center">
-                                <Search className="w-8 h-8 text-[var(--muted)] mx-auto mb-2 opacity-20" />
-                                <p className="text-sm text-[var(--muted)]">駅が見つかりませんでした</p>
-                            </div>
-                        ) : (
-                            groups.map(({ title, stations }) => (
-                                <div key={title}>
-                                    <div className="px-3 py-1.5 text-[10px] font-black text-[var(--muted)] bg-[var(--background-secondary)]/50 sticky top-0 backdrop-blur-md flex items-center gap-2">
-                                        <div className={`w-1 h-3 rounded-full ${title === '主要駅' ? 'bg-[var(--primary)]' : 'bg-gray-300'}`} />
-                                        {title}
-                                    </div>
-                                    {stations.map((station) => {
-                                        const isSelected = selectedStation?.id === station.id;
-                                        const isDisabled = otherStation?.id === station.id;
-                                        return (
-                                            <button
-                                                key={station.id}
-                                                type="button"
-                                                disabled={isDisabled}
-                                                onClick={() => {
-                                                    setStation(station);
-                                                    setQuery(station.name);
-                                                    setIsOpen(false);
-                                                }}
-                                                className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors
+            {isOpen && (
+                <div
+                    className="absolute z-50 mt-1 w-full max-h-72 overflow-y-auto bg-white border border-[var(--border)] rounded-xl shadow-xl backdrop-blur-sm border-t-0 animate-[fadeInDown_0.15s_ease-out]"
+                >
+                    {filtered.length === 0 ? (
+                        <div className="p-8 text-center">
+                            <Search className="w-8 h-8 text-[var(--muted)] mx-auto mb-2 opacity-20" />
+                            <p className="text-sm text-[var(--muted)]">駅が見つかりませんでした</p>
+                        </div>
+                    ) : (
+                        groups.map(({ title, stations }) => (
+                            <div key={title}>
+                                <div className="px-3 py-1.5 text-[11px] font-black text-[var(--muted)] bg-[var(--background-secondary)]/50 sticky top-0 backdrop-blur-md flex items-center gap-2">
+                                    <div className={`w-1 h-3 rounded-full ${title === '主要駅' ? 'bg-[var(--primary)]' : 'bg-gray-300'}`} />
+                                    {title}
+                                </div>
+                                {stations.map((station) => {
+                                    const isSelected = selectedStation?.id === station.id;
+                                    const isDisabled = otherStation?.id === station.id;
+                                    return (
+                                        <button
+                                            key={station.id}
+                                            type="button"
+                                            disabled={isDisabled}
+                                            onClick={() => {
+                                                setStation(station);
+                                                setQuery(station.name);
+                                                setIsOpen(false);
+                                            }}
+                                            className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors
                                                     ${isDisabled
-                                                        ? 'opacity-30 cursor-not-allowed grayscale'
-                                                        : isSelected
-                                                            ? 'bg-blue-50 text-[var(--primary)]'
-                                                            : 'hover:bg-gray-50'
-                                                    }
+                                                    ? 'opacity-30 cursor-not-allowed grayscale'
+                                                    : isSelected
+                                                        ? 'bg-blue-50 text-[var(--primary)]'
+                                                        : 'hover:bg-gray-50'
+                                                }
                                                 `}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`w-1.5 h-1.5 rounded-full ${station.isMajor ? 'bg-[var(--primary)]' : 'bg-gray-300'}`} />
-                                                    <div>
-                                                        <div className={`text-base font-bold ${station.isMajor ? 'text-[var(--foreground)]' : 'text-gray-700'}`}>
-                                                            {station.name}
-                                                        </div>
-                                                        <div className="text-[10px] text-[var(--muted)] font-medium">
-                                                            {station.kana}
-                                                        </div>
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-1.5 h-1.5 rounded-full ${station.isMajor ? 'bg-[var(--primary)]' : 'bg-gray-300'}`} />
+                                                <div>
+                                                    <div className={`text-base font-bold ${station.isMajor ? 'text-[var(--foreground)]' : 'text-gray-700'}`}>
+                                                        {station.name}
+                                                    </div>
+                                                    <div className="text-[11px] text-[var(--muted)] font-medium">
+                                                        {station.kana}
                                                     </div>
                                                 </div>
-                                                {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--primary)]" />}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            ))
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                            </div>
+                                            {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--primary)]" />}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
         </div>
     );
 }

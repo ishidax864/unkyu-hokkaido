@@ -58,6 +58,44 @@ export class OtherFactorsStrategy implements RiskFactorStrategy {
             }
         }
 
+        // 4. 気圧急変検出（爆弾低気圧: 24h で -24hPa 以上の降下）
+        if (input.weather?.pressure && input.weather?.surroundingHours?.length) {
+            const hours = input.weather.surroundingHours;
+            // 前後12時間の気圧データから最大降下量を計算
+            const pressures = hours
+                .filter(h => h.pressure !== undefined)
+                .map(h => h.pressure as number);
+
+            if (pressures.length >= 6) {
+                // 前半と後半の平均気圧差で降下傾向を検出
+                const firstHalf = pressures.slice(0, Math.floor(pressures.length / 2));
+                const secondHalf = pressures.slice(Math.floor(pressures.length / 2));
+                const avgFirst = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+                const avgSecond = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+
+                // 最大→最小の降下量
+                const maxPressure = Math.max(...pressures);
+                const minPressure = Math.min(...pressures);
+                const pressureDrop = maxPressure - minPressure;
+
+                // 24hPa 以上の降下（国際基準の爆弾低気圧）
+                if (pressureDrop >= 24) {
+                    score += 25;
+                    reasons.push({
+                        reason: `爆弾低気圧の兆候: ${pressureDrop.toFixed(0)}hPa急降下`,
+                        priority: 3
+                    });
+                } else if (pressureDrop >= 12 || (avgFirst - avgSecond) >= 8) {
+                    // 12hPa以上、または顕著な降下傾向
+                    score += 15;
+                    reasons.push({
+                        reason: `気圧急変: ${pressureDrop.toFixed(0)}hPa降下（荒天リスク）`,
+                        priority: 5
+                    });
+                }
+            }
+        }
+
         return { score, reasons };
     }
 }

@@ -3,27 +3,64 @@
 
 import { WeatherForecast, WeatherWarning } from './types';
 import { logger } from './logger';
+import { getJMAWarningsForRoute } from './jma-warnings';
 
 // 路線別の代表座標（最も影響を受けやすい地点）
-export const ROUTE_COORDINATES: Record<string, { lat: number; lon: number; name: string }> = {
+// 長距離路線は複数地点を設定し、最悪地点の気象を採用
+export const ROUTE_COORDINATES: Record<string, { lat: number; lon: number; name: string }[]> = {
     // 札幌近郊
-    'jr-hokkaido.hakodate-main': { lat: 43.0621, lon: 141.3544, name: '札幌（函館本線）' },
-    'jr-hokkaido.chitose': { lat: 42.7752, lon: 141.6922, name: '千歳' },
-    'jr-hokkaido.sassho': { lat: 43.2167, lon: 141.3500, name: '石狩当別（学園都市線）' },
+    'jr-hokkaido.hakodate-main': [
+        { lat: 43.0621, lon: 141.3544, name: '札幌' },
+        { lat: 43.2000, lon: 140.9833, name: '小樽' },
+        { lat: 43.3333, lon: 141.9167, name: '岩見沢' },
+    ],
+    'jr-hokkaido.chitose': [
+        { lat: 42.7752, lon: 141.6922, name: '千歳' },
+    ],
+    'jr-hokkaido.sassho': [
+        { lat: 43.2167, lon: 141.3500, name: '石狩当別' },
+    ],
     // 道央
-    'jr-hokkaido.muroran-main': { lat: 42.3150, lon: 140.9736, name: '室蘭' },
-    'jr-hokkaido.hidaka': { lat: 42.4833, lon: 142.0500, name: '日高門別' },
+    'jr-hokkaido.muroran-main': [
+        { lat: 42.3150, lon: 140.9736, name: '室蘭' },
+        { lat: 42.6333, lon: 141.6000, name: '苫小牧' },
+    ],
+    'jr-hokkaido.hidaka': [
+        { lat: 42.4833, lon: 142.0500, name: '日高門別' },
+    ],
     // 道南
-    'jr-hokkaido.hakodate-south': { lat: 41.7686, lon: 140.7289, name: '函館' },
+    'jr-hokkaido.hakodate-south': [
+        { lat: 41.7686, lon: 140.7289, name: '函館' },
+        { lat: 42.5000, lon: 140.2333, name: '長万部' },
+    ],
     // 道北
-    'jr-hokkaido.soya-main': { lat: 44.9167, lon: 142.0333, name: '稚内（宗谷本線）' },
-    'jr-hokkaido.rumoi': { lat: 43.9500, lon: 141.6333, name: '留萌' },
+    'jr-hokkaido.soya-main': [
+        { lat: 45.4167, lon: 141.6833, name: '稚内' },
+        { lat: 44.3500, lon: 142.3833, name: '名寄' },
+    ],
+    'jr-hokkaido.rumoi': [
+        { lat: 43.9500, lon: 141.6333, name: '留萌' },
+    ],
     // 道東
-    'jr-hokkaido.sekihoku-main': { lat: 43.7706, lon: 143.8964, name: '北見（石北本線）' },
-    'jr-hokkaido.senmo-main': { lat: 43.3333, lon: 145.5833, name: '網走・釧路（釧網本線）' },
-    'jr-hokkaido.nemuro-main': { lat: 43.0167, lon: 144.3833, name: '釧路（根室本線）' },
-    'jr-hokkaido.furano': { lat: 43.3500, lon: 142.3833, name: '富良野' },
-    'jr-hokkaido.sekisho': { lat: 43.0621, lon: 142.7500, name: '占冠（石勝線）' },
+    'jr-hokkaido.sekihoku-main': [
+        { lat: 43.8000, lon: 143.9000, name: '北見' },
+        { lat: 43.7706, lon: 142.3650, name: '上川（白滝）' },
+    ],
+    'jr-hokkaido.senmo-main': [
+        { lat: 44.0200, lon: 144.2700, name: '網走' },
+        { lat: 42.9849, lon: 144.3816, name: '釧路' },
+    ],
+    'jr-hokkaido.nemuro-main': [
+        { lat: 42.9200, lon: 143.2000, name: '帯広' },
+        { lat: 42.9849, lon: 144.3816, name: '釧路' },
+    ],
+    'jr-hokkaido.furano': [
+        { lat: 43.3500, lon: 142.3833, name: '富良野' },
+    ],
+    'jr-hokkaido.sekisho': [
+        { lat: 43.0000, lon: 142.7500, name: '占冠' },
+        { lat: 42.9200, lon: 143.2000, name: '帯広' },
+    ],
 };
 
 // デフォルト座標（札幌）
@@ -31,7 +68,7 @@ const DEFAULT_LAT = 43.0621;
 const DEFAULT_LON = 141.3544;
 
 // 座標間の距離を計算 (Haversine formula)
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -52,25 +89,27 @@ export function findNearestWeatherPoint(lat: number, lon: number): { id: string;
     let nearestPoint = 'jr-hokkaido.hakodate-main'; // デフォルト札幌
     let minDistance = Infinity;
 
-    Object.entries(ROUTE_COORDINATES).forEach(([id, point]) => {
-        const dist = calculateDistance(lat, lon, point.lat, point.lon);
-        if (dist < minDistance) {
-            minDistance = dist;
-            nearestPoint = id;
+    Object.entries(ROUTE_COORDINATES).forEach(([id, points]) => {
+        // 各路線の全地点から最も近いものを探す
+        for (const point of points) {
+            const dist = calculateDistance(lat, lon, point.lat, point.lon);
+            if (dist < minDistance) {
+                minDistance = dist;
+                nearestPoint = id;
+            }
         }
     });
 
     return {
         id: nearestPoint,
-        name: ROUTE_COORDINATES[nearestPoint].name
+        name: ROUTE_COORDINATES[nearestPoint][0].name
     };
 }
 
 /**
- * Get coordinates for a specific route ID or use provided coordinates.
+ * Get the primary (first) coordinates for a specific route ID or use provided coordinates.
+ * For multi-point weather, use getRouteAllCoordinates() instead.
  * Defaults to Sapporo if neither is valid.
- * @param routeId Optional route ID to look up.
- * @param coordinates Optional direct coordinates.
  */
 export function getRouteCoordinates(routeId?: string, coordinates?: { lat: number; lon: number }): { lat: number; lon: number } {
     if (coordinates) {
@@ -79,19 +118,27 @@ export function getRouteCoordinates(routeId?: string, coordinates?: { lat: numbe
     }
 
     if (routeId && ROUTE_COORDINATES[routeId]) {
-        const coords = {
-            lat: ROUTE_COORDINATES[routeId].lat,
-            lon: ROUTE_COORDINATES[routeId].lon,
-        };
+        const primary = ROUTE_COORDINATES[routeId][0];
+        const coords = { lat: primary.lat, lon: primary.lon };
         logger.debug('Using route-specific coordinates', {
             routeId,
             coords,
-            name: ROUTE_COORDINATES[routeId].name
+            name: primary.name
         });
         return coords;
     }
     logger.debug('Using default coordinates (Sapporo)', { routeId });
     return { lat: DEFAULT_LAT, lon: DEFAULT_LON };
+}
+
+/**
+ * Get all coordinates for a route (multiple observation points for long routes).
+ */
+export function getRouteAllCoordinates(routeId?: string): { lat: number; lon: number; name: string }[] {
+    if (routeId && ROUTE_COORDINATES[routeId]) {
+        return ROUTE_COORDINATES[routeId];
+    }
+    return [{ lat: DEFAULT_LAT, lon: DEFAULT_LON, name: '札幌（デフォルト）' }];
 }
 
 interface OpenMeteoHourlyResponse {
@@ -129,7 +176,7 @@ interface _OpenMeteoDailyResponse {
 }
 
 // 天気コードから天気名（日本語）
-function getWeatherName(code: number): string {
+export function getWeatherName(code: number): string {
     if (code === 0) return '快晴';
     if (code <= 3) return '晴れ';
     if (code <= 48) return '曇り';
@@ -141,8 +188,8 @@ function getWeatherName(code: number): string {
     return '不明';
 }
 
-// 警報生成（時間単位データ用）
-function generateWarningsFromHourly(
+// 擬似警報生成（時間単位データ用） — JMA公式データ取得失敗時のフォールバック
+export function generateWarningsFromHourly(
     precipitation: number,
     windSpeed: number,
     snowfall: number, // snowfall (intensity) instead of depth
@@ -153,23 +200,23 @@ function generateWarningsFromHourly(
 
     // 暴風警報（風速23m/s以上） - JMA基準より少し高めに設定（APIの過大評価補正）
     if (windSpeed >= 23) {
-        warnings.push({ type: '暴風警報', area: '北海道', issuedAt: now });
+        warnings.push({ type: '暴風警報', area: '北海道', issuedAt: now, source: 'pseudo' });
     } else if (windSpeed >= 16 || windGust >= 35) {
         // 平均16m/s以上で注意報
-        warnings.push({ type: '暴風注意報', area: '北海道', issuedAt: now });
+        warnings.push({ type: '暴風注意報', area: '北海道', issuedAt: now, source: 'pseudo' });
     }
 
     // 大雨警報（1時間降水量30mm以上）
     if (precipitation >= 30) {
-        warnings.push({ type: '大雨警報', area: '北海道', issuedAt: now });
+        warnings.push({ type: '大雨警報', area: '北海道', issuedAt: now, source: 'pseudo' });
     } else if (precipitation >= 10) {
-        warnings.push({ type: '大雨注意報', area: '北海道', issuedAt: now });
+        warnings.push({ type: '大雨注意報', area: '北海道', issuedAt: now, source: 'pseudo' });
     }
 
     // 大雪警報（強度ベース）
     // 気象庁基準はおおむね「12時間降雪量が30-40cm」など。時間当たり3-4cm続くと警報級。
     if (snowfall >= 4) {
-        warnings.push({ type: '大雪警報', area: '北海道', issuedAt: now });
+        warnings.push({ type: '大雪警報', area: '北海道', issuedAt: now, source: 'pseudo' });
     }
 
     return warnings;
@@ -247,12 +294,21 @@ export async function fetchHourlyWeatherForecast(
             pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[closestIndex] : 1013, // 🆕
         };
 
-        const warnings = generateWarningsFromHourly(
-            currentHourData.precipitation,
-            currentHourData.windSpeed,
-            currentHourData.snowfall || 0,
-            currentHourData.windGust
-        );
+        // 気象庁公式警報を優先し、取得失敗時は擬似警報にフォールバック
+        let warnings: WeatherWarning[];
+        const jmaWarnings = await getJMAWarningsForRoute(routeId || '');
+        if (jmaWarnings !== null) {
+            warnings = jmaWarnings;
+            logger.info('[Weather] Using JMA official warnings', { routeId, count: jmaWarnings.length });
+        } else {
+            warnings = generateWarningsFromHourly(
+                currentHourData.precipitation,
+                currentHourData.windSpeed,
+                currentHourData.snowfall || 0,
+                currentHourData.windGust
+            );
+            logger.info('[Weather] Using pseudo warnings (JMA unavailable)', { routeId });
+        }
 
         // 前後12時間のデータを抽出（タイムシフト提案・グラフ用）
         const surroundingHours: WeatherForecast[] = [];

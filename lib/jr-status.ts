@@ -51,6 +51,10 @@ export interface JROperationStatus {
     sourceArea?: string; // 🆕 情報取得元エリアID
     delayMinutes?: number; // 🆕 抽出された遅延分
     recoveryTime?: string; // 🆕 抽出された再開見込み時刻 (HH:mm)
+    /** 計画運休（前日発表等）かどうか */
+    isPlannedSuspension?: boolean;
+    /** 計画運休の詳細情報 */
+    plannedSuspensionDetails?: string;
 }
 
 /**
@@ -144,14 +148,19 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                 }
 
                 if (status !== 'normal') {
+                    // 計画運休判定（「明日」「計画的」「事前」「当初から」「終日」等のキーワード）
+                    const isPlanned = /明日|計画的|事前|当初から|終日|運休とします|運休といたし|運転を見合わせる予定|運転を取りやめ/.test(cleanGaikyo);
+
                     // 重複排除（複数のエリアにまたがる路線の対応）
                     const existing = allItems.find(i => i.routeId === route.routeId);
                     if (!existing || (status === 'suspended' && existing.status !== 'suspended')) {
                         if (existing) {
                             existing.status = status;
                             existing.statusText = description;
-                            existing.rawText = cleanGaikyo; // 🆕
-                            existing.sourceArea = `${areaName} (${areaId})`; // 🆕
+                            existing.rawText = cleanGaikyo;
+                            existing.sourceArea = `${areaName} (${areaId})`;
+                            existing.isPlannedSuspension = isPlanned;
+                            if (isPlanned) existing.plannedSuspensionDetails = cleanGaikyo;
                         } else {
                             allItems.push({
                                 routeId: route.routeId,
@@ -159,8 +168,10 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                                 status,
                                 statusText: description,
                                 updatedAt: now,
-                                rawText: cleanGaikyo, // 🆕
-                                sourceArea: `${areaName} (${areaId})` // 🆕
+                                rawText: cleanGaikyo,
+                                sourceArea: `${areaName} (${areaId})`,
+                                isPlannedSuspension: isPlanned,
+                                plannedSuspensionDetails: isPlanned ? cleanGaikyo : undefined,
                             });
                         }
                     }

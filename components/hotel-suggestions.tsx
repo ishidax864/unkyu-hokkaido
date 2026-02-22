@@ -2,7 +2,6 @@
 
 import { Hotel } from '@/lib/hotel-data';
 import { ExternalLink, Hotel as HotelIcon, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 interface HotelSuggestionsProps {
     hotels: Hotel[];
@@ -13,11 +12,9 @@ export function HotelSuggestions({ hotels, arrivalStationName }: HotelSuggestion
     if (hotels.length === 0) return null;
 
     return (
-        <motion.div
+        <div
             id="hotel-suggestions-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-6 p-5 rounded-2xl border-2 border-amber-100 bg-amber-50/50"
+            className="mt-6 p-5 rounded-2xl border-2 border-amber-100 bg-amber-50/50 animate-[fadeInUp_0.3s_ease-out]"
         >
             <div className="flex items-center gap-2 mb-4">
                 <div className="p-2 bg-amber-100 rounded-lg">
@@ -25,7 +22,7 @@ export function HotelSuggestions({ hotels, arrivalStationName }: HotelSuggestion
                 </div>
                 <div>
                     <h3 className="text-lg font-black text-amber-900 leading-none">帰宅困難時の宿泊提案</h3>
-                    <p className="text-[10px] text-amber-700 mt-1 font-bold">
+                    <p className="text-[11px] text-amber-700 mt-1 font-bold">
                         {arrivalStationName}周辺の人気ホテルをピックアップ
                     </p>
                 </div>
@@ -41,19 +38,20 @@ export function HotelSuggestions({ hotels, arrivalStationName }: HotelSuggestion
                         className="group flex flex-col sm:flex-row gap-3 p-4 bg-white rounded-xl border border-amber-200 hover:border-amber-400 hover:shadow-md transition-all"
                     >
                         <div className="flex-1">
-                            <h4 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
+                            <h4 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors flex items-center gap-1.5">
                                 {hotel.name}
+                                <span className="text-[9px] px-1 py-0.5 bg-gray-100 text-gray-400 rounded font-medium leading-none">PR</span>
                             </h4>
                             <p className="text-xs text-gray-600 mb-2 leading-relaxed">
                                 {hotel.description}
                             </p>
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1 text-[10px] text-gray-500 font-medium">
+                                <div className="flex items-center gap-1 text-[11px] text-gray-500 font-medium">
                                     <MapPin className="w-3 h-3" />
                                     <span>{hotel.city}エリア</span>
                                 </div>
                                 {hotel.priceRange && (
-                                    <div className="text-[10px] bg-gray-100 px-2 py-0.5 rounded-full font-bold text-gray-700">
+                                    <div className="text-[11px] bg-gray-100 px-2 py-0.5 rounded-full font-bold text-gray-700">
                                         目安: {hotel.priceRange}
                                     </div>
                                 )}
@@ -70,9 +68,9 @@ export function HotelSuggestions({ hotels, arrivalStationName }: HotelSuggestion
             </div>
 
             <p className="mt-4 text-[9px] text-amber-600/70 text-center font-medium">
-                ※リンク先は楽天トラベルのアフィリエイトリンクです。<br />
+                ※楽天トラベル提携リンク（広告）です。ご予約により当サイトに収益が発生します。<br />
                 運休時は予約が集中するため、早めの確認をお勧めします。
             </p>
-        </motion.div>
+        </div>
     );
 }

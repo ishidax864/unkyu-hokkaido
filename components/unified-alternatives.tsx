@@ -117,8 +117,8 @@ export function UnifiedAlternativesCard({
     const showHeavyTransport = isSevere; // 高速バス・レンタカー
 
     const taxiAffiliates = getAffiliatesByType('taxi').slice(0, 2); // Show up to 2 (Didi and GO)
-    // const busAffiliate = getAffiliatesByType('bus')[0]; // Unused
-    // const rentalAffiliate = getAffiliatesByType('rental')[0]; // Unused
+    const busAffiliate = getAffiliatesByType('bus')[0];
+    const rentalAffiliate = getAffiliatesByType('rental')[0];
 
     return (
         <div className="space-y-4 sm:space-y-6">
@@ -258,6 +258,59 @@ export function UnifiedAlternativesCard({
                             </a>
                         );
                     })}
+
+                    {/* Bus Affiliate (severe only) */}
+                    {showHeavyTransport && busAffiliate && (
+                        <a
+                            key={busAffiliate.id}
+                            href={busAffiliate.webUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'bus', provider: busAffiliate.name })}
+                            className="flex items-center justify-between p-4 min-h-[56px] hover:bg-gray-50 active:bg-gray-100 transition-colors group"
+                        >
+                            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                <div className="text-gray-400 group-hover:text-gray-600 shrink-0">
+                                    <Bus className="w-5 h-5" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <div className="font-bold text-gray-700 text-sm flex items-center gap-1.5">
+                                        <span className="truncate">高速バスを予約</span>
+                                        <span className="text-[9px] px-1 py-0.5 bg-gray-100 text-gray-400 rounded font-medium leading-none shrink-0">PR</span>
+                                    </div>
+                                    <div className="text-xs text-gray-500 truncate">{busAffiliate.description}</div>
+                                </div>
+                            </div>
+                            <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-500 shrink-0" />
+                        </a>
+                    )}
+
+                    {/* Rental Car Affiliate (severe + long disruption) */}
+                    {showHeavyTransport && isSevere && rentalAffiliate && (
+                        <a
+                            key={rentalAffiliate.id}
+                            href={rentalAffiliate.webUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => sendGAEvent('event', 'affiliate_click', { type: 'rental', provider: rentalAffiliate.name })}
+                            className="flex items-center justify-between p-4 min-h-[56px] hover:bg-gray-50 active:bg-gray-100 transition-colors group"
+                        >
+                            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                <div className="text-gray-400 group-hover:text-gray-600 shrink-0">
+                                    <Car className="w-5 h-5" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <div className="font-bold text-gray-700 text-sm flex items-center gap-1.5">
+                                        <span className="truncate">レンタカーを探す</span>
+                                        <span className="text-[9px] px-1 py-0.5 bg-gray-100 text-gray-400 rounded font-medium leading-none shrink-0">PR</span>
+                                    </div>
+                                    <div className="text-xs text-gray-500 truncate">{rentalAffiliate.description}</div>
+                                </div>
+                            </div>
+                            <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-500 shrink-0" />
+                        </a>
+                    )}
+
 
                     {/* Hotel / Cafe (Wait options) */}
                     {(showLongStayOptions || showShortStayOptions) && (

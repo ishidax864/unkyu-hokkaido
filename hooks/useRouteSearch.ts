@@ -29,6 +29,7 @@ export function useRouteSearch() {
 
     // Search Result State
     const [isLoading, setIsLoading] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
     const [prediction, setPrediction] = useState<PredictionResult | null>(null);
     const [weeklyPredictions, setWeeklyPredictions] = useState<PredictionResult[]>([]);
     const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
@@ -50,6 +51,7 @@ export function useRouteSearch() {
         type: 'departure' | 'arrival'
     ) => {
         setIsLoading(true);
+        setSearchError(null);
 
         // Update local state if called directly (e.g. from Favorites)
         // Note: If this is called from SearchForm, state might already be updated, but this ensures consistency
@@ -87,7 +89,7 @@ export function useRouteSearch() {
             }
         }
 
-        // Weather Fetching
+        // Weather & JR Status Fetching — 並列化 (Promise.allSettled)
         const targetDateTime = `${searchDate}T${targetTimeStr}:00`;
         let targetWeather: WeatherForecast | null = null;
         let weeklyWeather: WeatherForecast[] = [];
@@ -100,16 +102,23 @@ export function useRouteSearch() {
             }
             : undefined;
 
-        try {
-            targetWeather = await fetchHourlyWeatherForecast(routeId, targetDateTime, stationCoordinates);
-        } catch (error) {
-            logger.error('Hourly weather fetch failed', error);
+        // 3つの独立したAPI呼び出しを並列実行
+        const [hourlyResult, weeklyResult, jrResult] = await Promise.allSettled([
+            fetchHourlyWeatherForecast(routeId, targetDateTime, stationCoordinates),
+            fetchRealWeatherForecast(routeId, stationCoordinates),
+            fetch('/api/jr-status'),
+        ]);
+
+        if (hourlyResult.status === 'fulfilled') {
+            targetWeather = hourlyResult.value;
+        } else {
+            logger.error('Hourly weather fetch failed', hourlyResult.reason);
         }
 
-        try {
-            weeklyWeather = await fetchRealWeatherForecast(routeId, stationCoordinates);
-        } catch (error) {
-            logger.error('Weekly weather fetch failed', error);
+        if (weeklyResult.status === 'fulfilled') {
+            weeklyWeather = weeklyResult.value;
+        } else {
+            logger.error('Weekly weather fetch failed', weeklyResult.reason);
         }
 
         // JR Status
@@ -119,10 +128,9 @@ export function useRouteSearch() {
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const isToday = searchDate === todayStr;
 
-        try {
-            const response = await fetch('/api/jr-status');
-            if (response.ok) {
-                const data: JRStatusResponse & { hasAlerts?: boolean } = await response.json();
+        if (jrResult.status === 'fulfilled' && jrResult.value.ok) {
+            try {
+                const data: JRStatusResponse & { hasAlerts?: boolean } = await jrResult.value.json();
                 // Match by routeId first, then routeName as fallback
                 let matchingStatus = data.items.find((item: JRStatusItem) =>
                     (item.routeId && item.routeId === routeId) ||
@@ -137,15 +145,17 @@ export function useRouteSearch() {
                     jrStatus = {
                         routeId: routeId,
                         routeName: primaryRoute?.name || matchingStatus.routeName,
-                        status: matchingStatus.status, // type mismatch handled in calculation
+                        status: matchingStatus.status,
                         statusText: matchingStatus.description,
                         updatedAt: matchingStatus.updatedAt,
-                        rawText: matchingStatus.rawText, // 🆕
+                        rawText: matchingStatus.rawText,
                     };
                 }
+            } catch (error) {
+                logger.error('JR Status parse failed', error);
             }
-        } catch (error) {
-            logger.error('JR Status fetch failed', error);
+        } else if (jrResult.status === 'rejected') {
+            logger.error('JR Status fetch failed', jrResult.reason);
         }
 
         // Crowdsourced Status
@@ -202,19 +212,24 @@ export function useRouteSearch() {
         } catch (e) {
             logger.error('ML API error', e);
             // Fallback (Local Calc)
-            const result = calculateSuspensionRisk({
-                weather: targetWeather,
-                routeId: routeId,
-                routeName: primaryRoute?.name || '',
-                targetDate: searchDate,
-                targetTime: targetTimeStr,
-                jrStatus: isToday ? jrStatus : null,
-                crowdsourcedStatus: currentCrowdsourcedStatus,
-                timetableTrain: timetableTrain || undefined,
-                officialHistory: officialHistory
-            });
-            setPrediction(result);
-            finalPrediction = result;
+            try {
+                const result = calculateSuspensionRisk({
+                    weather: targetWeather,
+                    routeId: routeId,
+                    routeName: primaryRoute?.name || '',
+                    targetDate: searchDate,
+                    targetTime: targetTimeStr,
+                    jrStatus: isToday ? jrStatus : null,
+                    crowdsourcedStatus: currentCrowdsourcedStatus,
+                    timetableTrain: timetableTrain || undefined,
+                    officialHistory: officialHistory
+                });
+                setPrediction(result);
+                finalPrediction = result;
+            } catch (fallbackError) {
+                logger.error('Fallback calc also failed', fallbackError);
+                setSearchError('予測の取得に失敗しました。しばらくしてから再度お試しください。');
+            }
         }
 
         // Helper: Weekly Calculation
@@ -309,6 +324,7 @@ export function useRouteSearch() {
         time, setTime,
         timeType, setTimeType,
         isLoading,
+        searchError, // 🆕
         prediction,
         weeklyPredictions,
         selectedRouteId,

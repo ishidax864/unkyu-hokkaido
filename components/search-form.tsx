@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
-import { ArrowRight, Calendar, Clock, PlayCircle, Timer } from 'lucide-react';
-import { Station } from '@/lib/hokkaido-data';
+import { ArrowRight, Calendar, Clock, PlayCircle, Timer, Zap } from 'lucide-react';
+import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
 import { StationSelector } from './station-selector';
 
 interface SearchFormProps {
@@ -25,6 +25,16 @@ interface SearchFormProps {
     timeType: 'departure' | 'arrival';
     setTimeType: (type: 'departure' | 'arrival') => void;
 }
+
+// 人気ルートプリセット（コンポーネント外に定義して毎レンダーの再生成を回避）
+const QUICK_ROUTES = [
+    { dep: 'sapporo', arr: 'shin-chitose-airport', label: '札幌 → 空港', emoji: '✈️' },
+    { dep: 'sapporo', arr: 'otaru', label: '札幌 → 小樽', emoji: '🏔️' },
+    { dep: 'sapporo', arr: 'asahikawa', label: '札幌 → 旭川', emoji: '🚄' },
+    { dep: 'sapporo', arr: 'obihiro', label: '札幌 → 帯広', emoji: '🌾' },
+    { dep: 'sapporo', arr: 'hakodate', label: '札幌 → 函館', emoji: '🏯' },
+    { dep: 'sapporo', arr: 'kutchan', label: '札幌 → 倶知安', emoji: '⛷️' },
+] as const;
 
 export function SearchForm({
     onSearch,
@@ -96,7 +106,7 @@ export function SearchForm({
         }
     };
 
-    // 🆕 バリデーション：日付が範囲内か
+    // バリデーション：日付が範囲内か
     const isDateValid = (dateStr: string) => {
         if (!dateStr) return false;
         const selected = new Date(dateStr);
@@ -110,8 +120,43 @@ export function SearchForm({
         return selected >= min && selected <= max;
     };
 
+    const handleQuickRoute = (dep: string, arr: string) => {
+        const depSt = HOKKAIDO_STATIONS.find(s => s.id === dep);
+        const arrSt = HOKKAIDO_STATIONS.find(s => s.id === arr);
+        if (depSt && arrSt) {
+            setDepartureStation(depSt);
+            setArrivalStation(arrSt);
+            setDepQuery(depSt.name);
+            setArrQuery(arrSt.name);
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
+            {/* 🆕 クイックルート選択 */}
+            <div>
+                <div className="text-[11px] font-bold text-[var(--muted)] mb-2 flex items-center gap-1">
+                    <Zap className="w-3 h-3" />
+                    よく使うルート
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                    {QUICK_ROUTES.map(({ dep, arr, label, emoji }) => (
+                        <button
+                            key={`${dep}-${arr}`}
+                            type="button"
+                            onClick={() => handleQuickRoute(dep, arr)}
+                            className={`text-[11px] py-2 px-1 rounded-md border transition-all text-center leading-tight ${departureStation?.id === dep && arrivalStation?.id === arr
+                                ? 'border-[var(--primary)] bg-[var(--primary)]/5 text-[var(--primary)] font-bold'
+                                : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-gray-50 text-gray-600'
+                                }`}
+                        >
+                            <span className="block text-sm mb-0.5">{emoji}</span>
+                            {label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* 出発・到着駅選択 */}
             <div className="flex flex-col md:flex-row md:items-end gap-0 md:gap-2 relative">
                 <StationSelector
@@ -165,7 +210,7 @@ export function SearchForm({
                             className={`w-full input-field p-3 text-lg font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
                         />
                         {!isDateValid(date) && (
-                            <p className="text-[10px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
+                            <p className="text-[11px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
                         )}
                     </div>
                     <div>
@@ -200,16 +245,23 @@ export function SearchForm({
                     </div>
                 </div>
 
-                {/* 🆕 現在ボタン */}
+                {/* 🆕 現在ボタン — 駅選択状態に応じてラベル変更 */}
                 <button
                     type="button"
                     onClick={setCurrentDateTime}
-                    className="w-full btn-secondary py-3 text-sm flex items-center justify-center gap-2"
+                    disabled={!departureStation || !arrivalStation}
+                    className={`w-full py-3 text-sm flex items-center justify-center gap-2 rounded-md font-medium transition-all ${departureStation && arrivalStation
+                        ? 'bg-[var(--primary)] text-white hover:opacity-90 shadow-sm'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
                 >
-                    📍 現在の日時で検索
+                    {departureStation && arrivalStation
+                        ? <><Zap className="w-4 h-4" /> この区間を今すぐ予測</>
+                        : '📍 出発駅・到着駅を選択してください'
+                    }
                 </button>
                 {showError && (
-                    <p className="text-[10px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
+                    <p className="text-[11px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
                         ※出発駅と到着駅を選択してください
                     </p>
                 )}

@@ -3,7 +3,7 @@
  * calculateSuspensionRisk の複雑度を減らすため、サブ関数を抽出
  */
 
-import type { PredictionInput, RiskFactor, VulnerabilityData } from '../types';
+import type { PredictionInput, RiskFactor, VulnerabilityData, HistoricalMatch } from '../types';
 
 import {
     COMPOUND_RISK_THRESHOLD,
@@ -447,8 +447,7 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
 export function calculateRawRiskScore(
     input: PredictionInput,
     vulnerability: VulnerabilityData,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    historicalMatch: any,
+    historicalMatch: HistoricalMatch | null | undefined,
     isNearRealTime: boolean = false
 ): RiskEvaluationResult {
     const enrichedInput = { ...input, historicalMatch };

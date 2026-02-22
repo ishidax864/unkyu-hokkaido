@@ -95,7 +95,7 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                             {/* プログレスバーエリア */}
                             <div className="flex-1 relative">
                                 <div className="flex items-end justify-between mb-1">
-                                    <span className="text-[10px] text-gray-400 font-medium">リスク</span>
+                                    <span className="text-[11px] text-gray-400 font-medium">リスク</span>
                                     <span className={cn("text-xs font-bold", getRiskTextColor(pred.probability))}>
                                         {pred.probability}%
                                     </span>
@@ -111,7 +111,7 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                             {/* 天気詳細 info */}
                             <div className="w-20 text-right flex-shrink-0">
                                 {dayWeather && (
-                                    <div className="text-[10px] text-gray-400 font-medium space-y-0.5">
+                                    <div className="text-[11px] text-gray-400 font-medium space-y-0.5">
                                         <div className={cn(dayWeather.windSpeed >= 15 ? "text-orange-500 font-bold" : "")}>
                                             💨 {dayWeather.windSpeed}m/s
                                         </div>
@@ -133,19 +133,19 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
 
             {/* 凡例 */}
             <div className="flex flex-wrap text-center items-center justify-center gap-4 mt-6 pt-4 border-t border-dashed border-gray-200">
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                     <span>平常 (0-20%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                     <span>注意 (20-50%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
                     <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
                     <span>警戒 (50-80%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-600" />
                     <span>移動困難 (80%+)</span>
                 </div>

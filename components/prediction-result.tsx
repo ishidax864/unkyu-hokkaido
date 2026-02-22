@@ -240,24 +240,24 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
 // Risk Ring — Subtle, site-matching style
 // ────────────────────────────────────────────
 
-function RiskRing({ probability, strokeClass, trackClass, textClass, size = 52 }: {
+function RiskRing({ probability, strokeClass, trackClass, textClass, size = 72 }: {
     probability: number; strokeClass: string; trackClass: string; textClass: string; size?: number;
 }) {
-    const r = (size - 5) / 2;
+    const r = (size - 6) / 2;
     const circumference = 2 * Math.PI * r;
     const offset = circumference - (probability / 100) * circumference;
 
     return (
         <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
             <svg width={size} height={size} className="-rotate-90">
-                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={4} className={trackClass} />
-                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={4} strokeLinecap="round"
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={5} className={trackClass} />
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={5} strokeLinecap="round"
                     className={strokeClass}
                     strokeDasharray={circumference} strokeDashoffset={offset}
                     style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
                 />
             </svg>
-            <span className={cn("absolute text-xs font-black", textClass)}>{probability}%</span>
+            <span className={cn("absolute text-base font-black", textClass)}>{probability}%</span>
         </div>
     );
 }
@@ -293,7 +293,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     <div className="flex items-center gap-2.5">
                         <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
                         <div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">路線状況</p>
+                            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">路線状況</p>
                             <p className="text-sm font-bold text-gray-800">{route.name}</p>
                         </div>
                     </div>
@@ -304,7 +304,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                             trackClass={v.ringTrack}
                             textClass={v.ringText}
                         />
-                        <span className="text-[9px] font-bold text-gray-400 tracking-wider">運休リスク</span>
+                        <span className="text-[11px] font-bold text-gray-400 tracking-wider">運休リスク</span>
                     </div>
                 </div>
 
@@ -328,7 +328,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 mb-4">
                         <div className="flex items-center gap-1.5 mb-2">
                             <Shield className="w-3 h-3 text-gray-400" />
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">公式発表</span>
+                            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">公式発表</span>
                         </div>
                         <ul className="space-y-1">
                             {suspendedTrains.map((train, i) => (
@@ -347,7 +347,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                         <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border", v.pillBg, v.pillText, v.pillBorder)}>
                             <Clock className="w-3 h-3" />
                             {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
-                            <span className="text-[10px] font-medium opacity-70">（{result.isOfficialOverride ? '公式発表' : 'AI予測'}）</span>
+                            <span className="text-[11px] font-medium opacity-70">（{result.isOfficialOverride ? '公式発表' : 'AI予測'}）</span>
                         </span>
                     )}
                     {result.crowdStats && result.crowdStats.last15minReportCount > 0 && (
@@ -403,7 +403,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                         <div className="mt-3 space-y-4 animate-in fade-in slide-in-from-top-2">
                             {hasOfficialInfo && (
                                 <div>
-                                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">公式発表 (全文)</h4>
+                                    <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">公式発表 (全文)</h4>
                                     <div className="text-xs leading-relaxed text-gray-600 bg-gray-50 p-3 rounded-lg whitespace-pre-wrap border border-gray-100">
                                         {formatStatusText(result.officialStatus?.rawText || '')}
                                     </div>
@@ -412,7 +412,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
 
                             {result.reasons.length > 0 && (
                                 <div>
-                                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">リスク要因</h4>
+                                    <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">リスク要因</h4>
                                     <ul className="space-y-1.5">
                                         {result.reasons.map((r, i) => (
                                             <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
@@ -426,7 +426,7 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
 
                             {result.crowdStats && (result.crowdStats.last15minStopped > 0 || result.crowdStats.last15minDelayed > 0 || result.crowdStats.last15minCrowded > 0) && (
                                 <div>
-                                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">ユーザー報告 (直近15分)</h4>
+                                    <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">ユーザー報告 (直近15分)</h4>
                                     <div className="flex gap-3 text-xs font-bold">
                                         {result.crowdStats.last15minStopped > 0 && <span className="text-red-600">🔴 停止 {result.crowdStats.last15minStopped}件</span>}
                                         {result.crowdStats.last15minDelayed > 0 && <span className="text-amber-600">🟡 遅延 {result.crowdStats.last15minDelayed}件</span>}

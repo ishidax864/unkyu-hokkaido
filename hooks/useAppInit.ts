@@ -45,9 +45,9 @@ export function useAppInit() {
         const loadData = async () => {
             setState(prev => ({ ...prev, isWeatherLoading: true }));
 
-            // 1. Geolocation
+            // 1. Geolocation（短縮タイムアウト: 2秒）
             let currentCoords: { lat: number; lon: number } | undefined = undefined;
-            let currentLocationName = '札幌'; // Default
+            let currentLocationName = '札幌';
 
             try {
                 if (navigator.geolocation) {
@@ -64,9 +64,9 @@ export function useAppInit() {
                             },
                             (err) => {
                                 logger.warn('Geolocation denied/error', { error: err });
-                                resolve(); // Continue with default
+                                resolve();
                             },
-                            { timeout: 5000 }
+                            { timeout: 2000 }
                         );
                     });
                 }
@@ -74,35 +74,24 @@ export function useAppInit() {
                 logger.error('Geolocation setup failed', e);
             }
 
-            // 2. Weather
-            let realWeather: WeatherForecast[] = [];
-            let updateTime = '';
-            try {
-                realWeather = await fetchDailyWeatherForecast(undefined, currentCoords);
-                updateTime = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-            } catch (error) {
-                logger.error('Weather fetch failed', error);
-            }
+            // 2. Weather, Warnings, JR Status を並列実行
+            const [weatherResult, warningsResult, jrResult] = await Promise.allSettled([
+                fetchDailyWeatherForecast(undefined, currentCoords),
+                fetchAllHokkaidoWarnings(),
+                fetch('/api/jr-status').then(res => res.ok ? res.json() as Promise<JRStatusResponse> : null),
+            ]);
 
-            // 3. Warnings
-            let allWarnings: Array<{ area: string; warnings: WeatherWarning[] }> = [];
-            try {
-                allWarnings = await fetchAllHokkaidoWarnings();
-            } catch (error) {
-                logger.error('Warning fetch failed', error);
-            }
+            const realWeather = weatherResult.status === 'fulfilled' ? weatherResult.value : [];
+            const updateTime = weatherResult.status === 'fulfilled'
+                ? new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+                : '';
+            const allWarnings = warningsResult.status === 'fulfilled' ? warningsResult.value : [];
+            const allJrStatus = jrResult.status === 'fulfilled' && jrResult.value
+                ? (jrResult.value as JRStatusResponse).items : [];
 
-            // 4. JR Status (Global) 🆕
-            let allJrStatus: JRStatusItem[] = [];
-            try {
-                const res = await fetch('/api/jr-status');
-                if (res.ok) {
-                    const data: JRStatusResponse = await res.json();
-                    allJrStatus = data.items;
-                }
-            } catch (error) {
-                logger.error('JR Status fetch failed', error);
-            }
+            if (weatherResult.status === 'rejected') logger.error('Weather fetch failed', weatherResult.reason);
+            if (warningsResult.status === 'rejected') logger.error('Warning fetch failed', warningsResult.reason);
+            if (jrResult.status === 'rejected') logger.error('JR Status fetch failed', jrResult.reason);
 
             setState(prev => ({
                 ...prev,
@@ -111,7 +100,7 @@ export function useAppInit() {
                 weather: realWeather,
                 lastWeatherUpdate: updateTime,
                 warnings: allWarnings,
-                jrStatus: allJrStatus, // 🆕
+                jrStatus: allJrStatus,
                 isWeatherLoading: false
             }));
         };

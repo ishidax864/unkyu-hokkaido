@@ -98,7 +98,7 @@ export function FeedbackForm({ onClose }: FeedbackFormProps) {
                             <div className={`${opt.bg} ${opt.color} p-2 rounded-lg`}>
                                 <opt.icon className="w-4 h-4" />
                             </div>
-                            <span className="text-[10px] font-bold text-gray-600">{opt.label}</span>
+                            <span className="text-[11px] font-bold text-gray-600">{opt.label}</span>
                         </button>
                     ))}
                 </div>

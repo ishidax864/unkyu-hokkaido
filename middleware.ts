@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { logger } from '@/lib/logger';
 
 // =====================
 // レート制限設定
@@ -117,8 +118,13 @@ export function middleware(request: NextRequest) {
             const authValue = authHeader.split(' ')[1];
             const [user, pwd] = atob(authValue).split(':');
 
-            const adminUser = process.env.ADMIN_USER || 'admin';
-            const adminPass = process.env.ADMIN_PASSWORD || 'unkyu-ai-2026';
+            const adminUser = process.env.ADMIN_USER;
+            const adminPass = process.env.ADMIN_PASSWORD;
+
+            // 環境変数未設定の場合はアクセス拒否
+            if (!adminUser || !adminPass) {
+                return new NextResponse('Admin credentials not configured', { status: 503 });
+            }
 
             if (user !== adminUser || pwd !== adminPass) {
                 return new NextResponse('Unauthorized', {
@@ -136,7 +142,7 @@ export function middleware(request: NextRequest) {
 
     // 不審なリクエストをブロック
     if (isSuspiciousRequest(request)) {
-        console.warn(`[SECURITY] Suspicious request blocked from ${ip}: ${request.nextUrl.pathname}`);
+        logger.warn(`Suspicious request blocked from ${ip}: ${request.nextUrl.pathname}`);
         return new NextResponse(
             JSON.stringify({ error: 'Bad Request' }),
             {
@@ -155,7 +161,7 @@ export function middleware(request: NextRequest) {
         response.headers.set('X-RateLimit-Remaining', remaining.toString());
 
         if (limited) {
-            console.warn(`[RATELIMIT] Rate limit exceeded for ${ip}`);
+            logger.warn(`Rate limit exceeded for ${ip}`);
             return new NextResponse(
                 JSON.stringify({ error: 'Too many requests. Please try again later.' }),
                 {

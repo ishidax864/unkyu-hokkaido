@@ -100,7 +100,7 @@ describe('evaluateActionDecision', () => {
         it('should return CAUTION for probability >= 20', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 30 }));
             expect(result.type).toBe('CAUTION');
-            expect(result.title).toBe('遅延リスクあり');
+            expect(result.title).toBe('遅延・運休に注意');
             expect(result.title).not.toContain('Caution');
         });
 
@@ -122,7 +122,7 @@ describe('evaluateActionDecision', () => {
             const result = evaluateActionDecision(makePrediction({ probability: 5 }));
             expect(result.type).toBe('NORMAL');
             expect(result.title).toBe('平常運転');
-            expect(result.nextAction).toContain('通常通り');
+            expect(result.nextAction).toContain('安心');
         });
     });
 

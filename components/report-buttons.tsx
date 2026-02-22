@@ -109,7 +109,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                     </span>
                 </div>
                 {totalReports > 0 && (
-                    <span className="text-[10px] font-medium text-gray-400">
+                    <span className="text-[11px] font-medium text-gray-400">
                         直近2時間: {totalReports}件
                     </span>
                 )}
@@ -131,7 +131,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
 
             {/* Report Buttons */}
             <div className="rounded-lg p-3 border border-gray-100 bg-gray-50/50">
-                <div className="text-[10px] font-medium text-gray-500 mb-2 text-center">
+                <div className="text-[11px] font-medium text-gray-500 mb-2 text-center">
                     あなたの報告が他のユーザーの判断を助けます
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -166,7 +166,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                                 {/* Count Badge */}
                                 {count > 0 && (
                                     <span className={cn(
-                                        "absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] flex items-center justify-center text-[10px] font-bold rounded-full border shadow-sm px-1 z-10",
+                                        "absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] flex items-center justify-center text-[11px] font-bold rounded-full border shadow-sm px-1 z-10",
                                         option.type === 'stopped' ? "bg-red-500 text-white border-red-600" :
                                             option.type === 'delayed' ? "bg-yellow-500 text-white border-yellow-600" :
                                                 option.type === 'crowded' ? "bg-orange-500 text-white border-orange-600" :

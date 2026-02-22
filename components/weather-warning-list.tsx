@@ -53,11 +53,11 @@ export function WeatherWarningList({ warnings, isLoading }: WeatherWarningListPr
                     <div>
                         <div className="font-black text-base flex items-center gap-2">
                             気象警報・注意報発令中
-                            <span className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                            <span className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px] font-bold">
                                 {totalWarnings}件
                             </span>
                         </div>
-                        <div className="text-[10px] mt-0.5 font-medium opacity-80 uppercase tracking-tight">
+                        <div className="text-[11px] mt-0.5 font-medium opacity-80 uppercase tracking-tight">
                             {highPriorityWarnings.length > 0 ? (
                                 <span>
                                     {highPriorityWarnings.slice(0, 2).join('、')}

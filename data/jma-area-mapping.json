@@ -1,0 +1,183 @@
+{
+    "routes": {
+        "jr-hokkaido.chitose": {
+            "areaCodes": [
+                "016000"
+            ],
+            "areaNames": [
+                "石狩・空知・後志地方"
+            ]
+        },
+        "jr-hokkaido.hakodate-main": {
+            "areaCodes": [
+                "016000",
+                "012000"
+            ],
+            "areaNames": [
+                "石狩・空知・後志地方",
+                "上川・留萌地方"
+            ]
+        },
+        "jr-hokkaido.gakuentoshi": {
+            "areaCodes": [
+                "016000"
+            ],
+            "areaNames": [
+                "石狩・空知・後志地方"
+            ]
+        },
+        "jr-hokkaido.muroran-main": {
+            "areaCodes": [
+                "016000",
+                "015000"
+            ],
+            "areaNames": [
+                "石狩・空知・後志地方",
+                "胆振・日高地方"
+            ]
+        },
+        "jr-hokkaido.hakodate-south": {
+            "areaCodes": [
+                "017000"
+            ],
+            "areaNames": [
+                "渡島・檜山地方"
+            ]
+        },
+        "jr-hokkaido.soya-main": {
+            "areaCodes": [
+                "011000",
+                "012000"
+            ],
+            "areaNames": [
+                "宗谷地方",
+                "上川・留萌地方"
+            ]
+        },
+        "jr-hokkaido.sekihoku-main": {
+            "areaCodes": [
+                "012000",
+                "013000"
+            ],
+            "areaNames": [
+                "上川・留萌地方",
+                "網走・北見・紋別地方"
+            ]
+        },
+        "jr-hokkaido.furano": {
+            "areaCodes": [
+                "012000"
+            ],
+            "areaNames": [
+                "上川・留萌地方"
+            ]
+        },
+        "jr-hokkaido.rumoi": {
+            "areaCodes": [
+                "012000"
+            ],
+            "areaNames": [
+                "上川・留萌地方"
+            ]
+        },
+        "jr-hokkaido.hidaka": {
+            "areaCodes": [
+                "015000"
+            ],
+            "areaNames": [
+                "胆振・日高地方"
+            ]
+        },
+        "jr-hokkaido.sekisho": {
+            "areaCodes": [
+                "016000",
+                "014030"
+            ],
+            "areaNames": [
+                "石狩・空知・後志地方",
+                "十勝地方"
+            ]
+        },
+        "jr-hokkaido.nemuro-main": {
+            "areaCodes": [
+                "014030",
+                "014100"
+            ],
+            "areaNames": [
+                "十勝地方",
+                "釧路・根室地方"
+            ]
+        },
+        "jr-hokkaido.senmo-main": {
+            "areaCodes": [
+                "013000",
+                "014100"
+            ],
+            "areaNames": [
+                "網走・北見・紋別地方",
+                "釧路・根室地方"
+            ]
+        }
+    },
+    "warningTypeMapping": {
+        "暴風警報": [
+            "wind"
+        ],
+        "暴風雪警報": [
+            "wind",
+            "snow"
+        ],
+        "大雪警報": [
+            "snow"
+        ],
+        "大雨警報": [
+            "rain"
+        ],
+        "洪水警報": [
+            "rain"
+        ],
+        "高潮警報": [
+            "coastal"
+        ],
+        "波浪警報": [
+            "coastal"
+        ],
+        "暴風注意報": [
+            "wind"
+        ],
+        "強風注意報": [
+            "wind"
+        ],
+        "大雪注意報": [
+            "snow"
+        ],
+        "雷注意報": [
+            "thunder"
+        ],
+        "大雨注意報": [
+            "rain"
+        ],
+        "融雪注意報": [
+            "snow"
+        ],
+        "風雪注意報": [
+            "wind",
+            "snow"
+        ],
+        "着雪注意報": [
+            "snow"
+        ],
+        "なだれ注意報": [
+            "snow"
+        ],
+        "濃霧注意報": [
+            "fog"
+        ],
+        "高潮注意報": [
+            "coastal"
+        ],
+        "波浪注意報": [
+            "coastal"
+        ]
+    }
+}

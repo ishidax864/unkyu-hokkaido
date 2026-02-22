@@ -19,28 +19,21 @@ export function ShareCard({ prediction, routeName, departureStation, arrivalStat
 
     // シェアテキスト生成
     const getShareText = () => {
-        const riskLevel = prediction.probability >= 80 ? '🚫危険' :
-            prediction.probability >= 50 ? '⚠️高' :
-                prediction.probability >= 20 ? '⚡中' : '✅低';
-
-        const statusEmoji = prediction.status === '運休' ? '🚫' :
-            prediction.status === '運転見合わせ' ? '⚠️' :
-                prediction.status === '遅延' ? '🕐' : '✅';
+        const riskEmoji = prediction.probability >= 80 ? '🚫' :
+            prediction.probability >= 50 ? '⚠️' :
+                prediction.probability >= 20 ? '⚡' : '✅';
 
         const date = new Date(prediction.targetDate);
         const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
 
-        return `【運休北海道 予測】${dateStr}
-${departureStation}→${arrivalStation}（${routeName}）
-
-${statusEmoji} 運休リスク: ${prediction.probability}%（${riskLevel}）
+        return `${riskEmoji} ${dateStr} ${routeName}（${departureStation}→${arrivalStation}）
+運休リスク ${prediction.probability}%
 
 ${prediction.reasons[0] || ''}
 
-運行予報を確認する：
+AIが天気から電車の運休を予測 👇
 https://unkyu-ai.vercel.app
-
-#運休北海道 #JR北海道 #運休予測`;
+#運休北海道 #JR北海道`;
     };
 
     // クリップボードにコピー
@@ -106,6 +99,7 @@ https://unkyu-ai.vercel.app
                 <button
                     onClick={handleCopy}
                     className="flex items-center gap-1.5 text-xs text-[var(--muted)] hover:text-[var(--primary)] transition-colors"
+                    data-compact
                 >
                     {copied ? (
                         <Check className="w-3.5 h-3.5 text-[var(--status-normal)]" />
@@ -115,6 +109,30 @@ https://unkyu-ai.vercel.app
                     <span>{copied ? 'コピー済み' : 'テキストをコピー'}</span>
                 </button>
             </div>
+
+            {/* Visual Preview Card */}
+            {(() => {
+                const riskLevel = prediction.probability >= 80 ? '🚫 危険' :
+                    prediction.probability >= 50 ? '⚠️ 注意' :
+                        prediction.probability >= 20 ? '⚡ やや注意' : '✅ 安全';
+                const gradientClass = prediction.probability >= 80 ? 'from-red-500 to-red-700' :
+                    prediction.probability >= 50 ? 'from-orange-500 to-amber-600' :
+                        prediction.probability >= 20 ? 'from-amber-400 to-yellow-500' : 'from-emerald-500 to-teal-600';
+                return (
+                    <div className={`bg-gradient-to-br ${gradientClass} rounded-xl p-4 text-white shadow-lg`}>
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-bold opacity-80 tracking-wider">運休北海道 AI予測</span>
+                            <span className="text-2xl font-black">{prediction.probability}%</span>
+                        </div>
+                        <div className="text-sm font-bold mb-1">
+                            {departureStation} → {arrivalStation}
+                        </div>
+                        <div className="text-xs opacity-90">
+                            {riskLevel} · {routeName}
+                        </div>
+                    </div>
+                );
+            })()}
 
             <div className="grid grid-cols-2 gap-3">
                 <button

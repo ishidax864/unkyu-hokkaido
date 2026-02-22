@@ -83,7 +83,28 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
                     );
                 })}
             </div>
-            <div className="text-[10px] text-center text-[var(--muted)] mt-2">
+
+            {/* P3-2: 凡例 */}
+            <div className="flex items-center justify-center gap-4 mt-3 flex-wrap">
+                <div className="flex items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-emerald-400" />
+                    <span className="text-[11px] text-[var(--muted)]">安全</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-amber-400" />
+                    <span className="text-[11px] text-[var(--muted)]">注意</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-orange-500" />
+                    <span className="text-[11px] text-[var(--muted)]">高リスク</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-red-600" />
+                    <span className="text-[11px] text-[var(--muted)]">危険</span>
+                </div>
+            </div>
+
+            <div className="text-[11px] text-center text-[var(--muted)] mt-2">
                 ※前後2時間の予測推移
             </div>
         </section>

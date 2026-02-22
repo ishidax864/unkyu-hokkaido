@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
 
 export const dynamic = 'force-dynamic'; // 🆕 Disable caching for real-time predictions
 import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
 import { logger } from '@/lib/logger';
-import { JRStatusItem, PredictionInput, JRStatus } from '@/lib/types';
+import { JRStatusItem, PredictionInput, JRStatus, HourlyRiskData } from '@/lib/types';
 import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
 
 import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory } from '@/lib/supabase';
@@ -17,7 +17,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
     try {
         const supabase = getAdminSupabaseClient();
         if (!supabase) {
-            console.error('Missing Supabase credentials');
+            logger.error('Missing Supabase credentials');
             return null;
         }
 
@@ -36,7 +36,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             .limit(1);
 
         if (dbError) {
-            console.error('DB Error fetching route_status_history:', dbError.message);
+            logger.error('DB Error fetching route_status_history:', dbError);
             return null;
         }
 
@@ -77,7 +77,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             .limit(1);
 
         if (logError) {
-            console.error('DB Error fetching crawler_logs:', logError.message);
+            logger.error('DB Error fetching crawler_logs:', logError);
             return null;
         }
 
@@ -122,24 +122,16 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
                     source: 'official'
                 };
             } else {
-                return {
-                    routeName: routeName,
-                    status: 'delay',
-                    description: 'Stale Data',
-                    statusText: `ERR: Data Stale (${Math.round((now - lastFetch) / 60000)}min old)`,
-                    updatedAt: logs[0].fetched_at,
-                    source: 'official'
-                } as unknown as JRStatusItem;
+                logger.warn(`JR Status data stale: ${Math.round((now - lastFetch) / 60000)}min old`);
+                return null; // 古いデータは信頼できないためnull→気象予測のみで判定
             }
         } else {
             // クローラーログがないまたはデータが古い -> nullを返し気象予測のみで判定する
             return null;
         }
-
-        return null;
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error('JR Status Fetch Error:', msg);
+        logger.error('JR Status Fetch Error:', e);
         return null;
     }
 }
@@ -206,7 +198,7 @@ export async function POST(req: NextRequest) {
             historicalData,
             jrStatus: jrStatus,
             crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
-            officialHistory: isToday ? officialHistory as any : null
+            officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null
         };
 
         const result = calculateSuspensionRisk(input);
@@ -216,7 +208,7 @@ export async function POST(req: NextRequest) {
 
         // 🆕 Trend Calculation (Server-Side)
         // User Request: "Calculate on server for consistency throughout."
-        const trend: any[] = [];
+        const trend: HourlyRiskData[] = [];
         const targetHour = parseInt(time.split(':')[0]);
         const surroundingWeather = weather.surroundingHours || [];
 
@@ -228,14 +220,16 @@ export async function POST(req: NextRequest) {
             const checkTime = `${hStr}:00`;
 
             let hourRisk: number;
-            let hourWeather: any = null;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let hourWeather: Record<string, any> | null = null;
             const isTarget = offset === 0;
 
             if (isTarget) {
                 hourRisk = result.probability; // Re-use main result
                 hourWeather = weather;
             } else {
-                hourWeather = surroundingWeather.find((sw: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                hourWeather = surroundingWeather.find((sw: Record<string, any>) => {
                     const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
                     return swHour === h;
                 }) || null;
@@ -252,9 +246,9 @@ export async function POST(req: NextRequest) {
                     const contextHours = [...surroundingWeather, weather];
 
                     const weatherWithContext = {
-                        ...hourWeather,
+                        ...hourWeather!,
                         surroundingHours: contextHours
-                    };
+                    } as typeof weather;
 
                     const r = calculateSuspensionRisk({
                         weather: weatherWithContext,
@@ -265,7 +259,7 @@ export async function POST(req: NextRequest) {
                         historicalData,
                         jrStatus: jrStatus,
                         crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
-                        officialHistory: isToday ? officialHistory as any : null,
+                        officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null,
                         timetableTrain: undefined
                     });
                     hourRisk = r.probability;
@@ -275,7 +269,7 @@ export async function POST(req: NextRequest) {
             }
 
             // Determine icon
-            let icon = 'cloud';
+            let icon: HourlyRiskData['weatherIcon'] = 'cloud';
             const displayWeather = isTarget ? weather : hourWeather;
             if (displayWeather) {
                 if ((displayWeather.snowfall ?? 0) > 0) icon = 'snow';
@@ -308,7 +302,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(enrichedResult);
 
     } catch (error) {
-        console.error('Prediction API Error:', error);
+        logger.error('Prediction API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

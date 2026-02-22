@@ -290,7 +290,7 @@ describe('Category B: 軽度の悪天候 → 遅延リスク', () => {
             routeId,
             weather: makeWeather({ windSpeed: 12, windGust: 18, snowfall: 1, precipitation: 1 }),
             jrStatus: { status: 'delay', statusText: '遅れが生じています' },
-        }), [40, 75], ['遅延', '運休']);
+        }), [40, 75], ['遅延', '運休', '運転見合わせ']);
         expect(probOk).toBe(true);
         expect(statusOk).toBe(true);
     });

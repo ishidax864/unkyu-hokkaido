@@ -1,4 +1,6 @@
 
+import type { Timetable } from './timetable-data';
+
 // =====================
 // 運休AI 型定義
 // =====================
@@ -52,6 +54,8 @@ export interface WeatherWarning {
   type: '暴風警報' | '大雨警報' | '大雪警報' | '暴風雪警報' | '暴風注意報' | '大雨注意報' | '大雪注意報' | '雷注意報';
   area: string;
   issuedAt: string;
+  /** データソース: 'jma' = 気象庁公式, 'pseudo' = 気象データ推定 */
+  source?: 'jma' | 'pseudo';
 }
 
 export interface WeatherForecast {
@@ -249,11 +253,18 @@ export interface PredictionInput {
     delay_minutes?: number;
     recovery_time?: string;
   }[] | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  historicalMatch?: any | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  timetableTrain?: any;
+  historicalMatch?: HistoricalMatch | null;
+  timetableTrain?: Timetable | null;
 }
+
+/** 過去の気象条件との類似マッチ結果 */
+export interface HistoricalMatch {
+  id: string;
+  label: string;
+  similarity?: number;
+}
+
+
 
 export interface RiskFactor {
   condition: (input: PredictionInput, vuln: VulnerabilityData) => boolean;

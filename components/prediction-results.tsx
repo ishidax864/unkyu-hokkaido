@@ -35,7 +35,7 @@ export function PredictionResults({
     prediction,
     selectedRouteId,
     date,
-    time, // 🆕
+    time,
     depStation,
     arrStation,
     riskTrend,
@@ -59,30 +59,38 @@ export function PredictionResults({
             {/* ヘッダー：駅名表示とお気に入り */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none">予測結果</span>
-                    <h2 className="text-xl font-black text-gray-900 leading-none">
+                    <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none dark:bg-gray-100 dark:text-gray-900">予測結果</span>
+                    <h2 className="text-xl font-black text-[var(--foreground)] leading-none">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>
 
-                <button
-                    onClick={() => {
-                        if (isFavorite(depStation.id, arrStation.id)) {
-                            sendGAEvent('event', 'favorite_remove', { route: `${depStation.name}-${arrStation.name}` });
-                            removeFavorite(`${depStation.id}-${arrStation.id}`);
-                        } else {
-                            sendGAEvent('event', 'favorite_add', { route: `${depStation.name}-${arrStation.name}` });
-                            addFavorite(depStation.id, arrStation.id, depStation.name, arrStation.name);
-                        }
-                    }}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
-                        ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                        : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
-                        }`}
-                >
-                    <Star className={`w-3.5 h-3.5 ${isFavorite(depStation.id, arrStation.id) ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-                    {isFavorite(depStation.id, arrStation.id) ? '登録済み' : 'お気に入り登録'}
-                </button>
+                <div className="relative group">
+                    <button
+                        onClick={() => {
+                            if (isFavorite(depStation.id, arrStation.id)) {
+                                sendGAEvent('event', 'favorite_remove', { route: `${depStation.name}-${arrStation.name}` });
+                                removeFavorite(`${depStation.id}-${arrStation.id}`);
+                            } else {
+                                sendGAEvent('event', 'favorite_add', { route: `${depStation.name}-${arrStation.name}` });
+                                addFavorite(depStation.id, arrStation.id, depStation.name, arrStation.name);
+                            }
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
+                            ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                            : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
+                            }`}
+                    >
+                        <Star className={`w-3.5 h-3.5 ${isFavorite(depStation.id, arrStation.id) ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                        {isFavorite(depStation.id, arrStation.id) ? '登録済み' : 'お気に入り登録'}
+                    </button>
+                    {/* P3-1: オンボーディング — 未登録時のみツールチップ表示 */}
+                    {!isFavorite(depStation.id, arrStation.id) && (
+                        <div className="absolute -bottom-8 right-0 bg-gray-900 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                            ★ このルートを保存して次回ワンタップ検索
+                        </div>
+                    )}
+                </div>
             </div>
 
 
@@ -90,6 +98,33 @@ export function PredictionResults({
             <PredictionResultCard
                 result={prediction}
                 route={route}
+            />
+
+            {/* 免責注記 */}
+            <div className="flex items-start gap-1.5 justify-center -mt-3 mb-1 px-2">
+                <p className="text-[11px] text-gray-500 text-center leading-relaxed">
+                    {prediction.isOfficialOverride
+                        ? '※ JR北海道の公式情報に基づくAI予測です。'
+                        : '※ 本予測はAIによる予測であり、JR北海道の公式情報ではありません。'}
+                    最新の運行情報は
+                    <a
+                        href="https://www.jrhokkaido.co.jp/train/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-[var(--primary)] hover:opacity-80 ml-0.5 font-medium"
+                    >
+                        JR北海道公式サイト
+                    </a>
+                    をご確認ください。
+                </p>
+            </div>
+
+            {/* P1-3: SNSシェア — 結果直後に配置して感情的なシェアを促進 */}
+            <ShareCard
+                prediction={prediction}
+                routeName={route.name}
+                departureStation={depStation.name}
+                arrivalStation={arrStation.name}
             />
 
             {/* ユーザー報告（当日のみ）— 予測直後に配置して報告を促進 */}
@@ -128,16 +163,8 @@ export function PredictionResults({
                 />
             )}
 
-            {/* SNSシェア */}
-            <ShareCard
-                prediction={prediction}
-                routeName={route.name}
-                departureStation={depStation.name}
-                arrivalStation={arrStation.name}
-            />
-
-            {/* 宿泊提案: リスク30%以上または部分運休時 */}
-            {(prediction.probability >= 30 || prediction.isPartialSuspension) && (
+            {/* P2-3: 宿泊提案 — リスク70%以上のみ表示（通勤者にはノイズを減らす） */}
+            {(prediction.probability >= 70 || prediction.isPartialSuspension) && (
                 <HotelSuggestions
                     hotels={getHotelsForStation(arrStation.id)}
                     arrivalStationName={arrStation.name}

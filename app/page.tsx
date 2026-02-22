@@ -1,10 +1,7 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { SearchForm } from '@/components/search-form';
-import { ServiceFeatures } from '@/components/service-features';
-import { PredictionResults } from '@/components/prediction-results';
-import { WeatherWarningList } from '@/components/weather-warning-list';
-import { ProgressiveLoading } from '@/components/progressive-loading';
 import { HeadlineStatus } from '@/components/headline-status';
 import { getStationById } from '@/lib/hokkaido-data';
 import { useAppInit } from '@/hooks/useAppInit';
@@ -12,9 +9,16 @@ import { saveUserReport } from '@/lib/user-reports';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useRouteSearch } from '@/hooks/useRouteSearch';
 import { FavoriteSelector } from '@/components/favorite-selector';
-import { Cloud, Train, MapPin } from 'lucide-react';
+import { Cloud, Train, MapPin, AlertTriangle } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { getWeatherIcon } from '@/lib/weather-utils';
+import { logger } from '@/lib/logger';
+
+// 遅延ロード: 初回表示に不要なコンポーネント
+const PredictionResults = dynamic(() => import('@/components/prediction-results').then(m => ({ default: m.PredictionResults })));
+const ServiceFeatures = dynamic(() => import('@/components/service-features').then(m => ({ default: m.ServiceFeatures })));
+const WeatherWarningList = dynamic(() => import('@/components/weather-warning-list').then(m => ({ default: m.WeatherWarningList })));
+const ProgressiveLoading = dynamic(() => import('@/components/progressive-loading').then(m => ({ default: m.ProgressiveLoading })));
 
 export default function Home() {
   // 検索ロジックのフック
@@ -25,6 +29,7 @@ export default function Home() {
     time, setTime,
     timeType, setTimeType,
     isLoading,
+    searchError, // 🆕
     prediction,
     weeklyPredictions,
     selectedRouteId,
@@ -69,7 +74,7 @@ export default function Home() {
       // 自分の投稿を即座に反映させるため、データを再取得
       refreshRealtimeStatus();
     } catch (error) {
-      console.error('Report save error:', error);
+      logger.error('Report save error:', error);
     }
   };
 
@@ -103,7 +108,62 @@ export default function Home() {
           isLoading={isWeatherLoading}
         />
 
-        {/* 天気サマリー */}
+        {/* 検索フォーム — ファーストビュー直下に配置 */}
+        <section className="mb-4" aria-labelledby="search-section-title">
+          <h2 id="search-section-title" className="section-label">運休リスクを調べる</h2>
+
+          {/* 🆕 お気に入りルートセレクター */}
+          {isFavoritesLoaded && favorites.length > 0 && (
+            <FavoriteSelector
+              favorites={favorites}
+              onSelect={(fav) => {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const currentDate = `${year}-${month}-${day}`;
+                const currentTime = now.toTimeString().slice(0, 5);
+
+                // フォームの状態を更新（ユーザーリクエスト: 入力欄に反映させる）
+                setDepartureStation(getStationById(fav.departureId) || null);
+                setArrivalStation(getStationById(fav.arrivalId) || null);
+                setDate(currentDate);
+                setTime(currentTime);
+                setTimeType('departure');
+
+                sendGAEvent('event', 'favorite_select', {
+                  departure: fav.departureName,
+                  arrival: fav.arrivalName
+                });
+                handleSearch(
+                  fav.departureId,
+                  fav.arrivalId,
+                  currentDate,
+                  currentTime,
+                  'departure'
+                );
+              }}
+            />
+          )}
+          <div className="card p-4">
+            <SearchForm
+              onSearch={handleSearch}
+              isLoading={isLoading}
+              departureStation={departureStation}
+              setDepartureStation={setDepartureStation}
+              arrivalStation={arrivalStation}
+              setArrivalStation={setArrivalStation}
+              date={date}
+              setDate={setDate}
+              time={time}
+              setTime={setTime}
+              timeType={timeType}
+              setTimeType={setTimeType}
+            />
+          </div>
+        </section>
+
+        {/* 天気サマリー — 検索フォームの下に移動（セカンダリ情報） */}
         {isWeatherLoading ? (
           <section className="card p-4 mb-4 flex items-center justify-between animate-pulse min-h-[72px]">
             <div className="flex items-center gap-3">
@@ -150,67 +210,28 @@ export default function Home() {
         {/* 全道の警報表示 (折りたたみコンポーネント) */}
         <WeatherWarningList warnings={warnings} isLoading={isWeatherLoading} />
 
-        {/* 検索フォーム */}
-        <section className="mb-6" aria-labelledby="search-section-title">
-          <h2 id="search-section-title" className="section-label">運休リスクを調べる</h2>
-
-
-          {/* 🆕 お気に入りルートセレクター */}
-          {isFavoritesLoaded && favorites.length > 0 && (
-            <FavoriteSelector
-              favorites={favorites}
-              onSelect={(fav) => {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const currentDate = `${year}-${month}-${day}`;
-                const currentTime = now.toTimeString().slice(0, 5);
-
-                // フォームの状態を更新（ユーザーリクエスト: 入力欄に反映させる）
-                setDepartureStation(getStationById(fav.departureId) || null);
-                setArrivalStation(getStationById(fav.arrivalId) || null);
-                setDate(currentDate);
-                setTime(currentTime);
-                setTimeType('departure');
-
-                // setIsLoading(true); // Hook handles this
-                sendGAEvent('event', 'favorite_select', {
-                  departure: fav.departureName,
-                  arrival: fav.arrivalName
-                });
-                handleSearch(
-                  fav.departureId,
-                  fav.arrivalId,
-                  currentDate,
-                  currentTime,
-                  'departure'
-                );
-              }}
-            />
-          )}
-          <div className="card p-4">
-            <SearchForm
-              onSearch={handleSearch}
-              isLoading={isLoading}
-              departureStation={departureStation}
-              setDepartureStation={setDepartureStation}
-              arrivalStation={arrivalStation}
-              setArrivalStation={setArrivalStation}
-              date={date}
-              setDate={setDate}
-              time={time}
-              setTime={setTime}
-              timeType={timeType}
-              setTimeType={setTimeType}
-            />
-          </div>
-        </section>
-
 
 
         {/* Progressive Loading (Phase 27) */}
         {isLoading && <ProgressiveLoading isLoading={isLoading} />}
+
+        {/* P1-4: エラー表示 */}
+        {searchError && (
+          <div className="card p-4 mb-4 border-2 border-red-200 bg-red-50">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm text-red-800">予測エラー</p>
+                <p className="text-xs text-red-700 mt-1">{searchError}</p>
+                <p className="text-[11px] text-red-600 mt-2">
+                  直接確認:
+                  <a href="https://www3.jrhokkaido.co.jp/webunkou/" target="_blank" rel="noopener noreferrer"
+                    className="underline hover:opacity-80 ml-1 font-medium">JR北海道公式運行情報</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 予測結果セクション */}
         {prediction && (

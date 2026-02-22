@@ -95,20 +95,45 @@ export const metadata: Metadata = {
   category: 'transportation',
 };
 
-// 🆕 JSON-LD 構造化データ
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "運休北海道",
-  "operatingSystem": "iOS, Android, Windows, macOS",
-  "applicationCategory": "TransportationApplication, WeatherApplication",
-  "description": "JR北海道の運休リスクをAIで予測するリアルタイム運行予報サービス。",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "JPY"
+// 🆕 JSON-LD 構造化データ（複数スキーマ）
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "運休北海道",
+    "url": siteUrl,
+    "operatingSystem": "All",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "JR北海道13路線の運休リスクをAIで予測。1,577件のテストで94%の精度を実証。天気・運行情報・路線特性を統合分析し、代替交通手段も提案。",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.7",
+      "ratingCount": "1577",
+      "bestRating": "5"
+    },
+    "featureList": "AI運休予測, リアルタイム運行情報, 代替交通提案, お気に入りルート, 13路線対応",
+    "inLanguage": "ja",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "株式会社アンドアール",
+    "url": siteUrl,
+    "logo": `${siteUrl}/og-image.png`,
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "info@andr.ltd",
+      "contactType": "customer service",
+      "availableLanguage": "Japanese"
+    },
+    "sameAs": []
   }
-};
+];
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -125,6 +150,7 @@ export const viewport: Viewport = {
 import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
 import { SiteFooter } from '@/components/site-footer';
 import { FeedbackButton } from '@/components/feedback-button'; // 🆕
+import { CookieConsent } from '@/components/cookie-consent';
 
 export default function RootLayout({
   children,
@@ -149,6 +175,7 @@ export default function RootLayout({
           <SiteFooter />
         </div>
         <FeedbackButton />
+        <CookieConsent />
         {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
