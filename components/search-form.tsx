@@ -3,6 +3,8 @@ import { sendGAEvent } from '@next/third-parties/google';
 import { ArrowRight, ArrowUpDown, Calendar, Clock, Zap } from 'lucide-react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
 import { StationSelector } from './station-selector';
+import { useTranslation } from '@/lib/i18n';
+import { getLocalizedStationName } from '@/lib/i18n/localized-names';
 
 interface SearchFormProps {
     onSearch: (
@@ -52,6 +54,16 @@ export function SearchForm({
     const [depQuery, setDepQuery] = useState('');
     const [arrQuery, setArrQuery] = useState('');
     const [showError, setShowError] = useState(false);
+    const { t, locale } = useTranslation();
+
+    const sn = (station: Station) => getLocalizedStationName(station, locale);
+
+    const getQuickLabel = (dep: string, arr: string) => {
+        const depSt = HOKKAIDO_STATIONS.find(s => s.id === dep);
+        const arrSt = HOKKAIDO_STATIONS.find(s => s.id === arr);
+        if (!depSt || !arrSt) return `${dep} → ${arr}`;
+        return `${sn(depSt)} → ${sn(arrSt)}`;
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -82,8 +94,8 @@ export function SearchForm({
             is_valid_search: (!!departureStation && !!arrivalStation).toString()
         });
 
-        if (departureStation) setDepQuery(departureStation.name);
-        if (arrivalStation) setArrQuery(arrivalStation.name);
+        if (departureStation) setDepQuery(sn(departureStation));
+        if (arrivalStation) setArrQuery(sn(arrivalStation));
 
         if (departureStation && arrivalStation) {
             sendGAEvent('event', 'search_prediction', {
@@ -122,32 +134,32 @@ export function SearchForm({
         if (depSt && arrSt) {
             setDepartureStation(depSt);
             setArrivalStation(arrSt);
-            setDepQuery(depSt.name);
-            setArrQuery(arrSt.name);
+            setDepQuery(sn(depSt));
+            setArrQuery(sn(arrSt));
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            {/* 🆕 クイックルート選択 */}
+            {/* クイックルート選択 — モバイルで横スクロール */}
             <div>
                 <div className="text-[11px] font-bold text-[var(--muted)] mb-2 flex items-center gap-1">
                     <Zap className="w-3 h-3" />
-                    よく使うルート
+                    {t('search.quickRoutes')}
                 </div>
-                <div className="grid grid-cols-3 gap-1.5">
-                    {QUICK_ROUTES.map(({ dep, arr, label, emoji }) => (
+                <div className="flex md:grid md:grid-cols-3 gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+                    {QUICK_ROUTES.map(({ dep, arr, emoji }) => (
                         <button
                             key={`${dep}-${arr}`}
                             type="button"
                             onClick={() => handleQuickRoute(dep, arr)}
-                            className={`text-[11px] py-2 px-1 rounded-lg border transition-all text-center leading-tight ${departureStation?.id === dep && arrivalStation?.id === arr
+                            className={`text-[11px] py-2 px-3 md:px-1 rounded-lg border transition-all text-center leading-tight whitespace-nowrap flex-shrink-0 ${departureStation?.id === dep && arrivalStation?.id === arr
                                 ? 'border-[var(--primary)] bg-[var(--primary)]/5 text-[var(--primary)] font-bold'
                                 : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--background-secondary)] text-[var(--muted)]'
                                 }`}
                         >
-                            <span className="block text-sm mb-0.5">{emoji}</span>
-                            {label}
+                            <span className="inline md:block text-sm mr-1 md:mr-0 md:mb-0.5">{emoji}</span>
+                            {getQuickLabel(dep, arr)}
                         </button>
                     ))}
                 </div>
@@ -156,7 +168,7 @@ export function SearchForm({
             {/* 出発・到着駅選択 */}
             <div className="flex flex-col md:flex-row md:items-end gap-0 md:gap-2 relative">
                 <StationSelector
-                    label="出発駅"
+                    label={t('search.departure')}
                     selectedStation={departureStation}
                     isOpen={isDepartureOpen}
                     setIsOpen={setIsDepartureOpen}
@@ -174,20 +186,20 @@ export function SearchForm({
                         onClick={() => {
                             setDepartureStation(arrivalStation);
                             setArrivalStation(departureStation);
-                            setDepQuery(arrivalStation?.name || '');
-                            setArrQuery(departureStation?.name || '');
+                            setDepQuery(arrivalStation ? sn(arrivalStation) : '');
+                            setArrQuery(departureStation ? sn(departureStation) : '');
                         }}
                         disabled={!departureStation && !arrivalStation}
                         className="group flex items-center gap-1 px-3 py-1.5 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         aria-label="出発駅と到着駅を入れ替える"
                     >
                         <ArrowUpDown className="w-3.5 h-3.5 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
-                        <span className="text-[11px] font-medium text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors">入替</span>
+                        <span className="text-[11px] font-medium text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors">{t('search.swap')}</span>
                     </button>
                 </div>
 
                 <StationSelector
-                    label="到着駅"
+                    label={t('search.arrival')}
                     selectedStation={arrivalStation}
                     isOpen={isArrivalOpen}
                     setIsOpen={setIsArrivalOpen}
@@ -199,13 +211,13 @@ export function SearchForm({
                 />
             </div>
 
-            {/* 日付・時刻選択 */}
+            {/* 日付・時刻選択 — 常に横並び */}
             <div className="space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                     <div>
                         <label className="section-label flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            日付
+                            {t('search.date')}
                         </label>
                         <input
                             type="date"
@@ -227,7 +239,7 @@ export function SearchForm({
                     <div>
                         <label className="section-label flex items-center gap-1 mb-1">
                             <Clock className="w-3 h-3" />
-                            時刻
+                            {t('search.time')}
                         </label>
 
                         <input
@@ -239,11 +251,7 @@ export function SearchForm({
                     </div>
                 </div>
 
-                {!departureStation || !arrivalStation ? (
-                    <p className="text-xs text-center text-[var(--muted)] py-2">
-                        📍 出発駅・到着駅を選択してください
-                    </p>
-                ) : null}
+
                 {showError && (
                     <p className="text-[11px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
                         ※出発駅と到着駅を選択してください
@@ -260,10 +268,10 @@ export function SearchForm({
                 {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        予測中...
+                        {t('search.searching')}
                     </span>
                 ) : (
-                    '運休リスクを予測する'
+                    t('search.searchButton')
                 )}
             </button>
         </form>

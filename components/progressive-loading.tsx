@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Cloud, Database, Radio, TrendingUp, CheckCircle } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface ProgressiveLoadingProps {
     isLoading: boolean;
@@ -17,6 +18,14 @@ const ANALYSIS_STEPS = [
 export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
     const [currentStep, setCurrentStep] = useState(0);
     const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+    const { t } = useTranslation();
+
+    const STEPS = [
+        { id: 1, label: t('progressive.step1'), icon: Cloud, duration: 800 },
+        { id: 2, label: t('progressive.step2'), icon: Database, duration: 1000 },
+        { id: 3, label: t('progressive.step3'), icon: Radio, duration: 600 },
+        { id: 4, label: t('progressive.step4'), icon: TrendingUp, duration: 700 },
+    ];
 
     useEffect(() => {
         if (!isLoading) {
@@ -29,14 +38,14 @@ export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
         const timers: NodeJS.Timeout[] = [];
 
         const advanceStep = () => {
-            if (stepIndex < ANALYSIS_STEPS.length) {
+            if (stepIndex < STEPS.length) {
                 setCurrentStep(stepIndex);
 
                 const timer = setTimeout(() => {
                     setCompletedSteps(prev => [...prev, stepIndex]);
                     stepIndex++;
                     advanceStep();
-                }, ANALYSIS_STEPS[stepIndex].duration);
+                }, STEPS[stepIndex].duration);
 
                 timers.push(timer);
             }
@@ -56,11 +65,11 @@ export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
             <div className="text-center mb-4">
                 <div className="inline-flex items-center gap-2 text-[var(--primary)] font-bold">
                     <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-pulse" />
-                    AI予測エンジンが解析中...
+                    {t('progressive.title')}
                 </div>
             </div>
 
-            {ANALYSIS_STEPS.map((step, index) => {
+            {STEPS.map((step, index) => {
                 const Icon = step.icon;
                 const isActive = currentStep === index;
                 const isCompleted = completedSteps.includes(index);

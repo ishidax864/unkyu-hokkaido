@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n';
 
 export function CookieConsent() {
     const [show, setShow] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const consent = localStorage.getItem('cookie-consent');
@@ -22,7 +24,6 @@ export function CookieConsent() {
     const handleDecline = () => {
         localStorage.setItem('cookie-consent', 'declined');
         setShow(false);
-        // GA Cookieを無効化
         if (typeof window !== 'undefined') {
             const gaId = process.env.NEXT_PUBLIC_GA_ID || '';
             if (gaId) {
@@ -37,28 +38,29 @@ export function CookieConsent() {
         <div
             className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom duration-300"
             role="dialog"
-            aria-label="Cookie同意"
+            aria-label="Cookie Consent"
         >
             <div className="max-w-lg mx-auto bg-white rounded-xl shadow-lg border border-gray-200 p-4">
                 <p className="text-xs text-[var(--foreground)] leading-relaxed mb-3">
-                    当サイトでは、サービスの改善のためにGoogle Analyticsを使用し、Cookieによるアクセスデータの収集を行っています。
-                    詳細は<Link href="/privacy" className="text-[var(--primary)] underline">プライバシーポリシー</Link>をご確認ください。
+                    {t('cookie.message')}
+                    <Link href="/privacy" className="text-[var(--primary)] underline ml-1">{t('cookie.seePolicy')}</Link>
                 </p>
                 <div className="flex gap-2 justify-end">
                     <button
                         onClick={handleDecline}
                         className="px-3 py-1.5 text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors rounded-lg"
                     >
-                        拒否
+                        {t('cookie.decline')}
                     </button>
                     <button
                         onClick={handleAccept}
                         className="px-4 py-1.5 text-xs bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
                     >
-                        同意する
+                        {t('cookie.accept')}
                     </button>
                 </div>
             </div>
         </div>
     );
 }
+

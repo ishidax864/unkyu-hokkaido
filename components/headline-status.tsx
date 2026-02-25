@@ -2,6 +2,7 @@
 
 import { AlertTriangle, CheckCircle, Cloud, Train } from 'lucide-react';
 import { WeatherWarning, JRStatusItem } from '@/lib/types';
+import { useTranslation } from '@/lib/i18n';
 
 interface HeadlineStatusProps {
     warnings: WeatherWarning[];
@@ -14,6 +15,7 @@ interface HeadlineStatusProps {
  * ページ上部に表示する今日の全体的な運行予報サマリー
  */
 export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, jrStatus = [], isLoading }: HeadlineStatusProps) {
+    const { t } = useTranslation();
     if (isLoading) {
         return (
             <div className="card p-4 mb-4 border-2 bg-gray-50 border-gray-100 animate-pulse">
@@ -51,8 +53,8 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                 borderColor: 'border-red-200',
                 textColor: 'text-red-800',
                 iconColor: 'text-red-500',
-                headline: '❌ 一部路線で運休が発生',
-                message: `現在、${routeNames}${suffix}で運休または運転見合わせが発生しています。`,
+                headline: `❌ ${t('headline.suspendedRoutes', { count: String(suspendedRoutes.length) })}`,
+                message: `${routeNames}${suffix}`,
             };
         }
 
@@ -65,8 +67,8 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                 borderColor: 'border-orange-200',
                 textColor: 'text-orange-800',
                 iconColor: 'text-orange-500',
-                headline: '⚠️ 一部路線で遅延が発生',
-                message: `${delayedRoutes.length}路線で遅延が発生しています。最新情報を確認してください。`,
+                headline: `⚠️ ${t('headline.delayedRoutes', { count: String(delayedRoutes.length) })}`,
+                message: t('headline.minorWarning'),
             };
         }
 
@@ -79,8 +81,8 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                 borderColor: 'border-red-200',
                 textColor: 'text-red-800',
                 iconColor: 'text-red-500',
-                headline: '⚠️ 本日の運行に大きな影響の恐れ',
-                message: '暴風雪・大雪警報が発令されています。JR各線で運休・大幅遅延の可能性があります。',
+                headline: `⚠️ ${t('headline.criticalWarning')}`,
+                message: t('headline.criticalWarning'),
             };
         }
 
@@ -93,8 +95,8 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                 borderColor: 'border-yellow-200',
                 textColor: 'text-yellow-800',
                 iconColor: 'text-yellow-600',
-                headline: '⚡ 本日の運行に注意が必要',
-                message: '気象注意報が発令されています。一部路線で遅延の可能性があります。',
+                headline: `⚡ ${t('headline.minorWarning')}`,
+                message: t('headline.minorWarning'),
             };
         }
 
@@ -106,8 +108,8 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
             borderColor: 'border-blue-200',
             textColor: 'text-blue-800',
             iconColor: 'text-blue-500',
-            headline: '✅ 本日は概ね平常運行の見込み',
-            message: '現在、運行に影響する主要な警報や運休情報はありません。',
+            headline: `✅ ${t('headline.allNormal')}`,
+            message: t('headline.allNormalDetail'),
         };
     };
 

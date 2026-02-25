@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { sendGAEvent } from '@next/third-parties/google';
+import { useTranslation } from '@/lib/i18n';
 
 interface ReportButtonsProps {
     routeId: string;
@@ -27,10 +28,10 @@ interface ReportButtonsProps {
 type ReportType = 'stopped' | 'delayed' | 'crowded' | 'normal';
 
 const REPORT_OPTIONS = [
-    { type: 'stopped' as const, label: '止まっている', icon: AlertOctagon, className: 'status-suspended' },
-    { type: 'delayed' as const, label: '遅延している', icon: Clock, className: 'status-warning' },
-    { type: 'crowded' as const, label: '混雑している', icon: Users, className: 'bg-orange-50 text-orange-600 border-orange-200' },
-    { type: 'normal' as const, label: '平常運転', icon: CheckCircle, className: 'status-normal' },
+    { type: 'stopped' as const, labelKey: 'report.stopped', icon: AlertOctagon, className: 'status-suspended' },
+    { type: 'delayed' as const, labelKey: 'report.delayed', icon: Clock, className: 'status-warning' },
+    { type: 'crowded' as const, labelKey: 'report.crowded', icon: Users, className: 'bg-orange-50 text-orange-600 border-orange-200' },
+    { type: 'normal' as const, labelKey: 'report.normal', icon: CheckCircle, className: 'status-normal' },
 ];
 
 function getConsensusSummary(counts: ReportButtonsProps['counts']): { text: string; type: 'stopped' | 'delayed' | 'crowded' | 'normal' | null } | null {
@@ -58,6 +59,7 @@ function getConsensusSummary(counts: ReportButtonsProps['counts']): { text: stri
 }
 
 export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }: ReportButtonsProps) {
+    const { t } = useTranslation();
     const [selectedType, setSelectedType] = useState<ReportType | null>(null);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -160,7 +162,7 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
                                 )}
                             >
                                 <Icon className={cn("w-4 h-4", isSelected ? "" : "text-gray-400")} />
-                                {option.label}
+                                {t(option.labelKey)}
 
                                 {/* Count Badge */}
                                 {count > 0 && (

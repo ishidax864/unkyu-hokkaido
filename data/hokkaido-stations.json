@@ -11,7 +11,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 43.0687,
-        "lon": 141.3508
+        "lon": 141.3508,
+        "name_en": "Sapporo",
+        "name_zh": "札幌"
     },
     {
         "id": "shin-sapporo",
@@ -23,7 +25,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 43.0388,
-        "lon": 141.4733
+        "lon": 141.4733,
+        "name_en": "Shin-Sapporo",
+        "name_zh": "新札幌"
     },
     {
         "id": "shin-chitose-airport",
@@ -35,7 +39,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 42.7877,
-        "lon": 141.6795
+        "lon": 141.6795,
+        "name_en": "New Chitose Airport",
+        "name_zh": "新千歳空港"
     },
     {
         "id": "minami-chitose",
@@ -48,7 +54,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 42.8091,
-        "lon": 141.6748
+        "lon": 141.6748,
+        "name_en": "Minami-Chitose",
+        "name_zh": "南千歳"
     },
     {
         "id": "chitose",
@@ -59,7 +67,9 @@
         ],
         "region": "道央",
         "lat": 42.8282,
-        "lon": 141.6521
+        "lon": 141.6521,
+        "name_en": "Chitose",
+        "name_zh": "千歳"
     },
     {
         "id": "osatsu",
@@ -70,7 +80,9 @@
         ],
         "region": "道央",
         "lat": 42.8532,
-        "lon": 141.6136
+        "lon": 141.6136,
+        "name_en": "Osatsu",
+        "name_zh": "長都"
     },
     {
         "id": "sapporo-beer-teien",
@@ -81,7 +93,9 @@
         ],
         "region": "道央",
         "lat": 42.8632,
-        "lon": 141.5936
+        "lon": 141.5936,
+        "name_en": "Sapporo Beer Garden",
+        "name_zh": "札幌啤酒庭园"
     },
     {
         "id": "eniwa",
@@ -92,7 +106,9 @@
         ],
         "region": "道央",
         "lat": 42.8832,
-        "lon": 141.5836
+        "lon": 141.5836,
+        "name_en": "Eniwa",
+        "name_zh": "恵庭"
     },
     {
         "id": "megumino",
@@ -103,7 +119,9 @@
         ],
         "region": "道央",
         "lat": 42.8932,
-        "lon": 141.5736
+        "lon": 141.5736,
+        "name_en": "Megumino",
+        "name_zh": "恵み野"
     },
     {
         "id": "shimamatsu",
@@ -114,7 +132,9 @@
         ],
         "region": "道央",
         "lat": 42.9032,
-        "lon": 141.5633
+        "lon": 141.5633,
+        "name_en": "Shimamatsu",
+        "name_zh": "島松"
     },
     {
         "id": "kitahiroshima",
@@ -125,7 +145,9 @@
         ],
         "region": "道央",
         "lat": 42.9806,
-        "lon": 141.5649
+        "lon": 141.5649,
+        "name_en": "Kitahiroshima",
+        "name_zh": "北広島"
     },
     {
         "id": "kaminopporo",
@@ -136,7 +158,9 @@
         ],
         "region": "道央",
         "lat": 43.0188,
-        "lon": 141.4933
+        "lon": 141.4933,
+        "name_en": "Kaminopporo",
+        "name_zh": "上野幌"
     },
     {
         "id": "heiwa",
@@ -147,7 +171,9 @@
         ],
         "region": "道央",
         "lat": 43.0288,
-        "lon": 141.4533
+        "lon": 141.4533,
+        "name_en": "Heiwa",
+        "name_zh": "平和"
     },
     {
         "id": "otaru",
@@ -159,7 +185,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 43.1977,
-        "lon": 140.9937
+        "lon": 140.9937,
+        "name_en": "Otaru",
+        "name_zh": "小樽"
     },
     {
         "id": "otaru-chikko",
@@ -170,7 +198,9 @@
         ],
         "region": "道央",
         "lat": 43.1818,
-        "lon": 141.0269
+        "lon": 141.0269,
+        "name_en": "Otaru-Chikko",
+        "name_zh": "小樽築港"
     },
     {
         "id": "zenibako",
@@ -181,7 +211,9 @@
         ],
         "region": "道央",
         "lat": 43.1438,
-        "lon": 141.1594
+        "lon": 141.1594,
+        "name_en": "Zenibako",
+        "name_zh": "銭函"
     },
     {
         "id": "asari",
@@ -192,7 +224,9 @@
         ],
         "region": "道央",
         "lat": 43.16,
-        "lon": 141.08
+        "lon": 141.08,
+        "name_en": "Asari",
+        "name_zh": "朝里"
     },
     {
         "id": "yoichi",
@@ -203,7 +237,9 @@
         ],
         "region": "道央",
         "lat": 43.1878,
-        "lon": 140.7847
+        "lon": 140.7847,
+        "name_en": "Yoichi",
+        "name_zh": "余市"
     },
     {
         "id": "minami-otaru",
@@ -214,7 +250,9 @@
         ],
         "region": "道央",
         "lat": 43.187,
-        "lon": 141.007
+        "lon": 141.007,
+        "name_en": "Minami-Otaru",
+        "name_zh": "南小樽"
     },
     {
         "id": "niki",
@@ -225,7 +263,9 @@
         ],
         "region": "道央",
         "lat": 43.15,
-        "lon": 140.77
+        "lon": 140.77,
+        "name_en": "Niki",
+        "name_zh": "仁木"
     },
     {
         "id": "kozawa",
@@ -236,7 +276,9 @@
         ],
         "region": "道央",
         "lat": 42.98,
-        "lon": 140.68
+        "lon": 140.68,
+        "name_en": "Kozawa",
+        "name_zh": "小沢"
     },
     {
         "id": "kutchan",
@@ -248,7 +290,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 42.9,
-        "lon": 140.75
+        "lon": 140.75,
+        "name_en": "Kutchan",
+        "name_zh": "倶知安"
     },
     {
         "id": "niseko",
@@ -259,7 +303,9 @@
         ],
         "region": "道央",
         "lat": 42.8,
-        "lon": 140.68
+        "lon": 140.68,
+        "name_en": "Niseko",
+        "name_zh": "二世古"
     },
     {
         "id": "rankoshi",
@@ -270,7 +316,9 @@
         ],
         "region": "道央",
         "lat": 42.8,
-        "lon": 140.52
+        "lon": 140.52,
+        "name_en": "Rankoshi",
+        "name_zh": "蘭越"
     },
     {
         "id": "kuromatsunai",
@@ -281,7 +329,9 @@
         ],
         "region": "道央",
         "lat": 42.67,
-        "lon": 140.3
+        "lon": 140.3,
+        "name_en": "Kuromatsunai",
+        "name_zh": "黒松内"
     },
     {
         "id": "hassamu-chuo",
@@ -292,7 +342,9 @@
         ],
         "region": "道央",
         "lat": 43.0918,
-        "lon": 141.2864
+        "lon": 141.2864,
+        "name_en": "Hassamu-Chuo",
+        "name_zh": "発寒中央"
     },
     {
         "id": "inazumi-koen",
@@ -303,7 +355,9 @@
         ],
         "region": "道央",
         "lat": 43.1,
-        "lon": 141.26
+        "lon": 141.26,
+        "name_en": "Inazumikoen",
+        "name_zh": "稲積公園"
     },
     {
         "id": "teine",
@@ -314,7 +368,9 @@
         ],
         "region": "道央",
         "lat": 43.1118,
-        "lon": 141.2464
+        "lon": 141.2464,
+        "name_en": "Teine",
+        "name_zh": "手稲"
     },
     {
         "id": "inaho",
@@ -325,7 +381,9 @@
         ],
         "region": "道央",
         "lat": 43.12,
-        "lon": 141.22
+        "lon": 141.22,
+        "name_en": "Inaho",
+        "name_zh": "稲穂"
     },
     {
         "id": "hoshimi",
@@ -336,7 +394,9 @@
         ],
         "region": "道央",
         "lat": 43.13,
-        "lon": 141.2
+        "lon": 141.2,
+        "name_en": "Hoshimi",
+        "name_zh": "ほしみ"
     },
     {
         "id": "kotoni",
@@ -347,7 +407,9 @@
         ],
         "region": "道央",
         "lat": 43.0815,
-        "lon": 141.306
+        "lon": 141.306,
+        "name_en": "Kotoni",
+        "name_zh": "琴似"
     },
     {
         "id": "soen",
@@ -359,7 +421,9 @@
         ],
         "region": "道央",
         "lat": 43.0708,
-        "lon": 141.3325
+        "lon": 141.3325,
+        "name_en": "Soen",
+        "name_zh": "桑園"
     },
     {
         "id": "naebo",
@@ -370,7 +434,9 @@
         ],
         "region": "道央",
         "lat": 43.0685,
-        "lon": 141.38
+        "lon": 141.38,
+        "name_en": "Naebo",
+        "name_zh": "苗穂"
     },
     {
         "id": "shiroishi",
@@ -382,7 +448,9 @@
         ],
         "region": "道央",
         "lat": 43.0545,
-        "lon": 141.4135
+        "lon": 141.4135,
+        "name_en": "Shiroishi",
+        "name_zh": "白石"
     },
     {
         "id": "atsubetsu",
@@ -393,7 +461,9 @@
         ],
         "region": "道央",
         "lat": 43.045,
-        "lon": 141.455
+        "lon": 141.455,
+        "name_en": "Atsubetsu",
+        "name_zh": "厚別"
     },
     {
         "id": "oochi",
@@ -404,7 +474,9 @@
         ],
         "region": "道央",
         "lat": 43.07,
-        "lon": 141.5
+        "lon": 141.5,
+        "name_en": "Oochi",
+        "name_zh": "大麻"
     },
     {
         "id": "nopporo",
@@ -415,7 +487,9 @@
         ],
         "region": "道央",
         "lat": 43.09,
-        "lon": 141.53
+        "lon": 141.53,
+        "name_en": "Nopporo",
+        "name_zh": "野幌"
     },
     {
         "id": "ebetsu",
@@ -426,7 +500,9 @@
         ],
         "region": "道央",
         "lat": 43.11,
-        "lon": 141.55
+        "lon": 141.55,
+        "name_en": "Ebetsu",
+        "name_zh": "江別"
     },
     {
         "id": "toyohoro",
@@ -437,7 +513,9 @@
         ],
         "region": "道央",
         "lat": 43.125,
-        "lon": 141.615
+        "lon": 141.615,
+        "name_en": "Toyohoro",
+        "name_zh": "豊幌"
     },
     {
         "id": "horomui",
@@ -448,7 +526,9 @@
         ],
         "region": "道央",
         "lat": 43.151,
-        "lon": 141.657
+        "lon": 141.657,
+        "name_en": "Horomui",
+        "name_zh": "幌向"
     },
     {
         "id": "kamishunai",
@@ -459,7 +539,9 @@
         ],
         "region": "道央",
         "lat": 43.175,
-        "lon": 141.705
+        "lon": 141.705,
+        "name_en": "Kami-Horomui",
+        "name_zh": "上幌向"
     },
     {
         "id": "iwamizawa",
@@ -472,7 +554,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 43.2042,
-        "lon": 141.7596
+        "lon": 141.7596,
+        "name_en": "Iwamizawa",
+        "name_zh": "岩見沢"
     },
     {
         "id": "bibai",
@@ -483,7 +567,9 @@
         ],
         "region": "道央",
         "lat": 43.2977,
-        "lon": 141.8617
+        "lon": 141.8617,
+        "name_en": "Bibai",
+        "name_zh": "美唄"
     },
     {
         "id": "naie",
@@ -494,7 +580,9 @@
         ],
         "region": "道央",
         "lat": 43.42,
-        "lon": 141.89
+        "lon": 141.89,
+        "name_en": "Naie",
+        "name_zh": "奈井江"
     },
     {
         "id": "sunagawa",
@@ -505,7 +593,9 @@
         ],
         "region": "道央",
         "lat": 43.4934,
-        "lon": 141.9083
+        "lon": 141.9083,
+        "name_en": "Sunagawa",
+        "name_zh": "砂川"
     },
     {
         "id": "takikawa",
@@ -517,7 +607,9 @@
         ],
         "region": "道央",
         "lat": 43.5552,
-        "lon": 141.908
+        "lon": 141.908,
+        "name_en": "Takikawa",
+        "name_zh": "滝川"
     },
     {
         "id": "akabira",
@@ -528,7 +620,9 @@
         ],
         "region": "道央",
         "lat": 43.55,
-        "lon": 142.05
+        "lon": 142.05,
+        "name_en": "Akabira",
+        "name_zh": "赤平"
     },
     {
         "id": "ebeotsu",
@@ -539,7 +633,9 @@
         ],
         "region": "道央",
         "lat": 43.62,
-        "lon": 141.93
+        "lon": 141.93,
+        "name_en": "Ebeotsu",
+        "name_zh": "江部乙"
     },
     {
         "id": "moseushi",
@@ -550,7 +646,9 @@
         ],
         "region": "道央",
         "lat": 43.7,
-        "lon": 141.96
+        "lon": 141.96,
+        "name_en": "Moseushi",
+        "name_zh": "妹背牛"
     },
     {
         "id": "ashibetsu",
@@ -561,7 +659,9 @@
         ],
         "region": "道央",
         "lat": 43.51,
-        "lon": 142.18
+        "lon": 142.18,
+        "name_en": "Ashibetsu",
+        "name_zh": "芦別"
     },
     {
         "id": "osamunai",
@@ -572,7 +672,9 @@
         ],
         "region": "道央",
         "lat": 43.68,
-        "lon": 142.0
+        "lon": 142.0,
+        "name_en": "Osamunai",
+        "name_zh": "納内"
     },
     {
         "id": "fukagawa",
@@ -583,7 +685,9 @@
         ],
         "region": "道央",
         "lat": 43.7212,
-        "lon": 142.0416
+        "lon": 142.0416,
+        "name_en": "Fukagawa",
+        "name_zh": "深川"
     },
     {
         "id": "ishikari-numata",
@@ -594,7 +698,9 @@
         ],
         "region": "道北",
         "lat": 43.79,
-        "lon": 141.93
+        "lon": 141.93,
+        "name_en": "Ishikari-Numata",
+        "name_zh": "石狩沼田"
     },
     {
         "id": "asahikawa",
@@ -608,7 +714,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 43.7628,
-        "lon": 142.3587
+        "lon": 142.3587,
+        "name_en": "Asahikawa",
+        "name_zh": "旭川"
     },
     {
         "id": "nagayama",
@@ -620,7 +728,9 @@
         ],
         "region": "道北",
         "lat": 43.81,
-        "lon": 142.44
+        "lon": 142.44,
+        "name_en": "Nagayama",
+        "name_zh": "永山"
     },
     {
         "id": "pippu",
@@ -631,7 +741,9 @@
         ],
         "region": "道北",
         "lat": 43.87,
-        "lon": 142.47
+        "lon": 142.47,
+        "name_en": "Pippu",
+        "name_zh": "比布"
     },
     {
         "id": "ranru",
@@ -642,7 +754,9 @@
         ],
         "region": "道北",
         "lat": 43.94,
-        "lon": 142.48
+        "lon": 142.48,
+        "name_en": "Ranru",
+        "name_zh": "蘭留"
     },
     {
         "id": "hachiken",
@@ -653,7 +767,9 @@
         ],
         "region": "道央",
         "lat": 43.088,
-        "lon": 141.325
+        "lon": 141.325,
+        "name_en": "Hachiken",
+        "name_zh": "八軒"
     },
     {
         "id": "shinkawa",
@@ -664,7 +780,9 @@
         ],
         "region": "道央",
         "lat": 43.1,
-        "lon": 141.325
+        "lon": 141.325,
+        "name_en": "Shinkawa",
+        "name_zh": "新川"
     },
     {
         "id": "shin-kotoni",
@@ -675,7 +793,9 @@
         ],
         "region": "道央",
         "lat": 43.1,
-        "lon": 141.33
+        "lon": 141.33,
+        "name_en": "Shin-Kotoni",
+        "name_zh": "新琴似"
     },
     {
         "id": "taihei",
@@ -686,7 +806,9 @@
         ],
         "region": "道央",
         "lat": 43.13,
-        "lon": 141.35
+        "lon": 141.35,
+        "name_en": "Taihei",
+        "name_zh": "太平"
     },
     {
         "id": "yurigahara",
@@ -697,7 +819,9 @@
         ],
         "region": "道央",
         "lat": 43.14,
-        "lon": 141.37
+        "lon": 141.37,
+        "name_en": "Yurigahara",
+        "name_zh": "百合が原"
     },
     {
         "id": "shinoro",
@@ -708,7 +832,9 @@
         ],
         "region": "道央",
         "lat": 43.145,
-        "lon": 141.385
+        "lon": 141.385,
+        "name_en": "Shinoro",
+        "name_zh": "篠路"
     },
     {
         "id": "takuhoku",
@@ -719,7 +845,9 @@
         ],
         "region": "道央",
         "lat": 43.155,
-        "lon": 141.415
+        "lon": 141.415,
+        "name_en": "Takuhoku",
+        "name_zh": "拓北"
     },
     {
         "id": "ainosato-kyoiku-dai",
@@ -730,7 +858,9 @@
         ],
         "region": "道央",
         "lat": 43.1554,
-        "lon": 141.4011
+        "lon": 141.4011,
+        "name_en": "Ainosato-Kyoikudai",
+        "name_zh": "爱之里教育大"
     },
     {
         "id": "ainosato-koen",
@@ -741,7 +871,9 @@
         ],
         "region": "道央",
         "lat": 43.165,
-        "lon": 141.425
+        "lon": 141.425,
+        "name_en": "Ainosato-Koen",
+        "name_zh": "爱之里公园"
     },
     {
         "id": "ishikari-futomi",
@@ -752,7 +884,9 @@
         ],
         "region": "道央",
         "lat": 43.195,
-        "lon": 141.465
+        "lon": 141.465,
+        "name_en": "Ishikari-Futomi",
+        "name_zh": "石狩太美"
     },
     {
         "id": "ishikari-tobetsu",
@@ -763,7 +897,9 @@
         ],
         "region": "道央",
         "lat": 43.2208,
-        "lon": 141.5126
+        "lon": 141.5126,
+        "name_en": "Ishikari-Tobetsu",
+        "name_zh": "石狩当別"
     },
     {
         "id": "hokkaido-iryo-daigaku",
@@ -774,7 +910,9 @@
         ],
         "region": "道央",
         "lat": 43.2384,
-        "lon": 141.5422
+        "lon": 141.5422,
+        "name_en": "Hokkaido Medical Univ.",
+        "name_zh": "北海道医疗大学"
     },
     {
         "id": "tomakomai",
@@ -787,7 +925,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 42.6416,
-        "lon": 141.5973
+        "lon": 141.5973,
+        "name_en": "Tomakomai",
+        "name_zh": "苫小牧"
     },
     {
         "id": "mukawa",
@@ -798,7 +938,9 @@
         ],
         "region": "道東",
         "lat": 42.57,
-        "lon": 141.92
+        "lon": 141.92,
+        "name_en": "Mukawa",
+        "name_zh": "鹉川"
     },
     {
         "id": "shiraoi",
@@ -809,7 +951,9 @@
         ],
         "region": "道央",
         "lat": 42.5539,
-        "lon": 141.3533
+        "lon": 141.3533,
+        "name_en": "Shiraoi",
+        "name_zh": "白老"
     },
     {
         "id": "noboribetsu",
@@ -820,7 +964,9 @@
         ],
         "region": "道央",
         "lat": 42.4552,
-        "lon": 141.1764
+        "lon": 141.1764,
+        "name_en": "Noboribetsu",
+        "name_zh": "登別"
     },
     {
         "id": "higashi-muroran",
@@ -832,7 +978,9 @@
         "region": "道央",
         "isMajor": true,
         "lat": 42.3392,
-        "lon": 141.0263
+        "lon": 141.0263,
+        "name_en": "Higashi Muroran",
+        "name_zh": "東室蘭"
     },
     {
         "id": "muroran",
@@ -843,7 +991,9 @@
         ],
         "region": "道央",
         "lat": 42.3152,
-        "lon": 140.9753
+        "lon": 140.9753,
+        "name_en": "Muroran",
+        "name_zh": "室蘭"
     },
     {
         "id": "datemombetsu",
@@ -854,7 +1004,9 @@
         ],
         "region": "道央",
         "lat": 42.4697,
-        "lon": 140.8542
+        "lon": 140.8542,
+        "name_en": "Datemombetsu",
+        "name_zh": "伊達紋別"
     },
     {
         "id": "toya",
@@ -865,7 +1017,9 @@
         ],
         "region": "道央",
         "lat": 42.5592,
-        "lon": 140.7589
+        "lon": 140.7589,
+        "name_en": "Toya",
+        "name_zh": "洞爺"
     },
     {
         "id": "kuriyama",
@@ -876,7 +1030,9 @@
         ],
         "region": "道央",
         "lat": 43.0589,
-        "lon": 141.7761
+        "lon": 141.7761,
+        "name_en": "Kuriyama",
+        "name_zh": "栗山"
     },
     {
         "id": "yuni",
@@ -887,7 +1043,9 @@
         ],
         "region": "道央",
         "lat": 43.0039,
-        "lon": 141.7850
+        "lon": 141.785,
+        "name_en": "Yuni",
+        "name_zh": "由仁"
     },
     {
         "id": "abira",
@@ -898,7 +1056,9 @@
         ],
         "region": "道央",
         "lat": 42.8767,
-        "lon": 141.7633
+        "lon": 141.7633,
+        "name_en": "Abira",
+        "name_zh": "安平"
     },
     {
         "id": "oizawake",
@@ -910,7 +1070,9 @@
         ],
         "region": "道央",
         "lat": 42.8731,
-        "lon": 141.8106
+        "lon": 141.8106,
+        "name_en": "Oizawake",
+        "name_zh": "追分"
     },
     {
         "id": "shimukappu",
@@ -921,7 +1083,9 @@
         ],
         "region": "道央",
         "lat": 42.99,
-        "lon": 142.39
+        "lon": 142.39,
+        "name_en": "Shimukappu",
+        "name_zh": "占冠"
     },
     {
         "id": "tomamu",
@@ -933,7 +1097,9 @@
         "region": "道東",
         "isMajor": true,
         "lat": 43.0558,
-        "lon": 142.6122
+        "lon": 142.6122,
+        "name_en": "Tomamu",
+        "name_zh": "トマム"
     },
     {
         "id": "furano",
@@ -946,7 +1112,9 @@
         "region": "道北",
         "isMajor": true,
         "lat": 43.3469,
-        "lon": 142.3917
+        "lon": 142.3917,
+        "name_en": "Furano",
+        "name_zh": "富良野"
     },
     {
         "id": "nakafurano",
@@ -957,7 +1125,9 @@
         ],
         "region": "道北",
         "lat": 43.41,
-        "lon": 142.42
+        "lon": 142.42,
+        "name_en": "Nakafurano",
+        "name_zh": "中富良野"
     },
     {
         "id": "kamifurano",
@@ -968,7 +1138,9 @@
         ],
         "region": "道北",
         "lat": 43.46,
-        "lon": 142.46
+        "lon": 142.46,
+        "name_en": "Kamifurano",
+        "name_zh": "上富良野"
     },
     {
         "id": "bibaushi",
@@ -979,7 +1151,9 @@
         ],
         "region": "道北",
         "lat": 43.54,
-        "lon": 142.45
+        "lon": 142.45,
+        "name_en": "Bibaushi",
+        "name_zh": "美馬牛"
     },
     {
         "id": "biei",
@@ -990,7 +1164,9 @@
         ],
         "region": "道北",
         "lat": 43.5908,
-        "lon": 142.4628
+        "lon": 142.4628,
+        "name_en": "Biei",
+        "name_zh": "美瑛"
     },
     {
         "id": "wakkanai",
@@ -1002,7 +1178,9 @@
         "region": "道北",
         "isMajor": true,
         "lat": 45.4162,
-        "lon": 141.6734
+        "lon": 141.6734,
+        "name_en": "Wakkanai",
+        "name_zh": "稚内"
     },
     {
         "id": "shibetsu",
@@ -1013,7 +1191,9 @@
         ],
         "region": "道北",
         "lat": 44.1794,
-        "lon": 142.3969
+        "lon": 142.3969,
+        "name_en": "Shibetsu",
+        "name_zh": "士別"
     },
     {
         "id": "wassamu",
@@ -1024,7 +1204,9 @@
         ],
         "region": "道北",
         "lat": 44.02,
-        "lon": 142.42
+        "lon": 142.42,
+        "name_en": "Wassamu",
+        "name_zh": "和寒"
     },
     {
         "id": "kenbuchi",
@@ -1035,7 +1217,9 @@
         ],
         "region": "道北",
         "lat": 44.1,
-        "lon": 142.42
+        "lon": 142.42,
+        "name_en": "Kenbuchi",
+        "name_zh": "剣淵"
     },
     {
         "id": "nayoro",
@@ -1046,7 +1230,9 @@
         ],
         "region": "道北",
         "lat": 44.3562,
-        "lon": 142.4641
+        "lon": 142.4641,
+        "name_en": "Nayoro",
+        "name_zh": "名寄"
     },
     {
         "id": "bifuka",
@@ -1057,7 +1243,9 @@
         ],
         "region": "道北",
         "lat": 44.48,
-        "lon": 142.35
+        "lon": 142.35,
+        "name_en": "Bifuka",
+        "name_zh": "美深"
     },
     {
         "id": "otoineppu",
@@ -1068,7 +1256,9 @@
         ],
         "region": "道北",
         "lat": 44.73,
-        "lon": 142.26
+        "lon": 142.26,
+        "name_en": "Otoineppu",
+        "name_zh": "音威子府"
     },
     {
         "id": "teshio-nakagawa",
@@ -1079,7 +1269,9 @@
         ],
         "region": "道北",
         "lat": 44.81,
-        "lon": 142.06
+        "lon": 142.06,
+        "name_en": "Teshio Nakagawa",
+        "name_zh": "天塩中川"
     },
     {
         "id": "kamikawa",
@@ -1090,7 +1282,9 @@
         ],
         "region": "道北",
         "lat": 43.8483,
-        "lon": 142.7725
+        "lon": 142.7725,
+        "name_en": "Kamikawa",
+        "name_zh": "上川"
     },
     {
         "id": "antaroma",
@@ -1101,7 +1295,9 @@
         ],
         "region": "道北",
         "lat": 43.88,
-        "lon": 142.72
+        "lon": 142.72,
+        "name_en": "Antaroma",
+        "name_zh": "安足間"
     },
     {
         "id": "aibetsu",
@@ -1112,7 +1308,9 @@
         ],
         "region": "道北",
         "lat": 43.91,
-        "lon": 142.58
+        "lon": 142.58,
+        "name_en": "Aibetsu",
+        "name_zh": "愛別"
     },
     {
         "id": "shirataki",
@@ -1123,7 +1321,9 @@
         ],
         "region": "道北",
         "lat": 43.88,
-        "lon": 143.18
+        "lon": 143.18,
+        "name_en": "Shirataki",
+        "name_zh": "白滝"
     },
     {
         "id": "maruseppu",
@@ -1134,7 +1334,9 @@
         ],
         "region": "道北",
         "lat": 43.99,
-        "lon": 143.34
+        "lon": 143.34,
+        "name_en": "Maruseppu",
+        "name_zh": "丸瀬布"
     },
     {
         "id": "ikutahara",
@@ -1145,7 +1347,9 @@
         ],
         "region": "道北",
         "lat": 43.96,
-        "lon": 143.48
+        "lon": 143.48,
+        "name_en": "Ikutahara",
+        "name_zh": "生田原"
     },
     {
         "id": "rubeshibe",
@@ -1156,7 +1360,9 @@
         ],
         "region": "道北",
         "lat": 43.78,
-        "lon": 143.61
+        "lon": 143.61,
+        "name_en": "Rubeshibe",
+        "name_zh": "留辺蘂"
     },
     {
         "id": "tanno",
@@ -1167,7 +1373,9 @@
         ],
         "region": "道北",
         "lat": 43.85,
-        "lon": 143.95
+        "lon": 143.95,
+        "name_en": "Tanno",
+        "name_zh": "端野"
     },
     {
         "id": "engaru",
@@ -1178,7 +1386,9 @@
         ],
         "region": "道北",
         "lat": 44.0617,
-        "lon": 143.5283
+        "lon": 143.5283,
+        "name_en": "Engaru",
+        "name_zh": "遠軽"
     },
     {
         "id": "memambetsu",
@@ -1189,7 +1399,9 @@
         ],
         "region": "道北",
         "lat": 43.92,
-        "lon": 144.17
+        "lon": 144.17,
+        "name_en": "Memambetsu",
+        "name_zh": "女満別"
     },
     {
         "id": "abashiri",
@@ -1202,7 +1414,9 @@
         "region": "道北",
         "isMajor": true,
         "lat": 44.0202,
-        "lon": 144.2547
+        "lon": 144.2547,
+        "name_en": "Abashiri",
+        "name_zh": "網走"
     },
     {
         "id": "bihoro",
@@ -1213,7 +1427,9 @@
         ],
         "region": "道北",
         "lat": 43.8322,
-        "lon": 144.1083
+        "lon": 144.1083,
+        "name_en": "Bihoro",
+        "name_zh": "美幌"
     },
     {
         "id": "kitami",
@@ -1224,7 +1440,9 @@
         ],
         "region": "道北",
         "lat": 43.8057,
-        "lon": 143.8962
+        "lon": 143.8962,
+        "name_en": "Kitami",
+        "name_zh": "北見"
     },
     {
         "id": "shintoku",
@@ -1236,7 +1454,9 @@
         ],
         "region": "道東",
         "lat": 43.0833,
-        "lon": 142.8333
+        "lon": 142.8333,
+        "name_en": "Shintoku",
+        "name_zh": "新得"
     },
     {
         "id": "obihiro",
@@ -1248,7 +1468,9 @@
         "region": "道東",
         "isMajor": true,
         "lat": 42.918,
-        "lon": 143.2088
+        "lon": 143.2088,
+        "name_en": "Obihiro",
+        "name_zh": "帯広"
     },
     {
         "id": "ikeda",
@@ -1259,7 +1481,9 @@
         ],
         "region": "道東",
         "lat": 42.9267,
-        "lon": 143.4475
+        "lon": 143.4475,
+        "name_en": "Ikeda",
+        "name_zh": "池田"
     },
     {
         "id": "shiranuka",
@@ -1270,7 +1494,9 @@
         ],
         "region": "道東",
         "lat": 42.95,
-        "lon": 144.07
+        "lon": 144.07,
+        "name_en": "Shiranuka",
+        "name_zh": "白糠"
     },
     {
         "id": "kushiro",
@@ -1283,7 +1509,9 @@
         "region": "道東",
         "isMajor": true,
         "lat": 42.9904,
-        "lon": 144.3814
+        "lon": 144.3814,
+        "name_en": "Kushiro",
+        "name_zh": "釧路"
     },
     {
         "id": "atsukeshi",
@@ -1294,7 +1522,9 @@
         ],
         "region": "道東",
         "lat": 43.0514,
-        "lon": 144.8458
+        "lon": 144.8458,
+        "name_en": "Atsukeshi",
+        "name_zh": "厚岸"
     },
     {
         "id": "hamanaka",
@@ -1305,7 +1535,9 @@
         ],
         "region": "道東",
         "lat": 43.14,
-        "lon": 145.06
+        "lon": 145.06,
+        "name_en": "Hamanaka",
+        "name_zh": "浜中"
     },
     {
         "id": "attoko",
@@ -1316,7 +1548,9 @@
         ],
         "region": "道東",
         "lat": 43.23,
-        "lon": 145.24
+        "lon": 145.24,
+        "name_en": "Attoko",
+        "name_zh": "厚床"
     },
     {
         "id": "nemuro",
@@ -1327,7 +1561,9 @@
         ],
         "region": "道東",
         "lat": 43.3304,
-        "lon": 145.5826
+        "lon": 145.5826,
+        "name_en": "Nemuro",
+        "name_zh": "根室"
     },
     {
         "id": "mashu",
@@ -1338,7 +1574,9 @@
         ],
         "region": "道東",
         "lat": 43.4883,
-        "lon": 144.5333
+        "lon": 144.5333,
+        "name_en": "Mashu",
+        "name_zh": "摩周"
     },
     {
         "id": "kawayu-onsen",
@@ -1349,7 +1587,9 @@
         ],
         "region": "道東",
         "lat": 43.62,
-        "lon": 144.45
+        "lon": 144.45,
+        "name_en": "Kawayu Onsen",
+        "name_zh": "川湯温泉"
     },
     {
         "id": "midori",
@@ -1360,7 +1600,9 @@
         ],
         "region": "道東",
         "lat": 43.72,
-        "lon": 144.50
+        "lon": 144.5,
+        "name_en": "Midori",
+        "name_zh": "緑"
     },
     {
         "id": "shiretoko-shari",
@@ -1371,7 +1613,9 @@
         ],
         "region": "道東",
         "lat": 43.9103,
-        "lon": 144.661
+        "lon": 144.661,
+        "name_en": "Shiretoko Shari",
+        "name_zh": "知床斜里"
     },
     {
         "id": "hakodate",
@@ -1383,7 +1627,9 @@
         "region": "道南",
         "isMajor": true,
         "lat": 41.7737,
-        "lon": 140.7264
+        "lon": 140.7264,
+        "name_en": "Hakodate",
+        "name_zh": "函館"
     },
     {
         "id": "shin-hakodate-hokuto",
@@ -1395,7 +1641,9 @@
         "region": "道南",
         "isMajor": true,
         "lat": 41.9048,
-        "lon": 140.6481
+        "lon": 140.6481,
+        "name_en": "Shin Hakodate Hokuto",
+        "name_zh": "新函館北斗"
     },
     {
         "id": "nanae",
@@ -1406,7 +1654,9 @@
         ],
         "region": "道南",
         "lat": 41.88,
-        "lon": 140.68
+        "lon": 140.68,
+        "name_en": "Nanae",
+        "name_zh": "七飯"
     },
     {
         "id": "onuma",
@@ -1417,7 +1667,9 @@
         ],
         "region": "道南",
         "lat": 41.97,
-        "lon": 140.67
+        "lon": 140.67,
+        "name_en": "Onuma",
+        "name_zh": "大沼"
     },
     {
         "id": "onuma-koen",
@@ -1428,7 +1680,9 @@
         ],
         "region": "道南",
         "lat": 41.98,
-        "lon": 140.67
+        "lon": 140.67,
+        "name_en": "Onuma Koen",
+        "name_zh": "大沼公園"
     },
     {
         "id": "mori",
@@ -1439,7 +1693,9 @@
         ],
         "region": "道南",
         "lat": 42.1098,
-        "lon": 140.5746
+        "lon": 140.5746,
+        "name_en": "Mori",
+        "name_zh": "森"
     },
     {
         "id": "yakumo",
@@ -1450,7 +1706,9 @@
         ],
         "region": "道南",
         "lat": 42.2533,
-        "lon": 140.2725
+        "lon": 140.2725,
+        "name_en": "Yakumo",
+        "name_zh": "八雲"
     },
     {
         "id": "oshamambe",
@@ -1462,6 +1720,8 @@
         ],
         "region": "道南",
         "lat": 42.5126,
-        "lon": 140.3752
+        "lon": 140.3752,
+        "name_en": "Oshamambe",
+        "name_zh": "長万部"
     }
 ]

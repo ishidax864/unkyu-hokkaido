@@ -146,6 +146,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { FeedbackButton } from '@/components/feedback-button'; // 🆕
 import { CookieConsent } from '@/components/cookie-consent';
 import { ToastProvider } from '@/components/toast';
+import { LanguageProvider } from '@/lib/i18n';
 
 export default function RootLayout({
   children,
@@ -163,16 +164,18 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <ToastProvider>
-          <div className="flex flex-col min-h-screen">
-            <div className="flex-grow">
-              {children}
+        <LanguageProvider>
+          <ToastProvider>
+            <div className="flex flex-col min-h-screen">
+              <div className="flex-grow">
+                {children}
+              </div>
+              <SiteFooter />
             </div>
-            <SiteFooter />
-          </div>
-          <FeedbackButton />
-          <CookieConsent />
-        </ToastProvider>
+            <FeedbackButton />
+            <CookieConsent />
+          </ToastProvider>
+        </LanguageProvider>
         {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>

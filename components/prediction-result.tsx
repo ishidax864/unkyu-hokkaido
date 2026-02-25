@@ -5,6 +5,7 @@ import { AlertTriangle, CheckCircle, Clock, XCircle, ExternalLink, ChevronDown, 
 import { cn } from '@/lib/utils';
 import { getJRStatusUrl } from '@/lib/hokkaido-data';
 import { formatStatusText, extractSuspendedTrains } from '@/lib/text-parser';
+import { useTranslation } from '@/lib/i18n';
 
 // ────────────────────────────────────────────
 // Verdict System — Harmonized with site theme
@@ -35,11 +36,11 @@ interface VerdictConfig {
     icon: typeof CheckCircle;
 }
 
-function buildVerdict(result: PredictionResult): VerdictConfig {
+function buildVerdict(result: PredictionResult, t: (key: string, params?: Record<string, string | number>) => string): VerdictConfig {
     const prob = result.probability;
     const crowd = result.crowdStats;
     const recoveryTime = result.estimatedRecoveryTime;
-    const recoveryLabel = result.isOfficialOverride ? '公式発表' : 'AI予測';
+    const recoveryLabel = result.isOfficialOverride ? t('prediction.recoveryLabel.official') : t('prediction.recoveryLabel.ai');
     const recoveryHours = typeof result.estimatedRecoveryHours === 'number'
         ? result.estimatedRecoveryHours
         : undefined;
@@ -52,24 +53,24 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
         result.status === '運休' || result.status === '運休中') {
 
         if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
-            evidenceParts.push(`${crowd.last15minStopped}人が現地で確認`);
+            evidenceParts.push(t('verdict.confirmedOnSite', { count: crowd.last15minStopped }));
         if (result.suspensionReason)
             evidenceParts.push(result.suspensionReason);
         if (recoveryTime)
-            evidenceParts.push(`復旧見込 ${recoveryTime}（${recoveryLabel}）`);
+            evidenceParts.push(t('verdict.recoveryEstimate', { time: recoveryTime, label: recoveryLabel }));
         else
-            evidenceParts.push('復旧未定');
+            evidenceParts.push(t('verdict.recoveryNotScheduled'));
 
         // サブ分岐: 復旧時間に応じたverdict
         let verdict: string;
         if (recoveryTime?.includes('終日')) {
-            verdict = '本日は終日運休です';
+            verdict = t('verdict.allDaySuspended');
         } else if (recoveryHours !== undefined && recoveryHours <= 0.5) {
-            verdict = 'まもなく復旧します';
+            verdict = t('verdict.recoveringSoon');
         } else if (recoveryHours !== undefined && recoveryHours <= 2) {
-            verdict = '運転見合わせ中';
+            verdict = t('verdict.suspended');
         } else {
-            verdict = '現在、運休しています';
+            verdict = t('verdict.currentlySuspended');
         }
 
         return {
@@ -98,16 +99,16 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
         if (result.isPartialSuspension)
             evidenceParts.push('一部の列車が停止中');
         if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
-            evidenceParts.push(`${crowd.last15minStopped}人が現地で確認`);
+            evidenceParts.push(t('verdict.confirmedOnSite', { count: crowd.last15minStopped }));
         else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
-            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+            evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
         if (recoveryTime)
-            evidenceParts.push(`復旧見込 ${recoveryTime}（${recoveryLabel}）`);
+            evidenceParts.push(t('verdict.recoveryEstimate', { time: recoveryTime, label: recoveryLabel }));
 
         // サブ分岐: 部分運休 vs 高リスク
         const verdict = result.isPartialSuspension
-            ? '一部列車は動いています'
-            : '1本早い列車がおすすめ';
+            ? t('verdict.partialRunning')
+            : t('verdict.takeEarlier');
 
         return {
             level: 'HIGH',
@@ -132,15 +133,15 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
 
     // ── POST-RECOVERY ──
     if (result.isPostRecoveryWindow) {
-        evidenceParts.push('ダイヤ乱れ継続中');
-        if (recoveryTime) evidenceParts.push(`${recoveryTime}に再開（${recoveryLabel}）`);
+        evidenceParts.push(t('verdict.scheduleDisrupted'));
+        if (recoveryTime) evidenceParts.push(t('verdict.resumedAt', { time: recoveryTime, label: recoveryLabel }));
         if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
-            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+            evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
 
         // サブ分岐: 復旧からの経過時間
         const verdict = (recoveryHours !== undefined && recoveryHours >= 1)
-            ? 'ほぼ通常ダイヤに回復'
-            : '運行中ですが遅延に注意';
+            ? t('verdict.almostRecovered')
+            : t('verdict.delayWarning');
 
         return {
             level: 'CAUTION',
@@ -166,22 +167,21 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     // ── CAUTION ──
     if (prob >= 20 || result.isPostResumptionChaos || result.status === 'delayed' || result.status === '遅延') {
         if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
-            evidenceParts.push(`${crowd.last15minDelayed}人が遅延を報告`);
+            evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
 
-        // サブ分岐: リスク度合い
         let verdict: string;
         let evidenceDefault: string;
         if (result.isPostResumptionChaos) {
-            verdict = 'ダイヤ乱れ中';
-            evidenceDefault = '運転再開後のダイヤ乱れが続いています';
+            verdict = t('verdict.scheduleDisruption');
+            evidenceDefault = t('verdict.scheduleDisruptionContinuing');
         } else if (prob >= 30) {
-            verdict = '1本早い列車がおすすめ';
-            evidenceDefault = `運休の可能性 ${prob}% — 天候の影響で遅延や一部運休の可能性があります`;
-            evidenceParts.push(`運休の可能性 ${prob}%`);
+            verdict = t('verdict.takeEarlier');
+            evidenceDefault = t('verdict.riskPercent', { prob });
+            evidenceParts.push(t('prediction.suspensionRisk', { prob }));
         } else {
-            verdict = '遅延の可能性あり';
-            evidenceDefault = `運休の可能性 ${prob}% — 余裕を持って出発してください`;
-            evidenceParts.push(`運休の可能性 ${prob}%`);
+            verdict = t('verdict.possibleDelay');
+            evidenceDefault = t('verdict.lowRiskPercent', { prob });
+            evidenceParts.push(t('prediction.suspensionRisk', { prob }));
         }
 
         return {
@@ -208,11 +208,11 @@ function buildVerdict(result: PredictionResult): VerdictConfig {
     // ── GO ──
     // サブ分岐: 10%以上 vs 10%未満
     const verdict = prob >= 10
-        ? '通常通り運行しています'
-        : '安心してご利用いただけます';
+        ? t('verdict.normalOperation')
+        : t('verdict.safeToRide');
     const evidence = prob >= 10
-        ? '運休リスクは低いですが、天候の変化にご注意ください'
-        : '運休の可能性は非常に低く、安心してご利用いただけます';
+        ? t('verdict.lowRiskNote')
+        : t('verdict.veryLowRiskNote');
 
     return {
         level: 'GO',
@@ -274,8 +274,9 @@ interface PredictionResultCardProps {
 
 export function PredictionResultCard({ result, route }: PredictionResultCardProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const { t } = useTranslation();
 
-    const v = buildVerdict(result);
+    const v = buildVerdict(result, t);
     const Icon = v.icon;
 
     const hasOfficialInfo = !!result.officialStatus?.rawText?.trim();

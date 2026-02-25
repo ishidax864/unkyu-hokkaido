@@ -30,6 +30,8 @@ export type PredictionMode = 'risk' | 'recovery';  // risk: 運休リスク予�
 export interface Route {
   id: string;
   name: string;
+  name_en?: string;
+  name_zh?: string;
   company: string;
   region: string;
   color?: string;
@@ -38,6 +40,8 @@ export interface Route {
 export interface Station {
   id: string;
   name: string;
+  name_en?: string;
+  name_zh?: string;
   kana: string;
   lines: string[];
   region: '道央' | '道北' | '道東' | '道南';

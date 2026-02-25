@@ -10,8 +10,9 @@ import { ReportButtons } from './report-buttons';
 import { AlternativeRoutes } from './alternative-routes';
 import { HotelSuggestions } from './hotel-suggestions';
 import { WeeklyForecastChart } from './weekly-forecast';
-import { Star } from 'lucide-react';
+import { Star, ArrowUp } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
+import { useTranslation } from '@/lib/i18n';
 
 interface PredictionResultsProps {
     prediction: PredictionResult;
@@ -49,6 +50,7 @@ export function PredictionResults({
     removeFavorite
 }: PredictionResultsProps) {
     const isToday = date === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date());
+    const { t } = useTranslation();
     if (!selectedRouteId) return null;
     const route = getRouteById(selectedRouteId);
 
@@ -170,6 +172,20 @@ export function PredictionResults({
                     arrivalStationName={arrStation.name}
                 />
             )}
+
+            {/* UX5: Check another route CTA */}
+            <div className="text-center pt-4">
+                <button
+                    type="button"
+                    onClick={() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-[var(--primary)] text-[var(--primary)] font-bold text-sm hover:bg-[var(--primary)] hover:text-white transition-all"
+                >
+                    <ArrowUp className="w-4 h-4" />
+                    {t('results.searchAgain')}
+                </button>
+            </div>
         </section>
     );
 }
