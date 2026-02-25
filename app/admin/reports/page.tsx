@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { Trash2, AlertCircle } from 'lucide-react';
 import { UserReportDB } from '@/lib/supabase';
 
@@ -17,7 +18,7 @@ export default function ReportsManagement() {
                     setReports(data.items);
                 }
             } catch (error) {
-                console.error('Failed to fetch reports', error);
+                logger.error('Failed to fetch reports', { error });
             } finally {
                 setIsLoading(false);
             }

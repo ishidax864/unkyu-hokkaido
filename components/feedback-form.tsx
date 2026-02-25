@@ -88,8 +88,7 @@ export function FeedbackForm({ onClose }: FeedbackFormProps) {
                         <button
                             key={opt.id}
                             type="button"
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            onClick={() => setType(opt.id as any)}
+                            onClick={() => setType(opt.id as 'bug' | 'improvement' | 'other')}
                             className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 ${type === opt.id
                                 ? 'border-blue-500 ring-2 ring-blue-50/50 shadow-sm'
                                 : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'

@@ -8,6 +8,7 @@
  * フォールバック: 取得失敗時は既存の generateWarningsFromHourly() を使用
  */
 
+import { logger } from './logger';
 import { WeatherWarning } from './types';
 import jmaAreaMapping from '../data/jma-area-mapping.json';
 
@@ -19,7 +20,7 @@ const warningCache = new Map<string, { data: JMAWarningData | null; fetchedAt: n
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10分キャッシュ
 
 // 気象庁APIの警報レベル
-type JMAWarningLevel = 'warning' | 'advisory' | 'watch'; // 警報 | 注意報 | 特別警報
+type _JMAWarningLevel = 'warning' | 'advisory' | 'watch'; // 警報 | 注意報 | 特別警報
 
 // 気象庁JSONの型（主要フィールドのみ）
 interface JMAWarningAreaItem {
@@ -60,7 +61,7 @@ async function fetchJMAWarnings(areaCode: string): Promise<JMAWarningData | null
         });
 
         if (!response.ok) {
-            console.warn(`[JMA] ${areaCode} fetch failed: ${response.status}`);
+            logger.warn(`[JMA] ${areaCode} fetch failed: ${response.status}`);
             warningCache.set(areaCode, { data: null, fetchedAt: Date.now() });
             return null;
         }
@@ -69,7 +70,7 @@ async function fetchJMAWarnings(areaCode: string): Promise<JMAWarningData | null
         warningCache.set(areaCode, { data, fetchedAt: Date.now() });
         return data;
     } catch (error) {
-        console.warn(`[JMA] ${areaCode} fetch error:`, error instanceof Error ? error.message : error);
+        logger.warn(`[JMA] ${areaCode} fetch error: ${error instanceof Error ? error.message : error}`);
         warningCache.set(areaCode, { data: null, fetchedAt: Date.now() });
         return null;
     }
@@ -137,7 +138,7 @@ function extractActiveWarnings(data: JMAWarningData, reportDatetime: string): We
 export async function getJMAWarningsForRoute(routeId: string): Promise<WeatherWarning[] | null> {
     const routeConfig = (jmaAreaMapping.routes as Record<string, { areaCodes: string[]; areaNames: string[] }>)[routeId];
     if (!routeConfig) {
-        console.warn(`[JMA] Unknown route: ${routeId}`);
+        logger.warn(`[JMA] Unknown route: ${routeId}`);
         return null;
     }
 

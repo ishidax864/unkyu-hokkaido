@@ -181,7 +181,7 @@ export function calculateResumptionTime(
         }
     }
 
-    // console.log(`[DEBUG] Final Resume Hour: ${resumeHour}, Rolled Days: ${Math.floor((startHour + buffer) / 24)}`);
+
     // 🆕 Handle negative hours gracefully (e.g. if resumption was yesterday)
     // Normalize to 0-23 for display
     let displayHour = Math.floor(resumeHour);

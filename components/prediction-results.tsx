@@ -35,7 +35,7 @@ export function PredictionResults({
     prediction,
     selectedRouteId,
     date,
-    time,
+    time: _time,
     depStation,
     arrStation,
     riskTrend,
@@ -59,8 +59,8 @@ export function PredictionResults({
             {/* ヘッダー：駅名表示とお気に入り */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-black bg-gray-900 text-white px-2 py-0.5 rounded leading-none dark:bg-gray-100 dark:text-gray-900">予測結果</span>
-                    <h2 className="text-xl font-black text-[var(--foreground)] leading-none">
+                    <span className="text-xs font-black bg-[var(--foreground)] text-[var(--card)] px-2 py-0.5 rounded leading-none">予測結果</span>
+                    <h2 className="text-[16px] font-black text-[var(--foreground)] leading-none">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>
@@ -78,7 +78,7 @@ export function PredictionResults({
                         }}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
                             ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                            : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
+                            : 'bg-[var(--card)] text-[var(--muted)] border border-[var(--border)] hover:bg-[var(--background-secondary)]'
                             }`}
                     >
                         <Star className={`w-3.5 h-3.5 ${isFavorite(depStation.id, arrStation.id) ? 'fill-yellow-500 text-yellow-500' : ''}`} />
@@ -86,7 +86,7 @@ export function PredictionResults({
                     </button>
                     {/* P3-1: オンボーディング — 未登録時のみツールチップ表示 */}
                     {!isFavorite(depStation.id, arrStation.id) && (
-                        <div className="absolute -bottom-8 right-0 bg-gray-900 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        <div className="absolute -bottom-8 right-0 bg-[var(--foreground)] text-[var(--card)] text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                             ★ このルートを保存して次回ワンタップ検索
                         </div>
                     )}
@@ -102,7 +102,7 @@ export function PredictionResults({
 
             {/* 免責注記 */}
             <div className="flex items-start gap-1.5 justify-center -mt-3 mb-1 px-2">
-                <p className="text-[11px] text-gray-500 text-center leading-relaxed">
+                <p className="text-[11px] text-[var(--muted)] text-center leading-relaxed">
                     {prediction.isOfficialOverride
                         ? '※ JR北海道の公式情報に基づくAI予測です。'
                         : '※ 本予測はAIによる予測であり、JR北海道の公式情報ではありません。'}

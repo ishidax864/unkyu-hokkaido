@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Search, BarChart3, Bus, Star, ChevronDown, Train } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Search, BarChart3, Bus, Star, Train } from 'lucide-react';
 
 const steps = [
     {
@@ -31,7 +31,7 @@ const steps = [
                         </div>
                         <div className="flex gap-2">
                             <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
-                                2026-02-21
+                                2026-02-25
                             </div>
                             <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
                                 08:30
@@ -93,11 +93,11 @@ const steps = [
                         <span>遅延の可能性。時間に余裕を持って</span>
                     </div>
                     <div className="flex items-start gap-2 bg-orange-50 p-2.5 rounded-lg">
-                        <span className="font-bold text-orange-700">🟠 50-70%</span>
+                        <span className="font-bold text-orange-700">🟠 50-80%</span>
                         <span>運休の可能性大。代替手段の検討を</span>
                     </div>
                     <div className="flex items-start gap-2 bg-red-50 p-2.5 rounded-lg">
-                        <span className="font-bold text-red-700">🔴 70-100%</span>
+                        <span className="font-bold text-red-700">🔴 80-100%</span>
                         <span>運休の可能性極めて高い。代替手段を確保</span>
                     </div>
                 </div>
@@ -226,10 +226,10 @@ export default function OnboardingPage() {
                             key={s.step}
                             onClick={() => setCurrentStep(i)}
                             className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i === currentStep
-                                    ? `${colors.bg} text-white shadow-lg scale-110`
-                                    : i < currentStep
-                                        ? 'bg-green-100 text-green-600'
-                                        : 'bg-gray-100 text-gray-400'
+                                ? `${colors.bg} text-white shadow-lg scale-110`
+                                : i < currentStep
+                                    ? 'bg-green-100 text-green-600'
+                                    : 'bg-gray-100 text-gray-400'
                                 }`}
                         >
                             {i < currentStep ? '✓' : s.step}
@@ -261,8 +261,8 @@ export default function OnboardingPage() {
                         onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                         disabled={currentStep === 0}
                         className={`flex items-center gap-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${currentStep === 0
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-[var(--muted)] hover:bg-gray-100'
+                            ? 'text-gray-300 cursor-not-allowed'
+                            : 'text-[var(--muted)] hover:bg-gray-100'
                             }`}
                     >
                         <ArrowLeft className="w-4 h-4" />

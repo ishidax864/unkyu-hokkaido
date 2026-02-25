@@ -9,7 +9,6 @@ import {
     ArrowRight,
     RefreshCcw,
     CheckCircle2,
-    Database,
     MessageSquare,
     MapPin,
 } from 'lucide-react';
@@ -19,9 +18,9 @@ export default function AdminDashboard() {
     const [feedback, setFeedback] = useState<UserFeedbackDB[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [stats, setStats] = useState<{ reports: number; recentReports: number; feedbackOpen: number } | null>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [crawlerOk, setCrawlerOk] = useState<boolean | null>(null);
     const [mlTotal, setMlTotal] = useState<number>(0);
 
@@ -47,7 +46,7 @@ export default function AdminDashboard() {
             if (statusRes.ok) {
                 const data = await statusRes.json();
                 const items = data.items || [];
-                setCrawlerOk(items.length > 0 && items.every((s: any) => s.status === 'normal'));
+                setCrawlerOk(items.length > 0 && items.every((s: { status: string }) => s.status === 'normal'));
             }
             if (mlRes.success) setMlTotal(mlRes.data.totalRows || 0);
         } catch {
@@ -59,7 +58,7 @@ export default function AdminDashboard() {
 
     useEffect(() => { fetchData(); }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleStatusUpdate = async (id: string, newStatus: string) => {
         try {
             const res = await fetch(`/api/admin/feedback/${id}`, {
@@ -69,8 +68,7 @@ export default function AdminDashboard() {
             });
             if (res.ok) {
                 setFeedback(prev =>
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    prev.map(item => item.id === id ? { ...item, status: newStatus as any } : item)
+                    prev.map(item => item.id === id ? { ...item, status: newStatus as 'open' | 'in_progress' | 'closed' } : item)
                 );
             }
         } catch { /* ignore */ }

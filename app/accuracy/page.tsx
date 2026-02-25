@@ -14,9 +14,13 @@ export default function AccuracyPage() {
         { name: 'エッジケース', accuracy: 100, total: 78, emoji: '🔬' },
         { name: '降水量', accuracy: 99, total: 104, emoji: '🌧️' },
         { name: '中程度天候', accuracy: 95, total: 130, emoji: '🌥️' },
+        { name: '複合リスク', accuracy: 94, total: 130, emoji: '🔗' },
+        { name: '段階的変化', accuracy: 93, total: 78, emoji: '📈' },
         { name: '路線特性', accuracy: 92, total: 13, emoji: '🗺️' },
         { name: '復旧シナリオ', accuracy: 91, total: 104, emoji: '🔄' },
         { name: '時間帯', accuracy: 91, total: 104, emoji: '🕐' },
+        { name: 'ユーザー報告', accuracy: 90, total: 78, emoji: '👥' },
+        { name: '特殊条件', accuracy: 89, total: 78, emoji: '🎯' },
         { name: '季節変動', accuracy: 88, total: 104, emoji: '🍂' },
     ];
 
@@ -120,17 +124,17 @@ export default function AccuracyPage() {
                                 <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
                                     <div
                                         className={`h-full rounded-full transition-all ${accuracy === 100 ? 'bg-green-500' :
-                                                accuracy >= 95 ? 'bg-blue-500' :
-                                                    accuracy >= 90 ? 'bg-blue-400' :
-                                                        'bg-yellow-500'
+                                            accuracy >= 95 ? 'bg-blue-500' :
+                                                accuracy >= 90 ? 'bg-blue-400' :
+                                                    'bg-yellow-500'
                                             }`}
                                         style={{ width: `${accuracy}%` }}
                                     />
                                 </div>
                                 <span className={`text-xs font-bold w-12 text-right ${accuracy === 100 ? 'text-green-600' :
-                                        accuracy >= 95 ? 'text-blue-600' :
-                                            accuracy >= 90 ? 'text-blue-500' :
-                                                'text-yellow-600'
+                                    accuracy >= 95 ? 'text-blue-600' :
+                                        accuracy >= 90 ? 'text-blue-500' :
+                                            'text-yellow-600'
                                     }`}>
                                     {accuracy}%
                                 </span>

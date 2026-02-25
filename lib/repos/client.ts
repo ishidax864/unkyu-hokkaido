@@ -35,13 +35,13 @@ export interface Database {
 }
 
 // クライアント保持用
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let supabaseClient: SupabaseClient<any> | null = null;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let adminSupabaseClient: SupabaseClient<any> | null = null;
+// NOTE: Supabase クライアントは `Database` ジェネリクスを使わず初期化する。
+// 手動定義の型は Supabase v2 の GenericSchema に適合しないため。
+// 将来的に `npx supabase gen types typescript` で自動生成した型を使うことを推奨。
+let supabaseClient: SupabaseClient | null = null;
+let adminSupabaseClient: SupabaseClient | null = null;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getSupabaseClient(): SupabaseClient<any> | null {
+export function getSupabaseClient(): SupabaseClient | null {
     if (!supabaseUrl || !supabaseAnonKey) {
         logger.warn('Supabase credentials not configured');
         return null;
@@ -49,8 +49,7 @@ export function getSupabaseClient(): SupabaseClient<any> | null {
 
     if (!supabaseClient) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            supabaseClient = createClient<any>(supabaseUrl, supabaseAnonKey, {
+            supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
                 auth: { persistSession: false },
             });
             logger.debug('Supabase client initialized');
@@ -66,16 +65,14 @@ export function getSupabaseClient(): SupabaseClient<any> | null {
  * 管理者用クライアント取得（SERVICE_ROLE_KEYを使用）
  * RLSをバイパスするため、サーバーサイドでのみ使用すること
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getAdminSupabaseClient(): SupabaseClient<any> | null {
+export function getAdminSupabaseClient(): SupabaseClient | null {
     if (!supabaseUrl || !supabaseServiceKey) {
         return null;
     }
 
     if (!adminSupabaseClient) {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            adminSupabaseClient = createClient<any>(supabaseUrl, supabaseServiceKey, {
+            adminSupabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
                 auth: { persistSession: false },
             });
             logger.debug('Supabase ADMIN client initialized');

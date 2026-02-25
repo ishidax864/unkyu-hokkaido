@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { PredictionInput, VulnerabilityData, WeatherForecast } from '../../types';
 import { WindStrategy } from '../strategies/wind';
 import { SnowStrategy } from '../strategies/snow';

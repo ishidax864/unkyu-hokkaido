@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 
 // 簡易的な管理者認証（本来はミドルウェアやセッションチェックを行うべき）
@@ -15,7 +16,7 @@ export async function GET() {
             items: statusData
         });
     } catch (error) {
-        console.error('Status fetch error:', error);
+        logger.error('Status fetch error:', error);
         return NextResponse.json(
             { error: 'Failed to fetch status' },
             { status: 500 }

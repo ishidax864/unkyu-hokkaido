@@ -4,9 +4,10 @@
  * 17カテゴリ × 13路線 = 約2,000件の包括的テスト
  * 運休、遅延、復旧の予測精度を定量評価する
  */
+import fs from 'fs';
 import { describe, it, expect } from 'vitest';
 import { calculateSuspensionRisk } from '../lib/prediction-engine/index';
-import { ROUTES, ROUTE_NAMES, makeInput, TestResult, printReport } from './accuracy-2000-helpers';
+import { ROUTES, makeInput, TestResult, printReport } from './accuracy-2000-helpers';
 import { ALL_CATEGORIES } from './accuracy-2000-cases-part1';
 import { ALL_CATEGORIES_PART2 } from './accuracy-2000-cases-part2';
 
@@ -68,7 +69,6 @@ for (const cat of categories) {
 // Final report
 describe('📊 2000件精度レポート', () => {
     it('should output comprehensive accuracy statistics', () => {
-        const fs = require('fs');
         printReport(allResults);
 
         // Write results summary to file for analysis
@@ -80,7 +80,7 @@ describe('📊 2000件精度レポート', () => {
         const underP = allResults.filter(r => r.underPredicted).length;
 
         const cats = [...new Set(allResults.map(r => r.category))].sort();
-        const catResults: Record<string, any> = {};
+        const catResults: Record<string, { total: number; passed: number; over: number; under: number }> = {};
         for (const cat of cats) {
             const cr = allResults.filter(r => r.category === cat);
             catResults[cat] = {

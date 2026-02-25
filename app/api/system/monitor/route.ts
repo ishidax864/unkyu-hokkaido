@@ -4,15 +4,17 @@ import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine';
 import { saveMonitoringLog } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 
 // Force dynamic to ensure we get fresh data every call
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-    // Basic Auth
+    // 認証: 環境変数で設定されたシークレットキーで保護
     const { searchParams } = new URL(req.url);
-    if (searchParams.get('key') !== 'admin_monitor') {
-        return NextResponse.json({ error: 'Unauthorized access. Please provide valid key.' }, { status: 401 });
+    const monitorSecret = process.env.MONITOR_SECRET;
+    if (!monitorSecret || searchParams.get('key') !== monitorSecret) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const results = [];
@@ -48,7 +50,7 @@ export async function GET(req: NextRequest) {
                 };
             }
         } catch (e) {
-            console.error(`Prediction failed for ${route.id}`, e);
+            logger.error(`Prediction failed for ${route.id}`, e);
         }
 
         if (prediction) {

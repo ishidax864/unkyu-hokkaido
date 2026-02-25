@@ -32,7 +32,7 @@ export function preparePredictionInput(input: PredictionInput): PreparedInput {
     // 3. Near Real-Time Check
     // If target time is within 45 mins of current time, treat as real-time.
     const now = new Date();
-    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00`);
+    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00+09:00`);
     const diffMinutes = Math.abs(targetDateTime.getTime() - now.getTime()) / (1000 * 60);
     const isNearRealTime = diffMinutes <= 45;
 

@@ -26,10 +26,9 @@ export async function GET(req: NextRequest) {
         }
 
         return NextResponse.json({
-            partner: partner.name,
+            partner: partner?.name ?? 'unknown',
             timestamp: new Date().toISOString(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            reports: result.data.map((r: any) => ({
+            reports: result.data.map((r: { id?: string; report_type: string; comment?: string; is_verified?: boolean; created_at?: string }) => ({
                 id: r.id,
                 type: r.report_type,
                 comment: r.comment,

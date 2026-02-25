@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { RISK_FACTORS, DEFAULT_VULNERABILITY } from '../../lib/prediction-engine/risk-factors';
 import { PredictionInput, WeatherForecast } from '@/lib/types';
 
@@ -71,7 +71,7 @@ describe('RISK_FACTORS', () => {
     it('should trigger drifting snow risk', () => {
         // Find by unique reason text part or priority/logic
         // Drifting snow: priority 5, checks temp <= -2 and wind >= 10 and depth >= 5
-        const factor = RISK_FACTORS.find(f => f.reason({} as any).includes('地吹雪'))!;
+        const factor = RISK_FACTORS.find(f => f.reason({} as PredictionInput).includes('地吹雪'))!;
 
         const input = createMockInput({
             temperature: -5,
@@ -83,7 +83,7 @@ describe('RISK_FACTORS', () => {
     });
 
     it('should NOT trigger drifting snow risk if warm', () => {
-        const factor = RISK_FACTORS.find(f => f.reason({} as any).includes('地吹雪'))!;
+        const factor = RISK_FACTORS.find(f => f.reason({} as PredictionInput).includes('地吹雪'))!;
 
         const input = createMockInput({
             temperature: 0, // > -2
@@ -96,7 +96,7 @@ describe('RISK_FACTORS', () => {
 
     it('should trigger Wet Snow risk', () => {
         // Wet snow: temp -1 to 1.5, snow > 0
-        const factor = RISK_FACTORS.find(f => f.reason({} as any).includes('湿った雪'))!;
+        const factor = RISK_FACTORS.find(f => f.reason({} as PredictionInput).includes('湿った雪'))!;
 
         const input = createMockInput({
             temperature: 0.5,
@@ -108,7 +108,7 @@ describe('RISK_FACTORS', () => {
     });
 
     it('should NOT trigger Wet Snow risk if too cold', () => {
-        const factor = RISK_FACTORS.find(f => f.reason({} as any).includes('湿った雪'))!;
+        const factor = RISK_FACTORS.find(f => f.reason({} as PredictionInput).includes('湿った雪'))!;
 
         const input = createMockInput({
             temperature: -5, // Too cold, dry snow

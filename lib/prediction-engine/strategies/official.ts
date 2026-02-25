@@ -7,7 +7,7 @@ import { getRecencyWeight } from '../helpers';
 export class OfficialStatusStrategy implements RiskFactorStrategy {
     name = 'OfficialStatusStrategy';
 
-    evaluate(input: PredictionInput, vuln: VulnerabilityData): RiskFactorResult {
+    evaluate(input: PredictionInput, _vuln: VulnerabilityData): RiskFactorResult {
         let score = 0;
         const reasons: { reason: string; priority: number }[] = [];
 
@@ -28,7 +28,7 @@ export class OfficialStatusStrategy implements RiskFactorStrategy {
         if (input.jrStatus && input.jrStatus.resumptionTime) {
             const resumptionDate = new Date(input.jrStatus.resumptionTime);
             // targetDate is YYYY-MM-DD, targetTime is HH:MM
-            const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00`);
+            const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00+09:00`);
 
             // Add slight buffer (e.g. 30 mins) to ensure we don't flip too early if delayed
             // specific buffer can be tuned, but here we just check if we are significantly past resumption

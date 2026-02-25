@@ -1,5 +1,5 @@
 
-import { JRStatusItem, OperationStatus } from '../types';
+import { OperationStatus } from '../types';
 
 export interface BaseStatusResult {
     status: OperationStatus | 'partial' | 'unknown';
@@ -31,8 +31,8 @@ export function determineBaseStatus(
         timeZone: 'Asia/Tokyo'
     }).format(new Date());
 
-    const isToday = targetDate === todayJST;
-    const targetDateTime = new Date(`${targetDate}T${targetTime}:00`);
+    const _isToday = targetDate === todayJST;
+    const targetDateTime = new Date(`${targetDate}T${targetTime}:00+09:00`);
     const rawText = jrStatus.rawText || jrStatus.statusText || '';
 
     // 1. Partial Suspension Detection (High Priority)

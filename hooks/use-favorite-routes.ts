@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 const STORAGE_KEY = 'unkyu-favorite-routes';
 
@@ -14,19 +14,17 @@ export interface FavoriteRoute {
  * お気に入りルートを localStorage で管理するフック
  */
 export function useFavoriteRoutes() {
-    const [favorites, setFavorites] = useState<FavoriteRoute[]>([]);
-
-    // 初回ロード
-    useEffect(() => {
+    const [favorites, setFavorites] = useState<FavoriteRoute[]>(() => {
+        // 初回ロード: lazy initializer で localStorage から読み込み
+        if (typeof window === 'undefined') return [];
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                setFavorites(JSON.parse(stored));
-            }
+            if (stored) return JSON.parse(stored);
         } catch {
             // localStorageが使えない環境
         }
-    }, []);
+        return [];
+    });
 
     // localStorage への保存
     const saveFavorites = useCallback((newFavorites: FavoriteRoute[]) => {

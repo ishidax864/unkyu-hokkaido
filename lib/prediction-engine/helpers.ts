@@ -3,7 +3,7 @@
  * calculateSuspensionRisk の複雑度を減らすため、サブ関数を抽出
  */
 
-import type { PredictionInput, RiskFactor, VulnerabilityData, HistoricalMatch } from '../types';
+import type { PredictionInput, VulnerabilityData, HistoricalMatch } from '../types';
 
 import {
     COMPOUND_RISK_THRESHOLD,
@@ -141,7 +141,7 @@ export function determineMaxProbability(input: PredictionInput, isNearRealTime: 
         if (isSuspended && input.jrStatus.resumptionTime) {
             const resumption = new Date(input.jrStatus.resumptionTime);
             // targetDateがYYYY-MM-DD、targetTimeがHH:MM形式と仮定
-            const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+            const target = new Date(`${input.targetDate}T${input.targetTime}:00+09:00`);
             if (target.getTime() >= resumption.getTime()) {
                 isSuspended = false; // 再開済み扱い
             }
@@ -524,7 +524,7 @@ export function applyOfficialHistoryAdjustment(
     // 1. 直近の運休状態の継続性チェック (Dynamic Cap / Floor)
     // 過去6時間以内に「suspended」があった場合、リスクの下限を設ける
     const recentSuspension = history.find(h => {
-        const hDate = new Date(`${h.date}T${h.time}`);
+        const hDate = new Date(`${h.date}T${h.time}+09:00`);
         const diffHours = (now.getTime() - hDate.getTime()) / (1000 * 60 * 60);
         return (h.status === 'suspended' || h.status === 'stopped') && diffHours <= 6;
     });
@@ -534,7 +534,7 @@ export function applyOfficialHistoryAdjustment(
         let hasResumed = false;
         if (input.jrStatus?.resumptionTime) {
             const resumption = new Date(input.jrStatus.resumptionTime);
-            const target = new Date(`${input.targetDate}T${input.targetTime}:00`);
+            const target = new Date(`${input.targetDate}T${input.targetTime}:00+09:00`);
             if (target.getTime() >= resumption.getTime()) {
                 hasResumed = true;
             }

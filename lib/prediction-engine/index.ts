@@ -16,7 +16,6 @@ import {
 import {
     determineMaxProbability,
     applyHistoricalDataAdjustment,
-    determineSuspensionReason,
     applyConfidenceFilter,
     calculateRawRiskScore,
     applyOfficialHistoryAdjustment // 🆕
@@ -60,7 +59,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 2. Centralized Status Logic (Single Source of Truth)
     const {
-        status: baseStatus,
+        status: _baseStatus,
         isOfficialSuspended,
         isPostResumptionChaos,
         isPartialSuspension,
@@ -131,12 +130,12 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         isPartialSuspension || false
     );
 
-    let {
-        estimatedRecoveryTime,
+    const {
         estimatedRecoveryHours,
         recoveryRecommendation,
         suspensionReason
     } = recovery;
+    let { estimatedRecoveryTime } = recovery;
 
     reasonsWithPriority.push(...recovery.recoveryReasons);
 
@@ -148,7 +147,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // calibration/clamping の前にここで判定する必要がある
     if (input.jrStatus?.resumptionTime && effectiveTargetTime) {
         const officialResumptionDate = new Date(input.jrStatus.resumptionTime);
-        const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00`);
+        const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00+09:00`);
         if (targetDateTime.getTime() > officialResumptionDate.getTime()) {
             const hoursAfterOfficial = (targetDateTime.getTime() - officialResumptionDate.getTime()) / (1000 * 60 * 60);
 
@@ -304,16 +303,19 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         const resumptionDate = new Date(input.jrStatus.resumptionTime);
         const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
         const now = new Date();
-        const today = now.getDate();
-        const resumptionDay = resumptionDate.getDate();
+
+        // JST基準で日付文字列を比較（月境界でも安全）
+        const todayStr2 = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
+        const tomorrowDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        const tomorrowStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(tomorrowDate);
+        const resumptionStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(resumptionDate);
 
         let timeStr = `${resumptionHHMM}頃`;
-        if (resumptionDay !== today) {
-            const tomorrow = new Date(now);
-            tomorrow.setDate(now.getDate() + 1);
-            if (resumptionDay === tomorrow.getDate()) {
+        if (resumptionStr !== todayStr2) {
+            if (resumptionStr === tomorrowStr) {
                 timeStr = `明日 ${resumptionHHMM}頃`;
             } else {
+                const resumptionDay = resumptionDate.getDate();
                 timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
             }
         }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 // Gemini Flash API設定
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
@@ -64,11 +65,17 @@ export async function POST(request: Request) {
         const body: ReasonRequest = await request.json();
 
         // バリデーション
-        if (!body.routeName || typeof body.probability !== 'number') {
+        if (!body.routeName || typeof body.probability !== 'number' || body.probability < 0 || body.probability > 100) {
             return NextResponse.json(
                 { error: 'Invalid request body' },
                 { status: 400 }
             );
+        }
+
+        // 入力サニタイズ（プロンプトインジェクション防止）
+        body.routeName = body.routeName.slice(0, 50).replace(/[\n\r]/g, '');
+        if (body.factors) {
+            body.factors = body.factors.slice(0, 10).map((f: string) => String(f).slice(0, 200).replace(/[\n\r]/g, ''));
         }
 
         // キャッシュチェック
@@ -111,7 +118,7 @@ export async function POST(request: Request) {
         });
 
         if (!response.ok) {
-            console.error('Gemini API error:', response.status);
+            logger.error('Gemini API error:', response.status);
             const fallbackReason = generateFallbackReason(body);
             return NextResponse.json({
                 reason: fallbackReason,
@@ -134,7 +141,7 @@ export async function POST(request: Request) {
             source: 'gemini',
         });
     } catch (error) {
-        console.error('AI reason generation error:', error);
+        logger.error('AI reason generation error:', error);
         return NextResponse.json(
             { error: 'Internal server error' },
             { status: 500 }

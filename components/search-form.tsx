@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
-import { ArrowRight, Calendar, Clock, PlayCircle, Timer, Zap } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, Calendar, Clock, Zap } from 'lucide-react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
 import { StationSelector } from './station-selector';
 
@@ -9,8 +9,7 @@ interface SearchFormProps {
         departureId: string,
         arrivalId: string,
         date: string,
-        time: string,
-        timeType: 'departure' | 'arrival'
+        time: string
     ) => void;
     isLoading?: boolean;
     // Controlled props
@@ -22,8 +21,7 @@ interface SearchFormProps {
     setDate: (date: string) => void;
     time: string;
     setTime: (time: string) => void;
-    timeType: 'departure' | 'arrival';
-    setTimeType: (type: 'departure' | 'arrival') => void;
+
 }
 
 // 人気ルートプリセット（コンポーネント外に定義して毎レンダーの再生成を回避）
@@ -47,8 +45,7 @@ export function SearchForm({
     setDate,
     time,
     setTime,
-    timeType,
-    setTimeType,
+
 }: SearchFormProps) {
     const [isDepartureOpen, setIsDepartureOpen] = useState(false);
     const [isArrivalOpen, setIsArrivalOpen] = useState(false);
@@ -63,10 +60,9 @@ export function SearchForm({
                 departure: departureStation.name,
                 arrival: arrivalStation.name,
                 date: date,
-                time: time,
-                timeType: timeType
+                time: time
             });
-            onSearch(departureStation.id, arrivalStation.id, date, time, timeType);
+            onSearch(departureStation.id, arrivalStation.id, date, time);
         }
     };
 
@@ -80,7 +76,7 @@ export function SearchForm({
 
         setDate(dateStr);
         setTime(timeStr);
-        setTimeType('departure');
+
 
         sendGAEvent('event', 'search_current_location', {
             is_valid_search: (!!departureStation && !!arrivalStation).toString()
@@ -98,7 +94,7 @@ export function SearchForm({
                 timeType: 'departure',
                 trigger: 'current_btn'
             });
-            onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr, 'departure');
+            onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr);
             setShowError(false);
         } else {
             setShowError(true);
@@ -145,9 +141,9 @@ export function SearchForm({
                             key={`${dep}-${arr}`}
                             type="button"
                             onClick={() => handleQuickRoute(dep, arr)}
-                            className={`text-[11px] py-2 px-1 rounded-md border transition-all text-center leading-tight ${departureStation?.id === dep && arrivalStation?.id === arr
+                            className={`text-[11px] py-2 px-1 rounded-lg border transition-all text-center leading-tight ${departureStation?.id === dep && arrivalStation?.id === arr
                                 ? 'border-[var(--primary)] bg-[var(--primary)]/5 text-[var(--primary)] font-bold'
-                                : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-gray-50 text-gray-600'
+                                : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--background-secondary)] text-[var(--muted)]'
                                 }`}
                         >
                             <span className="block text-sm mb-0.5">{emoji}</span>
@@ -171,8 +167,23 @@ export function SearchForm({
                     onInteract={() => setIsArrivalOpen(false)}
                 />
 
-                <div className="hidden md:flex items-center justify-center py-0.5 z-10 md:my-0 md:pb-3">
-                    <ArrowRight className="w-4 h-4 text-[var(--muted)] rotate-90 md:rotate-0" />
+                {/* Swap ボタン + 矢印 */}
+                <div className="flex items-center justify-center py-1 z-10 md:my-0 md:pb-3">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setDepartureStation(arrivalStation);
+                            setArrivalStation(departureStation);
+                            setDepQuery(arrivalStation?.name || '');
+                            setArrQuery(departureStation?.name || '');
+                        }}
+                        disabled={!departureStation && !arrivalStation}
+                        className="group flex items-center gap-1 px-3 py-1.5 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        aria-label="出発駅と到着駅を入れ替える"
+                    >
+                        <ArrowUpDown className="w-3.5 h-3.5 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
+                        <span className="text-[11px] font-medium text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors">入替</span>
+                    </button>
                 </div>
 
                 <StationSelector
@@ -207,7 +218,7 @@ export function SearchForm({
                                 d.setDate(d.getDate() + 7);
                                 return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
                             })()}
-                            className={`w-full input-field p-3 text-lg font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
+                            className={`w-full input-field p-3 text-base font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
                         />
                         {!isDateValid(date) && (
                             <p className="text-[11px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
@@ -218,48 +229,21 @@ export function SearchForm({
                             <Clock className="w-3 h-3" />
                             時刻
                         </label>
-                        <div className="flex bg-[var(--background-secondary)] rounded-md border border-[var(--border)] p-1 mb-2">
-                            <button
-                                type="button"
-                                onClick={() => setTimeType('departure')}
-                                className={`flex-1 text-xs py-1.5 rounded flex items-center justify-center gap-1 ${timeType === 'departure' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
-                            >
-                                <PlayCircle className="w-3 h-3" />
-                                出発
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setTimeType('arrival')}
-                                className={`flex-1 text-xs py-1.5 rounded flex items-center justify-center gap-1 ${timeType === 'arrival' ? 'bg-white shadow-sm font-medium' : 'text-[var(--muted)]'}`}
-                            >
-                                <Timer className="w-3 h-3" />
-                                到着
-                            </button>
-                        </div>
+
                         <input
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className="w-full input-field p-3 text-lg font-bold"
+                            className="w-full input-field p-3 text-base font-bold"
                         />
                     </div>
                 </div>
 
-                {/* 🆕 現在ボタン — 駅選択状態に応じてラベル変更 */}
-                <button
-                    type="button"
-                    onClick={setCurrentDateTime}
-                    disabled={!departureStation || !arrivalStation}
-                    className={`w-full py-3 text-sm flex items-center justify-center gap-2 rounded-md font-medium transition-all ${departureStation && arrivalStation
-                        ? 'bg-[var(--primary)] text-white hover:opacity-90 shadow-sm'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
-                >
-                    {departureStation && arrivalStation
-                        ? <><Zap className="w-4 h-4" /> この区間を今すぐ予測</>
-                        : '📍 出発駅・到着駅を選択してください'
-                    }
-                </button>
+                {!departureStation || !arrivalStation ? (
+                    <p className="text-xs text-center text-[var(--muted)] py-2">
+                        📍 出発駅・到着駅を選択してください
+                    </p>
+                ) : null}
                 {showError && (
                     <p className="text-[11px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
                         ※出発駅と到着駅を選択してください
@@ -271,7 +255,7 @@ export function SearchForm({
             <button
                 type="submit"
                 disabled={!departureStation || !arrivalStation || !isDateValid(date) || isLoading}
-                className="w-full btn-primary py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
+                className="w-full btn-primary py-3 text-[14px] font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
             >
                 {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

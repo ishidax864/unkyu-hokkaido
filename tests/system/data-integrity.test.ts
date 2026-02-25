@@ -133,7 +133,7 @@ describe('Data Integrity - Alternative Routes', () => {
     });
 
     it('each alternative should have valid options', () => {
-        routes.forEach((route, i) => {
+        routes.forEach((route, _i) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const options = (route as any).options;
             expect(Array.isArray(options)).toBe(true);

@@ -21,7 +21,7 @@ export function predictRecovery(
     input: PredictionInput,
     currentProbability: number,
     isCurrentlySuspended: boolean,
-    isPartialSuspension: boolean
+    _isPartialSuspension: boolean
 ): RecoveryResult {
     let estimatedRecoveryTime: string | undefined;
     let estimatedRecoveryHours: number | undefined;

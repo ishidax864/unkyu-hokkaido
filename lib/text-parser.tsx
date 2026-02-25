@@ -79,7 +79,7 @@ export function formatStatusText(text: string): React.ReactNode[] {
     // 1. Initial cleanup
     // Remove "■" bullets if they are just clutter, or keep them?
     // Replace <BR> with actual newlines for splitting
-    let cleanText = text
+    const cleanText = text
         .replace(/<BR>/gi, '\n')
         .replace(/<br>/gi, '\n')
         .replace(/■/g, '\n■') // Ensure bullets start on new lines
@@ -127,7 +127,7 @@ export function splitStatusText(text: string): { summary: string; details: strin
     if (!text) return { summary: '', details: '' };
 
     // Initial cleanup similar to formatStatusText
-    let cleanText = text
+    const cleanText = text
         .replace(/<BR>/gi, '\n')
         .replace(/<br>/gi, '\n')
         .replace(/■/g, '\n■')

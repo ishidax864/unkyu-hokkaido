@@ -12,7 +12,14 @@ jobs:
     steps:
       - name: Call Vercel Cron API
         run: |
-          curl -X GET https://unkyu-hokkaido.jp/api/cron/crawl
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://unkyu-hokkaido.jp/api/cron/crawl")
+          if [ "$response" -ne 200 ]; then
+            echo "❌ Crawler returned HTTP $response"
+            exit 1
+          fi
+          echo "✅ Crawler executed successfully"
 
   monitor:
     runs-on: ubuntu-latest
@@ -20,4 +27,4 @@ jobs:
     steps:
       - name: Call Vercel Monitor API
         run: |
-          curl -X GET "https://unkyu-hokkaido.jp/api/system/monitor?key=admin_monitor"
+          curl -s -f "https://unkyu-hokkaido.jp/api/system/monitor?key=${{ secrets.MONITOR_KEY }}"

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -28,9 +28,25 @@ interface JRStatus {
     sourceArea?: string;
 }
 
+interface MLStats {
+    totalRows: number;
+    todayRows?: number;
+    statusBreakdown: { normal: number; delayed: number; suspended: number };
+    latestWeather?: {
+        area_id?: string;
+        temperature: number | null;
+        wind_speed: number | null;
+        snowfall: number | null;
+        snow_depth: number | null;
+        recorded_at: string;
+    } | null;
+    oldestRecord?: string | null;
+    estimatedStorageMB: number;
+}
+
 export default function CrawlerMLPage() {
     const [jrStatus, setJrStatus] = useState<JRStatus[]>([]);
-    const [mlStats, setMlStats] = useState<any>(null);
+    const [mlStats, setMlStats] = useState<MLStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

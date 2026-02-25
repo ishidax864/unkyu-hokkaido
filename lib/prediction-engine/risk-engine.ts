@@ -1,6 +1,6 @@
 
 import { PredictionInput, VulnerabilityData } from '../types';
-import { RiskFactorStrategy, RiskFactorResult } from './strategies/base';
+import { RiskFactorStrategy } from './strategies/base';
 import { WindStrategy } from './strategies/wind';
 import { SnowStrategy } from './strategies/snow';
 import { RainStrategy } from './strategies/rain';

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { determineBaseStatus } from '../../lib/prediction-engine/status-logic';
 
 const TODAY = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date());
-const TOMORROW = new Date(Date.now() + 86400 * 1000).toISOString().split('T')[0];
+const _TOMORROW = new Date(Date.now() + 86400 * 1000).toISOString().split('T')[0];
 
 describe('determineBaseStatus', () => {
     describe('No JR Status', () => {

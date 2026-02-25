@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import {
     RefreshCw,
     AlertTriangle,
@@ -26,7 +27,7 @@ export default function AdminStatusPage() {
                 setLastUpdated(new Date().toLocaleTimeString());
             }
         } catch (error) {
-            console.error('Failed to fetch status', error);
+            logger.error('Failed to fetch status', { error });
         } finally {
             setIsLoading(false);
         }
@@ -118,8 +119,8 @@ export default function AdminStatusPage() {
                                     </td>
                                     <td className="px-6 py-4 align-top">
                                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${item.status === 'suspended' || item.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                                                item.status === 'delay' ? 'bg-orange-100 text-orange-700' :
-                                                    'bg-green-100 text-green-700'
+                                            item.status === 'delay' ? 'bg-orange-100 text-orange-700' :
+                                                'bg-green-100 text-green-700'
                                             }`}>
                                             {item.status === 'suspended' || item.status === 'cancelled' ? <AlertTriangle className="w-3.5 h-3.5" /> :
                                                 item.status === 'delay' ? <Clock className="w-3.5 h-3.5" /> :

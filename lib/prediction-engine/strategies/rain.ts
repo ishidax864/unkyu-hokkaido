@@ -16,7 +16,7 @@ import {
 export class RainStrategy implements RiskFactorStrategy {
     name = 'RainStrategy';
 
-    evaluate(input: PredictionInput, vuln: VulnerabilityData): RiskFactorResult {
+    evaluate(input: PredictionInput, _vuln: VulnerabilityData): RiskFactorResult {
         let score = 0;
         const reasons: { reason: string; priority: number }[] = [];
 

@@ -66,8 +66,8 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
     return (
         <section className="card p-5" aria-labelledby="weekly-forecast-title">
             <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-4 h-4 text-gray-500" />
-                <h3 id="weekly-forecast-title" className="text-sm font-bold text-gray-700">向こう5日間の運休リスク予測</h3>
+                <TrendingUp className="w-4 h-4 text-[var(--muted)]" />
+                <h3 id="weekly-forecast-title" className="text-[14px] font-bold text-[var(--foreground)]">向こう5日間の運休リスク予測</h3>
             </div>
 
             <div className="space-y-4">
@@ -82,25 +82,25 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                     return (
                         <div key={pred.targetDate} className="flex items-center gap-4">
                             {/* 日付 */}
-                            <div className="w-14 flex-shrink-0 text-xs text-gray-500 text-center">
-                                <div className="font-bold text-gray-700 text-sm">{mainDate}</div>
+                            <div className="w-14 flex-shrink-0 text-[11px] text-[var(--muted)] text-center">
+                                <div className="font-bold text-[var(--foreground)] text-[13px]">{mainDate}</div>
                                 <div className="scale-90 opacity-80">{subDate}</div>
                             </div>
 
                             {/* 天気アイコン */}
-                            <div className="w-8 flex-shrink-0 text-center text-xl grayscale opacity-80">
+                            <div className="w-8 flex-shrink-0 text-center text-xl">
                                 {dayWeather ? getWeatherIcon(dayWeather.weather) : ''}
                             </div>
 
                             {/* プログレスバーエリア */}
                             <div className="flex-1 relative">
                                 <div className="flex items-end justify-between mb-1">
-                                    <span className="text-[11px] text-gray-400 font-medium">リスク</span>
+                                    <span className="text-[11px] text-[var(--muted)] font-medium">リスク</span>
                                     <span className={cn("text-xs font-bold", getRiskTextColor(pred.probability))}>
                                         {pred.probability}%
                                     </span>
                                 </div>
-                                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-[var(--background-secondary)] rounded-full overflow-hidden">
                                     <div
                                         className={cn('h-full rounded-full transition-all duration-500', getRiskColor(pred.probability))}
                                         style={{ width: `${Math.max(pred.probability, 5)}%` }}
@@ -111,7 +111,7 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                             {/* 天気詳細 info */}
                             <div className="w-20 text-right flex-shrink-0">
                                 {dayWeather && (
-                                    <div className="text-[11px] text-gray-400 font-medium space-y-0.5">
+                                    <div className="text-[11px] text-[var(--muted)] font-medium space-y-0.5">
                                         <div className={cn(dayWeather.windSpeed >= 15 ? "text-orange-500 font-bold" : "")}>
                                             💨 {dayWeather.windSpeed}m/s
                                         </div>
@@ -132,20 +132,20 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
             </div>
 
             {/* 凡例 */}
-            <div className="flex flex-wrap text-center items-center justify-center gap-4 mt-6 pt-4 border-t border-dashed border-gray-200">
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
+            <div className="flex flex-wrap text-center items-center justify-center gap-4 mt-6 pt-4 border-t border-dashed border-[var(--border)]">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[var(--muted)]">
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                     <span>平常 (0-20%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[var(--muted)]">
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                     <span>注意 (20-50%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[var(--muted)]">
                     <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
                     <span>警戒 (50-80%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[var(--muted)]">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-600" />
                     <span>移動困難 (80%+)</span>
                 </div>

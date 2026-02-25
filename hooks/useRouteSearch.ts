@@ -25,7 +25,7 @@ export function useRouteSearch() {
         const now = new Date();
         return now.toTimeString().slice(0, 5);
     });
-    const [timeType, setTimeType] = useState<'departure' | 'arrival'>('departure');
+
 
     // Search Result State
     const [isLoading, setIsLoading] = useState(false);
@@ -47,8 +47,7 @@ export function useRouteSearch() {
         departureId: string,
         arrivalId: string,
         searchDate: string,
-        searchTime: string,
-        type: 'departure' | 'arrival'
+        searchTime: string
     ) => {
         setIsLoading(true);
         setSearchError(null);
@@ -61,7 +60,7 @@ export function useRouteSearch() {
         setArrivalStation(arrStation || null);
         setDate(searchDate);
         setTime(searchTime);
-        setTimeType(type);
+
 
         const commonLines = depStation && arrStation ? getCommonLines(depStation, arrStation) : [];
         let primaryRoute = commonLines[0] || null;
@@ -82,7 +81,7 @@ export function useRouteSearch() {
         let timetableTrain = null;
 
         if (departureId && arrivalId) {
-            const trainResult = findTrain(departureId, arrivalId, searchTime, type);
+            const trainResult = findTrain(departureId, arrivalId, searchTime, 'departure');
             if (trainResult) {
                 targetTimeStr = trainResult.departureTime;
                 timetableTrain = trainResult.train;
@@ -291,7 +290,7 @@ export function useRouteSearch() {
                 if (minRisk < 50 && (currentRisk - minRisk >= 20)) {
                     const bestOption = futureOptions.find(o => o.risk === minRisk);
                     if (bestOption) {
-                        const diff = parseInt(bestOption.time.split(':')[0]) - currentHour;
+                        const _diff = parseInt(bestOption.time.split(':')[0]) - currentHour;
                         bestShift = {
                             time: bestOption.time,
                             risk: bestOption.risk,
@@ -322,7 +321,7 @@ export function useRouteSearch() {
         arrivalStation, setArrivalStation,
         date, setDate,
         time, setTime,
-        timeType, setTimeType,
+
         isLoading,
         searchError, // 🆕
         prediction,

@@ -57,7 +57,7 @@ export async function GET() {
     const healthCheck = {
         status: isHealthy ? 'healthy' : 'degraded',
         timestamp: new Date().toISOString(),
-        version: '1.2.0',
+        version: process.env.npm_package_version || '0.0.0',
         uptime: process.uptime(),
         memory: {
             used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { SearchForm } from '@/components/search-form';
 import { HeadlineStatus } from '@/components/headline-status';
@@ -9,6 +10,7 @@ import { saveUserReport } from '@/lib/user-reports';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useRouteSearch } from '@/hooks/useRouteSearch';
 import { FavoriteSelector } from '@/components/favorite-selector';
+import { useToast } from '@/components/toast';
 import { Cloud, Train, MapPin, AlertTriangle } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { getWeatherIcon } from '@/lib/weather-utils';
@@ -27,7 +29,7 @@ export default function Home() {
     arrivalStation, setArrivalStation,
     date, setDate,
     time, setTime,
-    timeType, setTimeType,
+
     isLoading,
     searchError, // 🆕
     prediction,
@@ -54,15 +56,38 @@ export default function Home() {
     jrStatus // 🆕
   } = useAppInit();
 
+  // トースト
+  const { showToast } = useToast();
 
+  // 予測結果セクションへの自動スクロール
+  const predictionRef = useRef<HTMLDivElement>(null);
+  const prevPrediction = useRef(prediction);
+
+  useEffect(() => {
+    // prediction が新しく設定されたときだけスクロール
+    if (prediction && prediction !== prevPrediction.current) {
+      prevPrediction.current = prediction;
+      // レンダリング後にスクロール
+      setTimeout(() => {
+        predictionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [prediction]);
 
   // お気に入りフック
-  const { favorites, addFavorite, removeFavorite, isFavorite, isLoaded: isFavoritesLoaded } = useFavorites();
+  const { favorites, addFavorite: addFav, removeFavorite, isFavorite, isLoaded: isFavoritesLoaded } = useFavorites();
+
+  // お気に入り追加（トースト付き）
+  const addFavorite = (depId: string, arrId: string, depName: string, arrName: string) => {
+    addFav(depId, arrId, depName, arrName);
+    showToast(`⭐ ${depName} → ${arrName} をお気に入りに追加しました`);
+  };
 
   // ユーザー報告を保存（Supabase優先、ローカルストレージにフォールバック）
   const handleReport = async (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string) => {
     if (!selectedRouteId) return;
 
+    const reportLabels = { stopped: '運休', delayed: '遅延', crowded: '混雑', normal: '通常運行' };
     try {
       await saveUserReport({
         routeId: selectedRouteId,
@@ -71,10 +96,12 @@ export default function Home() {
         createdAt: new Date().toISOString(),
       });
 
+      showToast(`📝 ${reportLabels[type]}の報告を送信しました。ありがとうございます！`);
       // 自分の投稿を即座に反映させるため、データを再取得
       refreshRealtimeStatus();
     } catch (error) {
       logger.error('Report save error:', error);
+      showToast('報告の送信に失敗しました', 'error');
     }
   };
 
@@ -88,12 +115,12 @@ export default function Home() {
         <div className="max-w-2xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Train className="w-5 h-5" />
-            <h1 className="text-lg sm:text-xl font-bold">運休北海道</h1>
-            <span className="text-xs opacity-80 ml-1">JR予報</span>
+            <h1 className="text-[16px] font-bold">運休北海道</h1>
+            <span className="text-[11px] opacity-80 ml-1">JR予報</span>
           </div>
-          <div className="text-right text-sm">
-            <div className="opacity-80 text-xs">{locationName || '北海道'}</div>
-            <div className="font-bold text-sm sm:text-base">{currentTime}</div>
+          <div className="text-right">
+            <div className="opacity-80 text-[11px]">{locationName || '北海道'}</div>
+            <div className="font-bold text-[14px]">{currentTime}</div>
           </div>
         </div>
       </header>
@@ -129,7 +156,7 @@ export default function Home() {
                 setArrivalStation(getStationById(fav.arrivalId) || null);
                 setDate(currentDate);
                 setTime(currentTime);
-                setTimeType('departure');
+
 
                 sendGAEvent('event', 'favorite_select', {
                   departure: fav.departureName,
@@ -139,8 +166,7 @@ export default function Home() {
                   fav.departureId,
                   fav.arrivalId,
                   currentDate,
-                  currentTime,
-                  'departure'
+                  currentTime
                 );
               }}
             />
@@ -157,8 +183,7 @@ export default function Home() {
               setDate={setDate}
               time={time}
               setTime={setTime}
-              timeType={timeType}
-              setTimeType={setTimeType}
+
             />
           </div>
         </section>
@@ -235,23 +260,25 @@ export default function Home() {
 
         {/* 予測結果セクション */}
         {prediction && (
-          <PredictionResults
-            prediction={prediction}
-            selectedRouteId={selectedRouteId}
-            date={date}
-            time={time}
-            depStation={departureStation}
-            arrStation={arrivalStation}
-            riskTrend={riskTrend}
-            realtimeStatus={realtimeStatus}
-            timeShiftSuggestion={timeShiftSuggestion}
-            weeklyPredictions={weeklyPredictions}
-            weather={weather}
-            handleReport={handleReport}
-            isFavorite={isFavorite}
-            addFavorite={addFavorite}
-            removeFavorite={removeFavorite}
-          />
+          <div ref={predictionRef}>
+            <PredictionResults
+              prediction={prediction}
+              selectedRouteId={selectedRouteId}
+              date={date}
+              time={time}
+              depStation={departureStation}
+              arrStation={arrivalStation}
+              riskTrend={riskTrend}
+              realtimeStatus={realtimeStatus}
+              timeShiftSuggestion={timeShiftSuggestion}
+              weeklyPredictions={weeklyPredictions}
+              weather={weather}
+              handleReport={handleReport}
+              isFavorite={isFavorite}
+              addFavorite={addFavorite}
+              removeFavorite={removeFavorite}
+            />
+          </div>
         )}
 
         {/* Pro誘導バナー - 後で機能追加予定（現在非公開）

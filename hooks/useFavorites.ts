@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const STORAGE_KEY = 'unkyu-ai-favorites';
 
@@ -19,19 +19,14 @@ export function useFavorites() {
                 if (stored) {
                     return JSON.parse(stored);
                 }
-            } catch (error) {
-                console.error('Failed to load favorites', error);
+            } catch {
+                // localStorage unavailable
             }
         }
         return [];
     });
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    // Initial load from localStorage — setState in useEffect is intentional here
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsLoaded(true);
-    }, []);
+    // SSR判定: windowがあればクライアントサイド = ロード完了
+    const [isLoaded] = useState(() => typeof window !== 'undefined');
 
     // Save to storage
     const saveFavorites = (newFavorites: FavoriteRoute[]) => {

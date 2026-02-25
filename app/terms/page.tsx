@@ -24,7 +24,7 @@ export default function TermsOfService() {
                     <section>
                         <h2 className="text-lg font-bold mb-3 border-b pb-1">1. サービスの目的と性質</h2>
                         <p>
-                            本サービス「運休北海道」（以下「当サービス」）は、天気予報および過去の統計データを基にJR北海道の運行見込みをAIが94%の精度で予測するサービスです。
+                            本サービス「運休北海道」（以下「当サービス」）は、天気予報および過去の統計データを基に、JR北海道の運行見込みをAIで予測するサービスです（テストデータにおいて94%の精度を達成した予測モデルを使用しています）。
                             <span className="font-bold text-red-600">JR北海道公式の情報ではありません。</span>
                             正確な運行状況については、必ずJR北海道の公式サイトをご確認ください。
                         </p>
@@ -67,8 +67,20 @@ export default function TermsOfService() {
                         </p>
                     </section>
 
+                    <section>
+                        <h2 className="text-lg font-bold mb-3 border-b pb-1">6. データソースについて</h2>
+                        <p>
+                            当サービスは以下の外部データを利用しています。いずれも各提供元の公式サービスではなく、当サービスが独自に解析・加工したものです。
+                        </p>
+                        <ul className="list-disc pl-5 mt-2 space-y-1 text-[var(--muted)]">
+                            <li>JR北海道が公開する運行情報（当サービスはJR北海道とは一切関係のない第三者サービスです）</li>
+                            <li>Open-Meteo API による気象予報データ（CC BY 4.0ライセンス）</li>
+                            <li>ユーザーからの自主的な状況報告</li>
+                        </ul>
+                    </section>
+
                     <div className="pt-4 text-right text-xs text-[var(--muted)]">
-                        2026年2月21日 改定
+                        2026年2月25日 改定
                     </div>
                 </div>
             </div>

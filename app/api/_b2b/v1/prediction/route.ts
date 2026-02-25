@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey } from '@/lib/b2b-auth';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine';
@@ -20,8 +21,8 @@ export async function GET(req: NextRequest) {
 
     try {
         const now = new Date();
-        const date = now.toISOString().split('T')[0];
-        const time = now.toTimeString().slice(0, 5);
+        const date = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
+        const time = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tokyo' }).format(now);
         const targetDateTime = `${date}T${time}:00`;
 
         // 天気予報を取得
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
             prediction
         });
     } catch (err) {
-        console.error(err);
+        logger.error('B2B prediction error:', err);
         return NextResponse.json({ error: 'Failed to fetch prediction' }, { status: 500 });
     }
 }

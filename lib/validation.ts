@@ -134,20 +134,7 @@ export function isValidProbability(value: unknown): value is number {
     return isValidNumber(value, 0, 100);
 }
 
-// =====================
-// セキュリティ用ユーティリティ
-// =====================
 
-// 簡易的なハッシュ生成（プライバシー保護用）
-export function hashString(input: string): string {
-    let hash = 0;
-    for (let i = 0; i < input.length; i++) {
-        const char = input.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // 32bit整数に変換
-    }
-    return Math.abs(hash).toString(36);
-}
 
 // =====================
 // レート制限

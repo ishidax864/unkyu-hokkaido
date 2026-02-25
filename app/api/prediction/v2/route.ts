@@ -5,7 +5,7 @@ import { fetchHourlyWeatherForecast } from '@/lib/weather';
 export const dynamic = 'force-dynamic'; // 🆕 Disable caching for real-time predictions
 import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
 import { logger } from '@/lib/logger';
-import { JRStatusItem, PredictionInput, JRStatus, HourlyRiskData } from '@/lib/types';
+import { JRStatusItem, PredictionInput, JRStatus, HourlyRiskData, WeatherForecast } from '@/lib/types';
 import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
 
 import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory } from '@/lib/supabase';
@@ -43,7 +43,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
         if (incidents && incidents.length > 0) {
             const latest = incidents[0];
             const description = latest.status === 'suspended' ? '運休・見合わせが発生しています' : latest.status === 'delayed' ? '遅延が発生しています' : '平常運転';
-            let jrStatus: JRStatusItem = {
+            const jrStatus: JRStatusItem = {
                 routeId,
                 routeName,
                 status: (latest.status === 'delayed' ? 'delay' : latest.status) as JRStatus,
@@ -130,7 +130,7 @@ async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
             return null;
         }
     } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
+        const _msg = e instanceof Error ? e.message : String(e);
         logger.error('JR Status Fetch Error:', e);
         return null;
     }
@@ -140,6 +140,23 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { routeId, date, time, lat, lon } = body;
+
+        // Input validation
+        if (!routeId || typeof routeId !== 'string' || routeId.length > 100) {
+            return NextResponse.json({ error: 'Invalid routeId' }, { status: 400 });
+        }
+        if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return NextResponse.json({ error: 'Invalid date format (expected YYYY-MM-DD)' }, { status: 400 });
+        }
+        if (!time || !/^\d{2}:\d{2}$/.test(time)) {
+            return NextResponse.json({ error: 'Invalid time format (expected HH:MM)' }, { status: 400 });
+        }
+        if (lat != null && (isNaN(Number(lat)) || Number(lat) < -90 || Number(lat) > 90)) {
+            return NextResponse.json({ error: 'Invalid latitude' }, { status: 400 });
+        }
+        if (lon != null && (isNaN(Number(lon)) || Number(lon) < -180 || Number(lon) > 180)) {
+            return NextResponse.json({ error: 'Invalid longitude' }, { status: 400 });
+        }
 
         // Parallel fetch: all data sources at once for minimal latency
         const dateTime = `${date}T${time}:00`;
@@ -220,16 +237,14 @@ export async function POST(req: NextRequest) {
             const checkTime = `${hStr}:00`;
 
             let hourRisk: number;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            let hourWeather: Record<string, any> | null = null;
+            let hourWeather: WeatherForecast | null = null;
             const isTarget = offset === 0;
 
             if (isTarget) {
                 hourRisk = result.probability; // Re-use main result
                 hourWeather = weather;
             } else {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                hourWeather = surroundingWeather.find((sw: Record<string, any>) => {
+                hourWeather = surroundingWeather.find((sw) => {
                     const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
                     return swHour === h;
                 }) || null;

@@ -6,7 +6,6 @@ import {
     Clock,
     Users,
     CheckCircle,
-    MessageSquare,
     ThumbsUp,
     Send
 } from 'lucide-react';

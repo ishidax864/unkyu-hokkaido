@@ -219,7 +219,6 @@ body {
   color: var(--muted);
   margin-bottom: 0.5rem;
   letter-spacing: 0.025em;
-  text-transform: uppercase;
 }
 
 .text-hero {
@@ -313,5 +312,17 @@ span a,
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
   }
 }

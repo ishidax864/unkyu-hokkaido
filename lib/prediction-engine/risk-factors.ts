@@ -425,8 +425,9 @@ const TIME_MULTIPLIERS: Record<string, number> = {
 // 時間帯補正を取得
 export function getTimeMultiplier(time?: string): number {
     if (!time) {
-        const now = new Date();
-        const hour = now.getHours().toString().padStart(2, '0');
+        const hour = new Intl.DateTimeFormat('en-US', {
+            hour: '2-digit', hour12: false, timeZone: 'Asia/Tokyo'
+        }).format(new Date()).padStart(2, '0');
         return TIME_MULTIPLIERS[hour] || 1.0;
     }
     const hour = time.slice(0, 2);

@@ -19,8 +19,7 @@ import {
     MODERATE_SNOW_DEPTH_THRESHOLD,
     MODERATE_SNOW_DEPTH_SCORE,
     CRITICAL_SNOW_DEPTH_THRESHOLD,
-    CRITICAL_SNOW_DEPTH_SCORE,
-    SUSPENSION_SNOW_THRESHOLD // 15cm
+    CRITICAL_SNOW_DEPTH_SCORE
 } from '../constants';
 
 export class SnowStrategy implements RiskFactorStrategy {

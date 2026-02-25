@@ -120,7 +120,7 @@ export async function saveUserReport(report: Omit<UserReport, 'id' | 'expiresAt'
         saveToLocalStorage(newReport);
         return newReport;
     } catch (error) {
-        logger.error('Report API submission failed, falling back to LocalStorage', { error });
+        logger.warn('Report API unavailable, saving to LocalStorage', { error });
         // フォールバック: ローカルストレージに保存
         saveToLocalStorage(newReport);
         return newReport;

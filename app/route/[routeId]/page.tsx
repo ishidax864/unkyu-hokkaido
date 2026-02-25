@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, Wind, CloudSnow, AlertTriangle, Train, MapPin, TrendingUp, Shield, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Wind, CloudSnow, AlertTriangle, Train, MapPin, TrendingUp, Shield } from 'lucide-react';
 import routesData from '@/data/hokkaido-routes.json';
 import { ROUTE_VULNERABILITY, DEFAULT_VULNERABILITY } from '@/lib/prediction-engine/route-config';
 import { notFound } from 'next/navigation';

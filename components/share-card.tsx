@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { PredictionResult } from '@/lib/types';
+import { logger } from '@/lib/logger';
 import { Share2, Copy, Check, Twitter, MessageCircle } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google'; // 🆕
 
@@ -14,8 +15,6 @@ interface ShareCardProps {
 
 export function ShareCard({ prediction, routeName, departureStation, arrivalStation }: ShareCardProps) {
     const [copied, setCopied] = useState(false);
-    const [_showShare, setShowShare] = useState(false);
-    const _cardRef = useRef<HTMLDivElement>(null);
 
     // シェアテキスト生成
     const getShareText = () => {
@@ -46,7 +45,7 @@ https://unkyu-ai.vercel.app
             sendGAEvent('event', 'share', { method: 'copy_clipboard', route: routeName });
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
-            console.error('Failed to copy:', err);
+            logger.error('Failed to copy', { err });
         }
     };
 
@@ -65,11 +64,12 @@ https://unkyu-ai.vercel.app
                 sendGAEvent('event', 'share', { method: 'web_share_api', route: routeName });
             } catch (err) {
                 if ((err as Error).name !== 'AbortError') {
-                    console.error('Share failed:', err);
+                    logger.error('Share failed', { err });
                 }
             }
         } else {
-            setShowShare(true);
+            // Fallback to copy
+            handleCopy();
         }
     };
 

@@ -106,8 +106,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
 
                     const text = await res.text();
                     const cleanJson = text.replace(/^\uFEFF/, '');
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const data = JSON.parse(cleanJson) as any;
+                    const data = JSON.parse(cleanJson) as { today?: { gaikyo?: Array<{ honbun: string }> } };
                     return { name: area.name, id: area.id, data };
                 } catch (e) {
                     logger.error(`Area ${area.name} fetch error:`, e);
@@ -121,8 +120,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
             const { name: areaName, id: areaId, data } = result;
 
             // 概況テキストから運休・遅延を判定
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const gaikyoText = data.today?.gaikyo?.map((g: any) => g.honbun).join(' ') || '';
+            const gaikyoText = data.today?.gaikyo?.map((g: { honbun: string }) => g.honbun).join(' ') || '';
             const cleanGaikyo = gaikyoText.replace(/<[^>]*>/g, ' ');
 
             for (const route of ROUTE_DEFINITIONS) {

@@ -94,7 +94,11 @@ const nextConfig: NextConfig = {
 
     // 本番ビルド最適化
     compiler: {
-        removeConsole: process.env.NODE_ENV === 'production',
+        // Note: logger.ts uses console.info/warn/error internally,
+        // so we only strip debug and log (not info/warn/error)
+        removeConsole: process.env.NODE_ENV === 'production'
+            ? { exclude: ['info', 'warn', 'error'] }
+            : false,
     },
 
     // 出力設定

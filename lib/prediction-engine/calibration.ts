@@ -1,4 +1,4 @@
-import { PredictionInput, VulnerabilityData } from '../types';
+import { PredictionInput, VulnerabilityData, HistoricalMatch } from '../types';
 import { calculateRawRiskScore, determineMaxProbability } from './helpers';
 import { getTimeMultiplier, getSeasonMultiplier } from './risk-factors';
 
@@ -16,8 +16,7 @@ export function applyAdaptiveCalibration(
     probability: number,
     input: PredictionInput,
     vulnerability: VulnerabilityData,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    historicalMatch: any,
+    historicalMatch: HistoricalMatch | null,
     reasons: Array<{ reason: string; priority: number }>,
     isFutureSafe?: boolean // 🆕
 ): CalibrationResult {
@@ -26,7 +25,7 @@ export function applyAdaptiveCalibration(
     }
 
     const now = new Date();
-    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00`);
+    const targetDateTime = new Date(`${input.targetDate}T${input.targetTime}:00+09:00`);
     const hoursFromNow = (targetDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
 
     // Only apply if looking at near future (-1h to 12h)
