@@ -121,10 +121,10 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
             <div className="flex items-start gap-3">
                 <Icon className={`w-6 h-6 flex-shrink-0 mt-0.5 ${status.iconColor}`} />
                 <div className="flex-1">
-                    <div className={`font-bold text-[16px] mb-1.5 leading-tight ${status.textColor}`}>
+                    <div className={`font-black text-[18px] leading-tight ${status.textColor}`}>
                         {status.headline}
                     </div>
-                    <div className={`text-[13px] ${status.textColor} opacity-80`}>
+                    <div className={`text-[12px] mt-1 ${status.textColor} opacity-70`}>
                         {status.message}
                     </div>
                 </div>

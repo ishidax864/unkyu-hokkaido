@@ -257,7 +257,7 @@ function RiskRing({ probability, strokeClass, trackClass, textClass, size = 72 }
                     style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
                 />
             </svg>
-            <span className={cn("absolute text-base font-black", textClass)}>{probability}%</span>
+            <span className={cn("absolute text-xl font-black", textClass)}>{probability}%</span>
         </div>
     );
 }
@@ -292,32 +292,27 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                 {/* ① Header: Route + Risk Ring */}
                 <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
-                        <div>
-                            <p className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">路線状況</p>
-                            <p className="text-[14px] font-bold text-[var(--foreground)]">{route.name}</p>
-                        </div>
+                        <div className="h-8 w-1.5 rounded-full" style={{ backgroundColor: route.color || '#666' }} />
+                        <p className="text-[16px] font-black text-[var(--foreground)] tracking-tight">{route.name}</p>
                     </div>
-                    <div className="flex flex-col items-center gap-0.5">
-                        <RiskRing
-                            probability={result.probability}
-                            strokeClass={v.ringStroke}
-                            trackClass={v.ringTrack}
-                            textClass={v.ringText}
-                        />
-                        <span className="text-[11px] font-bold text-[var(--muted)] tracking-wider">運休リスク</span>
-                    </div>
+                    <RiskRing
+                        probability={result.probability}
+                        strokeClass={v.ringStroke}
+                        trackClass={v.ringTrack}
+                        textClass={v.ringText}
+                        size={88}
+                    />
                 </div>
 
                 {/* ② THE VERDICT */}
                 <div className={cn("rounded-xl p-4 mb-4", v.headerBg)}>
                     <div className="flex items-start gap-3">
-                        <Icon className={cn("w-6 h-6 shrink-0 mt-0.5", v.iconColor)} />
+                        <Icon className={cn("w-7 h-7 shrink-0 mt-0.5", v.iconColor)} />
                         <div>
-                            <h2 className={cn("text-[16px] font-black leading-tight tracking-tight mb-1.5", v.verdictColor)}>
+                            <h2 className={cn("text-[20px] font-black leading-tight tracking-tight mb-1", v.verdictColor)}>
                                 {v.verdict}
                             </h2>
-                            <p className="text-[13px] text-[var(--muted)] leading-relaxed">
+                            <p className="text-[12px] text-[var(--muted)] leading-relaxed">
                                 {v.evidence}
                             </p>
                         </div>

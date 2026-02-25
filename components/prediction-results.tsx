@@ -61,8 +61,8 @@ export function PredictionResults({
             {/* ヘッダー：駅名表示とお気に入り */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-black bg-[var(--foreground)] text-[var(--card)] px-2 py-0.5 rounded leading-none">予測結果</span>
-                    <h2 className="text-[16px] font-black text-[var(--foreground)] leading-none">
+                    <span className="text-[10px] font-black bg-[var(--foreground)] text-[var(--card)] px-2 py-0.5 rounded leading-none">予測結果</span>
+                    <h2 className="text-[20px] font-black text-[var(--foreground)] leading-none tracking-tight">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>
@@ -104,11 +104,8 @@ export function PredictionResults({
 
             {/* 免責注記 */}
             <div className="flex items-start gap-1.5 justify-center -mt-3 mb-1 px-2">
-                <p className="text-[11px] text-[var(--muted)] text-center leading-relaxed">
-                    {prediction.isOfficialOverride
-                        ? '※ JR北海道の公式情報に基づくAI予測です。'
-                        : '※ 本予測はAIによる予測であり、JR北海道の公式情報ではありません。'}
-                    最新の運行情報は
+                <p className="text-[10px] text-[var(--muted)] text-center leading-relaxed opacity-70">
+                    ※ AI予測です。最新情報は
                     <a
                         href="https://www.jrhokkaido.co.jp/train/"
                         target="_blank"

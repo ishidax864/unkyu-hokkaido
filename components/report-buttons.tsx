@@ -105,13 +105,13 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-blue-600" />
-                    <span className="text-xs font-bold text-gray-800">
+                    <span className="text-sm font-black text-gray-800">
                         みんなのリアルタイム報告
                     </span>
                 </div>
                 {totalReports > 0 && (
                     <span className="text-[11px] font-medium text-gray-400">
-                        直近2時間: {totalReports}件
+                        直近2h: {totalReports}件
                     </span>
                 )}
             </div>
@@ -132,9 +132,6 @@ export function ReportButtons({ routeId: _routeId, routeName, onReport, counts }
 
             {/* Report Buttons */}
             <div className="rounded-lg p-3 border border-gray-100 bg-gray-50/50">
-                <div className="text-[11px] font-medium text-gray-500 mb-2 text-center">
-                    あなたの報告が他のユーザーの判断を助けます
-                </div>
                 <div className="grid grid-cols-2 gap-2">
                     {REPORT_OPTIONS.map((option) => {
                         const Icon = option.icon;

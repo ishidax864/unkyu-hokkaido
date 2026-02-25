@@ -67,7 +67,7 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
         <section className="card p-5" aria-labelledby="weekly-forecast-title">
             <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4 text-[var(--muted)]" />
-                <h3 id="weekly-forecast-title" className="text-[14px] font-bold text-[var(--foreground)]">向こう5日間の運休リスク予測</h3>
+                <h3 id="weekly-forecast-title" className="text-base font-black text-[var(--foreground)]">向こう5日間の運休リスク予測</h3>
             </div>
 
             <div className="space-y-4">

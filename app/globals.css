@@ -214,11 +214,11 @@ body {
 
 /* ── P2-5: タイポグラフィ階層 ── */
 .section-label {
-  font-size: var(--text-footnote);
-  font-weight: 600;
-  color: var(--muted);
+  font-size: var(--text-body);
+  font-weight: 800;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
-  letter-spacing: 0.025em;
+  letter-spacing: -0.01em;
 }
 
 .text-hero {
