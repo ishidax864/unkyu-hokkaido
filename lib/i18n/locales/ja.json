@@ -99,7 +99,13 @@
         "riskPercent": "運休の可能性 {{prob}}% — 天候の影響で遅延や一部運休の可能性があります",
         "lowRiskPercent": "運休の可能性 {{prob}}% — 余裕を持って出発してください",
         "lowRiskNote": "運休リスクは低いですが、天候の変化にご注意ください",
-        "veryLowRiskNote": "運休の可能性は非常に低く、安心してご利用いただけます"
+        "veryLowRiskNote": "運休の可能性は非常に低く、安心してご利用いただけます",
+        "futureHighSuspensionRisk": "運休の可能性が高いです",
+        "futureHighRisk": "天候の影響で運休リスクが高まる予報です",
+        "futureDelayLikely": "遅延・一部運休の可能性あり",
+        "futurePartialRisk": "一部区間で運休の可能性があります",
+        "futureDelayPossible": "遅延の可能性があります",
+        "futureDelayNote": "天候の影響で遅延リスクがあります"
     },
     "report": {
         "sectionTitle": "現場の状況を共有",

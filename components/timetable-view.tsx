@@ -23,6 +23,7 @@ interface TimetableViewProps {
     routeStatus: JRStatus;          // 路線全体のステータス
     rawStatusText?: string;         // 生テキスト（一部運休の列車番号パース用）
     isPremium?: boolean;            // 有料ユーザーか
+    isFuture?: boolean;             // 未来日の検索か
 }
 
 // ────────────────────────────────────────
@@ -42,9 +43,24 @@ function getTypeLabel(type: string): { label: string; color: string; bg: string 
 
 function getStatusBadge(
     routeStatus: JRStatus,
+    isFuture = false,
     _rawText?: string,
     _trainId?: string
 ): { label: string; icon: string; color: string; bg: string } {
+    if (isFuture) {
+        // 未来日は「可能性」表記
+        switch (routeStatus) {
+            case 'suspended':
+            case 'cancelled':
+                return { label: '運休リスク高', icon: '⚠️', color: 'text-red-700', bg: 'bg-red-50 border-red-200' };
+            case 'delay':
+                return { label: '遅延の可能性', icon: '📊', color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' };
+            case 'partial':
+                return { label: '一部運休の可能性', icon: '📊', color: 'text-orange-700', bg: 'bg-orange-50 border-orange-200' };
+            default:
+                return { label: '通常予定', icon: '✅', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' };
+        }
+    }
     switch (routeStatus) {
         case 'suspended':
         case 'cancelled':
@@ -74,17 +90,18 @@ function timeToMinutes(time: string): number {
 
 const FREE_VISIBLE_COUNT = 5;
 
-export function TimetableView({ routeStatus, rawStatusText, isPremium = false }: TimetableViewProps) {
+export function TimetableView({ routeStatus, rawStatusText, isPremium = false, isFuture = false }: TimetableViewProps) {
     const { t: _t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
 
     const trains = timetableData.weekday as TimetableEntry[];
     const currentMinutes = getCurrentTimeMinutes();
 
-    // Find the index of the closest upcoming train
+    // Find the index of the closest upcoming train (only for today)
     const nextTrainIndex = useMemo(() => {
+        if (isFuture) return -1;
         return trains.findIndex(train => timeToMinutes(train.dep) >= currentMinutes);
-    }, [trains, currentMinutes]);
+    }, [trains, currentMinutes, isFuture]);
 
     // Show trains centered around current time, or start from beginning if expanded
     const displayTrains = useMemo(() => {
@@ -92,14 +109,14 @@ export function TimetableView({ routeStatus, rawStatusText, isPremium = false }:
             return trains;
         }
 
-        // Show a window of trains around current time
-        const startIdx = Math.max(0, nextTrainIndex - 1);
+        // Show a window of trains around current time (today) or from start (future)
+        const startIdx = isFuture ? 0 : Math.max(0, nextTrainIndex - 1);
         const count = isPremium ? 20 : FREE_VISIBLE_COUNT;
         return trains.slice(startIdx, startIdx + count);
-    }, [trains, nextTrainIndex, isExpanded, isPremium]);
+    }, [trains, nextTrainIndex, isExpanded, isPremium, isFuture]);
 
     const hasMoreTrains = isPremium && !isExpanded && displayTrains.length < trains.length;
-    const statusBadge = getStatusBadge(routeStatus, rawStatusText);
+    const statusBadge = getStatusBadge(routeStatus, isFuture, rawStatusText);
 
     return (
         <section className="card p-4 mt-4">
@@ -121,10 +138,10 @@ export function TimetableView({ routeStatus, rawStatusText, isPremium = false }:
             {/* Train List */}
             <div className="space-y-0 relative">
                 {displayTrains.map((train, index) => {
-                    const isNextTrain = trains.indexOf(train) === nextTrainIndex;
-                    const isPast = timeToMinutes(train.dep) < currentMinutes;
+                    const isNextTrain = !isFuture && trains.indexOf(train) === nextTrainIndex;
+                    const isPast = !isFuture && timeToMinutes(train.dep) < currentMinutes;
                     const typeInfo = getTypeLabel(train.type);
-                    const trainStatus = getStatusBadge(routeStatus, rawStatusText, train.id);
+                    const trainStatus = getStatusBadge(routeStatus, isFuture, rawStatusText, train.id);
 
                     return (
                         <div

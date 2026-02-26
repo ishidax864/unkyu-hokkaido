@@ -101,6 +101,7 @@ export function PredictionResults({
             <PredictionResultCard
                 result={prediction}
                 route={route}
+                isFuture={!isToday}
             />
 
             {/* 免責注記 */}
@@ -130,6 +131,7 @@ export function PredictionResults({
                     <TimetableView
                         routeStatus={routeStatus}
                         rawStatusText={prediction.partialSuspensionText}
+                        isFuture={!isToday}
                     />
                 );
             })()}

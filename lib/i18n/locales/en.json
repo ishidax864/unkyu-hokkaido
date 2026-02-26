@@ -99,7 +99,13 @@
         "riskPercent": "Suspension risk {{prob}}% — Weather may cause delays or partial suspensions",
         "lowRiskPercent": "Suspension risk {{prob}}% — Allow extra time for your journey",
         "lowRiskNote": "Suspension risk is low, but please be aware of weather changes",
-        "veryLowRiskNote": "Suspension risk is very low — safe to travel with confidence"
+        "veryLowRiskNote": "Suspension risk is very low — safe to travel with confidence",
+        "futureHighSuspensionRisk": "High risk of suspension",
+        "futureHighRisk": "Weather forecast indicates increased suspension risk",
+        "futureDelayLikely": "Delays or partial suspensions possible",
+        "futurePartialRisk": "Some sections may be suspended",
+        "futureDelayPossible": "Delays are possible",
+        "futureDelayNote": "Weather conditions may cause delays"
     },
     "report": {
         "sectionTitle": "Share What You See",

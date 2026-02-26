@@ -99,7 +99,13 @@
         "riskPercent": "停运可能性 {{prob}}% — 天气可能导致延误或部分停运",
         "lowRiskPercent": "停运可能性 {{prob}}% — 请预留充足时间",
         "lowRiskNote": "停运风险较低，但请注意天气变化",
-        "veryLowRiskNote": "停运可能性非常低，可以安心出行"
+        "veryLowRiskNote": "停运可能性非常低，可以安心出行",
+        "futureHighSuspensionRisk": "停运可能性较高",
+        "futureHighRisk": "天气预报显示停运风险增加",
+        "futureDelayLikely": "可能出现延误或部分停运",
+        "futurePartialRisk": "部分区间可能停运",
+        "futureDelayPossible": "可能出现延误",
+        "futureDelayNote": "天气条件可能导致延误"
     },
     "report": {
         "sectionTitle": "分享现场状况",

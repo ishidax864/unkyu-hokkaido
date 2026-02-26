@@ -36,7 +36,7 @@ interface VerdictConfig {
     icon: typeof CheckCircle;
 }
 
-function buildVerdict(result: PredictionResult, t: (key: string, params?: Record<string, string | number>) => string): VerdictConfig {
+function buildVerdict(result: PredictionResult, t: (key: string, params?: Record<string, string | number>) => string, isFuture = false): VerdictConfig {
     const prob = result.probability;
     const crowd = result.crowdStats;
     const recoveryTime = result.estimatedRecoveryTime;
@@ -52,18 +52,22 @@ function buildVerdict(result: PredictionResult, t: (key: string, params?: Record
         result.status === 'suspended' || result.status === 'cancelled' ||
         result.status === '運休' || result.status === '運休中') {
 
-        if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1 && !isFuture)
             evidenceParts.push(t('verdict.confirmedOnSite', { count: crowd.last15minStopped }));
         if (result.suspensionReason)
             evidenceParts.push(result.suspensionReason);
-        if (recoveryTime)
+        if (isFuture) {
+            evidenceParts.push(t('verdict.futureHighRisk'));
+        } else if (recoveryTime)
             evidenceParts.push(t('verdict.recoveryEstimate', { time: recoveryTime, label: recoveryLabel }));
         else
             evidenceParts.push(t('verdict.recoveryNotScheduled'));
 
         // サブ分岐: 復旧時間に応じたverdict
         let verdict: string;
-        if (recoveryTime?.includes('終日')) {
+        if (isFuture) {
+            verdict = t('verdict.futureHighSuspensionRisk');
+        } else if (recoveryTime?.includes('終日')) {
             verdict = t('verdict.allDaySuspended');
         } else if (recoveryHours !== undefined && recoveryHours <= 0.5) {
             verdict = t('verdict.recoveringSoon');
@@ -97,18 +101,20 @@ function buildVerdict(result: PredictionResult, t: (key: string, params?: Record
     // ── HIGH ──
     if (prob >= 50 || result.isPartialSuspension) {
         if (result.isPartialSuspension)
-            evidenceParts.push('一部の列車が停止中');
-        if (crowd?.last15minStopped && crowd.last15minStopped >= 1)
+            evidenceParts.push(isFuture ? t('verdict.futurePartialRisk') : '一部の列車が停止中');
+        if (crowd?.last15minStopped && crowd.last15minStopped >= 1 && !isFuture)
             evidenceParts.push(t('verdict.confirmedOnSite', { count: crowd.last15minStopped }));
-        else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
+        else if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1 && !isFuture)
             evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
-        if (recoveryTime)
+        if (recoveryTime && !isFuture)
             evidenceParts.push(t('verdict.recoveryEstimate', { time: recoveryTime, label: recoveryLabel }));
 
         // サブ分岐: 部分運休 vs 高リスク
-        const verdict = result.isPartialSuspension
-            ? t('verdict.partialRunning')
-            : t('verdict.takeEarlier');
+        const verdict = isFuture
+            ? t('verdict.futureDelayLikely')
+            : result.isPartialSuspension
+                ? t('verdict.partialRunning')
+                : t('verdict.takeEarlier');
 
         return {
             level: 'HIGH',
@@ -133,15 +139,20 @@ function buildVerdict(result: PredictionResult, t: (key: string, params?: Record
 
     // ── POST-RECOVERY ──
     if (result.isPostRecoveryWindow) {
-        evidenceParts.push(t('verdict.scheduleDisrupted'));
-        if (recoveryTime) evidenceParts.push(t('verdict.resumedAt', { time: recoveryTime, label: recoveryLabel }));
-        if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
-            evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
+        if (!isFuture) {
+            evidenceParts.push(t('verdict.scheduleDisrupted'));
+            if (recoveryTime) evidenceParts.push(t('verdict.resumedAt', { time: recoveryTime, label: recoveryLabel }));
+            if (crowd?.last15minDelayed && crowd.last15minDelayed >= 1)
+                evidenceParts.push(t('verdict.delayReported', { count: crowd.last15minDelayed }));
+        } else {
+            evidenceParts.push(t('verdict.futureDelayNote'));
+        }
 
-        // サブ分岐: 復旧からの経過時間
-        const verdict = (recoveryHours !== undefined && recoveryHours >= 1)
-            ? t('verdict.almostRecovered')
-            : t('verdict.delayWarning');
+        const verdict = isFuture
+            ? t('verdict.futureDelayPossible')
+            : (recoveryHours !== undefined && recoveryHours >= 1)
+                ? t('verdict.almostRecovered')
+                : t('verdict.delayWarning');
 
         return {
             level: 'CAUTION',
@@ -270,13 +281,14 @@ function RiskRing({ probability, strokeClass, trackClass, textClass, size = 72 }
 interface PredictionResultCardProps {
     result: PredictionResult;
     route: Route;
+    isFuture?: boolean;
 }
 
-export function PredictionResultCard({ result, route }: PredictionResultCardProps) {
+export function PredictionResultCard({ result, route, isFuture = false }: PredictionResultCardProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const { t } = useTranslation();
 
-    const v = buildVerdict(result, t);
+    const v = buildVerdict(result, t, isFuture);
     const Icon = v.icon;
 
     const hasOfficialInfo = !!result.officialStatus?.rawText?.trim();
@@ -342,8 +354,10 @@ export function PredictionResultCard({ result, route }: PredictionResultCardProp
                     {result.estimatedRecoveryTime && (
                         <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border", v.pillBg, v.pillText, v.pillBorder)}>
                             <Clock className="w-3 h-3" />
-                            {result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {result.estimatedRecoveryTime}
-                            <span className="text-[11px] font-medium opacity-70">（{result.isOfficialOverride ? '公式発表' : 'AI予測'}）</span>
+                            {isFuture ? '遅延リスク' : result.isPostRecoveryWindow ? '復旧済み' : '復旧見込'} {isFuture ? '' : result.estimatedRecoveryTime}
+                            {!isFuture && (
+                                <span className="text-[11px] font-medium opacity-70">（{result.isOfficialOverride ? '公式発表' : 'AI予測'}）</span>
+                            )}
                         </span>
                     )}
                     {result.crowdStats && result.crowdStats.last15minReportCount > 0 && (
