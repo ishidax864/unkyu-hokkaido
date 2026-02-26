@@ -11,7 +11,7 @@ import { sanitizeString, isValidReportType as validateReportType } from '@/lib/v
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { routeId, reportType, comment } = body;
+        const { routeId, reportType, comment, trainId } = body;
 
         // Validation using helpers
         if (!isNonEmptyString(routeId) || !isNonEmptyString(reportType)) {
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         const result = await saveReportToSupabase({
             route_id: routeId,
             report_type: dbReportType,
+            train_id: trainId || undefined,
             comment: sanitizedComment,
             ip_hash: ipHash
         });

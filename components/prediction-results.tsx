@@ -27,7 +27,7 @@ interface PredictionResultsProps {
     timeShiftSuggestion: TimeShiftSuggestion | null;
     weeklyPredictions: PredictionResult[];
     weather: WeatherForecast[];
-    handleReport: (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string) => void;
+    handleReport: (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string, trainId?: string) => void;
     isFavorite: (depId: string, arrId: string) => boolean;
     addFavorite: (depId: string, arrId: string, depName: string, arrName: string) => void;
     removeFavorite: (id: string) => void;
@@ -132,6 +132,7 @@ export function PredictionResults({
                         routeStatus={routeStatus}
                         rawStatusText={prediction.partialSuspensionText}
                         isFuture={!isToday}
+                        onTrainReport={isToday ? (trainId, type) => handleReport(type, undefined, trainId) : undefined}
                     />
                 );
             })()}

@@ -94,6 +94,7 @@ export interface UserReportDB {
     id?: string;
     route_id: string;
     report_type: 'stopped' | 'delayed' | 'crowded' | 'normal';
+    train_id?: string;
     comment?: string;
     created_at?: string;
     ip_hash?: string;

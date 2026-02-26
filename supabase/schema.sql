@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS user_reports (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     route_id TEXT NOT NULL,
     report_type TEXT NOT NULL CHECK (report_type IN ('stopped', 'delayed', 'crowded', 'normal')),
+    train_id TEXT,               -- 🆕 列車番号（NULLなら路線レベル報告）
     comment TEXT,
     ip_hash TEXT,
     is_verified BOOLEAN DEFAULT FALSE, -- 🆕 管理者による確認済みフラグ

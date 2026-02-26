@@ -87,7 +87,7 @@ export default function Home() {
   };
 
   // ユーザー報告を保存（Supabase優先、ローカルストレージにフォールバック）
-  const handleReport = async (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string) => {
+  const handleReport = async (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string, trainId?: string) => {
     if (!selectedRouteId) return;
 
     const reportLabels = { stopped: '運休', delayed: '遅延', crowded: '混雑', normal: '通常運行' };
@@ -95,6 +95,7 @@ export default function Home() {
       await saveUserReport({
         routeId: selectedRouteId,
         reportType: type,
+        trainId,
         comment,
         createdAt: new Date().toISOString(),
       });

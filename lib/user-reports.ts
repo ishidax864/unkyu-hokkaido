@@ -17,6 +17,7 @@ export interface UserReport {
     id: string;
     routeId: string;
     reportType: ReportType;
+    trainId?: string;
     comment?: string;
     createdAt: string;
     expiresAt: string;
@@ -107,6 +108,7 @@ export async function saveUserReport(report: Omit<UserReport, 'id' | 'expiresAt'
             body: JSON.stringify({
                 routeId: report.routeId,
                 reportType: report.reportType,
+                trainId: report.trainId,
                 comment: report.comment
             }),
         });
