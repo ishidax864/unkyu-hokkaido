@@ -1,6 +1,6 @@
 'use client';
 
-import { PredictionResult, HourlyRiskData, WeatherForecast, PredictionInput, TimeShiftSuggestion } from '@/lib/types';
+import { PredictionResult, HourlyRiskData, WeatherForecast, PredictionInput, TimeShiftSuggestion, JRStatus } from '@/lib/types';
 import { Station, getRouteById } from '@/lib/hokkaido-data';
 import { getHotelsForStation } from '@/lib/hotel-data';
 import { PredictionResultCard } from './prediction-result';
@@ -10,6 +10,7 @@ import { ReportButtons } from './report-buttons';
 import { AlternativeRoutes } from './alternative-routes';
 import { HotelSuggestions } from './hotel-suggestions';
 import { WeeklyForecastChart } from './weekly-forecast';
+import { TimetableView } from './timetable-view';
 import { Star, ArrowUp } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { useTranslation } from '@/lib/i18n';
@@ -117,6 +118,21 @@ export function PredictionResults({
                     をご確認ください。
                 </p>
             </div>
+
+            {/* 時刻表 (MVP: 千歳線のみ) */}
+            {selectedRouteId.includes('chitose') && (() => {
+                const routeStatus: JRStatus = prediction.isCurrentlySuspended ? 'suspended'
+                    : prediction.isPartialSuspension ? 'partial'
+                        : prediction.probability >= 80 ? 'suspended'
+                            : prediction.probability >= 40 ? 'delay'
+                                : 'normal';
+                return (
+                    <TimetableView
+                        routeStatus={routeStatus}
+                        rawStatusText={prediction.partialSuspensionText}
+                    />
+                );
+            })()}
 
             {/* P1-3: SNSシェア — 結果直後に配置して感情的なシェアを促進 */}
             <ShareCard

@@ -1,0 +1,654 @@
+{
+    "route": "chitose-line",
+    "routeName": "千歳線",
+    "section": {
+        "from": "sapporo",
+        "to": "shin-chitose-airport",
+        "fromName": "札幌",
+        "toName": "新千歳空港"
+    },
+    "lastUpdated": "2026-02-26",
+    "nextRevision": "2026-03-14",
+    "weekday": [
+        {
+            "id": "AP14",
+            "name": "エアポート14号",
+            "type": "rapid",
+            "dep": "06:16",
+            "arr": "06:55",
+            "duration": 39
+        },
+        {
+            "id": "AP16",
+            "name": "エアポート16号",
+            "type": "rapid",
+            "dep": "06:29",
+            "arr": "07:09",
+            "duration": 40
+        },
+        {
+            "id": "AP18",
+            "name": "エアポート18号",
+            "type": "rapid",
+            "dep": "06:42",
+            "arr": "07:20",
+            "duration": 38
+        },
+        {
+            "id": "AP20",
+            "name": "特別快速エアポート20号",
+            "type": "special_rapid",
+            "dep": "06:57",
+            "arr": "07:30",
+            "duration": 33
+        },
+        {
+            "id": "AP22",
+            "name": "エアポート22号",
+            "type": "rapid",
+            "dep": "07:07",
+            "arr": "07:45",
+            "duration": 38
+        },
+        {
+            "id": "AP24",
+            "name": "エアポート24号",
+            "type": "rapid",
+            "dep": "07:21",
+            "arr": "07:59",
+            "duration": 38
+        },
+        {
+            "id": "AP26",
+            "name": "エアポート26号",
+            "type": "rapid",
+            "dep": "07:34",
+            "arr": "08:12",
+            "duration": 38
+        },
+        {
+            "id": "AP28",
+            "name": "エアポート28号",
+            "type": "rapid",
+            "dep": "07:48",
+            "arr": "08:26",
+            "duration": 38
+        },
+        {
+            "id": "AP30",
+            "name": "特別快速エアポート30号",
+            "type": "special_rapid",
+            "dep": "08:02",
+            "arr": "08:37",
+            "duration": 35
+        },
+        {
+            "id": "AP32",
+            "name": "エアポート32号",
+            "type": "rapid",
+            "dep": "08:08",
+            "arr": "08:47",
+            "duration": 39
+        },
+        {
+            "id": "AP34",
+            "name": "区間快速エアポート34号",
+            "type": "semi_rapid",
+            "dep": "08:22",
+            "arr": "09:02",
+            "duration": 40
+        },
+        {
+            "id": "AP36",
+            "name": "エアポート36号",
+            "type": "rapid",
+            "dep": "08:32",
+            "arr": "09:10",
+            "duration": 38
+        },
+        {
+            "id": "AP38",
+            "name": "区間快速エアポート38号",
+            "type": "semi_rapid",
+            "dep": "08:46",
+            "arr": "09:27",
+            "duration": 41
+        },
+        {
+            "id": "AP40",
+            "name": "エアポート40号",
+            "type": "rapid",
+            "dep": "09:00",
+            "arr": "09:38",
+            "duration": 38
+        },
+        {
+            "id": "AP42",
+            "name": "区間快速エアポート42号",
+            "type": "semi_rapid",
+            "dep": "09:04",
+            "arr": "09:45",
+            "duration": 41
+        },
+        {
+            "id": "AP44",
+            "name": "特別快速エアポート44号",
+            "type": "special_rapid",
+            "dep": "09:14",
+            "arr": "09:47",
+            "duration": 33
+        },
+        {
+            "id": "AP46",
+            "name": "エアポート46号",
+            "type": "rapid",
+            "dep": "09:24",
+            "arr": "10:02",
+            "duration": 38
+        },
+        {
+            "id": "AP48",
+            "name": "区間快速エアポート48号",
+            "type": "semi_rapid",
+            "dep": "09:34",
+            "arr": "10:15",
+            "duration": 41
+        },
+        {
+            "id": "AP50",
+            "name": "エアポート50号",
+            "type": "rapid",
+            "dep": "09:47",
+            "arr": "10:25",
+            "duration": 38
+        },
+        {
+            "id": "AP52",
+            "name": "区間快速エアポート52号",
+            "type": "semi_rapid",
+            "dep": "10:04",
+            "arr": "10:45",
+            "duration": 41
+        },
+        {
+            "id": "AP54",
+            "name": "特別快速エアポート54号",
+            "type": "special_rapid",
+            "dep": "10:14",
+            "arr": "10:47",
+            "duration": 33
+        },
+        {
+            "id": "AP56",
+            "name": "エアポート56号",
+            "type": "rapid",
+            "dep": "10:24",
+            "arr": "11:02",
+            "duration": 38
+        },
+        {
+            "id": "AP58",
+            "name": "区間快速エアポート58号",
+            "type": "semi_rapid",
+            "dep": "10:34",
+            "arr": "11:15",
+            "duration": 41
+        },
+        {
+            "id": "AP60",
+            "name": "エアポート60号",
+            "type": "rapid",
+            "dep": "10:47",
+            "arr": "11:25",
+            "duration": 38
+        },
+        {
+            "id": "AP62",
+            "name": "区間快速エアポート62号",
+            "type": "semi_rapid",
+            "dep": "11:04",
+            "arr": "11:45",
+            "duration": 41
+        },
+        {
+            "id": "AP64",
+            "name": "特別快速エアポート64号",
+            "type": "special_rapid",
+            "dep": "11:14",
+            "arr": "11:47",
+            "duration": 33
+        },
+        {
+            "id": "AP66",
+            "name": "エアポート66号",
+            "type": "rapid",
+            "dep": "11:24",
+            "arr": "12:02",
+            "duration": 38
+        },
+        {
+            "id": "AP68",
+            "name": "区間快速エアポート68号",
+            "type": "semi_rapid",
+            "dep": "11:34",
+            "arr": "12:15",
+            "duration": 41
+        },
+        {
+            "id": "AP70",
+            "name": "エアポート70号",
+            "type": "rapid",
+            "dep": "11:47",
+            "arr": "12:25",
+            "duration": 38
+        },
+        {
+            "id": "AP72",
+            "name": "区間快速エアポート72号",
+            "type": "semi_rapid",
+            "dep": "12:04",
+            "arr": "12:45",
+            "duration": 41
+        },
+        {
+            "id": "AP74",
+            "name": "特別快速エアポート74号",
+            "type": "special_rapid",
+            "dep": "12:14",
+            "arr": "12:47",
+            "duration": 33
+        },
+        {
+            "id": "AP76",
+            "name": "エアポート76号",
+            "type": "rapid",
+            "dep": "12:24",
+            "arr": "13:02",
+            "duration": 38
+        },
+        {
+            "id": "AP78",
+            "name": "区間快速エアポート78号",
+            "type": "semi_rapid",
+            "dep": "12:34",
+            "arr": "13:15",
+            "duration": 41
+        },
+        {
+            "id": "AP80",
+            "name": "エアポート80号",
+            "type": "rapid",
+            "dep": "12:47",
+            "arr": "13:25",
+            "duration": 38
+        },
+        {
+            "id": "AP82",
+            "name": "区間快速エアポート82号",
+            "type": "semi_rapid",
+            "dep": "13:04",
+            "arr": "13:45",
+            "duration": 41
+        },
+        {
+            "id": "AP84",
+            "name": "特別快速エアポート84号",
+            "type": "special_rapid",
+            "dep": "13:14",
+            "arr": "13:47",
+            "duration": 33
+        },
+        {
+            "id": "AP86",
+            "name": "エアポート86号",
+            "type": "rapid",
+            "dep": "13:24",
+            "arr": "14:02",
+            "duration": 38
+        },
+        {
+            "id": "AP88",
+            "name": "区間快速エアポート88号",
+            "type": "semi_rapid",
+            "dep": "13:34",
+            "arr": "14:15",
+            "duration": 41
+        },
+        {
+            "id": "AP90",
+            "name": "エアポート90号",
+            "type": "rapid",
+            "dep": "13:47",
+            "arr": "14:25",
+            "duration": 38
+        },
+        {
+            "id": "AP92",
+            "name": "区間快速エアポート92号",
+            "type": "semi_rapid",
+            "dep": "14:04",
+            "arr": "14:45",
+            "duration": 41
+        },
+        {
+            "id": "AP94",
+            "name": "特別快速エアポート94号",
+            "type": "special_rapid",
+            "dep": "14:14",
+            "arr": "14:47",
+            "duration": 33
+        },
+        {
+            "id": "AP96",
+            "name": "エアポート96号",
+            "type": "rapid",
+            "dep": "14:24",
+            "arr": "15:02",
+            "duration": 38
+        },
+        {
+            "id": "AP98",
+            "name": "区間快速エアポート98号",
+            "type": "semi_rapid",
+            "dep": "14:34",
+            "arr": "15:15",
+            "duration": 41
+        },
+        {
+            "id": "AP100",
+            "name": "エアポート100号",
+            "type": "rapid",
+            "dep": "14:47",
+            "arr": "15:25",
+            "duration": 38
+        },
+        {
+            "id": "AP102",
+            "name": "区間快速エアポート102号",
+            "type": "semi_rapid",
+            "dep": "15:04",
+            "arr": "15:45",
+            "duration": 41
+        },
+        {
+            "id": "AP104",
+            "name": "特別快速エアポート104号",
+            "type": "special_rapid",
+            "dep": "15:14",
+            "arr": "15:47",
+            "duration": 33
+        },
+        {
+            "id": "AP106",
+            "name": "エアポート106号",
+            "type": "rapid",
+            "dep": "15:24",
+            "arr": "16:02",
+            "duration": 38
+        },
+        {
+            "id": "AP108",
+            "name": "区間快速エアポート108号",
+            "type": "semi_rapid",
+            "dep": "15:34",
+            "arr": "16:15",
+            "duration": 41
+        },
+        {
+            "id": "AP110",
+            "name": "エアポート110号",
+            "type": "rapid",
+            "dep": "15:47",
+            "arr": "16:25",
+            "duration": 38
+        },
+        {
+            "id": "AP112",
+            "name": "区間快速エアポート112号",
+            "type": "semi_rapid",
+            "dep": "16:04",
+            "arr": "16:45",
+            "duration": 41
+        },
+        {
+            "id": "AP114",
+            "name": "特別快速エアポート114号",
+            "type": "special_rapid",
+            "dep": "16:14",
+            "arr": "16:47",
+            "duration": 33
+        },
+        {
+            "id": "AP116",
+            "name": "エアポート116号",
+            "type": "rapid",
+            "dep": "16:24",
+            "arr": "17:02",
+            "duration": 38
+        },
+        {
+            "id": "AP118",
+            "name": "区間快速エアポート118号",
+            "type": "semi_rapid",
+            "dep": "16:34",
+            "arr": "17:15",
+            "duration": 41
+        },
+        {
+            "id": "AP120",
+            "name": "エアポート120号",
+            "type": "rapid",
+            "dep": "16:47",
+            "arr": "17:25",
+            "duration": 38
+        },
+        {
+            "id": "AP130",
+            "name": "区間快速エアポート130号",
+            "type": "semi_rapid",
+            "dep": "17:04",
+            "arr": "17:45",
+            "duration": 41
+        },
+        {
+            "id": "AP132",
+            "name": "特別快速エアポート132号",
+            "type": "special_rapid",
+            "dep": "17:14",
+            "arr": "17:47",
+            "duration": 33
+        },
+        {
+            "id": "AP134",
+            "name": "エアポート134号",
+            "type": "rapid",
+            "dep": "17:24",
+            "arr": "18:02",
+            "duration": 38
+        },
+        {
+            "id": "AP140",
+            "name": "エアポート140号",
+            "type": "rapid",
+            "dep": "17:34",
+            "arr": "18:12",
+            "duration": 38
+        },
+        {
+            "id": "AP142",
+            "name": "エアポート142号",
+            "type": "rapid",
+            "dep": "17:47",
+            "arr": "18:25",
+            "duration": 38
+        },
+        {
+            "id": "AP150",
+            "name": "区間快速エアポート150号",
+            "type": "semi_rapid",
+            "dep": "18:04",
+            "arr": "18:45",
+            "duration": 41
+        },
+        {
+            "id": "AP152",
+            "name": "特別快速エアポート152号",
+            "type": "special_rapid",
+            "dep": "18:14",
+            "arr": "18:47",
+            "duration": 33
+        },
+        {
+            "id": "AP154",
+            "name": "エアポート154号",
+            "type": "rapid",
+            "dep": "18:24",
+            "arr": "19:02",
+            "duration": 38
+        },
+        {
+            "id": "AP160",
+            "name": "エアポート160号",
+            "type": "rapid",
+            "dep": "18:34",
+            "arr": "19:12",
+            "duration": 38
+        },
+        {
+            "id": "AP162",
+            "name": "エアポート162号",
+            "type": "rapid",
+            "dep": "18:47",
+            "arr": "19:25",
+            "duration": 38
+        },
+        {
+            "id": "AP164",
+            "name": "エアポート164号",
+            "type": "rapid",
+            "dep": "19:00",
+            "arr": "19:38",
+            "duration": 38
+        },
+        {
+            "id": "AP166",
+            "name": "エアポート166号",
+            "type": "rapid",
+            "dep": "19:11",
+            "arr": "19:49",
+            "duration": 38
+        },
+        {
+            "id": "AP168",
+            "name": "エアポート168号",
+            "type": "rapid",
+            "dep": "19:24",
+            "arr": "20:02",
+            "duration": 38
+        },
+        {
+            "id": "AP170",
+            "name": "エアポート170号",
+            "type": "rapid",
+            "dep": "19:36",
+            "arr": "20:14",
+            "duration": 38
+        },
+        {
+            "id": "AP172",
+            "name": "エアポート172号",
+            "type": "rapid",
+            "dep": "19:50",
+            "arr": "20:28",
+            "duration": 38
+        },
+        {
+            "id": "AP174",
+            "name": "特別快速エアポート174号",
+            "type": "special_rapid",
+            "dep": "20:02",
+            "arr": "20:35",
+            "duration": 33
+        },
+        {
+            "id": "AP176",
+            "name": "エアポート176号",
+            "type": "rapid",
+            "dep": "20:15",
+            "arr": "20:53",
+            "duration": 38
+        },
+        {
+            "id": "AP178",
+            "name": "エアポート178号",
+            "type": "rapid",
+            "dep": "20:30",
+            "arr": "21:08",
+            "duration": 38
+        },
+        {
+            "id": "AP180",
+            "name": "エアポート180号",
+            "type": "rapid",
+            "dep": "20:47",
+            "arr": "21:25",
+            "duration": 38
+        },
+        {
+            "id": "AP182",
+            "name": "エアポート182号",
+            "type": "rapid",
+            "dep": "21:00",
+            "arr": "21:39",
+            "duration": 39
+        },
+        {
+            "id": "AP184",
+            "name": "エアポート184号",
+            "type": "rapid",
+            "dep": "21:17",
+            "arr": "21:56",
+            "duration": 39
+        },
+        {
+            "id": "AP186",
+            "name": "エアポート186号",
+            "type": "rapid",
+            "dep": "21:35",
+            "arr": "22:14",
+            "duration": 39
+        },
+        {
+            "id": "AP188",
+            "name": "エアポート188号",
+            "type": "rapid",
+            "dep": "21:52",
+            "arr": "22:31",
+            "duration": 39
+        },
+        {
+            "id": "AP190",
+            "name": "エアポート190号",
+            "type": "rapid",
+            "dep": "22:10",
+            "arr": "22:49",
+            "duration": 39
+        },
+        {
+            "id": "AP192",
+            "name": "エアポート192号",
+            "type": "rapid",
+            "dep": "22:30",
+            "arr": "23:10",
+            "duration": 40
+        },
+        {
+            "id": "AP194",
+            "name": "エアポート194号",
+            "type": "rapid",
+            "dep": "22:53",
+            "arr": "23:32",
+            "duration": 39
+        }
+    ]
+}
