@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
-import { ArrowRight, ArrowUpDown, Calendar, Clock, Zap } from 'lucide-react';
+import { ArrowUpDown, Calendar, Clock, Zap } from 'lucide-react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
 import { StationSelector } from './station-selector';
 import { useTranslation } from '@/lib/i18n';
@@ -53,7 +53,7 @@ export function SearchForm({
     const [isArrivalOpen, setIsArrivalOpen] = useState(false);
     const [depQuery, setDepQuery] = useState('');
     const [arrQuery, setArrQuery] = useState('');
-    const [showError, setShowError] = useState(false);
+
     const { t, locale } = useTranslation();
 
     const sn = (station: Station) => getLocalizedStationName(station, locale);
@@ -78,41 +78,6 @@ export function SearchForm({
         }
     };
 
-    const setCurrentDateTime = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const dateStr = `${year}-${month}-${day}`;
-        const timeStr = now.toTimeString().slice(0, 5);
-
-        setDate(dateStr);
-        setTime(timeStr);
-
-
-        sendGAEvent('event', 'search_current_location', {
-            is_valid_search: (!!departureStation && !!arrivalStation).toString()
-        });
-
-        if (departureStation) setDepQuery(sn(departureStation));
-        if (arrivalStation) setArrQuery(sn(arrivalStation));
-
-        if (departureStation && arrivalStation) {
-            sendGAEvent('event', 'search_prediction', {
-                departure: departureStation.name,
-                arrival: arrivalStation.name,
-                date: dateStr,
-                time: timeStr,
-                timeType: 'departure',
-                trigger: 'current_btn'
-            });
-            onSearch(departureStation.id, arrivalStation.id, dateStr, timeStr);
-            setShowError(false);
-        } else {
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
-        }
-    };
 
     // バリデーション：日付が範囲内か
     const isDateValid = (dateStr: string) => {
@@ -252,11 +217,6 @@ export function SearchForm({
                 </div>
 
 
-                {showError && (
-                    <p className="text-[11px] text-red-500 text-center animate-in fade-in slide-in-from-top-1 font-bold">
-                        ※出発駅と到着駅を選択してください
-                    </p>
-                )}
             </div>
 
             {/* 予測ボタン */}

@@ -17,7 +17,14 @@ const LOCALE_FLAGS: Record<Locale, string> = {
 export function LanguageSwitcher() {
     const { locale, setLocale } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
-    const [shouldPulse, setShouldPulse] = useState(false);
+    // Pulse animation for first-time visitors to draw attention
+    const [shouldPulse, setShouldPulse] = useState(() => {
+        try {
+            return !localStorage.getItem('unkyu-lang-used');
+        } catch {
+            return false;
+        }
+    });
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -28,14 +35,6 @@ export function LanguageSwitcher() {
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    // Pulse animation for first-time visitors to draw attention
-    useEffect(() => {
-        const hasUsedSwitcher = localStorage.getItem('unkyu-lang-used');
-        if (!hasUsedSwitcher) {
-            setShouldPulse(true);
-        }
     }, []);
 
     const handleSelect = (l: Locale) => {

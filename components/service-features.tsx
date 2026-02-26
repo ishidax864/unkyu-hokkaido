@@ -134,18 +134,27 @@ function AccuracyRing() {
 
 /* ─── メインコンポーネント ─── */
 export function ServiceFeatures() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isReturningUser, setIsReturningUser] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        try {
+            return !!localStorage.getItem(STORAGE_KEY);
+        } catch {
+            return false;
+        }
+    });
+    const [isReturningUser] = useState(() => {
+        try {
+            return !!localStorage.getItem(STORAGE_KEY);
+        } catch {
+            return false;
+        }
+    });
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
     const { t } = useTranslation();
 
+    // Mark as visited on first render
     useEffect(() => {
         try {
-            const v = localStorage.getItem(STORAGE_KEY);
-            if (v) {
-                setIsCollapsed(true);
-                setIsReturningUser(true);
-            } else {
+            if (!localStorage.getItem(STORAGE_KEY)) {
                 localStorage.setItem(STORAGE_KEY, 'true');
             }
         } catch {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { Locale } from './types';
 import { DEFAULT_LOCALE } from './types';
 
@@ -30,14 +30,15 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string | un
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
-
-    useEffect(() => {
-        const saved = localStorage.getItem('unkyu-locale') as Locale | null;
-        if (saved && dictionaries[saved]) {
-            setLocaleState(saved);
+    const [locale, setLocaleState] = useState<Locale>(() => {
+        try {
+            const saved = localStorage.getItem('unkyu-locale') as Locale | null;
+            if (saved && dictionaries[saved]) return saved;
+        } catch {
+            /* SSR or localStorage unavailable */
         }
-    }, []);
+        return DEFAULT_LOCALE;
+    });
 
     const setLocale = useCallback((newLocale: Locale) => {
         setLocaleState(newLocale);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cloud, Database, Radio, TrendingUp, CheckCircle } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 
@@ -8,24 +8,17 @@ interface ProgressiveLoadingProps {
     isLoading: boolean;
 }
 
-const ANALYSIS_STEPS = [
-    { id: 1, label: '気象データを解析中...', icon: Cloud, duration: 800 },
-    { id: 2, label: '過去の運休パターンと照合中...', icon: Database, duration: 1000 },
-    { id: 3, label: 'JR公式情報を確認中...', icon: Radio, duration: 600 },
-    { id: 4, label: '最終リスク予測中...', icon: TrendingUp, duration: 700 },
-];
-
 export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
     const [currentStep, setCurrentStep] = useState(0);
     const [completedSteps, setCompletedSteps] = useState<number[]>([]);
     const { t } = useTranslation();
 
-    const STEPS = [
+    const STEPS = useMemo(() => [
         { id: 1, label: t('progressive.step1'), icon: Cloud, duration: 800 },
         { id: 2, label: t('progressive.step2'), icon: Database, duration: 1000 },
         { id: 3, label: t('progressive.step3'), icon: Radio, duration: 600 },
         { id: 4, label: t('progressive.step4'), icon: TrendingUp, duration: 700 },
-    ];
+    ], [t]);
 
     useEffect(() => {
         if (!isLoading) {
@@ -56,7 +49,7 @@ export function ProgressiveLoading({ isLoading }: ProgressiveLoadingProps) {
         return () => {
             timers.forEach(timer => clearTimeout(timer));
         };
-    }, [isLoading]);
+    }, [isLoading, STEPS]);
 
     if (!isLoading) return null;
 
