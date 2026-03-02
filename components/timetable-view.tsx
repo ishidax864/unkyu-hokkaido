@@ -254,8 +254,8 @@ export function TimetableView({ routeStatus, rawStatusText: _rawStatusText, isPr
                                 {/* Reported badge (if user reported) */}
                                 {hasReported && (
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${hasReported === 'normal' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                                            hasReported === 'delayed' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                                                'bg-red-50 text-red-700 border-red-200'
+                                        hasReported === 'delayed' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                                            'bg-red-50 text-red-700 border-red-200'
                                         }`}>
                                         {hasReported === 'normal' ? '✅' : hasReported === 'delayed' ? '⚠️' : '❌'} 報告済
                                     </span>
@@ -300,13 +300,10 @@ export function TimetableView({ routeStatus, rawStatusText: _rawStatusText, isPr
                 })}
             </div>
 
-            {/* Premium Gate */}
+            {/* Premium Gate - 後で機能追加予定（現在非公開）
             {!isPremium && (
                 <div className="relative mt-2">
-                    {/* Gradient overlay */}
                     <div className="absolute inset-x-0 -top-12 h-12 bg-gradient-to-t from-[var(--card)] to-transparent pointer-events-none z-10" />
-
-                    {/* CTA */}
                     <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-4 text-center text-white shadow-lg">
                         <div className="flex items-center justify-center gap-1.5 mb-1">
                             <Sparkles className="w-4 h-4" />
@@ -327,6 +324,7 @@ export function TimetableView({ routeStatus, rawStatusText: _rawStatusText, isPr
                     </div>
                 </div>
             )}
+            */}
 
             {/* Expand/Collapse for premium users */}
             {hasMoreTrains && (
