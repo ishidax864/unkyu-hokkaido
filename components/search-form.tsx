@@ -155,11 +155,10 @@ export function SearchForm({
                             setArrQuery(departureStation ? sn(departureStation) : '');
                         }}
                         disabled={!departureStation && !arrivalStation}
-                        className="group flex items-center gap-1 px-3 py-1.5 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        className="group p-2 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         aria-label="出発駅と到着駅を入れ替える"
                     >
-                        <ArrowUpDown className="w-3.5 h-3.5 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
-                        <span className="text-[11px] font-medium text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors">{t('search.swap')}</span>
+                        <ArrowUpDown className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
                     </button>
                 </div>
 
