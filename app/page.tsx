@@ -115,18 +115,18 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--background-secondary)]">
       {/* ヘッダー */}
-      <header className="bg-[var(--primary)] text-white px-4 py-3 sm:py-4">
+      <header className="bg-[var(--primary)] text-white px-3 sm:px-4 py-3 sm:py-4">
         <div className="max-w-2xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Train className="w-5 h-5" />
-            <h1 className="text-[16px] font-bold">{t('header.title')}</h1>
-            <span className="text-[11px] opacity-80 ml-1">{t('header.subtitle')}</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Train className="w-5 h-5 shrink-0" />
+            <h1 className="text-[15px] sm:text-[16px] font-bold whitespace-nowrap">{t('header.title')}</h1>
+            <span className="text-[11px] opacity-80 ml-0.5 hidden min-[360px]:inline">{t('header.subtitle')}</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <LanguageSwitcher />
             <div className="text-right">
-              <div className="opacity-80 text-[11px]">{locationName || t('common.hokkaido')}</div>
-              <div className="font-bold text-[14px]">{currentTime}</div>
+              <div className="opacity-80 text-[10px] sm:text-[11px]">{locationName || t('common.hokkaido')}</div>
+              <div className="font-bold text-[13px] sm:text-[14px]">{currentTime}</div>
             </div>
           </div>
         </div>

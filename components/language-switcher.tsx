@@ -48,7 +48,7 @@ export function LanguageSwitcher() {
         <div ref={ref} className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full 
+                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-full 
                     bg-white/20 hover:bg-white/30 backdrop-blur-sm
                     border border-white/40 hover:border-white/60
                     text-white text-[13px] font-bold
@@ -59,7 +59,7 @@ export function LanguageSwitcher() {
             >
                 <Globe className="w-4 h-4" />
                 <span>{LOCALE_FLAGS[locale]}</span>
-                <span>{LOCALE_LABELS[locale]}</span>
+                <span className="hidden min-[375px]:inline">{LOCALE_LABELS[locale]}</span>
             </button>
 
             {isOpen && (
