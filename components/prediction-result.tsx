@@ -449,7 +449,7 @@ export function PredictionResultCard({ result, route, isFuture = false }: Predic
                 </div>
 
                 {/* ⑦ JR Official Link */}
-                <div className="mt-4 pt-3 border-t border-[var(--border)] flex justify-center">
+                <div className="mt-4 pt-3 border-t border-[var(--border)] flex flex-col items-center gap-3">
                     <a
                         href={getJRStatusUrl(route.id).url}
                         target="_blank"
@@ -458,6 +458,9 @@ export function PredictionResultCard({ result, route, isFuture = false }: Predic
                     >
                         JR公式ページで確認 <ExternalLink size={12} />
                     </a>
+                    <p className="text-[10px] text-[var(--muted)] text-center leading-relaxed opacity-70">
+                        ※本予測はAIによるものです。最新情報はJR北海道公式サイトをご確認ください。
+                    </p>
                 </div>
             </div>
         </article>

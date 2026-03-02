@@ -104,22 +104,6 @@ export function PredictionResults({
                 isFuture={!isToday}
             />
 
-            {/* 免責注記 */}
-            <div className="flex items-start gap-1.5 justify-center -mt-3 mb-1 px-2">
-                <p className="text-[10px] text-[var(--muted)] text-center leading-relaxed opacity-70">
-                    ※ AI予測です。最新情報は
-                    <a
-                        href="https://www.jrhokkaido.co.jp/train/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline text-[var(--primary)] hover:opacity-80 ml-0.5 font-medium"
-                    >
-                        JR北海道公式サイト
-                    </a>
-                    をご確認ください。
-                </p>
-            </div>
-
             {/* 時刻表 (MVP: 千歳線のみ) */}
             {selectedRouteId.includes('chitose') && (() => {
                 const routeStatus: JRStatus = prediction.isCurrentlySuspended ? 'suspended'
