@@ -155,7 +155,7 @@ export function SearchForm({
                             setArrQuery(departureStation ? sn(departureStation) : '');
                         }}
                         disabled={!departureStation && !arrivalStation}
-                        className="group p-2 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        className="group flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         aria-label="出発駅と到着駅を入れ替える"
                     >
                         <ArrowUpDown className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
