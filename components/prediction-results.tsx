@@ -174,7 +174,7 @@ export function PredictionResults({
             )}
 
             {/* UX5: Check another route CTA */}
-            <div className="text-center pt-4">
+            <div className="text-center pt-8 mt-2">
                 <button
                     type="button"
                     onClick={() => {
