@@ -8,6 +8,7 @@ import { logger } from '@/lib/logger';
 
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1分
 const MAX_REQUESTS = parseInt(process.env.RATE_LIMIT_REQUESTS || '60', 10);
+const MAX_RATE_LIMIT_ENTRIES = 10000; // メモリリーク防止
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
 
 // =====================
@@ -41,6 +42,11 @@ function isRateLimited(key: string): { limited: boolean; remaining: number } {
     const record = rateLimitMap.get(key);
 
     if (!record) {
+        // メモリ上限超過時は古いエントリを削除
+        if (rateLimitMap.size >= MAX_RATE_LIMIT_ENTRIES) {
+            const oldest = rateLimitMap.keys().next().value;
+            if (oldest) rateLimitMap.delete(oldest);
+        }
         rateLimitMap.set(key, { count: 1, timestamp: now });
         return { limited: false, remaining: MAX_REQUESTS - 1 };
     }

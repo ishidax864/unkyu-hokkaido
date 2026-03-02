@@ -81,15 +81,10 @@ const nextConfig: NextConfig = {
         ];
     },
 
-    // 画像最適化
     images: {
         formats: ['image/avif', 'image/webp'],
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: '**',
-            },
-        ],
+        // セキュリティ: 必要なドメインのみ許可 (ワイルドカード禁止)
+        remotePatterns: [],
     },
 
     // 本番ビルド最適化
@@ -107,7 +102,6 @@ const nextConfig: NextConfig = {
     // サーバーサイド外部パッケージ
     serverExternalPackages: ['onnxruntime-node'],
 
-    // 実験的機能
     // 実験的機能
     experimental: {},
 };

@@ -7,6 +7,7 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/
 // キャッシュ（30分間有効）
 const reasonCache = new Map<string, { reason: string; timestamp: number }>();
 const CACHE_TTL = 30 * 60 * 1000;
+const MAX_CACHE_SIZE = 500; // メモリリーク防止
 
 interface ReasonRequest {
     routeName: string;
@@ -126,11 +127,18 @@ export async function POST(request: Request) {
             });
         }
 
+        // AI出力をサニタイズ（HTMLタグ除去、長さ制限）
         const data = await response.json();
-        const aiReason = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+        const rawReason = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
             || generateFallbackReason(body);
+        const aiReason = rawReason.replace(/<[^>]*>/g, '').slice(0, 200);
 
-        // キャッシュに保存
+        // キャッシュに保存（サイズ上限管理）
+        if (reasonCache.size >= MAX_CACHE_SIZE) {
+            // 最古のエントリを削除（FIFO）
+            const oldest = reasonCache.keys().next().value;
+            if (oldest) reasonCache.delete(oldest);
+        }
         reasonCache.set(cacheKey, {
             reason: aiReason,
             timestamp: Date.now(),
