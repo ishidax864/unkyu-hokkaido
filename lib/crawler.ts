@@ -114,145 +114,164 @@ export async function runJRCrawler() {
     // Collect all ML training rows for batch insert
     const mlBatch: Array<Record<string, unknown>> = [];
 
-    for (const area of JR_JSON_URLS) {
+    // 🆕 Process all areas in PARALLEL for speed (Vercel 10s limit)
+    const areaResults = await Promise.allSettled(JR_JSON_URLS.map(async (area) => {
         const url = `${BASE_URL}${area.id}.json`;
+        const areaML: Array<Record<string, unknown>> = [];
+        let savedCount = 0;
 
-        try {
-            const response = await fetch(url, { cache: 'no-store' });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(url, {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(5000) // 🆕 Explicit 5s timeout
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            const text = await response.text();
-            const json = JSON.parse(text.replace(/^\uFEFF/, ''));
+        const text = await response.text();
+        const json = JSON.parse(text.replace(/^\uFEFF/, ''));
 
-            // Content hash for dedup
-            const contentHash = hashContent(JSON.stringify(json));
+        // Content hash for dedup
+        const contentHash = hashContent(JSON.stringify(json));
 
-            // Check if content changed since last crawl
-            const { data: lastLog } = await supabase
-                .from('crawler_logs')
-                .select('content_hash')
-                .eq('area_id', area.id)
-                .order('fetched_at', { ascending: false })
-                .limit(1);
-            const contentChanged = !lastLog?.length || lastLog[0].content_hash !== contentHash;
+        // Check if content changed since last crawl
+        const { data: lastLog } = await supabase
+            .from('crawler_logs')
+            .select('content_hash')
+            .eq('area_id', area.id)
+            .order('fetched_at', { ascending: false })
+            .limit(1);
+        const contentChanged = !lastLog?.length || lastLog[0].content_hash !== contentHash;
 
-            // Store raw_json only when content changed (saves ~97% storage)
-            const { data: logData, error: logError } = await supabase
-                .from('crawler_logs')
-                .insert({
+        // Store raw_json only when content changed (saves ~97% storage)
+        const { data: logData, error: logError } = await supabase
+            .from('crawler_logs')
+            .insert({
+                area_id: area.id,
+                raw_json: contentChanged ? json : null,
+                content_hash: contentHash,
+                status: 'success'
+            })
+            .select('id')
+            .single();
+
+        if (logError) {
+            logger.error(`❌ Failed to log for ${area.name}:`, logError);
+            return { area: area.name, saved: 0, ml: [] as Array<Record<string, unknown>> };
+        }
+
+        const gaikyoList = json.today?.gaikyo || [];
+        const weather = weatherByArea[area.id];
+        const routesWithStatus = new Set<string>();
+
+        // Helper: create ML row object
+        const mkMlRow = (routeId: string, status: string, cause: string | null, details: string | null, delayMin: number | undefined, recTime: string | undefined) => ({
+            recorded_at: now.toISOString(),
+            area_id: area.id,
+            route_id: routeId,
+            train_status: status,
+            delay_minutes: delayMin ?? null,
+            recovery_time: recTime ?? null,
+            cause,
+            status_details: details?.substring(0, 500) ?? null,
+            temperature: weather.temperature,
+            wind_speed: weather.wind_speed,
+            wind_gust: weather.wind_gust,
+            snowfall: weather.snowfall,
+            precipitation: weather.precipitation,
+            snow_depth: weather.snow_depth,
+            weather_code: weather.weather_code,
+            wind_direction: weather.wind_direction,
+            pressure_msl: weather.pressure_msl,
+            visibility: weather.visibility,
+            month, hour, day_of_week: dayOfWeek
+        });
+
+        // 🆕 Batch all status inserts for this area
+        const statusInserts: Array<Record<string, unknown>> = [];
+
+        for (const item of gaikyoList) {
+            const content = (item.honbun || '') + (item.title || '');
+            if (!content) continue;
+            if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) continue;
+
+            let matchedRouteId = null;
+            for (const def of ROUTE_DEFINITIONS) {
+                if (def.validAreas && !def.validAreas.includes(area.id)) continue;
+                if (def.keywords.some(kw => content.includes(kw))) {
+                    matchedRouteId = def.routeId;
+                    break;
+                }
+            }
+
+            if (matchedRouteId) {
+                routesWithStatus.add(matchedRouteId);
+
+                let status = 'normal';
+                if (content.includes('再開') || content.includes('平常')) status = 'normal';
+                if (content.includes('遅れ') || content.includes('遅延')) status = 'delayed';
+                if (content.includes('運休') || content.includes('見合')) status = 'suspended';
+
+                let cause = 'weather';
+                if (content.includes('雪')) cause = 'snow';
+                else if (content.includes('風')) cause = 'wind';
+                else if (content.includes('雨')) cause = 'rain';
+
+                const { delayMinutes, recoveryTime } = extractNumericalStatus(content);
+
+                statusInserts.push({
+                    date, time,
+                    route_id: matchedRouteId,
+                    status, cause,
+                    details: content,
+                    crawler_log_id: logData.id,
+                    delay_minutes: delayMinutes,
+                    recovery_time: recoveryTime
+                });
+
+                areaML.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
+            }
+        }
+
+        // 🆕 Batch insert status history (1 call instead of N)
+        if (statusInserts.length > 0) {
+            const { error: batchErr } = await supabase
+                .from('route_status_history')
+                .insert(statusInserts);
+            if (batchErr) {
+                logger.error(`Failed to batch insert statuses for ${area.name}:`, batchErr);
+            } else {
+                savedCount = statusInserts.length;
+            }
+        }
+
+        // Normal routes (ネガティブサンプル) — collect
+        const areaRoutes = ROUTE_DEFINITIONS.filter(r => r.validAreas?.includes(area.id));
+        for (const route of areaRoutes) {
+            if (!routesWithStatus.has(route.routeId)) {
+                areaML.push(mkMlRow(route.routeId, 'normal', null, null, undefined, undefined));
+            }
+        }
+
+        return { area: area.name, saved: savedCount, ml: areaML };
+    }));
+
+    // Collect results from parallel execution
+    for (let i = 0; i < areaResults.length; i++) {
+        const r = areaResults[i];
+        if (r.status === 'fulfilled') {
+            results.push({ area: r.value.area, saved: r.value.saved });
+            mlBatch.push(...r.value.ml);
+        } else {
+            const area = JR_JSON_URLS[i];
+            logger.error(`❌ Error fetching ${area.name}:`, r.reason);
+            try {
+                await supabase.from('crawler_logs').insert({
                     area_id: area.id,
-                    raw_json: contentChanged ? json : null,
-                    content_hash: contentHash,
-                    status: 'success'
-                })
-                .select('id')
-                .single();
-
-            if (logError) {
-                logger.error(`❌ Failed to log for ${area.name}:`, logError);
-                continue;
-            }
-
-            const gaikyoList = json.today?.gaikyo || [];
-            let savedCount = 0;
-            const weather = weatherByArea[area.id];
-            const routesWithStatus = new Set<string>();
-
-            // Helper: create ML row object
-            const mkMlRow = (routeId: string, status: string, cause: string | null, details: string | null, delayMin: number | undefined, recTime: string | undefined) => ({
-                recorded_at: now.toISOString(),
-                area_id: area.id,
-                route_id: routeId,
-                train_status: status,
-                delay_minutes: delayMin ?? null,
-                recovery_time: recTime ?? null,
-                cause,
-                status_details: details?.substring(0, 500) ?? null,
-                temperature: weather.temperature,
-                wind_speed: weather.wind_speed,
-                wind_gust: weather.wind_gust,
-                snowfall: weather.snowfall,
-                precipitation: weather.precipitation,
-                snow_depth: weather.snow_depth,
-                weather_code: weather.weather_code,
-                wind_direction: weather.wind_direction,
-                pressure_msl: weather.pressure_msl,
-                visibility: weather.visibility,
-                month, hour, day_of_week: dayOfWeek
-                // Note: crawler_log_id skipped due to type mismatch (UUID vs BIGINT)
-            });
-
-            for (const item of gaikyoList) {
-                const content = (item.honbun || '') + (item.title || '');
-                if (!content) continue;
-                if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) continue;
-
-                let matchedRouteId = null;
-                for (const def of ROUTE_DEFINITIONS) {
-                    if (def.validAreas && !def.validAreas.includes(area.id)) continue;
-                    if (def.keywords.some(kw => content.includes(kw))) {
-                        matchedRouteId = def.routeId;
-                        break;
-                    }
-                }
-
-                if (matchedRouteId) {
-                    routesWithStatus.add(matchedRouteId);
-
-                    let status = 'normal';
-                    if (content.includes('再開') || content.includes('平常')) status = 'normal';
-                    if (content.includes('遅れ') || content.includes('遅延')) status = 'delayed';
-                    if (content.includes('運休') || content.includes('見合')) status = 'suspended';
-
-                    let cause = 'weather';
-                    if (content.includes('雪')) cause = 'snow';
-                    else if (content.includes('風')) cause = 'wind';
-                    else if (content.includes('雨')) cause = 'rain';
-
-                    const { delayMinutes, recoveryTime } = extractNumericalStatus(content);
-
-                    // route_status_history (既存)
-                    const { error: insertError } = await supabase
-                        .from('route_status_history')
-                        .insert({
-                            date, time,
-                            route_id: matchedRouteId,
-                            status, cause,
-                            details: content,
-                            crawler_log_id: logData.id,
-                            delay_minutes: delayMinutes,
-                            recovery_time: recoveryTime
-                        });
-
-                    if (insertError) {
-                        logger.error(`Failed to insert status for ${matchedRouteId}:`, insertError);
-                    } else {
-                        savedCount++;
-                    }
-
-                    // ML row (異常時) — collect, don't insert yet
-                    mlBatch.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
-                }
-            }
-
-            // Normal routes (ネガティブサンプル) — collect
-            const areaRoutes = ROUTE_DEFINITIONS.filter(r => r.validAreas?.includes(area.id));
-            for (const route of areaRoutes) {
-                if (!routesWithStatus.has(route.routeId)) {
-                    mlBatch.push(mkMlRow(route.routeId, 'normal', null, null, undefined, undefined));
-                }
-            }
-
-            results.push({ area: area.name, saved: savedCount });
-
-        } catch (e) {
-            logger.error(`❌ Error fetching ${area.name}:`, e);
-            await supabase.from('crawler_logs').insert({
-                area_id: area.id,
-                raw_json: {},
-                status: 'error',
-                error_message: String(e)
-            });
+                    raw_json: {},
+                    status: 'error',
+                    error_message: String(r.reason)
+                });
+            } catch { /* ignore error logging failure */ }
+            results.push({ area: area.name, saved: 0 });
         }
     }
 

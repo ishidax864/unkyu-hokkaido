@@ -12,14 +12,28 @@ jobs:
     steps:
       - name: Call Vercel Cron API
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://unkyu-hokkaido.jp/api/cron/crawl")
-          if [ "$response" -ne 200 ]; then
-            echo "❌ Crawler returned HTTP $response"
-            exit 1
-          fi
-          echo "✅ Crawler executed successfully"
+          # 🆕 Retry up to 3 times with 10s delay for transient failures
+          for attempt in 1 2 3; do
+            response=$(curl -s -o /tmp/crawl_response.json -w "%{http_code}" \
+              --connect-timeout 10 --max-time 30 \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              "https://unkyu-hokkaido.jp/api/cron/crawl")
+
+            if [ "$response" -eq 200 ]; then
+              echo "✅ Crawler succeeded (attempt $attempt)"
+              cat /tmp/crawl_response.json
+              exit 0
+            fi
+
+            echo "⚠️ Attempt $attempt failed (HTTP $response)"
+            if [ "$attempt" -lt 3 ]; then
+              echo "Retrying in 10s..."
+              sleep 10
+            fi
+          done
+
+          echo "❌ Crawler failed after 3 attempts"
+          exit 1
 
   monitor:
     runs-on: ubuntu-latest
@@ -30,6 +44,7 @@ jobs:
       - name: Call Vercel Monitor API
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
+            --connect-timeout 10 --max-time 60 \
             "https://unkyu-hokkaido.jp/api/system/monitor?key=${{ secrets.MONITOR_SECRET }}")
           if [ "$response" -ne 200 ]; then
             echo "⚠️ Monitor returned HTTP $response (non-critical)"
