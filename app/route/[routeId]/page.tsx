@@ -167,11 +167,11 @@ export default async function RoutePage({ params }: { params: Promise<{ routeId:
         '@type': 'WebPage',
         name: `${route.name}の運休予測・運行情報`,
         description: seoInfo.description,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-ai.vercel.app'}/route/${routeId}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-hokkaido.jp'}/route/${routeId}`,
         breadcrumb: {
             '@type': 'BreadcrumbList',
             itemListElement: [
-                { '@type': 'ListItem', position: 1, name: 'トップ', item: process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-ai.vercel.app' },
+                { '@type': 'ListItem', position: 1, name: 'トップ', item: process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-hokkaido.jp' },
                 { '@type': 'ListItem', position: 2, name: `${route.name}` },
             ],
         },

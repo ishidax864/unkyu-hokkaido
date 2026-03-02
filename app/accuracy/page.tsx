@@ -54,7 +54,7 @@ export default function AccuracyPage() {
                             <div className="text-[10px] text-green-600/80 mt-0.5 font-medium">ステータス的中率</div>
                         </div>
                         <div className="bg-purple-50 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-purple-600">1,577</div>
+                            <div className="text-2xl font-bold text-purple-600">2,293</div>
                             <div className="text-[10px] text-purple-600/80 mt-0.5 font-medium">テスト件数</div>
                         </div>
                     </div>
@@ -149,7 +149,7 @@ export default function AccuracyPage() {
                     <h2 className="text-lg font-bold mb-3">検証方法</h2>
                     <div className="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
                         <p>
-                            1,577件のテストケースは、以下の条件を体系的に組み合わせて設計しています：
+                            2,293件のテストケースは、以下の条件を体系的に組み合わせて設計しています：
                         </p>
                         <ul className="space-y-1.5 text-[11px]">
                             <li className="flex items-start gap-2">

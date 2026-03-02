@@ -134,27 +134,19 @@ function AccuracyRing() {
 
 /* ─── メインコンポーネント ─── */
 export function ServiceFeatures() {
-    const [isCollapsed, setIsCollapsed] = useState(() => {
-        try {
-            return !!localStorage.getItem(STORAGE_KEY);
-        } catch {
-            return false;
-        }
-    });
-    const [isReturningUser] = useState(() => {
-        try {
-            return !!localStorage.getItem(STORAGE_KEY);
-        } catch {
-            return false;
-        }
-    });
+    // SSR と CSR で同じ初期値にしてハイドレーションエラーを防止
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isReturningUser, setIsReturningUser] = useState(false);
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
     const { t } = useTranslation();
 
-    // Mark as visited on first render
+    // クライアントサイドでのみ localStorage を参照
     useEffect(() => {
         try {
-            if (!localStorage.getItem(STORAGE_KEY)) {
+            const visited = !!localStorage.getItem(STORAGE_KEY);
+            setIsCollapsed(visited);
+            setIsReturningUser(visited);
+            if (!visited) {
                 localStorage.setItem(STORAGE_KEY, 'true');
             }
         } catch {
@@ -304,7 +296,7 @@ export function ServiceFeatures() {
                             {t('features.accuracyTitle')}
                         </h3>
                         <p className="text-[11px] text-white/50 mt-1 leading-relaxed">
-                            {t('features.accuracyTestDesc', { count: '1,577' })}
+                            {t('features.accuracyTestDesc', { count: '2,293' })}
                         </p>
                     </div>
 
