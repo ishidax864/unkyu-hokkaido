@@ -8,7 +8,7 @@ import { logger } from '@/lib/logger';
 import { JRStatusItem, PredictionInput, JRStatus, HourlyRiskData, WeatherForecast } from '@/lib/types';
 import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
 
-import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory } from '@/lib/supabase';
+import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory, savePredictionHistory } from '@/lib/supabase';
 import { ROUTE_DEFINITIONS } from '@/lib/jr-status';
 import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
 
@@ -313,6 +313,16 @@ export async function POST(req: NextRequest) {
                 crowdsourcedStatus: isToday ? crowdsourcedStatus : null
             }
         };
+
+        // 🆕 Persist prediction for ML training & enterprise API data
+        savePredictionHistory({
+            route_id: routeId,
+            route_name: input.routeName || routeId,
+            probability: result.probability,
+            status: result.status,
+            weather_factors: result.reasons || [],
+            is_official_influenced: !!jrStatus,
+        }).catch(err => logger.warn('Failed to save prediction history', { err }));
 
         return NextResponse.json(enrichedResult);
 

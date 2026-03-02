@@ -24,7 +24,15 @@ jobs:
   monitor:
     runs-on: ubuntu-latest
     needs: crawl
+    # monitor 失敗でもワークフロー全体を失敗にしない（メール通知を防止）
+    continue-on-error: true
     steps:
       - name: Call Vercel Monitor API
         run: |
-          curl -s -f "https://unkyu-hokkaido.jp/api/system/monitor?key=${{ secrets.MONITOR_KEY }}"
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://unkyu-hokkaido.jp/api/system/monitor?key=${{ secrets.MONITOR_SECRET }}")
+          if [ "$response" -ne 200 ]; then
+            echo "⚠️ Monitor returned HTTP $response (non-critical)"
+            exit 1
+          fi
+          echo "✅ Monitor executed successfully"
