@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import {
     ChevronDown,
     BrainCircuit,
@@ -134,31 +134,42 @@ function AccuracyRing() {
 
 /* ─── メインコンポーネント ─── */
 export function ServiceFeatures() {
-    // SSR と CSR で同じ初期値にしてハイドレーションエラーを防止
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isReturningUser, setIsReturningUser] = useState(false);
+    // useSyncExternalStore でハイドレーション安全に localStorage を読む
+    const isReturningUser = useSyncExternalStore(
+        // subscribe: storage イベントで他タブの変更を検出
+        (onStoreChange) => {
+            window.addEventListener('storage', onStoreChange);
+            return () => window.removeEventListener('storage', onStoreChange);
+        },
+        // getSnapshot (client)
+        () => {
+            try { return !!localStorage.getItem(STORAGE_KEY); } catch { return false; }
+        },
+        // getServerSnapshot (SSR)
+        () => false,
+    );
+    // 手動展開フラグ（ボタンクリックで true に）
+    const [manuallyExpanded, setManuallyExpanded] = useState(false);
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
     const { t } = useTranslation();
 
-    // クライアントサイドでのみ localStorage を参照
+    // 訪問マークのみ（外部システムへの書き込み = Effect の正しい使い方）
     useEffect(() => {
         try {
-            const visited = !!localStorage.getItem(STORAGE_KEY);
-            setIsCollapsed(visited);
-            setIsReturningUser(visited);
-            if (!visited) {
+            if (!localStorage.getItem(STORAGE_KEY)) {
                 localStorage.setItem(STORAGE_KEY, 'true');
             }
-        } catch {
-            /* noop */
-        }
+        } catch { /* noop */ }
     }, []);
+
+    // isCollapsed は派生状態（リピーター かつ 手動展開していない）
+    const isCollapsed = isReturningUser && !manuallyExpanded;
 
     if (isCollapsed) {
         return (
             <section className="py-6 border-t border-[var(--border)]">
                 <button
-                    onClick={() => setIsCollapsed(false)}
+                    onClick={() => setManuallyExpanded(true)}
                     className="w-full flex items-center justify-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors py-2"
                 >
                     <ChevronDown className="w-4 h-4" />
@@ -386,7 +397,7 @@ export function ServiceFeatures() {
 
             {/* 閉じる */}
             <button
-                onClick={() => setIsCollapsed(true)}
+                onClick={() => setManuallyExpanded(false)}
                 className="w-full flex items-center justify-center gap-1 text-[12px] text-[var(--muted)] hover:text-[var(--foreground)] transition-colors py-3"
             >
                 <ChevronDown className="w-3.5 h-3.5 rotate-180" />

@@ -31,7 +31,7 @@ export function ShareCard({ prediction, routeName, departureStation, arrivalStat
 ${prediction.reasons[0] || ''}
 
 AIが天気から電車の運休を予測 👇
-https://unkyu-ai.vercel.app
+${typeof window !== 'undefined' ? window.location.origin : 'https://unkyu-hokkaido.jp'}
 #運休北海道 #JR北海道`;
     };
 

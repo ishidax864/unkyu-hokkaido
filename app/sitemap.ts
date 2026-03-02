@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import routesData from '@/data/hokkaido-routes.json';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-ai.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-hokkaido.jp';
 
     const staticPages: MetadataRoute.Sitemap = [
         {
