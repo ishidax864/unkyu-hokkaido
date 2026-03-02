@@ -104,8 +104,9 @@ export function HourlyRiskChart({ data }: HourlyRiskChartProps) {
                 </div>
             </div>
 
-            <div className="text-[11px] text-center text-[var(--muted)] mt-2">
-                ※前後2時間の予測推移
+            <div className="text-[11px] text-center text-[var(--muted)] mt-2 space-y-0.5">
+                <div>※前後2時間の予測推移</div>
+                <div>リアルタイム気象 + JR公式運行情報 + ユーザー報告を統合</div>
             </div>
         </section>
     );

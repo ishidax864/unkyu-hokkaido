@@ -150,6 +150,10 @@ export function WeeklyForecastChart({ predictions, weather }: WeeklyForecastChar
                     <span>移動困難 (80%+)</span>
                 </div>
             </div>
+
+            <div className="text-[11px] text-center text-[var(--muted)] mt-2">
+                ※天気予報に基づく予測です。当日のリアルタイム情報は反映されません
+            </div>
         </section>
     );
 }
