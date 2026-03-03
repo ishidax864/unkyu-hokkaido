@@ -57,15 +57,14 @@ function AccuracyRing() {
                 <circle
                     cx="44" cy="44" r={r}
                     fill="none"
-                    stroke="currentColor"
+                    stroke="var(--border)"
                     strokeWidth="4"
-                    className="text-white/10"
                 />
                 <circle
                     ref={circleRef}
                     cx="44" cy="44" r={r}
                     fill="none"
-                    stroke="#6ee7b7"
+                    stroke="var(--primary)"
                     strokeWidth="5"
                     strokeLinecap="round"
                     strokeDasharray={C}
@@ -73,8 +72,8 @@ function AccuracyRing() {
                 />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-[20px] font-bold text-white leading-none">94</span>
-                <span className="text-[9px] text-white/50">%</span>
+                <span className="text-[20px] font-bold leading-none" style={{ color: 'var(--foreground)' }}>94</span>
+                <span className="text-[9px]" style={{ color: 'var(--muted)' }}>%</span>
             </div>
         </div>
     );
@@ -172,28 +171,33 @@ export function ServiceFeatures() {
                 })}
             </div>
 
-            {/* ─── 精度セクション（シンプル） ─── */}
+            {/* ─── 精度セクション ─── */}
             <div
-                className="rounded-xl p-5 mb-4"
-                style={{ background: '#3d7a5a' }}
+                className="rounded-xl p-5 mb-4 border"
+                style={{
+                    background: 'var(--primary-light)',
+                    borderColor: 'var(--primary)',
+                    borderWidth: '1.5px',
+                }}
             >
                 <div className="flex items-center gap-4">
                     <AccuracyRing />
                     <div className="min-w-0">
-                        <h3 className="font-bold text-white text-[15px] mb-1">
+                        <h3 className="font-bold text-[15px] mb-1" style={{ color: 'var(--foreground)' }}>
                             {t('features.accuracyTitle')}
                         </h3>
-                        <p className="text-[11px] text-white/50 leading-relaxed">
+                        <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted)' }}>
                             2,293件のテストケースで検証。
                             <br />
                             JR北海道 全13路線に対応。
                         </p>
                     </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-white/10">
+                <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
                     <Link
                         href="/accuracy"
-                        className="inline-flex items-center gap-1 text-[11px] font-medium text-white/50 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-1 text-[11px] font-medium transition-colors"
+                        style={{ color: 'var(--primary)' }}
                     >
                         {t('features.viewReport')}
                         <ArrowRight className="w-3 h-3" />
