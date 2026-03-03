@@ -95,6 +95,91 @@ if (typeof setInterval !== 'undefined') {
 }
 
 // =====================
+// 使用量カウンター & アラート
+// =====================
+
+const USAGE_WINDOW = 5 * 60 * 1000; // 5分ウィンドウ
+const ALERT_THRESHOLD_REQUESTS = parseInt(process.env.USAGE_ALERT_REQUESTS || '300', 10); // 5分で300リクエスト
+const ALERT_THRESHOLD_UNIQUE_IPS = parseInt(process.env.USAGE_ALERT_UNIQUE_IPS || '50', 10); // 1時間で50ユニークIP
+
+interface UsageWindow {
+    requests: number;
+    uniqueIPs: Set<string>;
+    windowStart: number;
+    alertSent: boolean;
+}
+
+let currentUsage: UsageWindow = {
+    requests: 0,
+    uniqueIPs: new Set(),
+    windowStart: Date.now(),
+    alertSent: false,
+};
+
+// 1時間ごとのユニークIP追跡
+let hourlyIPs: { ips: Set<string>; hourStart: number; alertSent: boolean } = {
+    ips: new Set(),
+    hourStart: Date.now(),
+    alertSent: false,
+};
+
+function trackUsage(ip: string): { nearCapacity: boolean } {
+    const now = Date.now();
+
+    // 5分ウィンドウリセット
+    if (now - currentUsage.windowStart > USAGE_WINDOW) {
+        currentUsage = {
+            requests: 0,
+            uniqueIPs: new Set(),
+            windowStart: now,
+            alertSent: false,
+        };
+    }
+
+    // 1時間ウィンドウリセット
+    if (now - hourlyIPs.hourStart > 60 * 60 * 1000) {
+        hourlyIPs = { ips: new Set(), hourStart: now, alertSent: false };
+    }
+
+    currentUsage.requests++;
+    currentUsage.uniqueIPs.add(ip);
+    hourlyIPs.ips.add(ip);
+
+    const nearCapacity = currentUsage.requests > ALERT_THRESHOLD_REQUESTS * 0.8;
+
+    // 閾値超過アラート（5分あたりリクエスト数）
+    if (currentUsage.requests >= ALERT_THRESHOLD_REQUESTS && !currentUsage.alertSent) {
+        currentUsage.alertSent = true;
+        logger.warn(`⚠️ USAGE ALERT: ${currentUsage.requests} requests in 5min (threshold: ${ALERT_THRESHOLD_REQUESTS}). Unique IPs: ${currentUsage.uniqueIPs.size}. Consider upgrading to Vercel Pro.`);
+    }
+
+    // 閾値超過アラート（1時間あたりユニークIP）
+    if (hourlyIPs.ips.size >= ALERT_THRESHOLD_UNIQUE_IPS && !hourlyIPs.alertSent) {
+        hourlyIPs.alertSent = true;
+        logger.warn(`⚠️ USER GROWTH ALERT: ${hourlyIPs.ips.size} unique users in 1 hour (threshold: ${ALERT_THRESHOLD_UNIQUE_IPS}). Consider upgrading to Vercel Pro.`);
+    }
+
+    return { nearCapacity };
+}
+
+/** 使用量メトリクスを取得 */
+export function getUsageMetrics() {
+    return {
+        window5min: {
+            requests: currentUsage.requests,
+            uniqueIPs: currentUsage.uniqueIPs.size,
+            thresholdRequests: ALERT_THRESHOLD_REQUESTS,
+            alertSent: currentUsage.alertSent,
+        },
+        hourly: {
+            uniqueIPs: hourlyIPs.ips.size,
+            thresholdUniqueIPs: ALERT_THRESHOLD_UNIQUE_IPS,
+            alertSent: hourlyIPs.alertSent,
+        },
+    };
+}
+
+// =====================
 // 不審なパターン検出
 // =====================
 
@@ -178,6 +263,12 @@ export function middleware(request: NextRequest) {
     // APIルートにレート制限を適用
     if (request.nextUrl.pathname.startsWith('/api/')) {
         const { limited, remaining } = isRateLimited(ip);
+
+        // 使用量追跡 & アラート
+        const { nearCapacity } = trackUsage(ip);
+        if (nearCapacity) {
+            response.headers.set('X-Usage-Alert', 'near-capacity');
+        }
 
         // レート制限ヘッダーを追加
         response.headers.set('X-RateLimit-Limit', MAX_REQUESTS.toString());

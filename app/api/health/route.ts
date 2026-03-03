@@ -3,6 +3,7 @@ import { fetchJRHokkaidoStatus } from '@/lib/jr-status';
 import { calculateSuspensionRisk } from '@/lib/prediction-engine';
 import { isSupabaseAvailable } from '@/lib/supabase';
 import { weatherAPIBreaker, jrStatusBreaker } from '@/lib/circuit-breaker';
+import { getCacheMetrics } from '@/lib/prediction-cache';
 
 // Cache health check result for 30 seconds
 let lastHealthCheck: { data: unknown; timestamp: number } | null = null;
@@ -74,6 +75,7 @@ export async function GET() {
             weatherAPI: weatherAPIBreaker.getMetrics(),
             jrStatusAPI: jrStatusBreaker.getMetrics(),
         },
+        predictionCache: getCacheMetrics(),
     };
 
     // Cache result

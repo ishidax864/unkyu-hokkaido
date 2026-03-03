@@ -10,6 +10,7 @@ import { PredictionInput, HourlyRiskData, WeatherForecast } from '@/lib/types';
 import { getHistoricalSuspensionRate, getOfficialRouteHistory, savePredictionHistory } from '@/lib/supabase';
 import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
 import { fetchJRStatusFromDB } from '@/lib/services/jr-status-service';
+import { buildCacheKey, getFromCache, setCache } from '@/lib/prediction-cache';
 
 export async function POST(req: NextRequest) {
     try {
@@ -33,11 +34,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid longitude' }, { status: 400 });
         }
 
+        // キャッシュチェック: 同一ルート・同一時間帯のリクエストはキャッシュから返す
+        const cacheKey = buildCacheKey(routeId, date, time);
+        const cached = getFromCache<Record<string, unknown>>(cacheKey);
+        if (cached) {
+            return NextResponse.json({ ...cached, _cached: true });
+        }
+
         // Parallel fetch: all data sources at once for minimal latency
         const dateTime = `${date}T${time}:00`;
         const coordinates = (lat != null && lon != null) ? { lat: Number(lat), lon: Number(lon) } : undefined;
 
-        // 🆕 Check if searching for today (crowdsourced/history only relevant for today)
+        // Check if searching for today (crowdsourced/history only relevant for today)
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const isToday = date === todayStr;
@@ -198,6 +206,8 @@ export async function POST(req: NextRequest) {
             weather_factors: result.reasons || [],
             is_official_influenced: !!jrStatus,
         }).catch(err => logger.warn('Failed to save prediction history', { err }));
+        // キャッシュに保存（次回同一リクエスト高速化）
+        setCache(cacheKey, enrichedResult);
 
         return NextResponse.json(enrichedResult);
 
