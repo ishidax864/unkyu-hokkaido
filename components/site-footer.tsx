@@ -28,10 +28,7 @@ export function SiteFooter() {
                         {t('footer.contact')}: info@andr.ltd
                     </a>
                 </div>
-                <div className="pt-4">
-                    <p className="mb-0.5 text-[11px]">{t('common.weatherData')}: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" className="underline">Open-Meteo API</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="underline">CC BY 4.0</a>)</p>
-                    <p className="mb-1 text-[11px] opacity-60">{t('common.adDisclaimer')}</p>
-                    <p className="mb-2 text-[11px] opacity-50">{t('common.jrDisclaimer')}</p>
+                <div className="pt-3">
                     <p className="font-en text-[11px]">{t('common.copyright')} <span className="opacity-50 ml-1">v7.5</span></p>
                 </div>
             </div>
