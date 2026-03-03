@@ -126,12 +126,8 @@ export default function Home() {
               {t('header.catchphrase')}
             </p>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="shrink-0">
             <LanguageSwitcher />
-            <div className="text-right">
-              <div className="opacity-80 text-[10px] sm:text-[11px]">{locationName || t('common.hokkaido')}</div>
-              <div className="font-bold text-[13px] sm:text-[14px]">{currentTime}</div>
-            </div>
           </div>
         </div>
       </header>
