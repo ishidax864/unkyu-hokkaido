@@ -1,11 +1,10 @@
 
-const CACHE_NAME = 'unkyu-ai-v7';
-const STATIC_CACHE_NAME = 'unkyu-ai-static-v7';
-const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v7';
+const CACHE_NAME = 'unkyu-ai-v8';
+const STATIC_CACHE_NAME = 'unkyu-ai-static-v8';
+const DYNAMIC_CACHE_NAME = 'unkyu-ai-dynamic-v8';
 
-// 静的アセット（常にキャッシュ）
+// 静的アセット（常にキャッシュ）— HTMLページは含めない（Network First で処理）
 const STATIC_ASSETS = [
-    '/',
     '/manifest.json',
     '/favicon.ico',
 ];
