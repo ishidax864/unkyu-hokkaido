@@ -104,7 +104,7 @@ export class SnowStrategy implements RiskFactorStrategy {
             }
         }
 
-        // 6. 🆕 Wet Snow Logic (湿り雪)
+        // 6. Wet Snow Logic (湿り雪)
         // Temp between -1 and +2 AND Snowfall > 1cm
         if (temp >= -1 && temp <= 2 && snow >= 1.0) {
             // Wet snow sticks to pantographs and switches

@@ -11,7 +11,7 @@ export class OfficialStatusStrategy implements RiskFactorStrategy {
         let score = 0;
         const reasons: { reason: string; priority: number }[] = [];
 
-        // 🆕 Timezone-aware check
+        // Timezone-aware check
         const todayJST = new Intl.DateTimeFormat('sv-SE', {
             timeZone: 'Asia/Tokyo'
         }).format(new Date());
@@ -23,7 +23,7 @@ export class OfficialStatusStrategy implements RiskFactorStrategy {
             return { score: 0, reasons: [] };
         }
 
-        // 🆕 Check for Resumption Time Intersection
+        // Check for Resumption Time Intersection
         // If current status is Suspended BUT target time is AFTER resumption time, ignore the status score.
         if (input.jrStatus && input.jrStatus.resumptionTime) {
             const resumptionDate = new Date(input.jrStatus.resumptionTime);

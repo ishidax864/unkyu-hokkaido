@@ -5,7 +5,7 @@ import { getTimeMultiplier, getSeasonMultiplier } from './risk-factors';
 interface CalibrationResult {
     probability: number;
     reasons: Array<{ reason: string; priority: number }>;
-    isOfficialOverride?: boolean; // 🆕 取得した公式情報に基づき予測が調整されたか
+    isOfficialOverride?: boolean; // 取得した公式情報に基づき予測が調整されたか
 }
 
 /**
@@ -18,7 +18,7 @@ export function applyAdaptiveCalibration(
     vulnerability: VulnerabilityData,
     historicalMatch: HistoricalMatch | null,
     reasons: Array<{ reason: string; priority: number }>,
-    isFutureSafe?: boolean // 🆕
+    isFutureSafe?: boolean //
 ): CalibrationResult {
     if (!input.jrStatus || !input.targetDate || !input.targetTime || !input.weather || !input.weather.surroundingHours) {
         return { probability, reasons, isOfficialOverride: false };
@@ -76,7 +76,7 @@ export function applyAdaptiveCalibration(
     const previousProb = probability;
     let newProbability = Math.floor(Math.min(Math.max(probability + adjustment, 0), 100));
 
-    // 🆕 SUSPENSION LOCK: For same-day searches, if currently suspended, lock to 100%
+    // SUSPENSION LOCK: For same-day searches, if currently suspended, lock to 100%
     // This ensures consistency across the entire day's timeline for active incidents.
     const isToday = input.targetDate === new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
     if (isToday && (currentStatus === 'suspended' || currentStatus === 'cancelled')) {
@@ -108,7 +108,7 @@ export function applyAdaptiveCalibration(
         }
     }
 
-    // 🆕 EXTREME WEATHER GUARD
+    // EXTREME WEATHER GUARD
     // 強力な気象信号（突風18m/s以上 or 降雪3cm/h以上）がある場合は、
     // 公式平常による抑制があったとしても、最低限のリスク値(30-40%)を維持する
     const isExtremeWeather = ((weatherNow.windGust ?? 0) >= 18) || ((weatherNow.snowfall ?? 0) >= 3.0);

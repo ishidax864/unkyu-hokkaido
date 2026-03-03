@@ -42,15 +42,15 @@ import {
     USER_REPORT_COUNT_BONUS_COEFFICIENT,
     USER_REPORT_MAX_BONUS,
     MIN_USER_REPORT_COUNT,
-    MODERATE_SNOW_DEPTH_THRESHOLD, // 🆕
-    MODERATE_SNOW_DEPTH_SCORE, // 🆕
-    CRITICAL_SNOW_DEPTH_THRESHOLD, // 🆕
-    CRITICAL_SNOW_DEPTH_SCORE, // 🆕
+    MODERATE_SNOW_DEPTH_THRESHOLD, //
+    MODERATE_SNOW_DEPTH_SCORE, //
+    CRITICAL_SNOW_DEPTH_THRESHOLD, //
+    CRITICAL_SNOW_DEPTH_SCORE, //
     SAFE_WIND_DIRECTION_MULTIPLIER,
-    DRIFTING_SNOW_TEMP_THRESHOLD, // 🆕
-    DRIFTING_SNOW_WIND_THRESHOLD, // 🆕
-    DRIFTING_SNOW_BASE_SCORE,     // 🆕
-    DRIFTING_SNOW_WIND_COEFFICIENT, // 🆕
+    DRIFTING_SNOW_TEMP_THRESHOLD, //
+    DRIFTING_SNOW_WIND_THRESHOLD, //
+    DRIFTING_SNOW_BASE_SCORE,     //
+    DRIFTING_SNOW_WIND_COEFFICIENT, //
 } from './constants';
 
 import vulnerabilitiesData from '../../data/hokkaido-vulnerabilities.json';
@@ -212,7 +212,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `積雪${input.weather?.snowfall}cm（軽微な影響の可能性）`,
         priority: 10,
     },
-    // 🆕 湿り雪（着雪・架線凍結リスク）
+    // 湿り雪（着雪・架線凍結リスク）
     // 条件: 降雪があり、かつ気温が -1.0℃ 〜 +1.5℃ の範囲
     // 理由: 水分を含んだ重い雪は架線やパンタグラフに付着しやすく、ポイント不転換も起きやすい
     {
@@ -225,7 +225,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `気温${input.weather?.temperature}℃での降雪（湿った雪による着雪・ポイント不具合リスク）`,
         priority: 4,
     },
-    // 🆕 積雪急増（スタックリスク）
+    // 積雪急増（スタックリスク）
     {
         condition: (input) => (input.weather?.snowDepthChange ?? 0) >= 3,
         weight: (input) => {
@@ -237,7 +237,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `積雪が急増中（${input.weather?.snowDepthChange}cm/h）: 車両スタックのリスク増大`,
         priority: 4, // 比較的優先度高め
     },
-    // 🆕 地吹雪（Drifting Snow）
+    // 地吹雪（Drifting Snow）
     // 条件: 氷点下(-2℃未満) + 風がある程度強い(10m/s以上) + 積雪がある
     // 降雪がなくても、積もった雪が舞い上がって視界不良になる現象
     {
@@ -259,7 +259,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `低温(-2℃未満)かつ強風(${input.weather?.windSpeed}m/s): 地吹雪による視界不良リスク`,
         priority: 5,
     },
-    // 🆕 累積降雪（除雪作業・計画運休リスク）
+    // 累積降雪（除雪作業・計画運休リスク）
     {
         // 積雪深がある程度あり、かつ「降り続いている」または「風がある（吹き溜まり）」場合のみリスクとする
         // 単に積雪が深いだけ（晴れ・無風）なら、除雪済みであれば運行可能
@@ -267,7 +267,7 @@ export const RISK_FACTORS: RiskFactor[] = [
             const depth = input.weather?.snowDepth ?? 0;
             const snowfall = input.weather?.snowfall ?? 0;
 
-            // 🆕 修正(v4): 風だけで「積雪深リスク」を発動させない。
+            // 修正(v4): 風だけで「積雪深リスク」を発動させない。
             // 降雪 >= 1cm (0.25 -> 1.0へ引き上げ) のみ条件とする。
             // 地吹雪リスクは風速そのもの（または暴風警報）で評価する。
             const activeDisruption = (snowfall >= 1.0);
@@ -285,7 +285,7 @@ export const RISK_FACTORS: RiskFactor[] = [
         reason: (input) => `短期間の記録的積雪（${input.weather?.snowDepth}cm）: 排雪作業による運休・遅延の可能性`,
         priority: 3,
     },
-    // 🆕 週末夜間の計画除雪（1月-2月）
+    // 週末夜間の計画除雪（1月-2月）
     {
         condition: (input) => {
             const date = new Date(input.targetDate);

@@ -58,7 +58,7 @@ export function filterOfficialText(text: string, routeName: string): string {
         !targetKeywords.some(k => r.includes(k) || k.includes(r))
     );
 
-    // 🆕 <BR>タグを適切に処理（様々なバリエーションに対応）
+    // <BR>タグを適切に処理（様々なバリエーションに対応）
     const sanitizedText = text.replace(/<BR\s*\/?>/gi, '\n');
 
     const lines = sanitizedText.split(/[\n。]/).map(l => l.trim()).filter(l => l.length > 0);
@@ -73,4 +73,51 @@ export function filterOfficialText(text: string, routeName: string): string {
     });
 
     return filteredLines.join('。') + (filteredLines.length > 0 ? '。' : '');
+}
+
+/**
+ * 公式復旧時刻を日本語フォーマットに変換
+ *
+ * 今日なら「HH:MM頃」、明日なら「明日 HH:MM頃」、それ以降は「N日 HH:MM頃」
+ */
+export function formatRecoveryTime(resumptionTimeISO: string): string {
+    const resumptionDate = new Date(resumptionTimeISO);
+    const resumptionHHMM = resumptionTimeISO.substring(11, 16);
+    const now = new Date();
+
+    const todayStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
+    const tomorrowDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const tomorrowStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(tomorrowDate);
+    const resumptionStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(resumptionDate);
+
+    if (resumptionStr === todayStr) return `${resumptionHHMM}頃`;
+    if (resumptionStr === tomorrowStr) return `明日 ${resumptionHHMM}頃`;
+    return `${resumptionDate.getDate()}日 ${resumptionHHMM}頃`;
+}
+
+/**
+ * 公式情報のオーバーライド解決
+ *
+ * JRステータスから復旧時刻のフォーマットと終日運休の検出を行う
+ */
+export function resolveOfficialOverride(jrStatus: {
+    resumptionTime?: string | null;
+    rawText?: string;
+    statusText?: string;
+} | null | undefined): { estimatedRecoveryTime?: string; isOfficialOverride: boolean } {
+    if (!jrStatus) return { isOfficialOverride: false };
+
+    if (jrStatus.resumptionTime) {
+        return {
+            estimatedRecoveryTime: formatRecoveryTime(jrStatus.resumptionTime),
+            isOfficialOverride: true,
+        };
+    }
+
+    const text = jrStatus.rawText || jrStatus.statusText || '';
+    if (text.includes('終日運休') || text.includes('終日運転見合わせ') || text.includes('全区間運休')) {
+        return { estimatedRecoveryTime: '終日運休', isOfficialOverride: true };
+    }
+
+    return { isOfficialOverride: false };
 }

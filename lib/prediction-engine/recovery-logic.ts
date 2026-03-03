@@ -105,3 +105,87 @@ export function predictRecovery(
         recoveryReasons
     };
 }
+
+/**
+ * 復旧ウィンドウの判定結果
+ */
+export interface PostRecoveryEvaluation {
+    isFutureSafe: boolean;
+    isPostRecoveryWindow: boolean;
+    probability: number;
+    minProbability: number;
+    additionalReasons: { reason: string; priority: number }[];
+}
+
+/**
+ * 復旧ウィンドウの評価
+ *
+ * 公式またはAI予測の復旧時刻と、ユーザーの検索時刻を比較して
+ * 「復旧後」ウィンドウにいるかどうかを判定し、確率キャップを適用する。
+ */
+export function evaluatePostRecoveryWindow(params: {
+    jrStatus: PredictionInput['jrStatus'];
+    targetDate: string;
+    effectiveTargetTime: string;
+    probability: number;
+    minProbability: number;
+    estimatedRecoveryTime?: string;
+}): PostRecoveryEvaluation {
+    const { jrStatus, targetDate, effectiveTargetTime, estimatedRecoveryTime } = params;
+    let { probability, minProbability } = params;
+    let isFutureSafe = false;
+    let isPostRecoveryWindow = false;
+    const additionalReasons: { reason: string; priority: number }[] = [];
+
+    // 公式 resumptionTime vs ユーザー検索時刻のチェック
+    if (jrStatus?.resumptionTime && effectiveTargetTime) {
+        const officialResumptionDate = new Date(jrStatus.resumptionTime);
+        const targetDateTime = new Date(`${targetDate}T${effectiveTargetTime}:00+09:00`);
+        if (targetDateTime.getTime() > officialResumptionDate.getTime()) {
+            const hoursAfterOfficial = (targetDateTime.getTime() - officialResumptionDate.getTime()) / (1000 * 60 * 60);
+
+            isPostRecoveryWindow = true;
+
+            if (hoursAfterOfficial >= 1) {
+                // 1時間以上経過 → chaos window の minProbability を解除
+                isFutureSafe = true;
+                minProbability = 0;
+
+                // 経過時間に応じてキャップ (1h=45%, 2h=35%, 3h=25%, 4h+=15%)
+                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterOfficial * 10));
+                probability = Math.min(probability, postRecoveryMax);
+
+                additionalReasons.push({
+                    reason: `【復旧後】${jrStatus.resumptionTime.substring(11, 16)}頃に運転再開見込み。ダイヤ乱れに注意`,
+                    priority: 1
+                });
+            }
+        }
+    }
+
+    // AI予測の復旧時刻 vs ユーザー検索時刻（公式がない場合のフォールバック）
+    if (!isPostRecoveryWindow && estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
+        const recoveryMatch = estimatedRecoveryTime.match(/(\d{1,2}):(\d{2})/);
+        const targetMatch = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
+        if (recoveryMatch && targetMatch) {
+            const recoveryMinutes = parseInt(recoveryMatch[1]) * 60 + parseInt(recoveryMatch[2]);
+            const targetMinutes = parseInt(targetMatch[1]) * 60 + parseInt(targetMatch[2]);
+            if (targetMinutes > recoveryMinutes) {
+                isFutureSafe = true;
+                isPostRecoveryWindow = true;
+
+                const hoursAfterRecovery = (targetMinutes - recoveryMinutes) / 60;
+                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterRecovery * 10));
+                probability = Math.min(probability, postRecoveryMax);
+                minProbability = 0;
+
+                additionalReasons.push({
+                    reason: `【復旧後】${estimatedRecoveryTime}に運転再開見込み。ダイヤ乱れや一部列車の遅延が残る可能性があります`,
+                    priority: 1
+                });
+            }
+        }
+    }
+
+    return { isFutureSafe, isPostRecoveryWindow, probability, minProbability, additionalReasons };
+}

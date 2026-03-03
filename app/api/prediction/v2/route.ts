@@ -127,17 +127,17 @@ export async function POST(req: NextRequest) {
                 return null;
             }),
             fetchJRStatusFromDB(routeId),
-            // 🆕 Historical suspension rate from user reports
+            // Historical suspension rate from user reports
             getHistoricalSuspensionRate(routeId).catch(e => {
                 logger.warn('Historical data fetch failed', e);
                 return { success: false, data: null };
             }),
-            // 🆕 Official route history from crawler data (last 24h)
+            // Official route history from crawler data (last 24h)
             getOfficialRouteHistory(routeId, 24).catch(e => {
                 logger.warn('Official history fetch failed', e);
                 return { success: false, data: null };
             }),
-            // 🆕 Crowdsourced user reports (only for today)
+            // Crowdsourced user reports (only for today)
             isToday ? aggregateCrowdsourcedStatusAsync(routeId).catch(e => {
                 logger.warn('Crowdsourced status fetch failed', e);
                 return null;
@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Weather fetch failed' }, { status: 500 });
         }
 
-        // 🆕 Assemble all data sources
+        // Assemble all data sources
         const historicalData = historicalResult?.success && historicalResult?.data
             ? historicalResult.data : null;
         const officialHistory = officialHistoryResult?.success && officialHistoryResult?.data
@@ -177,7 +177,7 @@ export async function POST(req: NextRequest) {
         // Ensure officialStatus is set in the result
         result.officialStatus = jrStatus;
 
-        // 🆕 Trend Calculation (Server-Side)
+        // Trend Calculation (Server-Side)
         // 各時間を独立・統一的に評価し、検索時刻に依存しない一貫したリスク値を保証する
         const trend = buildHourlyRiskTrend({
             targetHour: parseInt(time.split(':')[0]),
@@ -194,7 +194,7 @@ export async function POST(req: NextRequest) {
 
         result.trend = trend;
 
-        // 🆕 Attach enriched data for client-side weekly forecast (avoids redundant fetches)
+        // Attach enriched data for client-side weekly forecast (avoids redundant fetches)
         const enrichedResult = {
             ...result,
             _serverData: {
@@ -204,7 +204,7 @@ export async function POST(req: NextRequest) {
             }
         };
 
-        // 🆕 Persist prediction for ML training & enterprise API data
+        // Persist prediction for ML training & enterprise API data
         savePredictionHistory({
             route_id: routeId,
             route_name: input.routeName || routeId,

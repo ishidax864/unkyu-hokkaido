@@ -71,16 +71,16 @@ export const LIGHT_WIND_MAX = 10;
 /** 軽い風のリスクスコア */
 export const LIGHT_WIND_SCORE = 3;
 
-/** 🆕 地吹雪発生の気温閾値（これより低いとパウダースノーで舞いやすい） */
+/** 地吹雪発生の気温閾値（これより低いとパウダースノーで舞いやすい） */
 export const DRIFTING_SNOW_TEMP_THRESHOLD = -2;
 
-/** 🆕 地吹雪発生の風速閾値（これ以上で舞い始める） */
+/** 地吹雪発生の風速閾値（これ以上で舞い始める） */
 export const DRIFTING_SNOW_WIND_THRESHOLD = 10;
 
-/** 🆕 地吹雪リスクの基本スコア (20点: 視界不良による徐行) */
+/** 地吹雪リスクの基本スコア (20点: 視界不良による徐行) */
 export const DRIFTING_SNOW_BASE_SCORE = 20;
 
-/** 🆕 地吹雪リスクの強風ボーナス係数 */
+/** 地吹雪リスクの強風ボーナス係数 */
 export const DRIFTING_SNOW_WIND_COEFFICIENT = 2;
 
 /** やや強い風の最小値（m/s） (15 -> 13: 遅延検知のため感度向上) */
@@ -149,7 +149,7 @@ export const HEAVY_SNOW_MAX_BONUS = 30;
 export const SUSPENSION_SNOW_THRESHOLD = 15;
 
 // =====================
-// 積雪深（累積）関連の閾値 🆕
+// 積雪深（累積）関連の閾値
 // =====================
 
 /** 中程度の積雪深（cm） - 遅延リスク (15 -> 25: 北海道の冬は20cm程度の積雪は日常) */

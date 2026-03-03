@@ -18,29 +18,26 @@ import {
     applyHistoricalDataAdjustment,
     applyConfidenceFilter,
     calculateRawRiskScore,
-    applyOfficialHistoryAdjustment // 🆕
+    applyOfficialHistoryAdjustment //
 } from './helpers';
 
-import {
-    getStatusFromProbability,
-    getConfidence,
-    getWeatherImpact
-} from './formatters';
+import { getStatusFromProbability, getConfidence, getWeatherImpact, resolveOfficialOverride } from './formatters';
 
 import {
     MAX_DISPLAY_REASONS,
     MAX_PREDICTION_WITH_NORMAL_DATA
 } from './constants';
 
-import { applyAdaptiveCalibration } from './calibration'; // 🆕
-import { determineBaseStatus } from './status-logic'; // 🆕
+import { applyAdaptiveCalibration } from './calibration'; //
+import { determineBaseStatus } from './status-logic'; //
 
 import {
     preparePredictionInput
 } from './preparation';
 
 import {
-    predictRecovery
+    predictRecovery,
+    evaluatePostRecoveryWindow
 } from './recovery-logic';
 
 // ==========================================
@@ -108,7 +105,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         });
     }
 
-    // 🆕 Add Non-Operating Hour Reason
+    // Add Non-Operating Hour Reason
     if (isNonOperatingHour) {
         reasonsWithPriority.unshift({
             reason: `【営業時間外】始発（06:00頃）のリスクを予測しています`,
@@ -139,80 +136,29 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     reasonsWithPriority.push(...recovery.recoveryReasons);
 
-    let isFutureSafe = false;
-    let isPostRecoveryWindow = false;
+    // 復旧ウィンドウの評価
+    const postRecovery = evaluatePostRecoveryWindow({
+        jrStatus: input.jrStatus,
+        targetDate: input.targetDate,
+        effectiveTargetTime,
+        probability,
+        minProbability,
+        estimatedRecoveryTime,
+    });
+    const { isFutureSafe, isPostRecoveryWindow } = postRecovery;
+    probability = postRecovery.probability;
+    minProbability = postRecovery.minProbability;
+    reasonsWithPriority.push(...postRecovery.additionalReasons);
 
-    // 🆕 公式 resumptionTime vs ユーザー検索時刻の早期チェック
-    // determineBaseStatus の chaos window (minProbability=60) を上書きするために、
-    // calibration/clamping の前にここで判定する必要がある
-    if (input.jrStatus?.resumptionTime && effectiveTargetTime) {
-        const officialResumptionDate = new Date(input.jrStatus.resumptionTime);
-        const targetDateTime = new Date(`${input.targetDate}T${effectiveTargetTime}:00+09:00`);
-        if (targetDateTime.getTime() > officialResumptionDate.getTime()) {
-            const hoursAfterOfficial = (targetDateTime.getTime() - officialResumptionDate.getTime()) / (1000 * 60 * 60);
-
-            isPostRecoveryWindow = true;
-
-            if (hoursAfterOfficial >= 1) {
-                // 1時間以上経過 → chaos window のminProbabilityを解除してpost-recoveryキャップを適用
-                isFutureSafe = true;
-                minProbability = 0;
-
-                // 公式再開時刻からの経過時間に応じてキャップ (1h=45%, 2h=35%, 3h=25%, 4h+=15%)
-                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterOfficial * 10));
-                if (probability > postRecoveryMax) {
-                    probability = postRecoveryMax;
-                }
-
-                reasonsWithPriority.push({
-                    reason: `【復旧後】${input.jrStatus.resumptionTime.substring(11, 16)}頃に運転再開見込み。ダイヤ乱れに注意`,
-                    priority: 1
-                });
-            }
-            // 1時間未満: isPostRecoveryWindow=true だが minProbability はchaos window側を維持
-        }
-    }
-
-    // 🆕 AI予測の復旧時刻 vs ユーザーの検索時刻を比較（公式がない場合のフォールバック）
-    if (!isPostRecoveryWindow && estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
-        const recoveryMatch = estimatedRecoveryTime.match(/(\d{1,2}):(\d{2})/);
-        const targetMatch = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
-        if (recoveryMatch && targetMatch) {
-            const recoveryMinutes = parseInt(recoveryMatch[1]) * 60 + parseInt(recoveryMatch[2]);
-            const targetMinutes = parseInt(targetMatch[1]) * 60 + parseInt(targetMatch[2]);
-            if (targetMinutes > recoveryMinutes) {
-                isFutureSafe = true;
-                isPostRecoveryWindow = true;
-
-                // 復旧後の経過時間に応じてダイヤ乱れリスクを逓減
-                const hoursAfterRecovery = (targetMinutes - recoveryMinutes) / 60;
-                // 直後(0h)=55%, 1h後=45%, 2h後=35%, 3h後=25%, 4h+後=15%
-                const postRecoveryMax = Math.max(15, Math.round(55 - hoursAfterRecovery * 10));
-                if (probability > postRecoveryMax) {
-                    probability = postRecoveryMax;
-                }
-
-                // 🔑 部分運休のminProbabilityフロアを無効化（復旧後なのに60%固定を防ぐ）
-                minProbability = 0;
-
-                // 復旧済みの文脈に合った理由を追加
-                reasonsWithPriority.push({
-                    reason: `【復旧後】${estimatedRecoveryTime}に運転再開見込み。ダイヤ乱れや一部列車の遅延が残る可能性があります`,
-                    priority: 1
-                });
-            }
-        }
-    }
-
-    // 🆕 ADAPTIVE CALIBRATION (Delta Logic) - Extracted
+    // ADAPTIVE CALIBRATION (Delta Logic) - Extracted
     const calibration = applyAdaptiveCalibration(probability, input, vulnerability, historicalMatch, reasonsWithPriority, isFutureSafe);
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
 
-    // 🆕 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
+    // 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
     let isOfficialInfluenced = false;
 
-    // 🆕 Confidence Filter（部分運休中・復旧後ウィンドウではバイパス）
+    // Confidence Filter（部分運休中・復旧後ウィンドウではバイパス）
     if (input.weather && !isPartialSuspension && !isPostRecoveryWindow) {
         const filterResult = applyConfidenceFilter({
             probability,
@@ -259,14 +205,14 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         reasonsWithPriority.push(...additionalReasons);
     }
 
-    // 🆕 6.5 公的な運行履歴による補正 (Crawler Integration)
+    // 6.5 公的な運行履歴による補正 (Crawler Integration)
     if (input.officialHistory) {
         const { adjustedProbability, additionalReasons } = applyOfficialHistoryAdjustment(probability, input, isPostRecoveryWindow);
         probability = adjustedProbability;
         reasonsWithPriority.push(...additionalReasons);
     }
 
-    // 🆕 Post-recovery 再キャップ（後段のcalibration/historyで引き上げられた値を再抑制）
+    // Post-recovery 再キャップ（後段のcalibration/historyで引き上げられた値を再抑制）
     if (isPostRecoveryWindow && effectiveTargetTime) {
         // estimatedRecoveryTime は後段で公式時刻に上書きされる前の値を使う
         // ここでは初期のAI予測値を使ってキャップを再適用
@@ -279,7 +225,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         }
     }
 
-    // 🆕 FINAL CLAMPING (Single Source of Truth)
+    // FINAL CLAMPING (Single Source of Truth)
     // Ensures strict consistency between Main and Hourly forecasts by obeying status-logic bounds.
     probability = Math.max(minProbability, Math.min(Math.round(probability), maxProbability));
 
@@ -294,48 +240,11 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
         : 'low';
 
 
-    // 🆕 公式情報の解析とオーバーライド (Official Info Override - Redesigned)
-    // Single Source of Truth: determineBaseStatus (calculated at start of function)
-    let isOfficialOverride = !!overrideReason;
-
-    // 1. Resumption Time Formatting (If official time exists)
-    if (input.jrStatus?.resumptionTime) {
-        const resumptionDate = new Date(input.jrStatus.resumptionTime);
-        const resumptionHHMM = input.jrStatus.resumptionTime.substring(11, 16);
-        const now = new Date();
-
-        // JST基準で日付文字列を比較（月境界でも安全）
-        const todayStr2 = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(now);
-        const tomorrowDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-        const tomorrowStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(tomorrowDate);
-        const resumptionStr = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(resumptionDate);
-
-        let timeStr = `${resumptionHHMM}頃`;
-        if (resumptionStr !== todayStr2) {
-            if (resumptionStr === tomorrowStr) {
-                timeStr = `明日 ${resumptionHHMM}頃`;
-            } else {
-                const resumptionDay = resumptionDate.getDate();
-                timeStr = `${resumptionDay}日 ${resumptionHHMM}頃`;
-            }
-        }
-
-        // Override predicted time with official time
-        estimatedRecoveryTime = timeStr;
-        isOfficialOverride = true;
-
-        // Determine scale if suspended
-        if (isCurrentlySuspended) {
-            // If override matches "All Day", handling is separate?
-            // Usually "All Day" doesn't have specific resumptionTime unless it's "Tomorrow 05:00"
-        }
-    } else if (input.jrStatus) {
-        // Check for "All Day Suspension" text pattern for estimatedRecoveryTime
-        const text = input.jrStatus.rawText || input.jrStatus.statusText || '';
-        if (text.includes('終日運休') || text.includes('終日運転見合わせ') || text.includes('全区間運休')) {
-            estimatedRecoveryTime = '終日運休';
-            isOfficialOverride = true;
-        }
+    // 公式情報の解析とオーバーライド
+    const officialOverride = resolveOfficialOverride(input.jrStatus);
+    let isOfficialOverride = !!overrideReason || officialOverride.isOfficialOverride;
+    if (officialOverride.estimatedRecoveryTime) {
+        estimatedRecoveryTime = officialOverride.estimatedRecoveryTime;
     }
 
     // 2. Construct Reasons
@@ -356,8 +265,8 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     return {
         routeId: input.routeId,
         targetDate: input.targetDate,
-        probability: (isCurrentlySuspended && !isFutureSafe) ? 100 : probability, // 🆕 Allow probability < 100 if future safe
-        status: (isCurrentlySuspended && !isFutureSafe) ? '運休中' : getStatusFromProbability(probability), // 🆕 Allow normal status if future safe
+        probability: (isCurrentlySuspended && !isFutureSafe) ? 100 : probability, // Allow probability < 100 if future safe
+        status: (isCurrentlySuspended && !isFutureSafe) ? '運休中' : getStatusFromProbability(probability), // Allow normal status if future safe
         confidence,
         // If suspended, ensure the main reason reflects it
         reasons: (isCurrentlySuspended && !isOfficialOverride && !isFutureSafe)
@@ -379,7 +288,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
                 if (estimatedRecoveryHours <= 6) return 'medium';
                 return 'large';
             }
-            // 🆕 運休中だが復旧時刻が算出できない（＝見通しが立たない）場合は「大規模」扱いとする
+            // 運休中だが復旧時刻が算出できない（＝見通しが立たない）場合は「大規模」扱いとする
             if (isCurrentlySuspended && !estimatedRecoveryTime) {
                 return 'large';
             }
@@ -421,7 +330,7 @@ export function calculateWeeklyForecast(
     historicalData?: PredictionInput['historicalData'] | null,
     officialHistory?: PredictionInput['officialHistory'] | null
 ): PredictionResult[] {
-    // 🆕 Timezone fix: Use JST for today determination
+    // Timezone fix: Use JST for today determination
     const today = new Intl.DateTimeFormat('sv-SE', {
         timeZone: 'Asia/Tokyo'
     }).format(new Date());

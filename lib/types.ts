@@ -65,17 +65,17 @@ export interface WeatherWarning {
 export interface WeatherForecast {
   date: string;
   weather: string;
-  temperature?: number; // 🆕 現在気温(時間単位用)
+  temperature?: number; // 現在気温(時間単位用)
   tempMax: number;
   tempMin: number;
   precipitation: number;
   windSpeed: number;
-  windDirection?: number; // 🆕 風向 (0-360)
+  windDirection?: number; // 風向 (0-360)
   snowfall?: number;
   snowDepth?: number;
-  snowDepthChange?: number; // 🆕 前時間からの積雪増加量(cm)
+  snowDepthChange?: number; // 前時間からの積雪増加量(cm)
   windGust?: number;
-  pressure?: number; // 🆕 気圧 (hPa)
+  pressure?: number; // 気圧 (hPa)
   weatherCode?: number;
   warnings: WeatherWarning[];
   targetTime?: string; // HH:MM
@@ -98,44 +98,44 @@ export interface PredictionResult {
   updatedAt: string;
   aiReason?: string;  // AI生成の理由文
 
-  // 🆕 時間帯別トレンド
+  // 時間帯別トレンド
   trend?: HourlyRiskData[];
 
   // 復旧予測モード用
   mode: PredictionMode;
   isCurrentlySuspended: boolean;
   estimatedRecoveryTime?: string;  // 例: "13:00頃", "18:30頃"
-  estimatedRecoveryHours?: number | string; // 🆕 時間単位（0.5, 1, 3, 6, 12）または '終日運休'
+  estimatedRecoveryHours?: number | string; // 時間単位（0.5, 1, 3, 6, 12）または '終日運休'
 
-  // 🆕 部分運休・減便情報
+  // 部分運休・減便情報
   isPartialSuspension?: boolean; // 一部運休モードかどうか
   partialSuspensionText?: string; // 公式テキストの抜粋（表示用）
-  suspensionScale?: 'small' | 'medium' | 'large' | 'all-day'; // 🆕 運休規模（ユーザーへの直感的な伝達用）
-  recoveryRecommendation?: string; // 🆕 代替手段提案メッセージ
+  suspensionScale?: 'small' | 'medium' | 'large' | 'all-day'; // 運休規模（ユーザーへの直感的な伝達用）
+  recoveryRecommendation?: string; // 代替手段提案メッセージ
   suspensionReason?: string;  // 運休の原因
   crowdStats?: {
     last15minReportCount: number;
     last15minStopped: number;
-    last15minDelayed: number; // 🆕
-    last15minCrowded: number; // 🆕
+    last15minDelayed: number; //
+    last15minCrowded: number; //
     last15minResumed: number;
   };
-  comparisonData?: { // 🆕 For Route Comparison
+  comparisonData?: { // For Route Comparison
     wind: number;
     snow: number;
   };
-  isOfficialOverride?: boolean; // 🆕 公式情報によるオーバーライドかどうか
-  isOfficialInfluenced?: boolean; // 🆕 クローラー等の公的情報が予測に影響を与えたか
-  isPostResumptionChaos?: boolean; // 🆕 運転再開直後の混乱状態か
-  isPostRecoveryWindow?: boolean; // 🆕 ユーザーの検索時刻が復旧予測時刻より後か
+  isOfficialOverride?: boolean; // 公式情報によるオーバーライドかどうか
+  isOfficialInfluenced?: boolean; // クローラー等の公的情報が予測に影響を与えたか
+  isPostResumptionChaos?: boolean; // 運転再開直後の混乱状態か
+  isPostRecoveryWindow?: boolean; // ユーザーの検索時刻が復旧予測時刻より後か
   officialStatus?: {
     status: JRStatus;
     statusText?: string;
     updatedAt?: string;
     rawText?: string;
     sourceArea?: string;
-    resumptionTime?: string | null; // 🆕
-  } | null; // 🆕 公式運行情報 (実データ)
+    resumptionTime?: string | null; //
+  } | null; // 公式運行情報 (実データ)
 }
 
 // =====================
@@ -177,12 +177,12 @@ export interface JRStatusItem {
   routeName: string;
   status: JRStatus;
   description: string;
-  statusText?: string; // 🆕 Added for consistency
+  statusText?: string; // Added for consistency
   updatedAt: string;
   source: 'official' | 'rss' | 'mock';
   rawText?: string;
-  sourceArea?: string; // 🆕
-  resumptionTime?: string | null; // 🆕 Date string (ISO) or HH:MM
+  sourceArea?: string; //
+  resumptionTime?: string | null; // Date string (ISO) or HH:MM
 }
 
 export interface AIReasonRequest {
@@ -228,8 +228,8 @@ export interface PredictionInput {
     status: JRStatus;
     statusText?: string;
     updatedAt?: string;
-    rawText?: string; // 🆕
-    resumptionTime?: string | null; // 🆕
+    rawText?: string; //
+    resumptionTime?: string | null; //
   } | null;
   crowdsourcedStatus?: {
     consensusStatus: ReportType | 'unknown';
@@ -274,7 +274,7 @@ export interface RiskFactor {
   condition: (input: PredictionInput, vuln: VulnerabilityData) => boolean;
   weight: (input: PredictionInput, vuln: VulnerabilityData) => number;
   reason: (input: PredictionInput) => string;
-  overrideWeight?: (input: PredictionInput, vuln: VulnerabilityData) => number | null; // 🆕 過去事例に基づく強制的な重み付け
+  overrideWeight?: (input: PredictionInput, vuln: VulnerabilityData) => number | null; // 過去事例に基づく強制的な重み付け
   priority: number; // 表示優先度（低い方が上）
 }
 

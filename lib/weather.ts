@@ -154,8 +154,8 @@ interface OpenMeteoHourlyResponse {
         snow_depth: number[];
         weather_code: number[];
         snowfall?: number[];
-        winddirection_10m: number[]; // 🆕
-        pressure_msl?: number[]; // 🆕
+        winddirection_10m: number[]; //
+        pressure_msl?: number[]; //
     };
 }
 
@@ -242,7 +242,7 @@ export async function fetchHourlyWeatherForecast(
             `latitude=${lat}&longitude=${lon}` +
             `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl` +
             `&timezone=Asia/Tokyo` +
-            `&wind_speed_unit=ms` + // 🆕 m/sに統一
+            `&wind_speed_unit=ms` + // m/sに統一
             `&forecast_days=7`,
             { next: { revalidate: 3600 } } // 1時間ごとに更新
         );
@@ -365,7 +365,7 @@ export async function fetchDailyWeatherForecast(
             `latitude=${lat}&longitude=${lon}` +
             `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,winddirection_10m,snowfall` +
             `&timezone=Asia/Tokyo` +
-            `&wind_speed_unit=ms` + // 🆕 m/sに統一
+            `&wind_speed_unit=ms` + // m/sに統一
             `&forecast_days=7`,
             { next: { revalidate: 3600 } } // 1時間ごとに更新
         );
@@ -384,7 +384,7 @@ export async function fetchDailyWeatherForecast(
             windSpeeds: number[];
             windGusts: number[];
             snowDepths: number[];
-            windDirections: number[]; // 🆕
+            windDirections: number[]; //
             weatherCodes: number[];
         }> = {};
 
@@ -403,7 +403,7 @@ export async function fetchDailyWeatherForecast(
                         windSpeeds: [],
                         windGusts: [],
                         snowDepths: [],
-                        windDirections: [], // 🆕
+                        windDirections: [], //
                         weatherCodes: [],
                     };
                 }
@@ -412,7 +412,7 @@ export async function fetchDailyWeatherForecast(
                 groupedByDate[date].windSpeeds.push(data.hourly.wind_speed_10m[i]);
                 groupedByDate[date].windGusts.push(data.hourly.wind_gusts_10m[i]);
                 groupedByDate[date].snowDepths.push(data.hourly.snow_depth[i]);
-                groupedByDate[date].windDirections.push(data.hourly.winddirection_10m[i]); // 🆕
+                groupedByDate[date].windDirections.push(data.hourly.winddirection_10m[i]); //
                 groupedByDate[date].weatherCodes.push(data.hourly.weather_code[i]);
             }
         });
@@ -499,7 +499,7 @@ export async function fetchDailyWeatherForecast(
                 windSpeed,
                 snowfall,
                 windGust,
-                windDirection, // 🆕
+                windDirection, //
                 weatherCode,
                 warnings,
             });

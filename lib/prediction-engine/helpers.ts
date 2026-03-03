@@ -26,7 +26,6 @@ import {
     HEAVY_RAIN_THRESHOLD,
     MAX_PREDICTION_WITH_NORMAL_DATA,
 } from './constants';
-// import { RISK_FACTORS } from './risk-factors'; // Deprecated
 import { COMPOUND_RISK_MULTIPLIER } from './constants';
 
 // =====================
@@ -107,7 +106,7 @@ export function calculateWinterRisk(
     // 路線脆弱性に応じて5-10%のベースリスク
     const winterBaseRisk = MIN_WINTER_RISK + (vuln.vulnerabilityScore - 0.8) * WINTER_RISK_COEFFICIENT;
 
-    // 🆕 冬季の朝（6時-9時）は除雪作業による遅延リスクを考慮してリスク底上げ (+5%)
+    // 冬季の朝（6時-9時）は除雪作業による遅延リスクを考慮してリスク底上げ (+5%)
     // Note: targetDateは "2024-01-01" 形式なので時間は取れない。呼び出し元で時間を考慮する必要がある。
     // ここでは単純にベースを少し上げるだけに留めるか、呼び出し元(helpers.ts)で時間を渡すように変更する必要がある。
     // 今回は安全に、全体のベースを少し上げる調整にする。
@@ -137,7 +136,7 @@ export function determineMaxProbability(input: PredictionInput, isNearRealTime: 
     if (input.jrStatus) {
         let isSuspended = input.jrStatus.status === 'cancelled' || input.jrStatus.status === 'suspended';
 
-        // 🆕 再開時刻がターゲット時刻より前なら、運休ステータスによるキャップを解除する
+        // 再開時刻がターゲット時刻より前なら、運休ステータスによるキャップを解除する
         if (isSuspended && input.jrStatus.resumptionTime) {
             const resumption = new Date(input.jrStatus.resumptionTime);
             // targetDateがYYYY-MM-DD、targetTimeがHH:MM形式と仮定
@@ -152,7 +151,7 @@ export function determineMaxProbability(input: PredictionInput, isNearRealTime: 
         } else if (input.jrStatus.status === 'delay') {
             maxProbability = MAX_PREDICTION_WITH_DELAY;
         } else if (input.jrStatus.status === 'normal') {
-            // 🆕 「現在」かつ「公式が平常運転」なら強力に抑制（35%）
+            // 「現在」かつ「公式が平常運転」なら強力に抑制（35%）
             // 未来の予測（!isNearRealTime）の場合は、このハードキャップを無効化し気象リスクを優先する
             if (isNearRealTime) {
                 // 極端な気象（突風等）がある場合は、平常でも50%まで許容
@@ -376,11 +375,11 @@ export interface ConfidenceFilterParams {
     windGust: number;
     snowfall: number;
     jrStatus?: string | null;
-    officialStatus?: { // 🆕
+    officialStatus?: { //
         status: string;
         resumptionTime?: string | null;
     } | null;
-    isNearRealTime?: boolean; // 🆕
+    isNearRealTime?: boolean; //
 }
 
 interface ConfidenceFilterResult {
@@ -404,10 +403,10 @@ export function applyConfidenceFilter(params: ConfidenceFilterParams & { jrStatu
     const { probability, totalScore, windSpeed, windGust, snowfall, jrStatus, isNearRealTime } = params;
 
     // フィルタ適用条件をチェック
-    // 🆕 公式が平常（normal）かつ気象警報等がない場合、抑制をより広範囲に適用する
+    // 公式が平常（normal）かつ気象警報等がない場合、抑制をより広範囲に適用する
     const isOfficialNormal = jrStatus === "normal" && isNearRealTime;
 
-    // 🆕 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
+    // 条件を厳格化：強風(20m/s)以下でも、突風(20m/s)があれば抑制を解除
     const isWeakWeather = windSpeed < 12 && windGust < 15 && snowfall < 0.5;
 
     // Exception for Extreme Weather (Blizzard/Storm) even if official is normal
@@ -457,7 +456,7 @@ export function calculateRawRiskScore(
     let totalScore = bScore;
     const reasonsWithPriority = [...bReasons];
 
-    // 🆕 過去事例に基づく理由の追加
+    // 過去事例に基づく理由の追加
     if (historicalMatch) {
         reasonsWithPriority.push({
             reason: `【過去事例】${historicalMatch.label}に近い気象条件です。`,
@@ -490,7 +489,7 @@ export function calculateRawRiskScore(
         });
     }
 
-    // 🆕 Decisive Scoring
+    // Decisive Scoring
     const criticalFactors = reasonsWithPriority.filter(r => r.priority <= 4).length;
     if (criticalFactors >= 2) {
         totalScore = Math.round(totalScore * COMPOUND_RISK_MULTIPLIER);
@@ -499,7 +498,7 @@ export function calculateRawRiskScore(
     return { totalScore, reasonsWithPriority, hasRealTimeData };
 }
 /**
- * 🆕 公的な運行履歴（クローラーデータ）による最終補正
+ * 公的な運行履歴（クローラーデータ）による最終補正
  * @param currentProbability 
  * @param input 
  * @returns 補正後の確率と理由
@@ -530,7 +529,7 @@ export function applyOfficialHistoryAdjustment(
     });
 
     if (recentSuspension && input.jrStatus?.status !== 'normal') {
-        // 🆕 再開時刻を過ぎている場合は、この「リスク維持」ロジックをスキップする
+        // 再開時刻を過ぎている場合は、この「リスク維持」ロジックをスキップする
         let hasResumed = false;
         if (input.jrStatus?.resumptionTime) {
             const resumption = new Date(input.jrStatus.resumptionTime);

@@ -4,11 +4,11 @@ import { OperationStatus } from '../types';
 export interface BaseStatusResult {
     status: OperationStatus | 'partial' | 'unknown';
     isOfficialSuspended: boolean;  // True if officially suspended AND not yet resumed
-    isPostResumptionChaos?: boolean; // 🆕 True if within chaos window after resumption
-    isPartialSuspension?: boolean;   // 🆕 True if "Partial Suspension" detected
-    partialSuspensionText?: string;  // 🆕 Official text describing the partial suspension
-    minProbability: number;        // 🆕 Minimum floor (e.g. 60 for partial)
-    maxProbability: number;        // 🆕 Maximum cap (e.g. 75 for delay)
+    isPostResumptionChaos?: boolean; // True if within chaos window after resumption
+    isPartialSuspension?: boolean;   // True if "Partial Suspension" detected
+    partialSuspensionText?: string;  // Official text describing the partial suspension
+    minProbability: number;        // Minimum floor (e.g. 60 for partial)
+    maxProbability: number;        // Maximum cap (e.g. 75 for delay)
     overrideReason?: string;       // Reason for the override
 }
 
