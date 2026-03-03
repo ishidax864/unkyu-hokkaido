@@ -117,10 +117,14 @@ export default function Home() {
       {/* ヘッダー */}
       <header className="bg-[var(--primary)] text-white px-3 sm:px-4 py-3 sm:py-4">
         <div className="max-w-2xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-            <Train className="w-5 h-5 shrink-0" />
-            <h1 className="text-[15px] sm:text-[16px] font-bold whitespace-nowrap">{t('header.title')}</h1>
-            <span className="text-[11px] opacity-80 ml-0.5 hidden min-[360px]:inline">{t('header.subtitle')}</span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <Train className="w-5 h-5 shrink-0" />
+              <h1 className="text-[15px] sm:text-[16px] font-bold whitespace-nowrap">{t('header.title')}</h1>
+            </div>
+            <p className="text-[11px] sm:text-[12px] text-white/70 mt-0.5 pl-[26px] tracking-wide">
+              {t('header.catchphrase')}
+            </p>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <LanguageSwitcher />
@@ -129,10 +133,6 @@ export default function Home() {
               <div className="font-bold text-[13px] sm:text-[14px]">{currentTime}</div>
             </div>
           </div>
-        </div>
-        {/* UX2: Catchphrase — tells first-time users what this service does */}
-        <div className="text-center pb-2 text-[11px] text-white/80">
-          {t('header.catchphrase')}
         </div>
       </header>
 
