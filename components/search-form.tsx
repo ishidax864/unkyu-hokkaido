@@ -177,7 +177,7 @@ export function SearchForm({
 
             {/* 日付・時刻選択 — 常に横並び */}
             <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-[3fr_2fr] gap-2">
                     <div>
                         <label className="section-label flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
@@ -194,7 +194,7 @@ export function SearchForm({
                                 d.setDate(d.getDate() + 7);
                                 return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
                             })()}
-                            className={`w-full input-field p-3 text-base font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
+                            className={`w-full input-field p-2.5 text-sm font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
                         />
                         {!isDateValid(date) && (
                             <p className="text-[11px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
@@ -210,7 +210,7 @@ export function SearchForm({
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className="w-full input-field p-3 text-base font-bold"
+                            className="w-full input-field p-2.5 text-sm font-bold"
                         />
                     </div>
                 </div>
