@@ -15,10 +15,10 @@ interface RouteDefinition {
     name: string;
     keywords: string[];
     routeId: string;
-    validAreas?: string[]; // 🆕 エリアフィルタ (01:札幌, 02:道央, 03:道南, 04:道北, 05:道東)
+    validAreas?: string[]; // エリアフィルタ (01:札幌, 02:道央, 03:道南, 04:道北, 05:道東)
 }
 
-// 🆕 JSONから定義を生成
+// JSONから定義を生成
 export const ROUTE_DEFINITIONS: RouteDefinition[] = crawlerConfig.routeMatching.map(rm => ({
     name: rm.id.split('.').pop() === 'chitose' ? '千歳線' :
         rm.id.split('.').pop() === 'hakodate-main' ? '函館本線' :
@@ -47,10 +47,10 @@ export interface JROperationStatus {
     affectedSection?: string;
     expectedRecovery?: string;
     updatedAt: string;
-    rawText?: string; // 🆕 生の概況テキスト
-    sourceArea?: string; // 🆕 情報取得元エリアID
-    delayMinutes?: number; // 🆕 抽出された遅延分
-    recoveryTime?: string; // 🆕 抽出された再開見込み時刻 (HH:mm)
+    rawText?: string; // 生の概況テキスト
+    sourceArea?: string; // 情報取得元エリアID
+    delayMinutes?: number; // 抽出された遅延分
+    recoveryTime?: string; // 抽出された再開見込み時刻 (HH:mm)
     /** 計画運休（前日発表等）かどうか */
     isPlannedSuspension?: boolean;
     /** 計画運休の詳細情報 */
@@ -58,7 +58,7 @@ export interface JROperationStatus {
 }
 
 /**
- * 🆕 テキストから数値情報を抽出 (ML強化用)
+ * テキストから数値情報を抽出 (ML強化用)
  * 例: "30分程度の遅れ" -> { delayMinutes: 30 }
  * 例: "20時30分頃に運転再開を見込んでいます" -> { recoveryTime: "20:30" }
  */
@@ -124,7 +124,7 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
             const cleanGaikyo = gaikyoText.replace(/<[^>]*>/g, ' ');
 
             for (const route of ROUTE_DEFINITIONS) {
-                // 🆕 エリアフィルタリング
+                // エリアフィルタリング
                 if (route.validAreas && !route.validAreas.includes(areaId)) {
                     continue;
                 }

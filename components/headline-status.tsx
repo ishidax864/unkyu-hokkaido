@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 interface HeadlineStatusProps {
     warnings: WeatherWarning[];
     weatherCondition: string;
-    jrStatus?: JRStatusItem[]; // 🆕
+    jrStatus?: JRStatusItem[]; //
     isLoading?: boolean;
 }
 

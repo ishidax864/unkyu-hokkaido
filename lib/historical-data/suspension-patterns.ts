@@ -214,12 +214,12 @@ export function findHistoricalMatch(weather: WeatherForecast): HistoricalPattern
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-wind-low-pressure') || null;
     }
 
-    // 🆕 沿岸部暴風雪の追加判定
+    // 沿岸部暴風雪の追加判定
     if (wind >= 18 && snow >= 2) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'blizzard-coastal') || null;
     }
 
-    // 🆕 内陸部集中豪雪の追加判定
+    // 内陸部集中豪雪の追加判定
     if (snow >= 5 && (month === 1 || month === 2)) {
         return HISTORICAL_PATTERNS.find(p => p.id === 'heavy-snow-inland') || null;
     }

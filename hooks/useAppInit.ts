@@ -11,7 +11,7 @@ interface AppInitState {
     lastWeatherUpdate: string;
     locationName: string;
     userLocation: { lat: number; lon: number } | undefined;
-    jrStatus: JRStatusItem[]; // 🆕
+    jrStatus: JRStatusItem[]; //
 }
 
 export function useAppInit() {
@@ -23,7 +23,7 @@ export function useAppInit() {
         lastWeatherUpdate: '',
         locationName: '札幌',
         userLocation: undefined,
-        jrStatus: [], // 🆕
+        jrStatus: [], //
     });
 
     // Time Update

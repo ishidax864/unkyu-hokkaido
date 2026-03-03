@@ -3,6 +3,10 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: '予測精度について - 2,293件で検証済みの94.1%精度',
     description: 'JR北海道の運休予測エンジンの精度を2,293件のテストケースで検証。確率的中率94.1%、ステータス的中率98.6%。カテゴリ別の精度実績、安全側バイアス設計、データソースの詳細を公開。',
+    openGraph: {
+        title: '予測精度について | 運休北海道',
+        description: 'AIによるJR北海道の運休予測精度を2,293件のテストケースで検証。94.1%の確率的中率を達成。',
+    },
     alternates: {
         canonical: '/accuracy',
     },

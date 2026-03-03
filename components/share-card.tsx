@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { PredictionResult } from '@/lib/types';
 import { logger } from '@/lib/logger';
 import { Share2, Copy, Check, Twitter, MessageCircle } from 'lucide-react';
-import { sendGAEvent } from '@next/third-parties/google'; // 🆕
+import { sendGAEvent } from '@next/third-parties/google'; //
 
 interface ShareCardProps {
     prediction: PredictionResult;
@@ -41,7 +41,7 @@ ${typeof window !== 'undefined' ? window.location.origin : 'https://unkyu-hokkai
         try {
             await navigator.clipboard.writeText(text);
             setCopied(true);
-            // 🆕 GA4イベント送信
+            // GA4イベント送信
             sendGAEvent('event', 'share', { method: 'copy_clipboard', route: routeName });
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
@@ -60,7 +60,7 @@ ${typeof window !== 'undefined' ? window.location.origin : 'https://unkyu-hokkai
                     text,
                     url: window.location.href,
                 });
-                // 🆕 GA4イベント送信
+                // GA4イベント送信
                 sendGAEvent('event', 'share', { method: 'web_share_api', route: routeName });
             } catch (err) {
                 if ((err as Error).name !== 'AbortError') {
@@ -77,7 +77,7 @@ ${typeof window !== 'undefined' ? window.location.origin : 'https://unkyu-hokkai
     const shareToTwitter = () => {
         const text = encodeURIComponent(getShareText());
         const url = `https://twitter.com/intent/tweet?text=${text}`;
-        // 🆕 GA4イベント送信
+        // GA4イベント送信
         sendGAEvent('event', 'share', { method: 'twitter', route: routeName });
         window.open(url, '_blank', 'width=550,height=420');
     };
@@ -86,7 +86,7 @@ ${typeof window !== 'undefined' ? window.location.origin : 'https://unkyu-hokkai
     const shareToLine = () => {
         const text = encodeURIComponent(getShareText());
         const url = `https://social-plugins.line.me/lineit/share?text=${text}`;
-        // 🆕 GA4イベント送信
+        // GA4イベント送信
         sendGAEvent('event', 'share', { method: 'line', route: routeName });
         window.open(url, '_blank');
     };

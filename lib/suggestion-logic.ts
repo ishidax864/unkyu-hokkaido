@@ -99,7 +99,7 @@ export function generateStrategicAdvice(
         } else {
             // recoveryHours不明 または 0
 
-            // 🆕 公式情報による上書きの場合は「目処立たず」とするが、
+            // 公式情報による上書きの場合は「目処立たず」とするが、
             // AI予測の場合は「可能性が高い」という表現に留める
             if (predictionResult.isOfficialOverride) {
                 return {
