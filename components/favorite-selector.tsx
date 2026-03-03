@@ -32,7 +32,7 @@ export function FavoriteSelector({ favorites, onSelect }: FavoriteSelectorProps)
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-3 bg-white border border-[var(--border)] rounded-md hover:bg-[var(--background-secondary)] transition-colors text-sm"
+                className="w-full flex items-center justify-between p-3 bg-[var(--card)] border border-[var(--border)] rounded-md hover:bg-[var(--background-secondary)] transition-colors text-sm"
             >
                 <div className="flex items-center gap-2 text-[var(--foreground)]">
                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
@@ -45,7 +45,7 @@ export function FavoriteSelector({ favorites, onSelect }: FavoriteSelectorProps)
             </button>
 
             {isOpen && (
-                <div className="absolute z-50 mt-1 w-full bg-white border border-[var(--border)] rounded-md shadow-lg max-h-64 overflow-y-auto animate-fade-in">
+                <div className="absolute z-50 mt-1 w-full bg-[var(--card)] border border-[var(--border)] rounded-md shadow-lg max-h-64 overflow-y-auto animate-fade-in">
                     <div className="p-2 text-xs text-[var(--muted)] bg-[var(--background-secondary)] border-b border-[var(--border)]">
                         選択すると現在の時刻で検索されます
                     </div>

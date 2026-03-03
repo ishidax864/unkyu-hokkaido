@@ -63,7 +63,7 @@ export function LanguageSwitcher() {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 min-w-[140px] animate-[fadeInDown_0.15s_ease-out]">
+                <div className="absolute right-0 top-full mt-2 bg-[var(--card)] rounded-xl shadow-xl border border-[var(--border)] py-1.5 z-50 min-w-[140px] animate-[fadeInDown_0.15s_ease-out]">
                     {locales.map((l) => (
                         <button
                             key={l}
