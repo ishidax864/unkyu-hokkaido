@@ -62,8 +62,8 @@ const nextConfig: NextConfig = {
                             "img-src 'self' data: https:",
                             // 接続先を明示的に指定
                             supabaseHost
-                                ? `connect-src 'self' https://api.open-meteo.com https://${supabaseHost} https://www.google-analytics.com`
-                                : "connect-src 'self' https://api.open-meteo.com https://www.google-analytics.com",
+                                ? `connect-src 'self' https://api.open-meteo.com https://${supabaseHost} https://www.google-analytics.com https://*.ingest.sentry.io`
+                                : "connect-src 'self' https://api.open-meteo.com https://www.google-analytics.com https://*.ingest.sentry.io",
                             "frame-ancestors 'none'",
                             "base-uri 'self'",
                             "form-action 'self'",

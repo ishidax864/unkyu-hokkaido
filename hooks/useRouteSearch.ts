@@ -176,9 +176,14 @@ export function useRouteSearch() {
         let trendData: HourlyRiskData[] = [];
 
         try {
+            // P2: API タイムアウト（15秒）
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
             const apiRes = await fetch('/api/prediction/v2', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                     routeId,
                     date: searchDate,
@@ -187,6 +192,8 @@ export function useRouteSearch() {
                     lon: stationCoordinates?.lon
                 })
             });
+
+            clearTimeout(timeoutId);
 
             if (apiRes.ok) {
                 const mlResult: PredictionResult & { trend?: HourlyRiskData[]; _serverData?: Record<string, unknown> } = await apiRes.json();

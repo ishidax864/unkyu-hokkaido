@@ -2,6 +2,23 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { logger } from '@/lib/logger';
 
+// タイミング攻撃対策: 定数時間で文字列比較（Edge Runtime対応）
+function safeCompare(a: string, b: string): boolean {
+    if (a.length !== b.length) {
+        // 長さが違っても定数時間で処理（ダミー比較）
+        let result = 1; // not equal
+        for (let i = 0; i < a.length; i++) {
+            result |= a.charCodeAt(i) ^ a.charCodeAt(i); // dummy op
+        }
+        return result === 0; // always false
+    }
+    let result = 0;
+    for (let i = 0; i < a.length; i++) {
+        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    }
+    return result === 0;
+}
+
 // =====================
 // レート制限設定
 // =====================
@@ -132,7 +149,7 @@ export function middleware(request: NextRequest) {
                 return new NextResponse('Admin credentials not configured', { status: 503 });
             }
 
-            if (user !== adminUser || pwd !== adminPass) {
+            if (!safeCompare(user, adminUser) || !safeCompare(pwd, adminPass)) {
                 return new NextResponse('Unauthorized', {
                     status: 401,
                     headers: { 'WWW-Authenticate': 'Basic realm="Admin Access"' },

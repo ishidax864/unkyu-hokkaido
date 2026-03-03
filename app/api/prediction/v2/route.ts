@@ -2,139 +2,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchHourlyWeatherForecast } from '@/lib/weather';
 
-export const dynamic = 'force-dynamic'; // 🆕 Disable caching for real-time predictions
-import { calculateSuspensionRisk } from '@/lib/prediction-engine'; // Correct import
+export const dynamic = 'force-dynamic'; // Disable caching for real-time predictions
+import { calculateSuspensionRisk } from '@/lib/prediction-engine';
 import { logger } from '@/lib/logger';
-import { JRStatusItem, PredictionInput, JRStatus, HourlyRiskData, WeatherForecast } from '@/lib/types';
-import { extractResumptionTime } from '@/lib/text-parser'; // 🆕
+import { PredictionInput, HourlyRiskData, WeatherForecast } from '@/lib/types';
 
-import { getAdminSupabaseClient, getHistoricalSuspensionRate, getOfficialRouteHistory, savePredictionHistory } from '@/lib/supabase';
-import { ROUTE_DEFINITIONS } from '@/lib/jr-status';
+import { getHistoricalSuspensionRate, getOfficialRouteHistory, savePredictionHistory } from '@/lib/supabase';
 import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
-
-// Helper to fetch JR Status (Debug Version)
-async function _fetchJRStatus(routeId: string): Promise<JRStatusItem | null> {
-    try {
-        const supabase = getAdminSupabaseClient();
-        if (!supabase) {
-            logger.error('Missing Supabase credentials');
-            return null;
-        }
-
-        const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
-        const routeName = routeDef?.name || '当該路線';
-
-        // 1. Check for recent incidents
-        const since = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-
-        const { data: incidents, error: dbError } = await supabase
-            .from('route_status_history')
-            .select('*')
-            .eq('route_id', routeId)
-            .gte('created_at', since)
-            .order('created_at', { ascending: false })
-            .limit(1);
-
-        if (dbError) {
-            logger.error('DB Error fetching route_status_history:', dbError);
-            return null;
-        }
-
-        if (incidents && incidents.length > 0) {
-            const latest = incidents[0];
-            const description = latest.status === 'suspended' ? '運休・見合わせが発生しています' : latest.status === 'delayed' ? '遅延が発生しています' : '平常運転';
-            const jrStatus: JRStatusItem = {
-                routeId,
-                routeName,
-                status: (latest.status === 'delayed' ? 'delay' : latest.status) as JRStatus,
-                description,
-                statusText: latest.details || description,
-                updatedAt: latest.timestamp || latest.created_at,
-                source: 'official',
-                rawText: latest.details
-            };
-
-            // Ensure 'cancelled' is treated as 'suspended' for consistency
-            if (jrStatus.status === 'cancelled') {
-                jrStatus.status = 'suspended';
-            }
-
-            // 🆕 Attempt to extract resumption time
-            if (jrStatus.status === 'suspended' || jrStatus.status === 'delay') {
-                const extracted = extractResumptionTime(jrStatus.rawText || jrStatus.statusText || "");
-                if (extracted) {
-                    jrStatus.resumptionTime = extracted.toISOString();
-                }
-            }
-            return jrStatus;
-        }
-
-        // 2. If no incidents, check if crawler ran recently (< 1 hour)
-        const { data: logs, error: logError } = await supabase
-            .from('crawler_logs')
-            .select('fetched_at')
-            .order('fetched_at', { ascending: false })
-            .limit(1);
-
-        if (logError) {
-            logger.error('DB Error fetching crawler_logs:', logError);
-            return null;
-        }
-
-        if (logs && logs.length > 0) {
-            const lastFetch = new Date(logs[0].fetched_at).getTime();
-            const now = Date.now();
-            if (now - lastFetch < 60 * 60 * 1000) { // 1 hour
-                // 🆕 Area-wide check
-                // Our route had no direct incident, but did anyone else in the same area?
-                // This protects against the crawler missing a regional warning.
-                if (routeDef && routeDef.validAreas) {
-                    const { data: areaIncidents } = await supabase
-                        .from('route_status_history')
-                        .select('status')
-                        .in('route_id', ROUTE_DEFINITIONS.filter(r =>
-                            r.validAreas && r.validAreas.some(a => routeDef.validAreas!.includes(a))
-                        ).map(r => r.routeId))
-                        .gte('created_at', since)
-                        .limit(5);
-
-                    const hasAreaIssues = areaIncidents && areaIncidents.some(ai => ai.status !== 'normal');
-                    if (hasAreaIssues) {
-                        return {
-                            routeId,
-                            routeName,
-                            status: 'partial',
-                            description: '周辺路線で運休・遅延が発生しています',
-                            statusText: '周辺の運行状況に基づきリスクを算出しています',
-                            updatedAt: logs[0].fetched_at,
-                            source: 'official'
-                        } as JRStatusItem;
-                    }
-                }
-
-                return {
-                    routeId,
-                    routeName,
-                    status: 'normal',
-                    description: '平常運転',
-                    statusText: '現在、遅れに関する情報はありません',
-                    updatedAt: logs[0].fetched_at,
-                    source: 'official'
-                };
-            } else {
-                logger.warn(`JR Status data stale: ${Math.round((now - lastFetch) / 60000)}min old`);
-                return null; // 古いデータは信頼できないためnull→気象予測のみで判定
-            }
-        } else {
-            // クローラーログがないまたはデータが古い -> nullを返し気象予測のみで判定する
-            return null;
-        }
-    } catch (e: unknown) {
-        const _msg = e instanceof Error ? e.message : String(e);
-        logger.error('JR Status Fetch Error:', e);
-        return null;
-    }
-}
+import { fetchJRStatusFromDB } from '@/lib/services/jr-status-service';
 
 export async function POST(req: NextRequest) {
     try {
@@ -172,7 +47,7 @@ export async function POST(req: NextRequest) {
                 logger.error('Weather fetch failed', e);
                 return null;
             }),
-            _fetchJRStatus(routeId),
+            fetchJRStatusFromDB(routeId),
             // 🆕 Historical suspension rate from user reports
             getHistoricalSuspensionRate(routeId).catch(e => {
                 logger.warn('Historical data fetch failed', e);
@@ -244,7 +119,7 @@ export async function POST(req: NextRequest) {
                 hourRisk = result.probability; // Re-use main result
                 hourWeather = weather;
             } else {
-                hourWeather = surroundingWeather.find((sw) => {
+                hourWeather = surroundingWeather.find((sw: WeatherForecast) => {
                     const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
                     return swHour === h;
                 }) || null;
