@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Search, BarChart3, Bus, Star, Train } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, ArrowRight, Search, BarChart3, Star, Train } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 
 const colorClasses: Record<string, { bg: string; text: string; light: string; border: string }> = {
@@ -28,28 +29,15 @@ export default function OnboardingPage() {
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
                         {t('onboarding.step1Desc')}
                     </p>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-200">
-                                <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-600 font-bold">{t('onboarding.step1Dep')}</div>
-                                <span className="text-sm text-gray-400">Sapporo</span>
-                            </div>
-                            <div className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-200">
-                                <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center text-[10px] text-red-600 font-bold">{t('onboarding.step1Arr')}</div>
-                                <span className="text-sm text-gray-400">New Chitose Airport</span>
-                            </div>
-                            <div className="flex gap-2">
-                                <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
-                                    <span className="text-sm text-gray-400">YYYY/MM/DD</span>
-                                </div>
-                                <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
-                                    08:30
-                                </div>
-                            </div>
-                            <button className="w-full py-2.5 bg-[var(--primary)] text-white rounded-lg text-sm font-bold">
-                                {t('onboarding.step1Button')}
-                            </button>
-                        </div>
+                    <div className="rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <Image
+                            src="/images/onboarding/step1-search.png"
+                            alt="検索フォームの画面"
+                            width={375}
+                            height={812}
+                            className="w-full h-auto"
+                            priority
+                        />
                     </div>
                     <div className="bg-blue-50 rounded-lg p-3 text-[11px] text-blue-700">
                         {t('onboarding.step1Hint')}
@@ -68,40 +56,30 @@ export default function OnboardingPage() {
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
                         {t('onboarding.step2Desc')}
                     </p>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                        <div className="text-center mb-3">
-                            <div className="text-[11px] text-[var(--muted)]">{t('onboarding.step2Risk')}</div>
-                            <div className="text-4xl font-bold text-orange-500 my-1">45<span className="text-lg">%</span></div>
-                            <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">
-                                {t('onboarding.step2DelayPossible')}
-                            </span>
-                        </div>
-                        <div className="border-t pt-3 space-y-1.5">
-                            <div className="flex items-center gap-2 text-[11px]">
-                                <span className="text-orange-500">💨</span>
-                                <span className="text-[var(--muted)]">{t('onboarding.step2Wind')}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-[11px]">
-                                <span className="text-blue-500">❄️</span>
-                                <span className="text-[var(--muted)]">{t('onboarding.step2Snow')}</span>
-                            </div>
-                        </div>
+                    <div className="rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <Image
+                            src="/images/onboarding/step2-results.png"
+                            alt="予測結果の画面"
+                            width={375}
+                            height={500}
+                            className="w-full h-auto"
+                        />
                     </div>
                     <div className="space-y-2 text-[11px] text-[var(--muted)]">
                         <div className="flex items-start gap-2 bg-green-50 p-2.5 rounded-lg">
-                            <span className="font-bold text-green-700">🟢 0-20%</span>
+                            <span className="font-bold text-green-700 flex-shrink-0">🟢 0-20%</span>
                             <span>{t('onboarding.step2Green')}</span>
                         </div>
                         <div className="flex items-start gap-2 bg-yellow-50 p-2.5 rounded-lg">
-                            <span className="font-bold text-yellow-700">🟡 20-50%</span>
+                            <span className="font-bold text-yellow-700 flex-shrink-0">🟡 20-50%</span>
                             <span>{t('onboarding.step2Yellow')}</span>
                         </div>
                         <div className="flex items-start gap-2 bg-orange-50 p-2.5 rounded-lg">
-                            <span className="font-bold text-orange-700">🟠 50-80%</span>
+                            <span className="font-bold text-orange-700 flex-shrink-0">🟠 50-80%</span>
                             <span>{t('onboarding.step2Orange')}</span>
                         </div>
                         <div className="flex items-start gap-2 bg-red-50 p-2.5 rounded-lg">
-                            <span className="font-bold text-red-700">🔴 80-100%</span>
+                            <span className="font-bold text-red-700 flex-shrink-0">🔴 80-100%</span>
                             <span>{t('onboarding.step2Red')}</span>
                         </div>
                     </div>
@@ -112,34 +90,21 @@ export default function OnboardingPage() {
             step: 3,
             title: t('onboarding.step3Title'),
             subtitle: t('onboarding.step3Subtitle'),
-            icon: Bus,
+            icon: Train,
             color: 'orange',
             content: (
                 <div className="space-y-4">
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
                         {t('onboarding.step3Desc')}
                     </p>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                        <div className="text-sm font-bold mb-3 flex items-center gap-2">
-                            <Bus className="w-4 h-4 text-orange-500" />
-                            {t('onboarding.step3Alt')}
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                                <div>
-                                    <div className="text-xs font-bold">{t('onboarding.step3Bus')}</div>
-                                    <div className="text-[10px] text-[var(--muted)]">{t('onboarding.step3BusRoute')}</div>
-                                </div>
-                                <div className="text-xs font-bold text-orange-600">{t('onboarding.step3BusTime')}</div>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                                <div>
-                                    <div className="text-xs font-bold">{t('onboarding.step3Taxi')}</div>
-                                    <div className="text-[10px] text-[var(--muted)]">{t('onboarding.step3TaxiRoute')}</div>
-                                </div>
-                                <div className="text-xs font-bold text-blue-600">{t('onboarding.step3TaxiTime')}</div>
-                            </div>
-                        </div>
+                    <div className="rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <Image
+                            src="/images/onboarding/step3-timetable.png"
+                            alt="時刻表の画面"
+                            width={375}
+                            height={500}
+                            className="w-full h-auto"
+                        />
                     </div>
                     <div className="bg-orange-50 rounded-lg p-3 text-[11px] text-orange-700">
                         {t('onboarding.step3Hint')}
@@ -158,26 +123,18 @@ export default function OnboardingPage() {
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
                         {t('onboarding.step4Desc')}
                     </p>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                        <div className="text-sm font-bold mb-3 flex items-center gap-2">
-                            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                            {t('onboarding.step4FavTitle')}
+                    <div className="space-y-3">
+                        <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                            <span className="text-lg flex-shrink-0">①</span>
+                            <p className="text-[12px] text-[var(--foreground)] leading-relaxed">
+                                予測結果画面の右上にある <strong>「☆ お気に入り登録」</strong> ボタンをタップするだけで登録完了。
+                            </p>
                         </div>
-                        <div className="space-y-2">
-                            <button className="w-full flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200 hover:bg-yellow-100 transition-colors text-left">
-                                <div>
-                                    <div className="text-xs font-bold">{t('onboarding.step4Commute')}</div>
-                                    <div className="text-[10px] text-[var(--muted)]">{t('onboarding.step4CommuteRoute')}</div>
-                                </div>
-                                <ArrowRight className="w-4 h-4 text-yellow-600" />
-                            </button>
-                            <button className="w-full flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors text-left">
-                                <div>
-                                    <div className="text-xs font-bold">{t('onboarding.step4School')}</div>
-                                    <div className="text-[10px] text-[var(--muted)]">{t('onboarding.step4SchoolRoute')}</div>
-                                </div>
-                                <ArrowRight className="w-4 h-4 text-purple-600" />
-                            </button>
+                        <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                            <span className="text-lg flex-shrink-0">②</span>
+                            <p className="text-[12px] text-[var(--foreground)] leading-relaxed">
+                                トップページにお気に入りが表示され、ワンタップで最新予測を確認できます。
+                            </p>
                         </div>
                     </div>
                     <div className="bg-purple-50 rounded-lg p-3 text-[11px] text-purple-700">
