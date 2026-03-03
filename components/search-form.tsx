@@ -145,7 +145,7 @@ export function SearchForm({
                 />
 
                 {/* Swap ボタン — 入力欄の境目にオーバーラップ */}
-                <div className="flex items-center justify-center mt-0 -mb-3.5 z-10 md:my-0 md:pb-3">
+                <div className="flex items-center justify-center mt-1.5 -mb-3.5 z-10 md:my-0 md:pb-3">
                     <button
                         type="button"
                         onClick={() => {
