@@ -327,16 +327,25 @@ export async function fetchHourlyWeatherForecast(
                     data.hourly.wind_gusts_10m[targetIdx]
                 );
 
+                // snowDepthChange を算出（メインweatherと同一ロジック）
+                const hSnowDepthM = data.hourly.snow_depth[targetIdx] || 0;
+                const hPrevSnowDepthM = targetIdx > 0 ? (data.hourly.snow_depth[targetIdx - 1] || 0) : hSnowDepthM;
+                const hSnowDepthChangeCm = parseFloat(((hSnowDepthM - hPrevSnowDepthM) * 100).toFixed(1));
+
                 surroundingHours.push({
                     date: hTime.split('T')[0],
                     targetTime: hTime.split('T')[1], // 時間も保持
                     weather: getWeatherName(data.hourly.weather_code[targetIdx]),
+                    temperature: data.hourly.temperature_2m[targetIdx], // 🆕 メインweatherと同一
                     tempMax: data.hourly.temperature_2m[targetIdx], // 便宜上
                     tempMin: data.hourly.temperature_2m[targetIdx],
                     precipitation: data.hourly.precipitation[targetIdx],
                     windSpeed: data.hourly.wind_speed_10m[targetIdx],
                     snowfall: hSnowfall,
+                    snowDepth: hSnowDepthM, // 🆕 メインweatherと同一
+                    snowDepthChange: hSnowDepthChangeCm, // 🆕 メインweatherと同一
                     windGust: data.hourly.wind_gusts_10m[targetIdx],
+                    pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[targetIdx] : 1013, // 🆕 メインweatherと同一
                     weatherCode: data.hourly.weather_code[targetIdx],
                     windDirection: data.hourly.winddirection_10m[targetIdx], // 🆕
                     warnings: hWarnings,

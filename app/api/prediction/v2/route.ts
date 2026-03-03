@@ -123,13 +123,13 @@ export async function POST(req: NextRequest) {
             const checkTime = `${hStr}:00`;
             const isTarget = offset === 0;
 
-            // Find weather data for this hour
-            const hourWeather = isTarget
-                ? weather
-                : surroundingWeather.find((sw: WeatherForecast) => {
-                    const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
-                    return swHour === h;
-                }) || null;
+            // 全時間を surroundingHours から統一取得（データ構造の一貫性を保証）
+            // ターゲット時刻も surroundingHours から取得することで、
+            // 検索時刻を変えても同じ時刻は同じデータ・同じ結果になる
+            const hourWeather = surroundingWeather.find((sw: WeatherForecast) => {
+                const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
+                return swHour === h;
+            }) || null;
 
             if (!hourWeather) continue;
 
