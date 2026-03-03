@@ -177,12 +177,12 @@ export function SearchForm({
 
             {/* 日付・時刻選択 — 統一フレーム */}
             <div className="space-y-2">
-                <div className="flex items-center gap-4">
-                    <label className="section-label flex items-center gap-1 mb-0">
+                <div className="grid grid-cols-2 gap-0">
+                    <label className="section-label flex items-center gap-1 mb-0 pl-1">
                         <Calendar className="w-3 h-3" />
                         {t('search.date')}
                     </label>
-                    <label className="section-label flex items-center gap-1 mb-0">
+                    <label className="section-label flex items-center gap-1 mb-0 pl-3">
                         <Clock className="w-3 h-3" />
                         {t('search.time')}
                     </label>
