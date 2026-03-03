@@ -276,22 +276,40 @@ export async function fetchHourlyWeatherForecast(
             }
         });
 
-        const snowDepthMeters = data.hourly.snow_depth[closestIndex] || 0;
-        const prevSnowDepthMeters = closestIndex > 0 ? (data.hourly.snow_depth[closestIndex - 1] || 0) : snowDepthMeters;
-        const snowDepthChangeVal = (snowDepthMeters - prevSnowDepthMeters) * 100; // m -> cm
+        // 共通ヘルパー: 任意のインデックスから WeatherForecast エントリを構築
+        // メインweatherとsurroundingHoursで同一ロジックを使用し、データ構造の対称性を保証
+        const buildHourlyEntry = (idx: number): Omit<WeatherForecast, 'surroundingHours'> => {
+            const hTime = data.hourly.time[idx];
+            const snowDepthM = data.hourly.snow_depth[idx] || 0;
+            const prevSnowDepthM = idx > 0 ? (data.hourly.snow_depth[idx - 1] || 0) : snowDepthM;
+            const snowDepthChangeCm = parseFloat(((snowDepthM - prevSnowDepthM) * 100).toFixed(1));
+            const hSnowfall = data.hourly.snowfall ? data.hourly.snowfall[idx] : 0;
 
-        const currentHourData = {
-            time: data.hourly.time[closestIndex],
-            temp: data.hourly.temperature_2m[closestIndex],
-            precipitation: data.hourly.precipitation[closestIndex],
-            windSpeed: data.hourly.wind_speed_10m[closestIndex],
-            windGust: data.hourly.wind_gusts_10m[closestIndex],
-            snowDepth: data.hourly.snow_depth[closestIndex],
-            snowDepthChange: parseFloat(snowDepthChangeVal.toFixed(1)),
-            snowfall: data.hourly.snowfall ? data.hourly.snowfall[closestIndex] : 0,
-            weatherCode: data.hourly.weather_code[closestIndex],
-            windDirection: data.hourly.winddirection_10m[closestIndex], // 🆕
-            pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[closestIndex] : 1013, // 🆕
+            const hWarnings = generateWarningsFromHourly(
+                data.hourly.precipitation[idx],
+                data.hourly.wind_speed_10m[idx],
+                hSnowfall,
+                data.hourly.wind_gusts_10m[idx]
+            );
+
+            return {
+                date: hTime.split('T')[0],
+                targetTime: hTime.split('T')[1],
+                weather: getWeatherName(data.hourly.weather_code[idx]),
+                temperature: data.hourly.temperature_2m[idx],
+                tempMax: data.hourly.temperature_2m[idx],
+                tempMin: data.hourly.temperature_2m[idx],
+                precipitation: data.hourly.precipitation[idx],
+                windSpeed: data.hourly.wind_speed_10m[idx],
+                snowfall: hSnowfall,
+                snowDepth: snowDepthM,
+                snowDepthChange: snowDepthChangeCm,
+                windGust: data.hourly.wind_gusts_10m[idx],
+                pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[idx] : 1013,
+                weatherCode: data.hourly.weather_code[idx],
+                windDirection: data.hourly.winddirection_10m[idx],
+                warnings: hWarnings,
+            };
         };
 
         // 気象庁公式警報を優先し、取得失敗時は擬似警報にフォールバック
@@ -301,74 +319,27 @@ export async function fetchHourlyWeatherForecast(
             warnings = jmaWarnings;
             logger.info('[Weather] Using JMA official warnings', { routeId, count: jmaWarnings.length });
         } else {
-            warnings = generateWarningsFromHourly(
-                currentHourData.precipitation,
-                currentHourData.windSpeed,
-                currentHourData.snowfall || 0,
-                currentHourData.windGust
-            );
+            const mainEntry = buildHourlyEntry(closestIndex);
+            warnings = mainEntry.warnings; // 擬似警報はヘルパーが生成済み
             logger.info('[Weather] Using pseudo warnings (JMA unavailable)', { routeId });
         }
 
         // 前後12時間のデータを抽出（タイムシフト提案・グラフ用）
         const surroundingHours: WeatherForecast[] = [];
         for (let i = -12; i <= 12; i++) {
-            // if (i === 0) continue; // 🆕 Include target hour to avoid data hole!
             const targetIdx = closestIndex + i;
             if (targetIdx >= 0 && targetIdx < data.hourly.time.length) {
-                const hTime = data.hourly.time[targetIdx];
-                const hSnowfall = data.hourly.snowfall ? data.hourly.snowfall[targetIdx] : 0;
-
-                // 簡易警告生成
-                const hWarnings = generateWarningsFromHourly(
-                    data.hourly.precipitation[targetIdx],
-                    data.hourly.wind_speed_10m[targetIdx],
-                    hSnowfall,
-                    data.hourly.wind_gusts_10m[targetIdx]
-                );
-
-                // snowDepthChange を算出（メインweatherと同一ロジック）
-                const hSnowDepthM = data.hourly.snow_depth[targetIdx] || 0;
-                const hPrevSnowDepthM = targetIdx > 0 ? (data.hourly.snow_depth[targetIdx - 1] || 0) : hSnowDepthM;
-                const hSnowDepthChangeCm = parseFloat(((hSnowDepthM - hPrevSnowDepthM) * 100).toFixed(1));
-
-                surroundingHours.push({
-                    date: hTime.split('T')[0],
-                    targetTime: hTime.split('T')[1], // 時間も保持
-                    weather: getWeatherName(data.hourly.weather_code[targetIdx]),
-                    temperature: data.hourly.temperature_2m[targetIdx], // 🆕 メインweatherと同一
-                    tempMax: data.hourly.temperature_2m[targetIdx], // 便宜上
-                    tempMin: data.hourly.temperature_2m[targetIdx],
-                    precipitation: data.hourly.precipitation[targetIdx],
-                    windSpeed: data.hourly.wind_speed_10m[targetIdx],
-                    snowfall: hSnowfall,
-                    snowDepth: hSnowDepthM, // 🆕 メインweatherと同一
-                    snowDepthChange: hSnowDepthChangeCm, // 🆕 メインweatherと同一
-                    windGust: data.hourly.wind_gusts_10m[targetIdx],
-                    pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[targetIdx] : 1013, // 🆕 メインweatherと同一
-                    weatherCode: data.hourly.weather_code[targetIdx],
-                    windDirection: data.hourly.winddirection_10m[targetIdx], // 🆕
-                    warnings: hWarnings,
-                });
+                surroundingHours.push(buildHourlyEntry(targetIdx) as WeatherForecast);
             }
         }
 
+        // メインweatherもヘルパーで構築（surroundingHoursと同一構造を保証）
+        const mainWeather = buildHourlyEntry(closestIndex);
         return {
-            date: targetDate,
-            weather: getWeatherName(currentHourData.weatherCode),
-            temperature: currentHourData.temp, // 🆕
-            tempMax: currentHourData.temp + 2,
-            tempMin: currentHourData.temp - 2,
-            precipitation: currentHourData.precipitation,
-            windSpeed: currentHourData.windSpeed,
-            snowfall: currentHourData.snowfall,
-            windGust: currentHourData.windGust,
-            weatherCode: currentHourData.weatherCode,
-            windDirection: currentHourData.windDirection, // 🆕
-            pressure: currentHourData.pressure, // 🆕
-            warnings,
-            surroundingHours, // 追加
-        };
+            ...mainWeather,
+            warnings, // JMA公式警報を優先使用
+            surroundingHours,
+        } as WeatherForecast;
     } catch (error) {
         logger.error('Failed to fetch hourly weather', error, { routeId, targetDateTime });
         return null;

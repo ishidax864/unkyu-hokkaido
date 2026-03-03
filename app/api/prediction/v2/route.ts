@@ -12,6 +12,77 @@ import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
 import { fetchJRStatusFromDB } from '@/lib/services/jr-status-service';
 import { buildCacheKey, getFromCache, setCache } from '@/lib/prediction-cache';
 
+/**
+ * 時間帯別リスク推移を構築する
+ *
+ * 全時間を surroundingHours から統一取得し、surroundingHours を除外した
+ * 独立計算を行うことで、検索時刻に依存しない一貫したリスク値を保証する。
+ */
+function buildHourlyRiskTrend(params: {
+    targetHour: number;
+    surroundingWeather: WeatherForecast[];
+    routeId: string;
+    routeName: string;
+    date: string;
+    isToday: boolean;
+    jrStatus: PredictionInput['jrStatus'];
+    historicalData: PredictionInput['historicalData'];
+    crowdsourcedStatus: PredictionInput['crowdsourcedStatus'];
+    officialHistory: PredictionInput['officialHistory'];
+}): HourlyRiskData[] {
+    const { targetHour, surroundingWeather, routeId, routeName, date, isToday, jrStatus, historicalData, crowdsourcedStatus, officialHistory } = params;
+    const trend: HourlyRiskData[] = [];
+
+    for (let offset = -2; offset <= 2; offset++) {
+        const h = targetHour + offset;
+        if (h < 0 || h > 23) continue;
+
+        const hStr = h.toString().padStart(2, '0');
+        const checkTime = `${hStr}:00`;
+        const isTarget = offset === 0;
+
+        // 全時間を surroundingHours から統一取得（データ構造の一貫性を保証）
+        const hourWeather = surroundingWeather.find((sw) => {
+            const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
+            return swHour === h;
+        }) || null;
+
+        if (!hourWeather) continue;
+
+        // surroundingHours を除外して独立計算（adaptive calibration をスキップ）
+        const isolatedWeather = { ...hourWeather, surroundingHours: undefined } as WeatherForecast;
+
+        const hourResult = calculateSuspensionRisk({
+            weather: isolatedWeather,
+            routeId,
+            routeName,
+            targetDate: date,
+            targetTime: checkTime,
+            historicalData,
+            jrStatus,
+            crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
+            officialHistory: isToday ? officialHistory : null,
+        });
+
+        // 天気アイコン判定
+        let icon: HourlyRiskData['weatherIcon'] = 'cloud';
+        if ((hourWeather.snowfall ?? 0) > 0) icon = 'snow';
+        else if (hourWeather.precipitation && hourWeather.precipitation > 0) icon = 'rain';
+        else if (hourWeather.windSpeed >= 15) icon = 'wind';
+        else if (hourWeather.weather.includes('晴')) icon = 'sun';
+
+        trend.push({
+            time: checkTime,
+            risk: Math.floor(hourResult.probability),
+            weatherIcon: icon,
+            isTarget,
+            isCurrent: isTarget,
+        });
+    }
+
+    return trend;
+}
+
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
@@ -107,67 +178,19 @@ export async function POST(req: NextRequest) {
         result.officialStatus = jrStatus;
 
         // 🆕 Trend Calculation (Server-Side)
-        // Each hour is evaluated INDEPENDENTLY on its own weather data.
-        // We intentionally do NOT pass surroundingHours so that
-        // applyAdaptiveCalibration is skipped — this ensures the same hour
-        // always shows the same risk value regardless of which hour is searched.
-        const trend: HourlyRiskData[] = [];
-        const targetHour = parseInt(time.split(':')[0]);
-        const surroundingWeather = weather.surroundingHours || [];
-
-        for (let offset = -2; offset <= 2; offset++) {
-            const h = targetHour + offset;
-            if (h < 0 || h > 23) continue;
-
-            const hStr = h.toString().padStart(2, '0');
-            const checkTime = `${hStr}:00`;
-            const isTarget = offset === 0;
-
-            // 全時間を surroundingHours から統一取得（データ構造の一貫性を保証）
-            // ターゲット時刻も surroundingHours から取得することで、
-            // 検索時刻を変えても同じ時刻は同じデータ・同じ結果になる
-            const hourWeather = surroundingWeather.find((sw: WeatherForecast) => {
-                const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
-                return swHour === h;
-            }) || null;
-
-            if (!hourWeather) continue;
-
-            // Strip surroundingHours to ensure deterministic calculation per hour
-            // (adaptive calibration uses surroundingHours which varies by search context)
-            const isolatedWeather = {
-                ...hourWeather,
-                surroundingHours: undefined
-            } as typeof weather;
-
-            const hourResult = calculateSuspensionRisk({
-                weather: isolatedWeather,
-                routeId,
-                routeName: jrStatus?.routeName || '当該路線',
-                targetDate: date,
-                targetTime: checkTime,
-                historicalData,
-                jrStatus: jrStatus,
-                crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
-                officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null,
-            });
-            const hourRisk = hourResult.probability;
-
-            // Determine icon
-            let icon: HourlyRiskData['weatherIcon'] = 'cloud';
-            if ((hourWeather.snowfall ?? 0) > 0) icon = 'snow';
-            else if (hourWeather.precipitation && hourWeather.precipitation > 0) icon = 'rain';
-            else if (hourWeather.windSpeed >= 15) icon = 'wind';
-            else if (hourWeather.weather.includes('晴')) icon = 'sun';
-
-            trend.push({
-                time: checkTime,
-                risk: Math.floor(hourRisk),
-                weatherIcon: icon,
-                isTarget: isTarget,
-                isCurrent: isTarget
-            });
-        }
+        // 各時間を独立・統一的に評価し、検索時刻に依存しない一貫したリスク値を保証する
+        const trend = buildHourlyRiskTrend({
+            targetHour: parseInt(time.split(':')[0]),
+            surroundingWeather: weather.surroundingHours || [],
+            routeId,
+            routeName: jrStatus?.routeName || '当該路線',
+            date,
+            isToday,
+            jrStatus,
+            historicalData,
+            crowdsourcedStatus,
+            officialHistory: officialHistory as PredictionInput['officialHistory'],
+        });
 
         result.trend = trend;
 
