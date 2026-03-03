@@ -105,7 +105,7 @@ export function SearchForm({
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
             {/* クイックルート選択 — モバイルで横スクロール */}
             <div>
                 <div className="text-[11px] font-bold text-[var(--muted)] mb-2 flex items-center gap-1">
@@ -118,9 +118,9 @@ export function SearchForm({
                             key={`${dep}-${arr}`}
                             type="button"
                             onClick={() => handleQuickRoute(dep, arr)}
-                            className={`text-[11px] py-2 px-3 md:px-1 rounded-lg border transition-all text-center leading-tight whitespace-nowrap flex-shrink-0 ${departureStation?.id === dep && arrivalStation?.id === arr
-                                ? 'border-[var(--primary)] bg-[var(--primary)]/5 text-[var(--primary)] font-bold'
-                                : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--background-secondary)] text-[var(--muted)]'
+                            className={`text-[12px] py-2 px-3.5 md:px-2 rounded-full border transition-all text-center leading-tight whitespace-nowrap flex-shrink-0 ${departureStation?.id === dep && arrivalStation?.id === arr
+                                ? 'border-[var(--primary)] bg-[var(--primary-light)] text-[var(--primary)] font-bold shadow-sm'
+                                : 'border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--primary-light)] text-[var(--muted)]'
                                 }`}
                         >
                             <span className="inline md:block text-sm mr-1 md:mr-0 md:mb-0.5">{emoji}</span>
@@ -155,7 +155,7 @@ export function SearchForm({
                             setArrQuery(departureStation ? sn(departureStation) : '');
                         }}
                         disabled={!departureStation && !arrivalStation}
-                        className="group flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        className="group flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         aria-label="出発駅と到着駅を入れ替える"
                     >
                         <ArrowUpDown className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
@@ -218,7 +218,7 @@ export function SearchForm({
             <button
                 type="submit"
                 disabled={!departureStation || !arrivalStation || !isDateValid(date) || isLoading}
-                className="w-full btn-primary py-3 text-[14px] font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
+                className="w-full btn-primary py-3.5 text-[14px] font-bold disabled:cursor-not-allowed"
             >
                 {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

@@ -147,7 +147,7 @@ export default function Home() {
         />
 
         {/* 検索フォーム — ファーストビュー直下に配置 */}
-        <section className="mb-4" aria-labelledby="search-section-title">
+        <section className="mb-5" aria-labelledby="search-section-title">
           <h2 id="search-section-title" className="section-label">{t('search.sectionTitle')}</h2>
 
           {/* 🆕 お気に入りルートセレクター */}
@@ -182,7 +182,7 @@ export default function Home() {
               }}
             />
           )}
-          <div className="card p-4">
+          <div className="card p-5">
             <SearchForm
               onSearch={handleSearch}
               isLoading={isLoading}

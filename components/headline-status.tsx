@@ -104,10 +104,10 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
         return {
             level: 'normal' as const,
             icon: CheckCircle,
-            bgColor: 'bg-blue-50',
-            borderColor: 'border-blue-200',
-            textColor: 'text-blue-800',
-            iconColor: 'text-blue-500',
+            bgColor: 'bg-[var(--primary-light)]',
+            borderColor: 'border-[var(--brand-green-100)]',
+            textColor: 'text-[var(--status-normal)]',
+            iconColor: 'text-[var(--status-normal)]',
             headline: `✅ ${t('headline.allNormal')}`,
             message: t('headline.allNormalDetail'),
         };
@@ -121,10 +121,10 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
             <div className="flex items-start gap-3">
                 <Icon className={`w-6 h-6 flex-shrink-0 mt-0.5 ${status.iconColor}`} />
                 <div className="flex-1">
-                    <div className={`font-black text-[18px] leading-tight ${status.textColor}`}>
+                    <div className={`font-bold text-[17px] leading-tight ${status.textColor}`}>
                         {status.headline}
                     </div>
-                    <div className={`text-[12px] mt-1 ${status.textColor} opacity-70`}>
+                    <div className={`text-[12px] mt-0.5 ${status.textColor} opacity-60`}>
                         {status.message}
                     </div>
                 </div>

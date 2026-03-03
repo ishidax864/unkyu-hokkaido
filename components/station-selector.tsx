@@ -131,8 +131,8 @@ export function StationSelector({
                         handleFocusOrChange();
                     }}
                     onFocus={handleFocusOrChange}
-                    className={`w-full input-field pl-9 pr-10 py-3 text-lg font-black transition-all
-                        ${selectedStation ? 'bg-blue-50/30 border-[var(--primary)] shadow-[0_0_0_1px_var(--primary)]' : 'bg-white'}
+                    className={`w-full input-field pl-9 pr-10 py-3 text-base font-bold transition-all
+                        ${selectedStation ? 'bg-[var(--primary-light)] border-[var(--primary)] shadow-[0_0_0_1px_var(--primary)]' : ''}
                     `}
                 />
 
@@ -151,7 +151,7 @@ export function StationSelector({
             {isOpen && (
                 <>
                     {/* Mobile: fullscreen modal overlay */}
-                    <div className="md:hidden fixed inset-0 z-50 bg-white flex flex-col animate-[fadeInDown_0.15s_ease-out]">
+                    <div className="md:hidden fixed inset-0 z-50 bg-[var(--card)] flex flex-col animate-[fadeInDown_0.15s_ease-out]">
                         {/* Modal header */}
                         <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background-secondary)]">
                             <h3 className="text-base font-bold">{label}</h3>
@@ -212,7 +212,7 @@ export function StationSelector({
                                                             ? 'opacity-30 cursor-not-allowed grayscale'
                                                             : isSelected
                                                                 ? 'bg-blue-50 text-[var(--primary)]'
-                                                                : 'hover:bg-gray-50 active:bg-gray-100'
+                                                                : 'hover:bg-[var(--background-secondary)] active:bg-[var(--background-secondary)]'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-3">
@@ -238,7 +238,7 @@ export function StationSelector({
 
                     {/* Desktop: regular dropdown */}
                     <div
-                        className="hidden md:block absolute z-50 mt-1 w-full max-h-72 overflow-y-auto bg-white border border-[var(--border)] rounded-xl shadow-xl backdrop-blur-sm border-t-0 animate-[fadeInDown_0.15s_ease-out]"
+                        className="hidden md:block absolute z-50 mt-1 w-full max-h-72 overflow-y-auto bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-xl backdrop-blur-sm border-t-0 animate-[fadeInDown_0.15s_ease-out]"
                     >
                         {filtered.length === 0 ? (
                             <div className="p-8 text-center">

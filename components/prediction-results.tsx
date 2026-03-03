@@ -65,8 +65,8 @@ export function PredictionResults({
             {/* ヘッダー：駅名表示とお気に入り */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black bg-[var(--foreground)] text-[var(--card)] px-2 py-0.5 rounded leading-none">予測結果</span>
-                    <h2 className="text-[20px] font-black text-[var(--foreground)] leading-none tracking-tight">
+                    <span className="text-[10px] font-bold bg-[var(--primary)] text-white px-2 py-0.5 rounded-md leading-none">予測結果</span>
+                    <h2 className="text-[19px] font-bold text-[var(--foreground)] leading-none tracking-tight">
                         {depStation.name} → {arrStation.name}
                     </h2>
                 </div>
@@ -82,7 +82,7 @@ export function PredictionResults({
                                 addFavorite(depStation.id, arrStation.id, depStation.name, arrStation.name);
                             }
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-all shadow-sm ${isFavorite(depStation.id, arrStation.id)
                             ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
                             : 'bg-[var(--card)] text-[var(--muted)] border border-[var(--border)] hover:bg-[var(--background-secondary)]'
                             }`}
