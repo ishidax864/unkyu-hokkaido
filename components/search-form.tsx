@@ -175,47 +175,43 @@ export function SearchForm({
                 />
             </div>
 
-            {/* 日付・時刻選択 — 常に横並び */}
-            <div className="space-y-3">
-                <div className="grid grid-cols-[3fr_2fr] gap-2">
-                    <div>
-                        <label className="section-label flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {t('search.date')}
-                        </label>
-                        <input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            onKeyDown={(e) => e.preventDefault()} // 🆕 手入力不可（年を数万年にする等のイタズラ防止）
-                            min={new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date())}
-                            max={(() => {
-                                const d = new Date();
-                                d.setDate(d.getDate() + 7);
-                                return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
-                            })()}
-                            className={`w-full input-field p-2.5 text-sm font-bold ${!isDateValid(date) ? 'border-red-500 bg-red-50' : ''}`}
-                        />
-                        {!isDateValid(date) && (
-                            <p className="text-[11px] text-red-500 mt-1">※1週間以内の日付を選択してください</p>
-                        )}
-                    </div>
-                    <div>
-                        <label className="section-label flex items-center gap-1 mb-1">
-                            <Clock className="w-3 h-3" />
-                            {t('search.time')}
-                        </label>
-
-                        <input
-                            type="time"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                            className="w-full input-field p-2.5 text-sm font-bold"
-                        />
-                    </div>
+            {/* 日付・時刻選択 — 統一フレーム */}
+            <div className="space-y-2">
+                <div className="flex items-center gap-4">
+                    <label className="section-label flex items-center gap-1 mb-0">
+                        <Calendar className="w-3 h-3" />
+                        {t('search.date')}
+                    </label>
+                    <label className="section-label flex items-center gap-1 mb-0">
+                        <Clock className="w-3 h-3" />
+                        {t('search.time')}
+                    </label>
                 </div>
-
-
+                <div className={`flex items-center rounded-lg border ${!isDateValid(date) ? 'border-red-400 bg-red-50/30' : 'border-[var(--border)] bg-[var(--card)]'} overflow-hidden transition-colors`}>
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        onKeyDown={(e) => e.preventDefault()}
+                        min={new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date())}
+                        max={(() => {
+                            const d = new Date();
+                            d.setDate(d.getDate() + 7);
+                            return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
+                        })()}
+                        className="flex-1 min-w-0 bg-transparent px-3 py-2.5 text-sm font-bold text-[var(--foreground)] outline-none"
+                    />
+                    <div className="w-px h-6 bg-[var(--border)] shrink-0" />
+                    <input
+                        type="time"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        className="flex-1 min-w-0 bg-transparent px-3 py-2.5 text-sm font-bold text-[var(--foreground)] outline-none"
+                    />
+                </div>
+                {!isDateValid(date) && (
+                    <p className="text-[11px] text-red-500">※1週間以内の日付を選択してください</p>
+                )}
             </div>
 
             {/* 予測ボタン */}
