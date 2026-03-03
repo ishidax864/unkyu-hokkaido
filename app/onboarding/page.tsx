@@ -40,7 +40,7 @@ export default function OnboardingPage() {
                             </div>
                             <div className="flex gap-2">
                                 <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
-                                    2026-02-25
+                                    <span className="text-sm text-gray-400">YYYY/MM/DD</span>
                                 </div>
                                 <div className="flex-1 p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-400">
                                     08:30

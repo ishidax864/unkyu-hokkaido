@@ -53,29 +53,10 @@ export default function LegalNotation() {
                     </section>
 
                     <section>
-                        <h2 className="text-lg font-bold mb-3 border-b pb-1">販売価格 / 販売価格以外に必要な費用</h2>
+                        <h2 className="text-lg font-bold mb-3 border-b pb-1">サービスの提供形態</h2>
                         <p>
-                            投げ銭（寄付）の価格は、決済ページに表示される金額（税込）によります。<br />
-                            インターネット接続料金、通信料金等はお客様の負担となります。
+                            当サービスは無料で提供しています。有料サービスの提供を開始する場合は、本ページにて事前にご案内いたします。
                         </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-lg font-bold mb-3 border-b pb-1">代金の支払時期 / 支払方法</h2>
-                        <p>
-                            支払方法：クレジットカード決済（Stripe）<br />
-                            支払時期：決済時（即時）
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-lg font-bold mb-3 border-b pb-1">商品の引き渡し時期</h2>
-                        <p>投げ銭（寄付）という性質上、デジタルコンテンツ等の直接的な商品の提供はありません。</p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-lg font-bold mb-3 border-b pb-1">返品・キャンセルについて</h2>
-                        <p>投げ銭（寄付）の性質上、決済完了後の返金・キャンセルには応じられません。あらかじめご了承ください。</p>
                     </section>
 
                     <div className="pt-4 text-right text-xs text-[var(--muted)]">
