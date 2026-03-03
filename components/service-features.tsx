@@ -175,7 +175,7 @@ export function ServiceFeatures() {
             {/* ─── 精度セクション（シンプル） ─── */}
             <div
                 className="rounded-xl p-5 mb-4"
-                style={{ background: '#1a3a2a' }}
+                style={{ background: '#2a5a40' }}
             >
                 <div className="flex items-center gap-4">
                     <AccuracyRing />

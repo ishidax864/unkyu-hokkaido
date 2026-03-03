@@ -49,11 +49,13 @@ function buildHourlyRiskTrend(params: {
 
         if (!hourWeather) continue;
 
-        // surroundingHours を除外して独立計算（adaptive calibration をスキップ）
-        const isolatedWeather = { ...hourWeather, surroundingHours: undefined } as WeatherForecast;
+        // 当日はリアルタイムステータスも反映するため surroundingHours を保持
+        // 全時間に同一の surroundingWeather を渡すことで、検索時刻による一貫性を維持しつつ
+        // applyAdaptiveCalibration（JR公式ステータスによる補正）を有効にする
+        const weatherWithContext = { ...hourWeather, surroundingHours: isToday ? surroundingWeather : undefined } as WeatherForecast;
 
         const hourResult = calculateSuspensionRisk({
-            weather: isolatedWeather,
+            weather: weatherWithContext,
             routeId,
             routeName,
             targetDate: date,
