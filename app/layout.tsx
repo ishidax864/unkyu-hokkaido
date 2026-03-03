@@ -143,10 +143,13 @@ export const viewport: Viewport = {
 
 import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
 import { SiteFooter } from '@/components/site-footer';
-import { FeedbackButton } from '@/components/feedback-button'; // 🆕
-import { CookieConsent } from '@/components/cookie-consent';
 import { ToastProvider } from '@/components/toast';
 import { LanguageProvider } from '@/lib/i18n';
+import dynamic from 'next/dynamic';
+
+// 非クリティカル UI: コード分割で初回バンドルから分離
+const FeedbackButton = dynamic(() => import('@/components/feedback-button').then(m => m.FeedbackButton));
+const CookieConsent = dynamic(() => import('@/components/cookie-consent').then(m => m.CookieConsent));
 
 export default function RootLayout({
   children,

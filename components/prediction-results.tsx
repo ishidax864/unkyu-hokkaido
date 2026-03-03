@@ -7,13 +7,16 @@ import { PredictionResultCard } from './prediction-result';
 import { ShareCard } from './share-card';
 import { HourlyRiskChart } from './hourly-risk-chart';
 import { ReportButtons } from './report-buttons';
-import { AlternativeRoutes } from './alternative-routes';
-import { HotelSuggestions } from './hotel-suggestions';
-import { WeeklyForecastChart } from './weekly-forecast';
-import { TimetableView } from './timetable-view';
 import { Star, ArrowUp } from 'lucide-react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { useTranslation } from '@/lib/i18n';
+import dynamic from 'next/dynamic';
+
+// 遅延ロード: 検索結果表示後にしか使わないコンポーネント
+const AlternativeRoutes = dynamic(() => import('./alternative-routes').then(m => m.AlternativeRoutes), { ssr: false });
+const HotelSuggestions = dynamic(() => import('./hotel-suggestions').then(m => m.HotelSuggestions), { ssr: false });
+const WeeklyForecastChart = dynamic(() => import('./weekly-forecast').then(m => m.WeeklyForecastChart), { ssr: false });
+const TimetableView = dynamic(() => import('./timetable-view').then(m => m.TimetableView), { ssr: false });
 
 interface PredictionResultsProps {
     prediction: PredictionResult;
