@@ -131,7 +131,7 @@ export function SearchForm({
             </div>
 
             {/* 出発・到着駅選択 */}
-            <div className="flex flex-col md:flex-row md:items-end gap-0 md:gap-2 relative">
+            <div className="flex flex-col md:flex-row md:items-end md:gap-2 relative">
                 <StationSelector
                     label={t('search.departure')}
                     selectedStation={departureStation}
@@ -144,8 +144,8 @@ export function SearchForm({
                     onInteract={() => setIsArrivalOpen(false)}
                 />
 
-                {/* Swap ボタン + 矢印 */}
-                <div className="flex items-center justify-center py-1 z-10 md:my-0 md:pb-3">
+                {/* Swap ボタン — 入力欄の境目にオーバーラップ */}
+                <div className="flex items-center justify-center -my-1.5 z-10 md:my-0 md:pb-3">
                     <button
                         type="button"
                         onClick={() => {
@@ -155,10 +155,10 @@ export function SearchForm({
                             setArrQuery(departureStation ? sn(departureStation) : '');
                         }}
                         disabled={!departureStation && !arrivalStation}
-                        className="group flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        className="group flex items-center justify-center w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--primary-light)] hover:border-[var(--primary)] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         aria-label="出発駅と到着駅を入れ替える"
                     >
-                        <ArrowUpDown className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
+                        <ArrowUpDown className="w-3.5 h-3.5 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors" />
                     </button>
                 </div>
 
