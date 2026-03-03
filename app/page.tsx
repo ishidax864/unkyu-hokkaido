@@ -33,15 +33,15 @@ export default function Home() {
     time, setTime,
 
     isLoading,
-    searchError, // 🆕
+    searchError, //
     prediction,
     weeklyPredictions,
     selectedRouteId,
     timeShiftSuggestion,
     riskTrend,
-    realtimeStatus, // 🆕
+    realtimeStatus, //
     handleSearch,
-    refreshRealtimeStatus, // 🆕
+    refreshRealtimeStatus, //
   } = useRouteSearch();
 
 
@@ -138,7 +138,7 @@ export default function Home() {
         <HeadlineStatus
           warnings={warnings.flatMap(w => w.warnings)}
           weatherCondition={todayWeather?.weather || ''}
-          jrStatus={jrStatus} // 🆕
+          jrStatus={jrStatus} //
           isLoading={isWeatherLoading}
         />
 
@@ -146,7 +146,7 @@ export default function Home() {
         <section className="mb-5" aria-labelledby="search-section-title">
           <h2 id="search-section-title" className="section-label">{t('search.sectionTitle')}</h2>
 
-          {/* 🆕 お気に入りルートセレクター */}
+          {/* お気に入りルートセレクター */}
           {isFavoritesLoaded && favorites.length > 0 && (
             <FavoriteSelector
               favorites={favorites}

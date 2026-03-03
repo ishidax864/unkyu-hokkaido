@@ -114,7 +114,7 @@ export async function runJRCrawler() {
     // Collect all ML training rows for batch insert
     const mlBatch: Array<Record<string, unknown>> = [];
 
-    // 🆕 Process all areas in PARALLEL for speed (Vercel 10s limit)
+    // Process all areas in PARALLEL for speed (Vercel 10s limit)
     const areaResults = await Promise.allSettled(JR_JSON_URLS.map(async (area) => {
         const url = `${BASE_URL}${area.id}.json`;
         const areaML: Array<Record<string, unknown>> = [];
@@ -122,7 +122,7 @@ export async function runJRCrawler() {
 
         const response = await fetch(url, {
             cache: 'no-store',
-            signal: AbortSignal.timeout(5000) // 🆕 Explicit 5s timeout
+            signal: AbortSignal.timeout(5000) // Explicit 5s timeout
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -185,7 +185,7 @@ export async function runJRCrawler() {
             month, hour, day_of_week: dayOfWeek
         });
 
-        // 🆕 Batch all status inserts for this area
+        // Batch all status inserts for this area
         const statusInserts: Array<Record<string, unknown>> = [];
 
         for (const item of gaikyoList) {
@@ -231,7 +231,7 @@ export async function runJRCrawler() {
             }
         }
 
-        // 🆕 Batch insert status history (1 call instead of N)
+        // Batch insert status history (1 call instead of N)
         if (statusInserts.length > 0) {
             const { error: batchErr } = await supabase
                 .from('route_status_history')
@@ -275,7 +275,7 @@ export async function runJRCrawler() {
         }
     }
 
-    // 🆕 Batch insert all ML training data in one call
+    // Batch insert all ML training data in one call
     let mlResult: { inserted: number; error?: string } = { inserted: 0 };
     if (mlBatch.length > 0) {
         logger.info(`[ML] Attempting batch insert: ${mlBatch.length} rows`);

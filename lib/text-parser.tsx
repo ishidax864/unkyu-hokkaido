@@ -24,7 +24,7 @@ export function extractResumptionTime(text: string, referenceDate: Date = new Da
         /(\d{1,2})時(\d{1,2})分頃?.*再開/, // 19時30分頃再開
         /(\d{1,2}):(\d{1,2}).*再開/,       // 19:30再開
         /(\d{1,2})時頃?.*再開/,           // 19時頃再開
-        // 🆕 Patterns for "from" (から) which implies resumption start
+        // Patterns for "from" (から) which implies resumption start
         /(\d{1,2}):(\d{1,2})頃?から/,      // 18:00頃から
         /(\d{1,2})時(\d{1,2})分頃?から/,   // 18時00分頃から
         /(\d{1,2}):(\d{1,2})頃?以降/,      // 18:00頃以降
@@ -180,7 +180,7 @@ export function extractSuspendedTrains(text: string): string[] {
             // Remove typical prefix reasons
             content = content.replace(/^.*(ため|より|影響で|要したため|伴い|伴う)、/, '');
 
-            // 🆕 Filter out generic statements that don't specify *which* trains
+            // Filter out generic statements that don't specify *which* trains
             // Must contain specific keywords like Train Name, Type, Line, Section, Travel direction
             if (!content.match(/特急|快速|普通|ライラック|カムイ|エアポート|宗谷|オホーツク|ニセコ|すずらん|北斗|とかち|おおぞら|号|線|間|行き|発|上り|下り/)) {
                 continue;

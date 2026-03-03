@@ -95,7 +95,7 @@ export const metadata: Metadata = {
   category: 'transportation',
 };
 
-// 🆕 JSON-LD 構造化データ（複数スキーマ）
+// JSON-LD 構造化データ（複数スキーマ）
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -138,10 +138,10 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "#007849" },
     { media: "(prefers-color-scheme: dark)", color: "#007849" },
   ],
-  colorScheme: "light",
+  colorScheme: "light dark",
 };
 
-import { GoogleAnalytics } from '@next/third-parties/google'; // 🆕
+import { GoogleAnalytics } from '@next/third-parties/google'; //
 import { SiteFooter } from '@/components/site-footer';
 import { ToastProvider } from '@/components/toast';
 import { LanguageProvider } from '@/lib/i18n';
@@ -156,13 +156,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID; // 🆕 GA4測定ID
+  const gaId = process.env.NEXT_PUBLIC_GA_ID; // GA4測定ID
 
   return (
     <html lang="ja">
       {/* ... (head) ... */}
       <body className={`${notoSansJP.variable} ${inter.variable} font-sans antialiased`}>
-        {/* 🆕 構造化データを挿入 */}
+        {/* 構造化データを挿入 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

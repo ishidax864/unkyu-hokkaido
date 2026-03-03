@@ -40,7 +40,7 @@ export function useRouteSearch() {
         isEarlier: boolean;
     } | null>(null);
     const [riskTrend, setRiskTrend] = useState<HourlyRiskData[]>([]);
-    // 🆕 Always hold real-time status
+    // Always hold real-time status
     const [realtimeStatus, setRealtimeStatus] = useState<PredictionInput['crowdsourcedStatus'] | null>(null);
 
     const handleSearch = async (
@@ -65,7 +65,7 @@ export function useRouteSearch() {
         const commonLines = depStation && arrStation ? getCommonLines(depStation, arrStation) : [];
         let primaryRoute = commonLines[0] || null;
 
-        // 🆕 直通路線がない場合、主要連絡ルート（コリドー）を検索
+        // 直通路線がない場合、主要連絡ルート（コリドー）を検索
         if (!primaryRoute && depStation && arrStation) {
             const connectingRoute = getConnectingRoute(depStation, arrStation);
             if (connectingRoute) {
@@ -158,14 +158,14 @@ export function useRouteSearch() {
         }
 
         // Crowdsourced Status
-        // 🆕 週間予測の「今日」の行のために、本日でなくても取得する（ただし計算に使用するのは1行目のみ）
+        // 週間予測の「今日」の行のために、本日でなくても取得する（ただし計算に使用するのは1行目のみ）
         const rtStatus = routeId ? aggregateCrowdsourcedStatus(routeId) : null;
         setRealtimeStatus(rtStatus);
 
         // 検索日が今日の場合のみ、メインの計算用にStatusを使用する
         const currentCrowdsourcedStatus = isToday ? rtStatus : null;
 
-        // 🆕 過去30日の運休履歴、および公的ステータス履歴は v2 API がサーバー側で取得済み
+        // 過去30日の運休履歴、および公的ステータス履歴は v2 API がサーバー側で取得済み
         // クライアント側での冗長な取得を廃止
         let historicalData: PredictionInput['historicalData'] = null;
         let officialHistory: PredictionInput['officialHistory'] = null;
@@ -198,7 +198,7 @@ export function useRouteSearch() {
             if (apiRes.ok) {
                 const mlResult: PredictionResult & { trend?: HourlyRiskData[]; _serverData?: Record<string, unknown> } = await apiRes.json();
 
-                // 🆕 サーバーから取得した enriched data を利用
+                // サーバーから取得した enriched data を利用
                 if (mlResult._serverData) {
                     historicalData = mlResult._serverData.historicalData as PredictionInput['historicalData'];
                     officialHistory = mlResult._serverData.officialHistory as PredictionInput['officialHistory'];
@@ -239,7 +239,7 @@ export function useRouteSearch() {
         }
 
         // Helper: Weekly Calculation
-        // 🆕 API v2のofficialStatus（サーバー側で取得）を優先使用
+        // API v2のofficialStatus（サーバー側で取得）を優先使用
         // サーバー側はSupabaseのエリア広域チェックを含むため、より正確に周辺路線の影響を検出する
         if (weeklyWeather.length > 0) {
             const weeklyJrStatus = finalPrediction?.officialStatus
@@ -278,7 +278,7 @@ export function useRouteSearch() {
             // For now, trusting API primarily.
         }
 
-        // 🆕 Recalculate Best Shift based on the NEW trend data
+        // Recalculate Best Shift based on the NEW trend data
         // Filter out high risk options effectively
         if (trendData.length > 0) {
             const currentRisk = finalPrediction?.probability ?? 0;
@@ -330,7 +330,7 @@ export function useRouteSearch() {
         time, setTime,
 
         isLoading,
-        searchError, // 🆕
+        searchError, //
         prediction,
         weeklyPredictions,
         selectedRouteId,
@@ -338,6 +338,6 @@ export function useRouteSearch() {
         riskTrend,
         realtimeStatus,
         handleSearch,
-        refreshRealtimeStatus // 🆕
+        refreshRealtimeStatus //
     };
 }
