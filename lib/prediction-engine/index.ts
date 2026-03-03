@@ -242,7 +242,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
 
     // 公式情報の解析とオーバーライド
     const officialOverride = resolveOfficialOverride(input.jrStatus);
-    let isOfficialOverride = !!overrideReason || officialOverride.isOfficialOverride;
+    const isOfficialOverride = !!overrideReason || officialOverride.isOfficialOverride;
     if (officialOverride.estimatedRecoveryTime) {
         estimatedRecoveryTime = officialOverride.estimatedRecoveryTime;
     }
