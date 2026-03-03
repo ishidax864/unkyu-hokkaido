@@ -458,8 +458,8 @@ export function PredictionResultCard({ result, route, isFuture = false }: Predic
                     >
                         JR公式ページで確認 <ExternalLink size={12} />
                     </a>
-                    <p className="text-[10px] text-[var(--muted)] text-center leading-relaxed opacity-70">
-                        ※本予測はAIによるものです。最新情報はJR北海道公式サイトをご確認ください。
+                    <p className="text-[11px] text-[var(--muted)] text-center leading-relaxed opacity-70 text-balance">
+                        ※本予測はAIによる参考情報です。<br className="sm:hidden" />正確な運行状況はJR北海道公式サイトをご確認ください。
                     </p>
                 </div>
             </div>
