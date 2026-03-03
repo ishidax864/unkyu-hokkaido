@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Train, Clock, ChevronDown, ChevronUp, Lock, Sparkles, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { Train, Clock, ChevronDown, ChevronUp, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { JRStatus } from '@/lib/types';
 import timetableData from '@/data/timetable-sapporo-chitose.json';

@@ -50,12 +50,12 @@ export default function Home() {
   const {
     weather,
     warnings,
-    currentTime,
+    currentTime: _currentTime,
     isWeatherLoading,
     lastWeatherUpdate,
     locationName,
     userLocation,
-    jrStatus // 🆕
+    jrStatus
   } = useAppInit();
 
   // トースト
