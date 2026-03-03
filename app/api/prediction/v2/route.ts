@@ -107,10 +107,13 @@ export async function POST(req: NextRequest) {
         result.officialStatus = jrStatus;
 
         // 🆕 Trend Calculation (Server-Side)
-        // User Request: "Calculate on server for consistency throughout."
+        // All time slots use the SAME calculation method for consistency.
+        // This ensures the same hour always shows the same risk value
+        // regardless of which hour the user searched.
         const trend: HourlyRiskData[] = [];
         const targetHour = parseInt(time.split(':')[0]);
         const surroundingWeather = weather.surroundingHours || [];
+        const contextHours = [...surroundingWeather, weather];
 
         for (let offset = -2; offset <= 2; offset++) {
             const h = targetHour + offset;
@@ -118,67 +121,47 @@ export async function POST(req: NextRequest) {
 
             const hStr = h.toString().padStart(2, '0');
             const checkTime = `${hStr}:00`;
-
-            let hourRisk: number;
-            let hourWeather: WeatherForecast | null = null;
             const isTarget = offset === 0;
 
-            if (isTarget) {
-                hourRisk = result.probability; // Re-use main result
-                hourWeather = weather;
-            } else {
-                hourWeather = surroundingWeather.find((sw: WeatherForecast) => {
+            // Find weather data for this hour
+            const hourWeather = isTarget
+                ? weather
+                : surroundingWeather.find((sw: WeatherForecast) => {
                     const swHour = sw.targetTime ? parseInt(sw.targetTime.split(':')[0]) : -1;
                     return swHour === h;
                 }) || null;
 
-                if (hourWeather) {
-                    // 🔑 CRITICAL: Context Attachment for Adaptive Calibration
-                    // We must attach 'surroundingHours' to the neighbor weather object
-                    // so that 'calculateSuspensionRisk' can find "Now" and apply the delta.
-                    // We use the full 'surroundingHours' from the main weather object.
+            if (!hourWeather) continue;
 
-                    // We also need to include the main weather itself in the list if it's not there,
-                    // but usually 'surroundingHours' contains neighbors.
-                    // To be safe, we construct a context list that includes the main weather.
-                    const contextHours = [...surroundingWeather, weather];
+            // Use consistent calculation for ALL hours (including target)
+            const weatherWithContext = {
+                ...hourWeather,
+                surroundingHours: contextHours
+            } as typeof weather;
 
-                    const weatherWithContext = {
-                        ...hourWeather!,
-                        surroundingHours: contextHours
-                    } as typeof weather;
-
-                    const r = calculateSuspensionRisk({
-                        weather: weatherWithContext,
-                        routeId,
-                        routeName: jrStatus?.routeName || '当該路線',
-                        targetDate: date,
-                        targetTime: checkTime,
-                        historicalData,
-                        jrStatus: jrStatus,
-                        crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
-                        officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null,
-                        timetableTrain: undefined
-                    });
-                    hourRisk = r.probability;
-                } else {
-                    continue;
-                }
-            }
+            const hourResult = calculateSuspensionRisk({
+                weather: weatherWithContext,
+                routeId,
+                routeName: jrStatus?.routeName || '当該路線',
+                targetDate: date,
+                targetTime: checkTime,
+                historicalData,
+                jrStatus: jrStatus,
+                crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
+                officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null,
+            });
+            const hourRisk = hourResult.probability;
 
             // Determine icon
             let icon: HourlyRiskData['weatherIcon'] = 'cloud';
-            const displayWeather = isTarget ? weather : hourWeather;
-            if (displayWeather) {
-                if ((displayWeather.snowfall ?? 0) > 0) icon = 'snow';
-                else if (displayWeather.precipitation && displayWeather.precipitation > 0) icon = 'rain';
-                else if (displayWeather.windSpeed >= 15) icon = 'wind';
-                else if (displayWeather.weather.includes('晴')) icon = 'sun';
-            }
+            if ((hourWeather.snowfall ?? 0) > 0) icon = 'snow';
+            else if (hourWeather.precipitation && hourWeather.precipitation > 0) icon = 'rain';
+            else if (hourWeather.windSpeed >= 15) icon = 'wind';
+            else if (hourWeather.weather.includes('晴')) icon = 'sun';
 
             trend.push({
                 time: checkTime,
-                risk: Math.floor(hourRisk), // Ensure integer
+                risk: Math.floor(hourRisk),
                 weatherIcon: icon,
                 isTarget: isTarget,
                 isCurrent: isTarget
