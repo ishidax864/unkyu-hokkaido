@@ -107,13 +107,13 @@ export async function POST(req: NextRequest) {
         result.officialStatus = jrStatus;
 
         // 🆕 Trend Calculation (Server-Side)
-        // All time slots use the SAME calculation method for consistency.
-        // This ensures the same hour always shows the same risk value
-        // regardless of which hour the user searched.
+        // Each hour is evaluated INDEPENDENTLY on its own weather data.
+        // We intentionally do NOT pass surroundingHours so that
+        // applyAdaptiveCalibration is skipped — this ensures the same hour
+        // always shows the same risk value regardless of which hour is searched.
         const trend: HourlyRiskData[] = [];
         const targetHour = parseInt(time.split(':')[0]);
         const surroundingWeather = weather.surroundingHours || [];
-        const contextHours = [...surroundingWeather, weather];
 
         for (let offset = -2; offset <= 2; offset++) {
             const h = targetHour + offset;
@@ -133,14 +133,15 @@ export async function POST(req: NextRequest) {
 
             if (!hourWeather) continue;
 
-            // Use consistent calculation for ALL hours (including target)
-            const weatherWithContext = {
+            // Strip surroundingHours to ensure deterministic calculation per hour
+            // (adaptive calibration uses surroundingHours which varies by search context)
+            const isolatedWeather = {
                 ...hourWeather,
-                surroundingHours: contextHours
+                surroundingHours: undefined
             } as typeof weather;
 
             const hourResult = calculateSuspensionRisk({
-                weather: weatherWithContext,
+                weather: isolatedWeather,
                 routeId,
                 routeName: jrStatus?.routeName || '当該路線',
                 targetDate: date,
