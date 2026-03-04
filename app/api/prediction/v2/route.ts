@@ -9,8 +9,87 @@ import { PredictionInput, HourlyRiskData, WeatherForecast } from '@/lib/types';
 
 import { getHistoricalSuspensionRate, getOfficialRouteHistory, savePredictionHistory } from '@/lib/supabase';
 import { aggregateCrowdsourcedStatusAsync } from '@/lib/user-reports';
-import { fetchJRStatusFromDB } from '@/lib/services/jr-status-service';
+import { fetchJRHokkaidoStatus, ROUTE_DEFINITIONS } from '@/lib/jr-status';
+import { extractResumptionTime } from '@/lib/text-parser';
 import { buildCacheKey, getFromCache, setCache } from '@/lib/prediction-cache';
+import { JRStatusItem } from '@/lib/types';
+
+// --- Live JR Status Cache (shared across requests, same TTL as banner) ---
+let liveJrCache: { data: Awaited<ReturnType<typeof fetchJRHokkaidoStatus>>; ts: number } | null = null;
+const LIVE_JR_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+
+async function fetchLiveJRStatus(routeId: string): Promise<JRStatusItem | null> {
+    try {
+        // Use cached live data if fresh
+        if (!liveJrCache || Date.now() - liveJrCache.ts >= LIVE_JR_CACHE_TTL) {
+            const items = await fetchJRHokkaidoStatus();
+            liveJrCache = { data: items, ts: Date.now() };
+        }
+
+        const items = liveJrCache.data;
+        const match = items.find(i => i.routeId === routeId);
+
+        if (match && match.status !== 'normal') {
+            const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
+            const jrStatusItem: JRStatusItem = {
+                routeId,
+                routeName: match.routeName || routeDef?.name || '当該路線',
+                status: match.status === 'cancelled' ? 'suspended' : match.status as JRStatusItem['status'],
+                description: match.statusText,
+                statusText: match.statusText,
+                updatedAt: match.updatedAt,
+                source: 'official',
+                rawText: match.rawText,
+            };
+
+            // Extract resumption time from official text
+            if (jrStatusItem.status === 'suspended' || jrStatusItem.status === 'delay') {
+                const extracted = extractResumptionTime(jrStatusItem.rawText || jrStatusItem.statusText || '');
+                if (extracted) {
+                    jrStatusItem.resumptionTime = extracted.toISOString();
+                }
+            }
+            return jrStatusItem;
+        }
+
+        // Check area-wide incidents (neighboring routes suspended)
+        const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
+        if (routeDef?.validAreas) {
+            const hasAreaIssues = items.some(i =>
+                i.routeId !== routeId &&
+                (i.status === 'suspended' || i.status === 'cancelled') &&
+                ROUTE_DEFINITIONS.find(r => r.routeId === i.routeId)?.validAreas?.some(
+                    a => routeDef.validAreas!.includes(a)
+                )
+            );
+            if (hasAreaIssues) {
+                return {
+                    routeId,
+                    routeName: routeDef.name || '当該路線',
+                    status: 'partial',
+                    description: '周辺路線で運休・遅延が発生しています',
+                    statusText: '周辺の運行状況に基づきリスクを算出しています',
+                    updatedAt: new Date().toISOString(),
+                    source: 'official',
+                };
+            }
+        }
+
+        // No issues found = normal
+        return {
+            routeId,
+            routeName: routeDef?.name || '当該路線',
+            status: 'normal',
+            description: '平常運転',
+            statusText: '現在、遅れに関する情報はありません',
+            updatedAt: new Date().toISOString(),
+            source: 'official',
+        };
+    } catch (e) {
+        logger.error('Live JR status fetch failed', e);
+        return null;
+    }
+}
 
 /**
  * 時間帯別リスク推移を構築する
@@ -128,7 +207,7 @@ export async function POST(req: NextRequest) {
                 logger.error('Weather fetch failed', e);
                 return null;
             }),
-            fetchJRStatusFromDB(routeId),
+            fetchLiveJRStatus(routeId),
             // Historical suspension rate from user reports
             getHistoricalSuspensionRate(routeId).catch(e => {
                 logger.warn('Historical data fetch failed', e);
