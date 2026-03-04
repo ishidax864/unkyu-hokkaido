@@ -36,8 +36,11 @@ export function determineBaseStatus(
     const rawText = jrStatus.rawText || jrStatus.statusText || '';
 
     // 1. Partial Suspension Detection (High Priority)
-    const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き', '一部区間', '区間運休', '一部運休', '減便', '列車を一部'];
-    const isPartialSuspension = partialKeywords.some(k => rawText.includes(k)) || jrStatus.status === 'partial';
+    // Note: '区間運休' must NOT match '全区間運休' (which is FULL cancellation, not partial)
+    const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き', '一部区間', '一部運休', '減便', '列車を一部'];
+    // '区間運休' needs special handling — only match if NOT preceded by '全'
+    const hasSpecialPartialKeyword = /(?<!全)区間運休/.test(rawText);
+    const isPartialSuspension = partialKeywords.some(k => rawText.includes(k)) || hasSpecialPartialKeyword || jrStatus.status === 'partial';
 
     if (isPartialSuspension) {
         return {
