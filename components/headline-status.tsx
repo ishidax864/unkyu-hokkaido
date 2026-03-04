@@ -20,14 +20,15 @@ function extractRouteSummary(routeName: string, rawText?: string): string | null
 
     // Route name variants for matching
     const nameVariants: Record<string, string[]> = {
-        '千歳線': ['千歳線', 'エアポート', '千歳'],
+        '千歳線': ['千歳線', 'エアポート'],
         '石勝線': ['石勝線', 'おおぞら', 'とかち'],
         '根室本線': ['根室線', '根室本線'],
         '函館本線': ['函館本線', '函館線'],
+        '函館本線（道南）': ['函館本線', '函館線'],
         '室蘭本線': ['室蘭本線', '室蘭線'],
-        '宗谷本線': ['宗谷本線', '宗谷線', 'サロベツ', '宗谷'],
+        '宗谷本線': ['宗谷本線', '宗谷線', 'サロベツ'],
         '石北本線': ['石北本線', '石北線', 'オホーツク', '大雪'],
-        '富良野線': ['富良野線', 'ラベンダー', '富良野'],
+        '富良野線': ['富良野線', '富良野'],
         '日高本線': ['日高本線', '日高線'],
         '釧網本線': ['釧網本線', '釧網線'],
         '学園都市線（札沼線）': ['学園都市線', '札沼線'],
@@ -36,32 +37,45 @@ function extractRouteSummary(routeName: string, rawText?: string): string | null
 
     const variants = nameVariants[routeName] || [routeName];
 
-    // Split rawText into segments by ・ or newline-like patterns
-    const segments = rawText.split(/[・\n]/).map(s => s.trim()).filter(Boolean);
+    // Split rawText into segments by ・ or ■ markers
+    const segments = rawText.split(/[・■\n]/).map(s => s.trim()).filter(s => s.length > 3);
 
-    // Find the most specific segment matching this route
+    // Find matching segments and score them — prefer specific details over generic headers
+    let bestMatch: { text: string; score: number } | null = null;
+
     for (const seg of segments) {
-        for (const v of variants) {
-            if (seg.includes(v)) {
-                // Clean up: extract the core info (section and schedule)
-                // e.g., "根室線　新得～池田駅間：11時頃から終日運休" → "新得～池田 11時頃から終日運休"
-                let summary = seg;
-                // Remove route name prefix for brevity
-                for (const rv of variants) {
-                    summary = summary.replace(rv, '').trim();
-                }
-                // Clean leading whitespace/punctuation
-                summary = summary.replace(/^[\s　：:]+/, '').trim();
+        const matched = variants.some(v => seg.includes(v));
+        if (!matched) continue;
 
-                if (summary.length > 3) {
-                    // Cap length for display
-                    return summary.length > 40 ? summary.substring(0, 38) + '…' : summary;
-                }
+        // Score: higher = more specific/actionable
+        let score = 1;
+        if (seg.includes('～') || seg.includes('〜')) score += 5; // Has section range (e.g., 新得～池田)
+        if (seg.includes('駅間') || seg.includes('区間')) score += 4;
+        if (/\d+時/.test(seg)) score += 3; // Has time info
+        if (seg.includes('終日') || seg.includes('全区間')) score += 3;
+        if (seg.includes('運休') || seg.includes('見合')) score += 2;
+        if (seg.includes('通常') || seg.includes('平常')) score += 2; // "通常通りの運転" is useful too
+        // Penalize generic announcement headers (long text without specifics)
+        if (seg.length > 60 && score <= 3) score -= 2;
+
+        if (!bestMatch || score > bestMatch.score) {
+            // Clean up: remove route name for brevity
+            let summary = seg;
+            for (const rv of variants) {
+                summary = summary.replace(rv, '').trim();
+            }
+            summary = summary.replace(/^[\s　：:]+/, '').trim();
+
+            if (summary.length > 3) {
+                bestMatch = {
+                    text: summary.length > 40 ? summary.substring(0, 38) + '…' : summary,
+                    score,
+                };
             }
         }
     }
 
-    return null;
+    return bestMatch?.text || null;
 }
 
 /**
