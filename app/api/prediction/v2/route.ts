@@ -52,6 +52,20 @@ async function fetchLiveJRStatus(routeId: string): Promise<JRStatusItem | null> 
             return jrStatusItem;
         }
 
+        // JR公式で「通常通り」と明示された路線 → area-wide partialチェックをスキップ
+        if (match && match.status === 'normal') {
+            const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
+            return {
+                routeId,
+                routeName: match.routeName || routeDef?.name || '当該路線',
+                status: 'normal',
+                description: match.statusText || '公式発表により通常運転',
+                statusText: match.statusText || '公式発表により通常運転',
+                updatedAt: match.updatedAt,
+                source: 'official',
+            };
+        }
+
         // Check area-wide incidents (neighboring routes suspended)
         const routeDef = ROUTE_DEFINITIONS.find(r => r.routeId === routeId);
         if (routeDef?.validAreas) {

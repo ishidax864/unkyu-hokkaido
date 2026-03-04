@@ -158,8 +158,23 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                     }
                 }
 
-                // 公式に「通常通り」と言及されている路線はスキップ
-                if (isExplicitlyNormal) continue;
+                // 公式に「通常通り」と言及されている路線は、明示的にnormalとして登録
+                // （area-wide partialチェックによる上書きを防止）
+                if (isExplicitlyNormal) {
+                    const existing = allItems.find(i => i.routeId === route.routeId);
+                    if (!existing) {
+                        allItems.push({
+                            routeId: route.routeId,
+                            routeName: route.name,
+                            status: 'normal',
+                            statusText: '公式発表により通常運転',
+                            updatedAt: now,
+                            rawText: cleanGaikyo,
+                            sourceArea: `${areaName} (${areaId})`,
+                        });
+                    }
+                    continue;
+                }
 
                 // 運休判定
                 if (cleanGaikyo.includes('運休') || cleanGaikyo.includes('運転見合わせ') || cleanGaikyo.includes('運転見合せ')) {
