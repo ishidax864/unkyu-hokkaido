@@ -164,7 +164,9 @@ export function evaluatePostRecoveryWindow(params: {
     }
 
     // AI予測の復旧時刻 vs ユーザー検索時刻（公式がない場合のフォールバック）
-    if (!isPostRecoveryWindow && estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime) {
+    // ただし、公式に「終日運休」が発表されている場合は、AI予測を適用しない
+    const isAllDaySuspension = jrStatus?.rawText?.includes('終日運休') || jrStatus?.statusText?.includes('終日運休');
+    if (!isPostRecoveryWindow && estimatedRecoveryTime && !estimatedRecoveryTime.includes('終日') && effectiveTargetTime && !isAllDaySuspension) {
         const recoveryMatch = estimatedRecoveryTime.match(/(\d{1,2}):(\d{2})/);
         const targetMatch = effectiveTargetTime.match(/(\d{1,2}):(\d{2})/);
         if (recoveryMatch && targetMatch) {
