@@ -12,6 +12,59 @@ interface HeadlineStatusProps {
 }
 
 /**
+ * rawText（JR公式の発表文）から路線に対応する具体的な運休情報を抽出する。
+ * 例: "根室線　新得～池田駅間：11時頃から終日運休" → "新得～池田 11時頃から終日運休"
+ */
+function extractRouteSummary(routeName: string, rawText?: string): string | null {
+    if (!rawText) return null;
+
+    // Route name variants for matching
+    const nameVariants: Record<string, string[]> = {
+        '千歳線': ['千歳線', 'エアポート', '千歳'],
+        '石勝線': ['石勝線', 'おおぞら', 'とかち'],
+        '根室本線': ['根室線', '根室本線'],
+        '函館本線': ['函館本線', '函館線'],
+        '室蘭本線': ['室蘭本線', '室蘭線'],
+        '宗谷本線': ['宗谷本線', '宗谷線', 'サロベツ', '宗谷'],
+        '石北本線': ['石北本線', '石北線', 'オホーツク', '大雪'],
+        '富良野線': ['富良野線', 'ラベンダー', '富良野'],
+        '日高本線': ['日高本線', '日高線'],
+        '釧網本線': ['釧網本線', '釧網線'],
+        '学園都市線（札沼線）': ['学園都市線', '札沼線'],
+        '留萌本線': ['留萌本線', '留萌線'],
+    };
+
+    const variants = nameVariants[routeName] || [routeName];
+
+    // Split rawText into segments by ・ or newline-like patterns
+    const segments = rawText.split(/[・\n]/).map(s => s.trim()).filter(Boolean);
+
+    // Find the most specific segment matching this route
+    for (const seg of segments) {
+        for (const v of variants) {
+            if (seg.includes(v)) {
+                // Clean up: extract the core info (section and schedule)
+                // e.g., "根室線　新得～池田駅間：11時頃から終日運休" → "新得～池田 11時頃から終日運休"
+                let summary = seg;
+                // Remove route name prefix for brevity
+                for (const rv of variants) {
+                    summary = summary.replace(rv, '').trim();
+                }
+                // Clean leading whitespace/punctuation
+                summary = summary.replace(/^[\s　：:]+/, '').trim();
+
+                if (summary.length > 3) {
+                    // Cap length for display
+                    return summary.length > 40 ? summary.substring(0, 38) + '…' : summary;
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
  * ページ上部に表示する今日の全体的な運行予報サマリー
  */
 export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, jrStatus = [], isLoading }: HeadlineStatusProps) {
@@ -44,8 +97,15 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
     const getStatus = () => {
         // 1. 実際の運休（最優先）
         if (suspendedRoutes.length > 0) {
-            const routeNames = suspendedRoutes.map(r => r.routeName).slice(0, 3).join('・');
-            const suffix = suspendedRoutes.length > 3 ? 'など' : '';
+            // 各路線の詳細サマリーを生成
+            const routeDetails = suspendedRoutes.slice(0, 4).map(r => {
+                const summary = extractRouteSummary(r.routeName, r.rawText);
+                return {
+                    name: r.routeName,
+                    detail: summary,
+                };
+            });
+
             return {
                 level: 'critical' as const,
                 icon: AlertTriangle,
@@ -54,7 +114,7 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                 textColor: 'text-red-800',
                 iconColor: 'text-red-500',
                 headline: `❌ ${t('headline.suspendedRoutes', { count: String(suspendedRoutes.length) })}`,
-                message: `${routeNames}${suffix}`,
+                routeDetails,
             };
         }
 
@@ -124,9 +184,22 @@ export function HeadlineStatus({ warnings, weatherCondition: _weatherCondition, 
                     <div className={`font-bold text-[17px] leading-tight ${status.textColor}`}>
                         {status.headline}
                     </div>
-                    <div className={`text-[12px] mt-0.5 ${status.textColor} opacity-60`}>
-                        {status.message}
-                    </div>
+                    {'routeDetails' in status && status.routeDetails ? (
+                        <div className="mt-1.5 space-y-0.5">
+                            {status.routeDetails.map((r: { name: string; detail: string | null }) => (
+                                <div key={r.name} className={`text-[12px] ${status.textColor} opacity-70 leading-snug`}>
+                                    <span className="font-bold">{r.name}</span>
+                                    {r.detail && (
+                                        <span className="ml-1 opacity-80">: {r.detail}</span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className={`text-[12px] mt-0.5 ${status.textColor} opacity-60`}>
+                            {'message' in status ? (status as { message: string }).message : ''}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
