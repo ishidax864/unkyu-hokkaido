@@ -14,44 +14,45 @@ import React from 'react';
 export function extractResumptionTime(text: string, referenceDate: Date = new Date()): Date | null {
     if (!text) return null;
 
+    // 終日運休 = all-day suspension, no resumption expected
+    if (text.includes('終日運休')) return null;
+
     // Normalize text (full-width digits/colon to half-width)
     const normalized = text
         .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
         .replace(/：/g, ':');
 
     // Common patterns for resumption time
-    const patterns = [
-        /(\d{1,2})時(\d{1,2})分頃?.*再開/, // 19時30分頃再開
-        /(\d{1,2}):(\d{1,2}).*再開/,       // 19:30再開
-        /(\d{1,2})時頃?.*再開/,           // 19時頃再開
-        // Patterns for "from" (から) which implies resumption start
-        /(\d{1,2}):(\d{1,2})頃?から/,      // 18:00頃から
-        /(\d{1,2})時(\d{1,2})分頃?から/,   // 18時00分頃から
-        /(\d{1,2}):(\d{1,2})頃?以降/,      // 18:00頃以降
-        /(\d{1,2})時(\d{1,2})分頃?以降/,   // 18時00分頃以降
+    const patterns: { regex: RegExp; requireContext?: boolean }[] = [
+        { regex: /(\d{1,2})時(\d{1,2})分頃?.*再開/ },  // 19時30分頃再開
+        { regex: /(\d{1,2}):(\d{1,2}).*再開/ },         // 19:30再開
+        { regex: /(\d{1,2})時頃?.*再開/ },              // 19時頃再開
+        // から/以降 patterns — need context check to avoid matching suspension start times
+        { regex: /(\d{1,2}):(\d{1,2})頃?から/, requireContext: true },
+        { regex: /(\d{1,2})時(\d{1,2})分頃?から/, requireContext: true },
+        { regex: /(\d{1,2}):(\d{1,2})頃?以降/, requireContext: true },
+        { regex: /(\d{1,2})時(\d{1,2})分頃?以降/, requireContext: true },
     ];
 
-    for (const pattern of patterns) {
+    for (const { regex: pattern, requireContext } of patterns) {
         const match = normalized.match(pattern);
         if (match) {
+            // Context check: if 'から' pattern, verify it's NOT followed by suspension keywords
+            // e.g., "12時10分頃から終日運休" means suspension STARTS, not resumption
+            if (requireContext) {
+                const matchEnd = match.index! + match[0].length;
+                const afterMatch = normalized.substring(matchEnd, matchEnd + 10);
+                if (/運休|見合|取りやめ|取消/.test(afterMatch)) {
+                    continue; // Skip — this is a suspension start time, not resumption
+                }
+            }
+
             const hour = parseInt(match[1], 10);
             const minute = match[2] ? parseInt(match[2], 10) : 0;
 
             if (hour >= 0 && hour <= 24 && minute >= 0 && minute < 60) {
                 const resumptionDate = new Date(referenceDate);
                 resumptionDate.setHours(hour, minute, 0, 0);
-
-                // If extracted time is significantly in the past (e.g. > 12 hours ago), 
-                // it might mean "tomorrow" or it's an old message, but for "Resumption", 
-                // it usually implies the *next* occurrence of that time if it's already passed 
-                // OR it refers to today if we are currently suspended.
-                // However, simplistic logic: assume it refers to "Today" or "Tomorrow".
-                // If now is 23:00 and extraction is 05:00, it's likely tomorrow.
-                if (resumptionDate.getTime() < referenceDate.getTime() - 6 * 60 * 60 * 1000) {
-                    // If prediction is for 6 hours ago, assume it means tomorrow? 
-                    // Or just keep it as today (maybe it resumed already).
-                    // Let's stick to "Today" for now unless explicit "tomorrow" (翌日) text found.
-                }
 
                 return resumptionDate;
             }
