@@ -102,12 +102,13 @@ export function determineBaseStatus(
     }
 
     // 3. Area-wide Partial Impact (neighboring routes suspended)
+    // 天気がメインドライバー、周辺影響は補助的な底上げのみ
     if (jrStatus.status === 'partial') {
         return {
             status: 'partial',
             isOfficialSuspended: false,
-            minProbability: 25,
-            maxProbability: 85,
+            minProbability: 10,
+            maxProbability: 50,
             overrideReason: jrStatus.statusText || '周辺路線で運休・遅延が発生しています'
         };
     }
