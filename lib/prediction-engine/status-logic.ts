@@ -98,7 +98,18 @@ export function determineBaseStatus(
         };
     }
 
-    // 3. Simple Delay
+    // 3. Area-wide Partial Impact (neighboring routes suspended)
+    if (jrStatus.status === 'partial') {
+        return {
+            status: 'partial',
+            isOfficialSuspended: false,
+            minProbability: 25,
+            maxProbability: 85,
+            overrideReason: jrStatus.statusText || '周辺路線で運休・遅延が発生しています'
+        };
+    }
+
+    // 4. Simple Delay
     if (jrStatus.status === 'delay') {
         return {
             status: '遅延',
