@@ -18,6 +18,44 @@ import { JRStatusItem } from '@/lib/types';
 let liveJrCache: { data: Awaited<ReturnType<typeof fetchJRHokkaidoStatus>>; ts: number } | null = null;
 const LIVE_JR_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
 
+/**
+ * 翌日以降の予測用にJRステータスをフィルタリング
+ *
+ * ルール:
+ * 1. suspended/cancelled: rawTextが対象日を言及していれば使用（計画運休等）、なければnull
+ * 2. partial/normal: 翌日以降は適用しない（天気予報ベースのみ）
+ * 3. delay: rawText参照で対象日言及あれば使用
+ */
+function filterJrStatusForFutureDate(
+    jrStatus: JRStatusItem | null,
+    targetDate: string
+): JRStatusItem | null {
+    if (!jrStatus) return null;
+
+    const rawText = jrStatus.rawText || '';
+    const targetMonth = parseInt(targetDate.split('-')[1]);
+    const targetDay = parseInt(targetDate.split('-')[2]);
+
+    // 「3月5日」「３月５日」のような日付パターンで対象日が言及されているか
+    const toFullWidth = (s: string) => s.replace(/[0-9]/g, c => '０１２３４５６７８９'[parseInt(c)]);
+    const datePatterns = [
+        `${targetMonth}月${targetDay}日`,
+        `${toFullWidth(String(targetMonth))}月${toFullWidth(String(targetDay))}日`,
+    ];
+    const mentionsTargetDate = datePatterns.some(p => rawText.includes(p));
+
+    if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
+        return mentionsTargetDate ? jrStatus : null;
+    }
+
+    if (jrStatus.status === 'delay') {
+        return mentionsTargetDate ? jrStatus : null;
+    }
+
+    // partial (area-wide) / normal → 翌日以降は天気予報のみ
+    return null;
+}
+
 async function fetchLiveJRStatus(routeId: string): Promise<JRStatusItem | null> {
     try {
         // Use cached live data if fresh
@@ -259,34 +297,8 @@ export async function POST(req: NextRequest) {
                 reportCount: crowdsourcedResult.reportCount,
                 last15minCounts: crowdsourcedResult.last15minCounts
             } : null;
-        // 未来予測用のJRステータスフィルタリング
-        // 当日: リアルタイムステータスをそのまま使用
-        // 翌日以降: rawTextが対象日に言及している場合のみ使用（天気予報ベース）
-        let effectiveJrStatus = jrStatus;
-        if (!isToday && jrStatus) {
-            const rawText = jrStatus.rawText || '';
-            const targetMonth = parseInt(date.split('-')[1]);
-            const targetDay = parseInt(date.split('-')[2]);
-            // 「3月5日」「３月５日」のような日付パターンで対象日が言及されているか
-            const datePatterns = [
-                `${targetMonth}月${targetDay}日`,
-                `${String(targetMonth).replace(/[0-9]/g, c => '０１２３４５６７８９'[parseInt(c)])}月${String(targetDay).replace(/[0-9]/g, c => '０１２３４５６７８９'[parseInt(c)])}日`,
-            ];
-            const mentionsTargetDate = datePatterns.some(p => rawText.includes(p));
-
-            if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
-                // 運休中: rawTextが対象日を言及していれば使用、なければ天気のみ
-                if (!mentionsTargetDate) {
-                    effectiveJrStatus = null;
-                }
-            } else if (jrStatus.status === 'partial') {
-                // 周辺影響(area-wide): 翌日以降は天気のみ
-                effectiveJrStatus = null;
-            } else if (jrStatus.status === 'normal') {
-                // 通常運転: 翌日以降は影響なし
-                effectiveJrStatus = null;
-            }
-        }
+        // 翌日以降はJRステータスのフィルタリングを適用
+        const effectiveJrStatus = isToday ? jrStatus : filterJrStatusForFutureDate(jrStatus, date);
 
         const input: PredictionInput = {
             weather,

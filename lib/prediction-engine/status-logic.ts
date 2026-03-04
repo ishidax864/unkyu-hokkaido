@@ -15,6 +15,13 @@ export interface BaseStatusResult {
 /**
  * Determines the effective base status from JR official information.
  * Single source of truth for probability constraints.
+ *
+ * Decision paths (in priority order):
+ * 1. Keyword Partial: rawText contains '一部運休' etc → min=60%, max=95%
+ * 2. Full Suspension: status=suspended or rawText contains '運休' → min=100%, max=100%
+ * 3. Area-wide Partial: status=partial (neighboring routes suspended) → min=10%, max=50%
+ * 4. Delay: status=delay → min=40%, max=75%
+ * 5. Normal: status=normal → min=0%, max=75%
  */
 export function determineBaseStatus(
     jrStatus: { status: string; resumptionTime?: string | null; rawText?: string; statusText?: string } | null | undefined,
@@ -27,11 +34,6 @@ export function determineBaseStatus(
         return { status: 'unknown', isOfficialSuspended: false, minProbability: 0, maxProbability: 100 };
     }
 
-    const todayJST = new Intl.DateTimeFormat('sv-SE', {
-        timeZone: 'Asia/Tokyo'
-    }).format(new Date());
-
-    const _isToday = targetDate === todayJST;
     const targetDateTime = new Date(`${targetDate}T${targetTime}:00+09:00`);
     const rawText = jrStatus.rawText || jrStatus.statusText || '';
 
@@ -126,7 +128,7 @@ export function determineBaseStatus(
         };
     }
 
-    // 4. Normal
+    // 5. Normal
     if (jrStatus.status === 'normal') {
         return {
             status: '平常運転',

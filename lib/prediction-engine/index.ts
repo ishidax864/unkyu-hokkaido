@@ -159,7 +159,7 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     // (calibration delta can push probability beyond the intended range)
     probability = Math.max(minProbability, Math.min(probability, maxProbability));
 
-    // 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
+    // 公式情報の影響判定 (confidence filter後に評価)
     let isOfficialInfluenced = false;
 
     // Confidence Filter（部分運休中・復旧後ウィンドウではバイパス）
