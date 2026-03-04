@@ -155,6 +155,10 @@ export function calculateSuspensionRisk(input: PredictionInput): PredictionResul
     probability = calibration.probability;
     reasonsWithPriority = calibration.reasons;
 
+    // Enforce bounds from determineBaseStatus after calibration
+    // (calibration delta can push probability beyond the intended range)
+    probability = Math.max(minProbability, Math.min(probability, maxProbability));
+
     // 是否有官方情報の影響 (Single source of truth - evaluated after confidence filter)
     let isOfficialInfluenced = false;
 

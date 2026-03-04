@@ -37,7 +37,7 @@ export function applyAdaptiveCalibration(
     let actualRiskNow = 0;
     if (currentStatus === 'suspended' || currentStatus === 'cancelled') actualRiskNow = 100;
     else if (currentStatus === 'delay') actualRiskNow = 50;
-    else if (currentStatus === 'partial') actualRiskNow = 30;
+    else if (currentStatus === 'partial') actualRiskNow = 15;
     else if (currentStatus === 'normal') actualRiskNow = 0;
 
     // 2. Calculate Theoretical Risk Now (Model's view of right now)
