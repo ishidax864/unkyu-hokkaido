@@ -259,6 +259,34 @@ export async function POST(req: NextRequest) {
                 reportCount: crowdsourcedResult.reportCount,
                 last15minCounts: crowdsourcedResult.last15minCounts
             } : null;
+        // 未来予測用のJRステータスフィルタリング
+        // 当日: リアルタイムステータスをそのまま使用
+        // 翌日以降: rawTextが対象日に言及している場合のみ使用（天気予報ベース）
+        let effectiveJrStatus = jrStatus;
+        if (!isToday && jrStatus) {
+            const rawText = jrStatus.rawText || '';
+            const targetMonth = parseInt(date.split('-')[1]);
+            const targetDay = parseInt(date.split('-')[2]);
+            // 「3月5日」「３月５日」のような日付パターンで対象日が言及されているか
+            const datePatterns = [
+                `${targetMonth}月${targetDay}日`,
+                `${String(targetMonth).replace(/[0-9]/g, c => '０１２３４５６７８９'[parseInt(c)])}月${String(targetDay).replace(/[0-9]/g, c => '０１２３４５６７８９'[parseInt(c)])}日`,
+            ];
+            const mentionsTargetDate = datePatterns.some(p => rawText.includes(p));
+
+            if (jrStatus.status === 'suspended' || jrStatus.status === 'cancelled') {
+                // 運休中: rawTextが対象日を言及していれば使用、なければ天気のみ
+                if (!mentionsTargetDate) {
+                    effectiveJrStatus = null;
+                }
+            } else if (jrStatus.status === 'partial') {
+                // 周辺影響(area-wide): 翌日以降は天気のみ
+                effectiveJrStatus = null;
+            } else if (jrStatus.status === 'normal') {
+                // 通常運転: 翌日以降は影響なし
+                effectiveJrStatus = null;
+            }
+        }
 
         const input: PredictionInput = {
             weather,
@@ -267,7 +295,7 @@ export async function POST(req: NextRequest) {
             targetDate: date,
             targetTime: time,
             historicalData,
-            jrStatus: jrStatus,
+            jrStatus: effectiveJrStatus,
             crowdsourcedStatus: isToday ? crowdsourcedStatus : null,
             officialHistory: isToday ? officialHistory as PredictionInput['officialHistory'] : null
         };
@@ -286,7 +314,7 @@ export async function POST(req: NextRequest) {
             routeName: jrStatus?.routeName || '当該路線',
             date,
             isToday,
-            jrStatus,
+            jrStatus: effectiveJrStatus,
             historicalData,
             crowdsourcedStatus,
             officialHistory: officialHistory as PredictionInput['officialHistory'],
