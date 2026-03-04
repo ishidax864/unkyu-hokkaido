@@ -85,14 +85,17 @@ describe('determineBaseStatus', () => {
             expect(result.isPartialSuspension).toBe(true);
         });
 
-        it('should detect status===partial', () => {
+        it('should detect status===partial as area-wide impact (not keyword partial)', () => {
             const result = determineBaseStatus(
                 { status: 'partial' },
                 TODAY,
                 '12:00'
             );
-            expect(result.isPartialSuspension).toBe(true);
+            // area-wide partialはキーワードベースのisPartialSuspensionとは別
+            expect(result.isPartialSuspension).toBeUndefined();
             expect(result.isOfficialSuspended).toBe(false);
+            expect(result.minProbability).toBe(10);
+            expect(result.maxProbability).toBe(50);
         });
     });
 });
