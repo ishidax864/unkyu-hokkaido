@@ -40,7 +40,9 @@ export function determineBaseStatus(
     const partialKeywords = ['一部の列車', '部分運休', '本数を減ら', '間引き', '一部区間', '一部運休', '減便', '列車を一部'];
     // '区間運休' needs special handling — only match if NOT preceded by '全'
     const hasSpecialPartialKeyword = /(?<!全)区間運休/.test(rawText);
-    const isPartialSuspension = partialKeywords.some(k => rawText.includes(k)) || hasSpecialPartialKeyword || jrStatus.status === 'partial';
+    // isPartialSuspensionはテキスト内のキーワードベースの検出のみ
+    // jrStatus.status === 'partial'（周辺路線影響）は別途 section 3 で処理
+    const isPartialSuspension = partialKeywords.some(k => rawText.includes(k)) || hasSpecialPartialKeyword;
 
     if (isPartialSuspension) {
         return {
