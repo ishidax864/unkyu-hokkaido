@@ -136,6 +136,31 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                 const hasRouteMention = route.keywords.some(k => cleanGaikyo.includes(k));
                 if (!hasRouteMention) continue;
 
+                // コンテキスト判定: キーワードが「通常通り」「通常運転」の文脈で出現しているかチェック
+                // 例: "快速エアポートを含む札幌近郊の列車は現時点では通常通りの運転をします"
+                // → この場合、エアポート(千歳線)は通常運転なのでsuspendedにしない
+                let isExplicitlyNormal = false;
+                for (const keyword of route.keywords) {
+                    const keyIdx = cleanGaikyo.indexOf(keyword);
+                    if (keyIdx === -1) continue;
+
+                    // キーワード周辺の文（。で区切られた一文、または前後100文字）を取得
+                    const sentenceStart = cleanGaikyo.lastIndexOf('。', keyIdx) + 1;
+                    const sentenceEnd = cleanGaikyo.indexOf('。', keyIdx);
+                    const sentence = cleanGaikyo.substring(
+                        sentenceStart >= 0 ? sentenceStart : Math.max(0, keyIdx - 100),
+                        sentenceEnd >= 0 ? sentenceEnd : Math.min(cleanGaikyo.length, keyIdx + 100)
+                    );
+
+                    if (/通常通り|通常運転|平常通り|平常運転/.test(sentence)) {
+                        isExplicitlyNormal = true;
+                        break;
+                    }
+                }
+
+                // 公式に「通常通り」と言及されている路線はスキップ
+                if (isExplicitlyNormal) continue;
+
                 // 運休判定
                 if (cleanGaikyo.includes('運休') || cleanGaikyo.includes('運転見合わせ') || cleanGaikyo.includes('運転見合せ')) {
                     status = 'suspended';
