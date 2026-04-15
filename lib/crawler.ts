@@ -161,6 +161,7 @@ export async function runJRCrawler() {
         const gaikyoList = json.today?.gaikyo || [];
         const weather = weatherByArea[area.id];
         const routesWithStatus = new Set<string>();
+        const routesIgnored = new Set<string>();
 
         // Helper: create ML row object
         const mkMlRow = (routeId: string, status: string, cause: string | null, details: string | null, delayMin: number | undefined, recTime: string | undefined) => ({
@@ -191,7 +192,6 @@ export async function runJRCrawler() {
         for (const item of gaikyoList) {
             const content = (item.honbun || '') + (item.title || '');
             if (!content) continue;
-            if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) continue;
 
             let matchedRouteId = null;
             for (const def of ROUTE_DEFINITIONS) {
@@ -202,33 +202,49 @@ export async function runJRCrawler() {
                 }
             }
 
-            if (matchedRouteId) {
-                routesWithStatus.add(matchedRouteId);
+            if (!matchedRouteId) continue;
 
-                let status = 'normal';
-                if (content.includes('再開') || content.includes('平常')) status = 'normal';
-                if (content.includes('遅れ') || content.includes('遅延')) status = 'delayed';
-                if (content.includes('運休') || content.includes('見合')) status = 'suspended';
-
-                let cause = 'weather';
-                if (content.includes('雪')) cause = 'snow';
-                else if (content.includes('風')) cause = 'wind';
-                else if (content.includes('雨')) cause = 'rain';
-
-                const { delayMinutes, recoveryTime } = extractNumericalStatus(content);
-
-                statusInserts.push({
-                    date, time,
-                    route_id: matchedRouteId,
-                    status, cause,
-                    details: content,
-                    crawler_log_id: logData.id,
-                    delay_minutes: delayMinutes,
-                    recovery_time: recoveryTime
-                });
-
-                areaML.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
+            if (EXCLUDE_KEYWORDS.some(kw => content.includes(kw))) {
+                routesIgnored.add(matchedRouteId);
+                continue;
             }
+
+            routesWithStatus.add(matchedRouteId);
+
+            let status = 'normal';
+            const normalized = content.replace(/\s+/g, '');
+            const hasSuspend = /運休|見合/.test(normalized);
+            const hasDelay = /遅れ|遅延/.test(normalized);
+            const hasRecovered = /再開|平常/.test(normalized);
+
+            if (hasSuspend && !hasRecovered) {
+                status = 'suspended';
+            } else if (hasDelay) {
+                status = 'delayed';
+            } else if (hasRecovered) {
+                status = 'normal';
+            } else if (hasSuspend && hasRecovered) {
+                status = 'normal';
+            }
+
+            let cause = 'weather';
+            if (content.includes('雪')) cause = 'snow';
+            else if (content.includes('風')) cause = 'wind';
+            else if (content.includes('雨')) cause = 'rain';
+
+            const { delayMinutes, recoveryTime } = extractNumericalStatus(content);
+
+            statusInserts.push({
+                date, time,
+                route_id: matchedRouteId,
+                status, cause,
+                details: content,
+                crawler_log_id: logData.id,
+                delay_minutes: delayMinutes,
+                recovery_time: recoveryTime
+            });
+
+            areaML.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
         }
 
         // Batch insert status history (1 call instead of N)
@@ -246,7 +262,7 @@ export async function runJRCrawler() {
         // Normal routes (ネガティブサンプル) — collect
         const areaRoutes = ROUTE_DEFINITIONS.filter(r => r.validAreas?.includes(area.id));
         for (const route of areaRoutes) {
-            if (!routesWithStatus.has(route.routeId)) {
+            if (!routesWithStatus.has(route.routeId) && !routesIgnored.has(route.routeId)) {
                 areaML.push(mkMlRow(route.routeId, 'normal', null, null, undefined, undefined));
             }
         }

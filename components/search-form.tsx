@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { ArrowUpDown, Calendar, Clock, Zap } from 'lucide-react';
 import { Station, HOKKAIDO_STATIONS } from '@/lib/hokkaido-data';
@@ -54,6 +54,25 @@ export function SearchForm({
     const [depQuery, setDepQuery] = useState('');
     const [arrQuery, setArrQuery] = useState('');
 
+    const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
+
+    useEffect(() => {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const dStr = String(today.getDate()).padStart(2, '0');
+        const minStr = `${y}-${m}-${dStr}`;
+
+        const future = new Date();
+        future.setDate(future.getDate() + 7);
+        const fy = future.getFullYear();
+        const fm = String(future.getMonth() + 1).padStart(2, '0');
+        const fdStr = String(future.getDate()).padStart(2, '0');
+        const maxStr = `${fy}-${fm}-${fdStr}`;
+
+        setDateBounds({ min: minStr, max: maxStr });
+    }, []);
+
     const { t, locale } = useTranslation();
 
     const sn = (station: Station) => getLocalizedStationName(station, locale);
@@ -82,7 +101,8 @@ export function SearchForm({
     // バリデーション：日付が範囲内か
     const isDateValid = (dateStr: string) => {
         if (!dateStr) return false;
-        const selected = new Date(dateStr);
+        const [y, m, d] = dateStr.split('-');
+        const selected = new Date(Number(y), Number(m) - 1, Number(d));
         const now = new Date();
         now.setHours(0, 0, 0, 0);
 
@@ -193,12 +213,8 @@ export function SearchForm({
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                         onKeyDown={(e) => e.preventDefault()}
-                        min={new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date())}
-                        max={(() => {
-                            const d = new Date();
-                            d.setDate(d.getDate() + 7);
-                            return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(d);
-                        })()}
+                        min={dateBounds.min || undefined}
+                        max={dateBounds.max || undefined}
                         className="flex-1 min-w-0 bg-transparent px-3 py-2.5 text-sm font-bold text-[var(--foreground)] outline-none"
                     />
                     <div className="w-px h-6 bg-[var(--border)] shrink-0" />
