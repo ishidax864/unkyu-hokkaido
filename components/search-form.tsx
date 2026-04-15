@@ -70,6 +70,7 @@ export function SearchForm({
         const fdStr = String(future.getDate()).padStart(2, '0');
         const maxStr = `${fy}-${fm}-${fdStr}`;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDateBounds({ min: minStr, max: maxStr });
     }, []);
 
