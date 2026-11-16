@@ -38,7 +38,7 @@ function verdictDetail(r: JourneyResult) {
     const reasons = r.forecast?.current.reasons ?? [];
     switch (r.verdict) {
         case 'disrupted': return `${r.official.disrupted.map(d => d.name + (d.note?.match(/^(札幌近郊|道央|道南)/) ? `（${d.note.match(/^(札幌近郊|道央|道南)/)![1]}）` : '')).join('、')}でJRが運休・30分以上の遅れを発表しています。`;
-        case 'caution': return `出発時刻の前後で、${reasons[0] ?? '強い雪・雨・風'}。予定の変更や早めの移動を検討してください。`;
+        case 'caution': return r.snowLoadReason ? `${r.snowLoadReason}。予定の変更や早めの移動を検討してください。` : `出発時刻の前後で、${reasons[0] ?? '強い雪・雨・風'}。予定の変更や早めの移動を検討してください。`;
         case 'watch': return reasons[0] && !reasons[0].includes('兆候はありません') ? `${reasons[0]}。出発前にもう一度確認してください。` : 'JRの最新情報を出発前に確認してください。';
         case 'unknown': return UNKNOWN_REASON_LABELS[r.official.reason ?? 'missing'];
         default: return r.official.dayKind === 'later' ? 'JRの運行情報は前日から出ます。気象リスクは低めです。' : 'JRの発表で運休・遅れの情報はなく、気象リスクも低めです。';
@@ -129,7 +129,7 @@ export default async function JourneyPage({ searchParams }: { searchParams: Prom
         <section aria-labelledby="verdict" className={`mt-5 rounded-2xl p-5 ${v.tone}`}>
             <h2 id="verdict" className={`text-2xl font-bold ${v.titleTone}`}>{v.title}</h2>
             <p className="mt-1.5 text-[17px] text-ink-2">{verdictDetail(r)}</p>
-            {r.verdict !== 'disrupted' && r.probability && <p className="mt-3 flex flex-wrap items-baseline gap-x-2">
+            {r.verdict !== 'disrupted' && r.probability && !r.snowLoadReason && <p className="mt-3 flex flex-wrap items-baseline gap-x-2">
                 <span className="text-sm font-bold text-ink-3">天候で運休・大幅に遅れる可能性</span>
                 <span className="text-3xl font-bold tabular">{r.probability.percent < 1 ? '1%未満' : `約${r.probability.percent}%`}</span>
                 {r.probability.multiple >= 2 && <span className="rounded-full bg-surface/70 px-2 py-0.5 text-sm font-bold">ふだんの約{r.probability.multiple}倍</span>}

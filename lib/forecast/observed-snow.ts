@@ -3,7 +3,7 @@ import type { RiskAssessment, WeatherPoint } from './types';
 
 export interface ObservedSnow {
     available: boolean; observedAt: string | null; checkedAt: string;
-    points: { point: string; station: string; stationId: string; distanceKm: number; snowfall24hCm: number }[];
+    points: { point: string; station: string; stationId: string; distanceKm: number; snowfall24hCm: number; /** 積雪深(cm)。観測が無い・品質フラグ付きは null */ snowDepthCm?: number | null }[];
     coverage: { available: number; total: number };
     url: string;
 }
@@ -22,15 +22,17 @@ export function selectObservedSnow(raw: unknown, observedAt: string, points: Wea
     const age = now.getTime() - Date.parse(observedAt);
     if (!Number.isFinite(age) || age < 0 || age > 90 * 60_000 || !raw || typeof raw !== 'object' || Array.isArray(raw)) return result;
     const valid = stations.stations.flatMap(station => {
-        const value = (raw as Record<string, {snow24h?: unknown}>)[station.id]?.snow24h;
+        const entry = (raw as Record<string, {snow24h?: unknown; snow?: unknown}>)[station.id];
+        const value = entry?.snow24h, depth = entry?.snow;
+        const snowDepthCm = Array.isArray(depth) && depth.length === 2 && depth[1] === 0 && typeof depth[0] === 'number' && Number.isFinite(depth[0]) && depth[0] >= 0 ? depth[0] : null;
         return Array.isArray(value) && value.length === 2 && value[1] === 0 && typeof value[0] === 'number' &&
-            Number.isFinite(value[0]) && value[0] >= 0 ? [{ ...station, snowfall24hCm: value[0] }] : [];
+            Number.isFinite(value[0]) && value[0] >= 0 ? [{ ...station, snowfall24hCm: value[0], snowDepthCm }] : [];
     });
     result.points = points.flatMap(point => {
         const nearest = valid.map(station => ({ ...station, distanceKm: distance(point, station) }))
             .filter(station => station.distanceKm <= 35).sort((a, b) => a.distanceKm - b.distanceKm)[0];
         return nearest ? [{ point: point.name, station: nearest.name, stationId: nearest.id,
-            distanceKm: Math.round(nearest.distanceKm), snowfall24hCm: nearest.snowfall24hCm }] : [];
+            distanceKm: Math.round(nearest.distanceKm), snowfall24hCm: nearest.snowfall24hCm, snowDepthCm: nearest.snowDepthCm }] : [];
     });
     result.coverage.available = result.points.length;
     result.available = points.length > 0 && result.points.length === points.length;

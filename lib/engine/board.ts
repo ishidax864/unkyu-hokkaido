@@ -12,6 +12,7 @@ import { assessWeather, withCurrentWarnings } from '@/lib/forecast/risk';
 import { getObservedSnow, withObservedSnow, type ObservedSnow } from '@/lib/forecast/observed-snow';
 import { getJourneyWarnings, type WarningSnapshot } from '@/lib/jma-warnings';
 import type { PointForecast, RiskAssessment, RiskLevel } from '@/lib/forecast/types';
+import { snowLoad, withSnowLoad, type SnowLoad } from '@/lib/forecast/snow-load';
 
 export interface RiskSummary {
     level: RiskLevel;
@@ -37,6 +38,8 @@ export interface BoardLine {
         tomorrow: RiskSummary | null;
     };
     warnings: { name: string; area: string }[];
+    /** 積雪が多いところに大雪・風雪の注意報・警報が出ている(今日のこのあと。12時以降は明日にも反映) */
+    snowLoad: (SnowLoad & { appliesTomorrow: boolean }) | null;
 }
 
 export interface Board {
@@ -102,22 +105,26 @@ export function buildBoard(inputs: BoardInputs, now = new Date()): Board {
         const available = points.filter((p): p is PointForecast => !!p);
         const expected = line.weatherPoints.length;
         const warnings = inputs.warnings.get(line.slug);
+        const load = snowLoad(warnings, inputs.observedSnow, line.weatherPoints.map(p => p.name));
+        const appliesTomorrow = hourNow >= 12; // 検証は「前日12〜21時に出ていた注意報」
+        const bump = (r: RiskSummary | null, on: boolean) => r && on && r.level !== 'unknown' ? withSnowLoad(r, load) : r;
         let nowRisk: RiskSummary | null = null;
         if (expected) {
             const nowTime = `${String(hourNow).padStart(2, '0')}:00`;
             let r = assessWeather(available, expected, calendarDate, nowTime);
             if (inputs.observedSnow) r = withObservedSnow(r, inputs.observedSnow, now.getTime(), now);
             if (warnings) r = withCurrentWarnings(r, warnings, now.getTime(), now);
-            nowRisk = { level: r.level, peakAt: nowTime, peakDate: calendarDate, reasons: r.reasons, location: r.location };
+            nowRisk = bump({ level: r.level, peakAt: nowTime, peakDate: calendarDate, reasons: r.reasons, location: r.location }, true);
         }
         return {
             slug: line.slug, name: line.name, note: line.note, region: line.region,
             today, tomorrow,
             risk: {
                 now: nowRisk,
-                laterToday: expected ? worstOver(available, expected, hoursBetween(calendarDate, Math.min(hourNow + 1, 23), 23)) : null,
-                tomorrow: expected ? worstOver(available, expected, hoursBetween(tomorrowDate, 6, 23)) : null,
+                laterToday: bump(expected ? worstOver(available, expected, hoursBetween(calendarDate, Math.min(hourNow + 1, 23), 23)) : null, true),
+                tomorrow: bump(expected ? worstOver(available, expected, hoursBetween(tomorrowDate, 6, 23)) : null, appliesTomorrow),
             },
+            snowLoad: load ? { ...load, appliesTomorrow } : null,
             warnings: (warnings?.alerts ?? []).filter(a => a.severity !== 'advisory').map(a => ({ name: a.name, area: a.area })),
         } satisfies BoardLine;
     });
