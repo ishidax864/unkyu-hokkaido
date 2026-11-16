@@ -1,0 +1,96 @@
+{
+ "area": "05",
+ "fetchedAt": "2026-11-07T01:15:05.081139+00:00",
+ "source": "crawler_logs fb5b800f-3fe1-46af-adb8-acbc6a5562cb",
+ "raw": {
+  "time": "2026年11月07日 10時14分現在",
+  "today": {
+   "gaikyo": [
+    {
+     "time": "2026年11月07日 08時55分現在",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 1,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "【設備点検による列車への影響について】                                                                                                     ",
+     "honbun": "根室線 滝川～赤平駅間の信号場で発生したポイント不転換の影響により、一部列車に運休および遅れが発生しています。<BR><BR>【運転再開】<BR>・根室線　滝川～富良野駅間（上下線）　８：４５頃から　"
+    }
+   ],
+   "dateText": "11/7",
+   "areaStatus": {
+    "doo": 1,
+    "spo": 1,
+    "doto": 1,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 0
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 1,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  },
+  "tomorrow": {
+   "gaikyo": [
+    {
+     "time": "",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "",
+     "honbun": "現在、遅れに関する情報はありません。"
+    }
+   ],
+   "dateText": "11/8",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 0
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  }
+ }
+}

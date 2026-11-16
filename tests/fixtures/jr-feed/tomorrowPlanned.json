@@ -1,0 +1,96 @@
+{
+ "area": "04",
+ "fetchedAt": "2026-11-12T15:00:12.738895+00:00",
+ "source": "crawler_logs f809274e-ed4f-42ac-825d-2b1b827969de",
+ "raw": {
+  "time": "2026年11月12日 23時59分現在",
+  "today": {
+   "gaikyo": [
+    {
+     "time": "",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "",
+     "honbun": "現在、遅れに関する情報はありません。"
+    }
+   ],
+   "dateText": "11/12",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 0
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  },
+  "tomorrow": {
+   "gaikyo": [
+    {
+     "time": "2026年11月11日 14時37分現在",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 1
+     },
+     "title": "【車両の確認による列車への影響について】                                                                                                    ",
+     "honbun": "基準値外の滑走傷が発見された影響により、一部列車に運休が発生しています。"
+    }
+   ],
+   "dateText": "11/13",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 1
+   },
+   "senkuStatus": {
+    "soya": 1,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  }
+ }
+}

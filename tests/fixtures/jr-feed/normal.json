@@ -1,0 +1,96 @@
+{
+ "area": "01",
+ "fetchedAt": "2026-11-16T12:30:22.376114+00:00",
+ "source": "crawler_logs e5a24dff-cd14-4f11-9f45-c82ded61afec",
+ "raw": {
+  "time": "2026年11月16日 21時29分現在",
+  "today": {
+   "gaikyo": [
+    {
+     "time": "",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "",
+     "honbun": "現在、遅れに関する情報はありません。"
+    }
+   ],
+   "dateText": "11/16",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 0
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  },
+  "tomorrow": {
+   "gaikyo": [
+    {
+     "time": "",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "",
+     "honbun": "現在、遅れに関する情報はありません。"
+    }
+   ],
+   "dateText": "11/17",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 0
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  }
+ }
+}

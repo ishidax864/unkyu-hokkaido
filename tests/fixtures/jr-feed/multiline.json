@@ -1,0 +1,108 @@
+{
+ "area": "01",
+ "fetchedAt": "2026-11-02T23:30:04.512495+00:00",
+ "source": "crawler_logs e505a1dc-c184-4b42-b56c-a4608ab197c0",
+ "raw": {
+  "time": "2026年11月03日 08時29分現在",
+  "today": {
+   "gaikyo": [
+    {
+     "time": "2026年11月02日 15時39分現在",
+     "eikyo": {
+      "doo": 1,
+      "spo": 1,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 1
+     },
+     "title": "【熊との衝突による列車への影響について】                                                                                                    ",
+     "honbun": "10月30日、宗谷線 天塩中川～問寒別駅間で、旭川発　稚内行き　特急サロベツ３号が熊との衝突により、先頭車両の車輪が脱線しました。この影響により、11月3日も終日運転を見合わせます。<BR>【運転見合わせ】<BR>・宗谷線　音威子府～稚内駅間　上下線：終日"
+    },
+    {
+     "time": "2026年11月03日 07時07分現在",
+     "eikyo": {
+      "doo": 1,
+      "spo": 1,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "【列車への影響について】                                                                                                            ",
+     "honbun": "函館線　琴似駅でお客様の対応を行ったため、一部の列車に運休・遅れが出ています。"
+    }
+   ],
+   "dateText": "11/3",
+   "areaStatus": {
+    "doo": 1,
+    "spo": 1,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 1
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 1,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 1,
+    "express": 1,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 1,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  },
+  "tomorrow": {
+   "gaikyo": [
+    {
+     "time": "",
+     "eikyo": {
+      "doo": 0,
+      "spo": 0,
+      "doto": 0,
+      "donan": 0,
+      "dohoku": 0
+     },
+     "title": "",
+     "honbun": "現在、遅れに関する情報はありません。"
+    }
+   ],
+   "dateText": "11/4",
+   "areaStatus": {
+    "doo": 0,
+    "spo": 0,
+    "doto": 0,
+    "shin": 0,
+    "donan": 0,
+    "dohoku": 1
+   },
+   "senkuStatus": {
+    "soya": 0,
+    "rumoi": 0,
+    "senmo": 0,
+    "furano": 0,
+    "gakuen": 0,
+    "hidaka": 0,
+    "nemuro": 0,
+    "airport": 0,
+    "express": 0,
+    "muroran": 0,
+    "sekisho": 0,
+    "hakodate": 0,
+    "hanasaki": 0,
+    "sekihoku": 0,
+    "hakochise": 0,
+    "hakodateLiner": 0
+   },
+   "areaComments": []
+  }
+ }
+}
