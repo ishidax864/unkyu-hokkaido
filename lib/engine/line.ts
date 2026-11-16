@@ -5,7 +5,8 @@ import { LINE_BY_SLUG } from '@/lib/registry/lines';
 import { getBoard, worstOver, hoursBetween, addDays, type BoardLine, type RiskSummary } from './board';
 import { fetchWeatherSeriesBatch } from '@/lib/weather';
 import { assessWeather } from '@/lib/forecast/risk';
-import { estimateRecovery, officialRecoveryTime, type RecoveryEstimate } from '@/lib/forecast/recovery';
+import { recoveryView, type RecoveryView } from './recovery';
+import { getCurrentOnsets } from './onsets';
 import type { PointForecast, RiskLevel } from '@/lib/forecast/types';
 import type { WeatherForecast } from '@/lib/types';
 
@@ -17,20 +18,11 @@ export interface LineDetail {
     serviceDate: string;
     hourly: HourSlot[];
     daily: DaySlot[];
-    recovery: RecoveryEstimate | null;
+    recovery: RecoveryView | null;
     weatherAvailable: boolean;
 }
 
 const jst = (d: Date) => new Date(d.getTime() + 9 * 3_600_000).toISOString();
-
-/** 「鹿との衝突による列車への影響について」→「鹿との衝突」 */
-export function causeFromNotices(titles: string[]): string | null {
-    for (const t of titles) {
-        const m = t.match(/^(.+?)(?:による|のため|の影響)/);
-        if (m && m[1].length <= 20) return m[1];
-    }
-    return null;
-}
 
 export async function getLineDetail(slug: string, now = new Date()): Promise<LineDetail | null> {
     const def = LINE_BY_SLUG.get(slug);
@@ -61,18 +53,13 @@ export async function getLineDetail(slug: string, now = new Date()): Promise<Lin
         return { date, ...(worstOver(points, expected, hoursBetween(date, from, 23)) ?? { level: 'unknown' as const, peakAt: null, peakDate: null, reasons: [], location: null }) };
     }) : [];
 
-    let recovery: RecoveryEstimate | null = null;
+    let recovery: RecoveryView | null = null;
     if (line.today.state === 'disrupted') {
-        const text = line.today.notices.filter(n => !n.areaWide).map(n => `${n.title}\n${n.body}`).join('\n');
-        recovery = estimateRecovery({
-            disrupted: true, officialText: text, officialExpectedAt: officialRecoveryTime(text, now),
-            routeId: def.routeIds[0] ?? slug, cause: 'unknown', incidents: [], startedAt: null, now,
-        });
-        if (recovery.kind === 'unknown') {
-            const cause = causeFromNotices(line.today.notices.map(n => n.title));
-            recovery = { ...recovery, label: 'JRから再開見込みの発表はまだありません',
-                detail: `${cause ? `原因: ${cause}（JR発表）。` : ''}再開時刻が発表されたらここに表示します。急ぐ場合は代替手段も確認してください。` };
-        }
+        const own = line.today.notices.filter(n => !n.areaWide);
+        const onsets = await getCurrentOnsets(now);
+        const starts = line.today.units.filter(u => u.state === 'disrupted')
+            .map(u => u.unit === 'shinkansen' ? undefined : onsets.get(u.unit)).filter((x): x is number => x != null);
+        recovery = recoveryView({ notices: own.length ? own : line.today.notices, onset: starts.length ? Math.min(...starts) : null, now });
     }
     return { line, generatedAt: board.generatedAt, serviceDate: board.serviceDate, hourly, daily, recovery, weatherAvailable: points.length === expected };
 }

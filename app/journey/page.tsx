@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpRight, Bus, Clock3, Coffee, Hotel, Megaphone, Pencil, Wind, CloudSnow, TrainFront } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Bus, Coffee, Hotel, Megaphone, Pencil, Wind, CloudSnow, TrainFront } from 'lucide-react';
 import { getJourneyResult, JourneyInputError, type JourneyResult, type Verdict } from '@/lib/engine/journey';
 import { UNKNOWN_REASON_LABELS } from '@/lib/engine/status';
 import { OfficialPill, RiskPill } from '@/components/ui/status-pill';
 import { RefreshButton } from '@/components/journey/refresh-button';
+import { RecoveryPanel } from '@/components/recovery-panel';
+import { AdviceCard } from '@/components/advice-card';
 import { CommunityIsland } from '@/components/journey/community-island';
 import '../journey.css';
 import { getStationById } from '@/lib/hokkaido-data';
@@ -89,7 +91,7 @@ export default async function JourneyPage({ searchParams }: { searchParams: Prom
 
     const v = VERDICT[r.verdict];
     const f = r.forecast;
-    const showAltFirst = r.verdict === 'disrupted' || r.verdict === 'caution';
+    const showAltFirst = r.advice.emphasize.length > 0;
     const primary = r.lines.find(l => l.slug !== 'express') ?? r.lines[0];
     const qs = (date: string) => `/journey?from=${r!.from.id}&to=${r!.to.id}&date=${date}&time=${r!.request.time}`;
     return <main id="main" className="mx-auto max-w-3xl px-4 pb-16 pt-4 sm:px-6">
@@ -109,22 +111,24 @@ export default async function JourneyPage({ searchParams }: { searchParams: Prom
         <section aria-labelledby="verdict" className={`mt-5 rounded-2xl p-5 ${v.tone}`}>
             <h2 id="verdict" className={`text-2xl font-bold ${v.titleTone}`}>{v.title}</h2>
             <p className="mt-1.5 text-[17px] text-ink-2">{verdictDetail(r)}</p>
+            {r.verdict !== 'disrupted' && r.probability && <p className="mt-3 flex flex-wrap items-baseline gap-x-2">
+                <span className="text-sm font-bold text-ink-3">天候で運休・大幅に遅れる可能性</span>
+                <span className="text-3xl font-bold tabular">{r.probability.percent < 1 ? '1%未満' : `約${r.probability.percent}%`}</span>
+                {r.probability.multiple >= 2 && <span className="rounded-full bg-surface/70 px-2 py-0.5 text-sm font-bold">ふだんの約{r.probability.multiple}倍</span>}
+            </p>}
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-ink-3">
                 <span className="flex items-center gap-1.5">JR発表 <OfficialPill state={r.official.state} />{r.official.publishedAt && <span className="tabular">{clock(r.official.publishedAt)}</span>}</span>
                 <span className="flex items-center gap-1.5">{r.request.time}の気象リスク <RiskPill level={r.riskAtTime} /></span>
             </div>
-            {r.recovery && <div className="mt-4 rounded-xl bg-surface p-4">
-                <h3 className="flex items-center gap-1.5 text-sm font-bold text-ink-3"><Clock3 size={16} aria-hidden />再開の見通し</h3>
-                {r.recovery.kind === 'official' && r.recovery.earliest
-                    ? <p className="mt-1"><span className="text-3xl font-bold tabular">{clock(r.recovery.earliest)}</span> <span className="font-bold">ごろ再開見込み</span><span className="ml-2 rounded bg-surface-2 px-1.5 text-sm">JR発表</span></p>
-                    : <p className="mt-1 text-lg font-bold">{r.recovery.label}</p>}
-                <p className="mt-1 text-[15px] text-ink-2">{r.recovery.detail}</p>
-            </div>}
-            {r.official.disrupted.flatMap(d => d.notices.filter(n => !n.areaWide)).slice(0, 3).map(n => <article key={n.title + n.body} className="mt-3 rounded-xl bg-surface p-4">
+            {r.recovery && <div className="mt-4"><RecoveryPanel recovery={r.recovery} /></div>}
+        </section>
+
+        <AdviceCard advice={r.advice} />
+
+        {r.official.disrupted.flatMap(d => d.notices.filter(n => !n.areaWide)).slice(0, 3).map(n => <article key={n.title + n.body} className="mt-4 rounded-2xl border border-line bg-surface p-4 shadow-card">
                 <h3 className="flex items-start gap-1.5 font-bold"><Megaphone size={17} className="mt-1 shrink-0 text-ink-3" aria-hidden />{n.title || 'お知らせ'}</h3>
                 <p className="mt-1 whitespace-pre-line text-[15px] text-ink-2">{n.body}</p>
             </article>)}
-        </section>
 
         {showAltFirst && <Alternatives r={r} open />}
 

@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowUpRight, Clock3, CloudSnow, Search, Wind, Megaphone } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CloudSnow, Search, Wind, Megaphone } from 'lucide-react';
 import { getLineDetail } from '@/lib/engine/line';
 import { LINE_BY_SLUG } from '@/lib/registry/lines';
 import { OFFICIAL_LABELS, UNKNOWN_REASON_LABELS } from '@/lib/engine/status';
 import { OfficialPill, RiskPill } from '@/components/ui/status-pill';
+import { RecoveryPanel } from '@/components/recovery-panel';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,13 +46,7 @@ export default async function LinePage({ params }: { params: Promise<{ slug: str
             <div className="mt-1"><OfficialPill state={today.state} size="lg" /></div>
             <p className="mt-2 text-[17px] font-bold">{today.state === 'unknown' ? UNKNOWN_REASON_LABELS[today.reason ?? 'missing'] : OFFICIAL_LABELS[today.state]}</p>
 
-            {disrupted && recovery && <div className="mt-4 rounded-xl bg-surface p-4">
-                <h3 className="flex items-center gap-1.5 text-sm font-bold text-ink-3"><Clock3 size={16} aria-hidden />再開の見通し</h3>
-                {recovery.kind === 'official' && recovery.earliest
-                    ? <p className="mt-1"><span className="text-3xl font-bold tabular">{clock(recovery.earliest)}</span> <span className="font-bold">ごろ再開見込み</span><span className="ml-2 rounded bg-surface-2 px-1.5 text-sm">JR発表</span></p>
-                    : <p className="mt-1 text-lg font-bold">{recovery.label}</p>}
-                <p className="mt-1 text-[15px] text-ink-2">{recovery.detail}</p>
-            </div>}
+            {disrupted && recovery && <div className="mt-4"><RecoveryPanel recovery={recovery} /></div>}
 
             {today.notices.length > 0 && <div className="mt-4 space-y-3">
                 {today.notices.map(n => <article key={n.title + n.body} className="rounded-xl bg-surface p-4">

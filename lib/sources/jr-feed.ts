@@ -129,7 +129,34 @@ export interface FeedSnapshot {
 let cache: { expires: number; value: Promise<FeedSnapshot> } | null = null;
 
 /** 5エリアを並列取得。自前の60秒キャッシュのみ(Next のキャッシュは古い応答を返し得るので使わない)。 */
+/**
+ * 開発・画面確認用: JR_FEED_FIXTURE=disrupted などで、保存済みの実フィード(tests/fixtures/jr-feed)を
+ * 「いま発表された」ものとして差し込む。本番では無効。
+ */
+async function fixtureSnapshot(name: string): Promise<FeedSnapshot> {
+    const { readFile } = await import('node:fs/promises');
+    const path = await import('node:path');
+    const f = JSON.parse(await readFile(path.join(process.cwd(), 'tests/fixtures/jr-feed', `${name}.json`), 'utf8')) as { area: JrAreaId; raw: Record<string, unknown> };
+    const now = new Date();
+    const j = new Date(now.getTime() + 9 * 3_600_000);
+    const service = new Date(j.getTime() - (j.getUTCHours() < 3 ? 86_400_000 : 0));
+    const md = (d: Date) => `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+    const stamp = `${j.getUTCFullYear()}年${j.getUTCMonth() + 1}月${j.getUTCDate()}日 ${j.getUTCHours()}時${j.getUTCMinutes()}分現在`;
+    const clear = { senkuStatus: {}, areaStatus: {}, gaikyo: [], areaComments: [] };
+    const feeds: FeedSnapshot['feeds'] = {};
+    for (const area of Object.keys(JR_AREAS) as JrAreaId[]) {
+        const src = area === f.area ? f.raw : { today: clear, tomorrow: clear };
+        const raw = { ...src, time: stamp,
+            today: { ...(src.today as object), dateText: md(service) },
+            tomorrow: { ...(src.tomorrow as object), dateText: md(new Date(service.getTime() + 86_400_000)) } };
+        const parsed = parseAreaFeed(raw, area, now.toISOString());
+        if (parsed) feeds[area] = parsed;
+    }
+    return { feeds, errors: {}, fetchedAt: now.toISOString() };
+}
+
 export async function fetchAreaFeeds(fetchImpl: typeof fetch = fetch): Promise<FeedSnapshot> {
+    if (process.env.JR_FEED_FIXTURE && process.env.NODE_ENV !== 'production') return fixtureSnapshot(process.env.JR_FEED_FIXTURE);
     if (cache && cache.expires > Date.now()) return cache.value;
     const value = (async () => {
         const fetchedAt = new Date().toISOString();

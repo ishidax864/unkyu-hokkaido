@@ -1,6 +1,28 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "next-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 }
+    {
+      "name": "next-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "next-dev-disrupted",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "JR_FEED_FIXTURE=disrupted",
+        "npm",
+        "run",
+        "dev",
+        "--",
+        "-p",
+        "3001"
+      ],
+      "port": 3001
+    }
   ]
 }

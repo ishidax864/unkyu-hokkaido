@@ -7,9 +7,11 @@ import { linesForJourney } from '@/lib/registry/journey-lines';
 import { getBoard, type BoardLine } from './board';
 import { combine, type OfficialState, type UnknownReason } from './status';
 import { getJourneyForecast } from '@/lib/forecast/journey';
-import { estimateRecovery, officialRecoveryTime, type RecoveryEstimate } from '@/lib/forecast/recovery';
+import { recoveryView, type RecoveryView } from './recovery';
+import { getCurrentOnsets } from './onsets';
+import { advise, type Advice } from './advice';
+import coefficients from '@/lib/forecast/core-coefficients.json';
 import { stationPlaces } from '@/lib/forecast/places';
-import { causeFromNotices } from './line';
 import type { JourneyForecast, RiskLevel } from '@/lib/forecast/types';
 
 export type Verdict = 'go' | 'watch' | 'caution' | 'disrupted' | 'unknown';
@@ -29,7 +31,10 @@ export interface JourneyResult {
     };
     riskAtTime: RiskLevel;
     verdict: Verdict;
-    recovery: RecoveryEstimate | null;
+    recovery: RecoveryView | null;
+    advice: Advice;
+    /** 指定時刻の気象条件での「天候による運休・大幅な遅れ」の目安。multiple はふだんの何倍か */
+    probability: { percent: number; multiple: number } | null;
     forecast: JourneyForecast | null;
     alternatives: AlternativeRouteOption[];
     places: ReturnType<typeof stationPlaces>[];
@@ -71,24 +76,27 @@ export async function getJourneyResult(req: { from: string; to: string; date: st
         .map(l => ({ slug: l.slug, name: l.name, note: l.note, notices: (dayKind === 'today' ? l.today : l.tomorrow).notices }));
     const riskAtTime: RiskLevel = forecast?.current.level ?? 'unknown';
 
-    let recovery: RecoveryEstimate | null = null;
+    let recovery: RecoveryView | null = null;
     if (state === 'disrupted' && dayKind === 'today') {
-        const notices = disrupted.flatMap(d => d.notices.filter(n => !n.areaWide));
-        const text = notices.map(n => `${n.title}\n${n.body}`).join('\n');
-        recovery = estimateRecovery({ disrupted: true, officialText: text, officialExpectedAt: officialRecoveryTime(text, now),
-            routeId: lineDefs[0].routeIds[0] ?? lineDefs[0].slug, cause: 'unknown', incidents: [], startedAt: null, now });
-        if (recovery.kind === 'unknown') {
-            const cause = causeFromNotices(disrupted.flatMap(d => d.notices.map(n => n.title)));
-            recovery = { ...recovery, label: 'JRから再開見込みの発表はまだありません',
-                detail: `${cause ? `原因: ${cause}（JR発表）。` : ''}再開時刻が発表されたら表示します。急ぐ場合は下の代替手段も確認してください。` };
-        }
+        const own = disrupted.flatMap(d => d.notices.filter(n => !n.areaWide));
+        const notices = own.length ? own : disrupted.flatMap(d => d.notices);
+        const onsets = await getCurrentOnsets(now);
+        const starts = lines.filter(l => l.today.state === 'disrupted')
+            .flatMap(l => l.today.units.filter(u => u.state === 'disrupted').map(u => u.unit === 'shinkansen' ? undefined : onsets.get(u.unit)))
+            .filter((x): x is number => x != null);
+        recovery = recoveryView({ notices, onset: starts.length ? Math.min(...starts) : null, now });
     }
+    const score = forecast?.current.score;
+    const baseRate = coefficients.training.positives / coefficients.training.rows * 100;
+    const probability = typeof score === 'number' ? { percent: score, multiple: Math.round(score / baseRate) } : null;
+    const hour = new Date(now.getTime() + 9 * 3_600_000).getUTCHours();
+    const advice = advise({ disrupted: state === 'disrupted' && dayKind === 'today', recovery, risk: riskAtTime, hour });
     const published = days.map(d => d.publishedAt).filter((x): x is string => !!x).sort();
     const at = new Date(`${req.date}T${req.time}:00+09:00`);
     return {
         request: req, from: { id: from.id, name: from.name }, to: { id: to.id, name: to.name }, lines,
         official: { state, ...(reason ? { reason } : {}), dayKind, publishedAt: published[0] ?? null, disrupted },
-        riskAtTime, verdict: decideVerdict(state, riskAtTime), recovery, forecast,
+        riskAtTime, verdict: decideVerdict(state, riskAtTime), recovery, advice, probability, forecast,
         alternatives: getAlternativeRoutes(from.id, to.id),
         places: [stationPlaces(from.id, at, now), stationPlaces(to.id, at, now)],
     };
