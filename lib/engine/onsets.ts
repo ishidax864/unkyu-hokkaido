@@ -22,7 +22,7 @@ export async function getCurrentOnsets(now = new Date()): Promise<Map<UnitId, nu
         if (!client) return onsets;
         const since = new Date(now.getTime() - 30 * 3_600_000).toISOString();
         const { data, error } = await client.from('crawler_logs').select('fetched_at,area_id,raw_json')
-            .gte('fetched_at', since).not('raw_json', 'is', null).order('fetched_at').limit(1000);
+            .gte('fetched_at', since).in('area_id', ['01', '02', '03', '04', '05']).not('raw_json', 'is', null).order('fetched_at').limit(1000);
         if (error || !data) { logger.warn('Onset lookup unavailable', { error: error?.message }); return onsets; }
         for (const [unit, series] of seriesFromLogs(data)) {
             const last = episodesOfUnit(unit, series).at(-1);

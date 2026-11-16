@@ -410,6 +410,43 @@ async function fetchAreaWeather(areas, fetchImpl = fetch, sleep = (ms) => new Pr
   logger.warn("Weather snapshot fetch failed", { attempts });
   return { byArea, attempts };
 }
+var EXTRA_SOURCES = [
+  { id: "map", url: "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json", kind: "json" },
+  ...["011000", "012000", "013000", "014030", "014100", "015000", "016000", "017000"].map((code) => ({ id: `jma:${code}`, url: `https://www.jma.go.jp/bosai/warning/data/r8/${code}.json`, kind: "json" })),
+  { id: "bus:chuo", url: "https://www.chuo-bus.co.jp/support/stop/?ope=feed&topic=stop_top", kind: "text" }
+];
+async function collectExtras(supabase, fetchImpl = fetch) {
+  const out = {};
+  await Promise.all(EXTRA_SOURCES.map(async (src) => {
+    try {
+      const res = await fetchImpl(src.url, { cache: "no-store", signal: AbortSignal.timeout(6e3) });
+      if (!res.ok) {
+        out[src.id] = `error: HTTP ${res.status}`;
+        return;
+      }
+      const text = (await res.text()).replace(/^\uFEFF/, "");
+      const payload = src.kind === "json" ? JSON.parse(text) : { text };
+      const hash = hashContent(src.kind === "json" ? JSON.stringify(payload) : text);
+      const { data: last } = await supabase.from("crawler_logs").select("content_hash").eq("area_id", src.id).order("fetched_at", { ascending: false }).limit(1);
+      if (last?.[0]?.content_hash === hash) {
+        out[src.id] = "unchanged";
+        return;
+      }
+      const { error } = await supabase.from("crawler_logs").insert({
+        area_id: src.id,
+        raw_json: payload,
+        content_hash: hash,
+        status: "success",
+        source_url: src.url,
+        collector_version: "extras-v1"
+      });
+      out[src.id] = error ? `error: ${error.message}`.slice(0, 120) : "saved";
+    } catch (e) {
+      out[src.id] = `error: ${e?.name === "TimeoutError" ? "timeout" : String(e?.message ?? e)}`.slice(0, 120);
+    }
+  }));
+  return out;
+}
 function hashContent(content) {
   return crypto.createHash("md5").update(content).digest("hex");
 }
@@ -585,8 +622,9 @@ async function runJRCrawler() {
     }
   }
   logger.info("\u{1F3C1} Crawler finished (ML Enhanced).", { results });
+  const extras = await collectExtras(supabase).catch((e) => ({ all: `error: ${String(e)}`.slice(0, 120) }));
   const weatherMissing = areaConfigs.filter((area) => !weatherByArea[area.id]?.evidence).map((area) => area.id);
-  return { success: areaResults.every((r) => r.status === "fulfilled") && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts };
+  return { success: areaResults.every((r) => r.status === "fulfilled") && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras };
 }
 
 // scripts/edge/entry.mjs

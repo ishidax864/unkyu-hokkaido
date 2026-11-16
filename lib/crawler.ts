@@ -115,6 +115,50 @@ export async function fetchAreaWeather(
     return { byArea, attempts };
 }
 
+// ----- 追加の収集(後から取り戻せないもの) -----
+
+/**
+ * 運行フィード以外で、過去分を後から取得できないデータ。内容が変わったときだけ保存する
+ * (変化なし・失敗は収集記録の summary.extras に残す)。失敗しても本体の収集は成功扱いのまま。
+ * - map: JRの影響マップ(区間ごとの状態。1=情報なし 2=運休・遅延 3=災害等の見合わせ 9=バス代行)
+ * - jma:<府県予報区>: 気象庁の警報・注意報(北海道の8予報区)
+ * - bus:chuo: 北海道中央バスの運休情報(代替手段が使えるかの判断材料)
+ */
+export const EXTRA_SOURCES: { id: string; url: string; kind: 'json' | 'text' }[] = [
+    { id: 'map', url: 'https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json', kind: 'json' },
+    ...['011000', '012000', '013000', '014030', '014100', '015000', '016000', '017000']
+        .map(code => ({ id: `jma:${code}`, url: `https://www.jma.go.jp/bosai/warning/data/r8/${code}.json`, kind: 'json' as const })),
+    { id: 'bus:chuo', url: 'https://www.chuo-bus.co.jp/support/stop/?ope=feed&topic=stop_top', kind: 'text' },
+];
+
+type ExtraOutcome = 'saved' | 'unchanged' | string;
+
+export async function collectExtras(
+    supabase: NonNullable<ReturnType<typeof getAdminSupabaseClient>>, fetchImpl: typeof fetch = fetch,
+): Promise<Record<string, ExtraOutcome>> {
+    const out: Record<string, ExtraOutcome> = {};
+    await Promise.all(EXTRA_SOURCES.map(async src => {
+        try {
+            const res = await fetchImpl(src.url, { cache: 'no-store', signal: AbortSignal.timeout(6000) });
+            if (!res.ok) { out[src.id] = `error: HTTP ${res.status}`; return; }
+            const text = (await res.text()).replace(/^\uFEFF/, '');
+            const payload = src.kind === 'json' ? JSON.parse(text) : { text };
+            const hash = hashContent(src.kind === 'json' ? JSON.stringify(payload) : text);
+            const { data: last } = await supabase.from('crawler_logs').select('content_hash')
+                .eq('area_id', src.id).order('fetched_at', { ascending: false }).limit(1);
+            if (last?.[0]?.content_hash === hash) { out[src.id] = 'unchanged'; return; }
+            const { error } = await supabase.from('crawler_logs').insert({
+                area_id: src.id, raw_json: payload, content_hash: hash, status: 'success',
+                source_url: src.url, collector_version: 'extras-v1',
+            });
+            out[src.id] = error ? `error: ${error.message}`.slice(0, 120) : 'saved';
+        } catch (e) {
+            out[src.id] = `error: ${(e as Error)?.name === 'TimeoutError' ? 'timeout' : String((e as Error)?.message ?? e)}`.slice(0, 120);
+        }
+    }));
+    return out;
+}
+
 // ----- Content Hash for Deduplication -----
 
 function hashContent(content: string): string {
@@ -332,6 +376,7 @@ export async function runJRCrawler() {
     }
 
     logger.info('🏁 Crawler finished (ML Enhanced).', { results });
+    const extras = await collectExtras(supabase).catch(e => ({ all: `error: ${String(e)}`.slice(0, 120) }));
     const weatherMissing = areaConfigs.filter(area => !weatherByArea[area.id]?.evidence).map(area => area.id);
-    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts };
+    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras };
 }

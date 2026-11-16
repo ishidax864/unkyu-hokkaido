@@ -13,7 +13,7 @@ let last = '1970-01-01T00:00:00Z', n = 0;
 for (;;) {
     const { data, error } = await s.from('crawler_logs')
         .select('id,fetched_at,area_id,collector_version,status,raw_json')
-        .not('raw_json', 'is', null).gt('fetched_at', last).order('fetched_at').limit(1000);
+        .in('area_id', ['01', '02', '03', '04', '05']).not('raw_json', 'is', null).gt('fetched_at', last).order('fetched_at').limit(1000);
     if (error) throw error;
     if (!data.length) break;
     for (const r of data) out.write(JSON.stringify(r) + '\n');
