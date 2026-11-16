@@ -34,7 +34,7 @@ export function assessWeather(points: PointForecast[], expectedPoints: number, d
         location: null, weather: null, coverage,
     };
     const worst = candidates.reduce((a, b) => a.p >= b.p ? a : b);
-    let level: RiskLevel = levelOf(worst.p);
+    let level: RiskLevel = levelOf(worst.p, date);
     let reasons = explain(worst.features);
     const gusty = candidates.reduce((a, b) => b.features.gust > a.features.gust ? b : a);
     if (gusty.features.gust >= GUST_WATCH_FLOOR && LEVEL_RANK[level] < LEVEL_RANK.watch) {

@@ -16,7 +16,7 @@ for (const [route, pts] of Object.entries(ROUTE_COORDINATES)) {
     const date = d.toISOString().slice(0, 10);
     let p = 0;
     for (const s of ss) for (let h = 5; h <= 23; h++) { const f = hourFeatures(s, date, `${String(h).padStart(2, '0')}:00`); if (f) p = Math.max(p, probability(f)); }
-    const lv = levelOf(p); counts[route] ??= { low: 0, watch: 0, high: 0, severe: 0 }; counts[route][lv]++;
+    const lv = levelOf(p, date); counts[route] ??= { low: 0, watch: 0, high: 0, severe: 0 }; counts[route][lv]++;
     if (route === 'jr-hokkaido.hakodate-main') sapporo.push(`${date.slice(5)}:${lv[0]}`);
   }
 }

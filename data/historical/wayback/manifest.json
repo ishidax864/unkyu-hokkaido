@@ -1,0 +1,66 @@
+[
+ {
+  "timestamp": "20251118021951",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json",
+  "file": "20251118021951_eikyo_map_status.json",
+  "sha256": "5b4903fbd4ff4c65b0d978a67b09cf350f1a5ce08c544f2421fc16c78a34abb6",
+  "bytes": 2649,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20251208221136",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_01.json",
+  "file": "20251208221136_area_01.json",
+  "sha256": "407f86c36764206b7353e2438d2d3bc9d9136b4047b9a5b58773acf2f53efacf",
+  "bytes": 1983,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20251208221136",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json",
+  "file": "20251208221136_eikyo_map_status.json",
+  "sha256": "3e97072084e89d36e9ac201e3308a32e411cf17f61df78546c20544737e4cba2",
+  "bytes": 2649,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20260125064614",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_03.json",
+  "file": "20260125064614_area_03.json",
+  "sha256": "26908201ce198f08ab8ce498650c701b55f7ab64ee2ae0ae0a57b96e5eac61de",
+  "bytes": 3149,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20260125064614",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json",
+  "file": "20260125064614_eikyo_map_status.json",
+  "sha256": "a367806e69c8efc3f8722e1b1f807440273d2edc7e7cfdffc12b19ea74bd873f",
+  "bytes": 2649,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20260126022008",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json",
+  "file": "20260126022008_eikyo_map_status.json",
+  "sha256": "434c3f4597e74849986aff9757c3aa5f622b76da24daf36176bb68eeb75989ba",
+  "bytes": 2649,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20260212005502",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/map/eikyo_map_status.json",
+  "file": "20260212005502_eikyo_map_status.json",
+  "sha256": "2abfc243fe37f83daf60406d8432104d4002ea1c24e03883dbbcca69a8dcfc73",
+  "bytes": 2649,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ },
+ {
+  "timestamp": "20260212005507",
+  "url": "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_01.json",
+  "file": "20260212005507_area_01.json",
+  "sha256": "c9b8659010500c508ebb4fa602b53ac1184858341e827959265749158df9786f",
+  "bytes": 1011,
+  "note": "stored gunzipped (archive served gzip bytes)"
+ }
+]

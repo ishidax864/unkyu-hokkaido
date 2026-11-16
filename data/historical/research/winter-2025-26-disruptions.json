@@ -1,0 +1,751 @@
+{
+ "researchedAt": "2026-11-17",
+ "coverageNote": "Opened: 北海道新聞(多数), 日経, UHB, トラベルWatch, J-CAST, 乗りものニュース. JR北海道公式PDF(中間報告 20260310_KO_sapporogousetsu.pdf, 2/10間引き資料, 1/28旭川支社, 2/6旭川支社等)は画像/圧縮PDFでテキスト抽出できず本文を読めていないため一切引用していない。2025-12-01〜12-13, 2026-01-01〜01-24, 2026-02-03〜05, 02-10〜18 は気象起因の運休記事を見つけられなかった(『運休なし』を意味するとは限らず、検索で見つからなかっただけの可能性が高い週あり。特に宗谷線・石北線・道東の通常規模の運休は未網羅)。1/3,10,17,24,31,2/7,14,21,28 の土曜『計画運休』は除雪時間確保の恒常運用で気象トリガーではないため収録せず(2/7のみ嵐と重なり収録)。2025-11-18 函館線深川〜納内 降雪で信号視認不可(8本運休、期間外)。12/21〜12/26 は根室線の継続不通を推定で収録(low)。引用は検索要約ツールで取得した日本語文であり、原文との微差の可能性あり。 2025-12-27(根室線再開日)と2026-02-01(1/31記事に『2/1は17本運休決定』とあるが直接引用を確保できず)は除外。2/1は大規模間引き・運休があった可能性が高い(未確認)。",
+ "events": [
+  {
+   "date": "2025-12-14",
+   "lines": [
+    "石北線",
+    "釧網線"
+   ],
+   "section": "石北線 上川〜網走 / 釧網線 全線",
+   "kind": "stoppage",
+   "scale": "unknown",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/616645",
+     "title": "「あ、路盤がない 護岸ごと…」 北海道のJR幹線が被災 復旧の見通したたず",
+     "publisher": "乗りものニュース",
+     "quote": "鉄道の路盤の一部が、その外側の護岸ごと流出していること"
+    }
+   ],
+   "note": "乗りものニュース記事: 14日から発達した低気圧の影響で運転見合わせ(発表ベース)。開始時刻・当日の本数は不明。"
+  },
+  {
+   "date": "2025-12-15",
+   "lines": [
+    "根室線",
+    "石北線",
+    "釧網線",
+    "花咲線"
+   ],
+   "section": "根室線 音別(浦幌)〜白糠 路盤流出ほか / 釧網線 / 花咲線",
+   "kind": "stoppage",
+   "scale": "unknown",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/616645",
+     "title": "「あ、路盤がない 護岸ごと…」 北海道のJR幹線が被災 復旧の見通したたず",
+     "publisher": "乗りものニュース",
+     "quote": "鉄道の路盤の一部が、その外側の護岸ごと流出していること"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1252740/",
+     "title": "特急おおぞら 17日は札幌―帯広のみ（12/16）",
+     "publisher": "北海道新聞",
+     "quote": "再開の見通しが立っていない"
+    }
+   ],
+   "note": "根室線の路盤流出は15日に発見。同日の石北線・釧網線・花咲線の運転状況は記事が『14日から』『見通しが立たない』と述べるのみで日別詳細は不明。区間表記が報道により音別〜白糠/浦幌〜白糠で異なる。"
+  },
+  {
+   "date": "2025-12-16",
+   "lines": [
+    "特急おおぞら",
+    "石北線",
+    "根室線",
+    "釧網線",
+    "花咲線"
+   ],
+   "section": "札幌〜釧路 特急全12本 / 石北線 始発から / 根室線 / 釧網線全線 / 花咲線全線",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 12,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1252262/",
+     "title": "札幌―釧路JR特急おおぞら16日全休 石北線も始発から運転見合わせ",
+     "publisher": "北海道新聞",
+     "quote": "札幌―釧路駅間の特急おおぞら全12本を全区間運休する"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1252740/",
+     "title": "特急おおぞら 17日は札幌―帯広のみ（12/16）",
+     "publisher": "北海道新聞",
+     "quote": "再開の見通しが立っていない"
+    }
+   ],
+   "note": "おおぞら12本全区間運休、石北線は始発から運転見合わせ。16日から旭川〜上川間は一部普通列車が再開(別記事)。"
+  },
+  {
+   "date": "2025-12-17",
+   "lines": [
+    "特急おおぞら",
+    "石北線",
+    "根室線",
+    "釧網線",
+    "花咲線"
+   ],
+   "section": "おおぞら札幌〜帯広のみ運転(帯広〜釧路は代行バス) / 石北線 上川〜遠軽 再開めどなし / 根室線浦幌〜白糠 不通",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1252740/",
+     "title": "特急おおぞら 17日は札幌―帯広のみ（12/16）",
+     "publisher": "北海道新聞",
+     "quote": "再開の見通しが立っていない"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1253319/",
+     "title": "石北線 運転再開の見通し（12/17）",
+     "publisher": "北海道新聞",
+     "quote": "18日午後3時ごろから"
+    }
+   ]
+  },
+  {
+   "date": "2025-12-18",
+   "lines": [
+    "石北線",
+    "釧網線",
+    "花咲線",
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "石北線 上川〜遠軽 不通(遠軽〜網走は15時ごろ再開) / 釧網線 / 花咲線 / 根室線",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": "15:00",
+   "resumedDate": "2025-12-18",
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1253319/",
+     "title": "石北線 運転再開の見通し（12/17）",
+     "publisher": "北海道新聞",
+     "quote": "18日午後3時ごろから"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1252740/",
+     "title": "特急おおぞら 17日は札幌―帯広のみ（12/16）",
+     "publisher": "北海道新聞",
+     "quote": "再開の見通しが立っていない"
+    }
+   ],
+   "note": "遠軽〜網走は18日15時ごろから再開(減便)。上川〜遠軽の再開日は未確認。"
+  },
+  {
+   "date": "2025-12-19",
+   "lines": [
+    "根室線",
+    "釧網線"
+   ],
+   "section": "根室線 浦幌〜白糠 / 釧網線 川湯温泉〜網走",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": 50,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1254462/",
+     "title": "根室線浦幌－白糠・釧網線川湯温泉－網走 20日も終日運休（12/19）",
+     "publisher": "北海道新聞",
+     "quote": "20日も終日運休"
+    }
+   ],
+   "note": "約50本が運休・部分運休(特急含む)、約2400人に影響と報道(本数は全体の概数で区間別内訳なし)。"
+  },
+  {
+   "date": "2025-12-20",
+   "lines": [
+    "根室線",
+    "釧網線"
+   ],
+   "section": "根室線 浦幌〜白糠 / 釧網線 川湯温泉〜網走",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1254462/",
+     "title": "根室線浦幌－白糠・釧網線川湯温泉－網走 20日も終日運休（12/19）",
+     "publisher": "北海道新聞",
+     "quote": "20日も終日運休"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ]
+  },
+  {
+   "date": "2025-12-21",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2025-12-22",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2025-12-23",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2025-12-24",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2025-12-25",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2025-12-26",
+   "lines": [
+    "根室線",
+    "特急おおぞら"
+   ],
+   "section": "根室線 浦幌〜白糠(路盤流出の復旧工事中)",
+   "kind": "stoppage",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2025-12-27",
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1257645/",
+     "title": "JR根室線、2週間ぶり全線開通 帰省ラッシュに間に合い特急再開",
+     "publisher": "北海道新聞",
+     "quote": "根室線の全線開通は約2週間ぶり"
+    }
+   ],
+   "note": "12/27に全線再開・約2週間ぶりとの記事から継続運休と推定。日別の運休発表は未確認。釧網線・石北線の状況は未確認。"
+  },
+  {
+   "date": "2026-01-25",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "快速エアポート",
+    "特急"
+   ],
+   "section": "札幌圏(新千歳空港〜札幌ほか)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": "00:00",
+   "resumedDate": "2026-01-26",
+   "trainsCancelled": 545,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOFC2660I0W6A120C2000000/",
+     "title": "記録的大雪で列車1000本超運休 JR北海道、除雪の遅れ見通せず",
+     "publisher": "日本経済新聞",
+     "quote": "545本"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1267065/",
+     "title": "【札幌大雪】「まるで災害時の避難所」…",
+     "publisher": "北海道新聞",
+     "quote": "26日午前0時から順次運転を再開した。"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1267510",
+     "title": "JR運休、33万人に影響 25~26日で1145本 新千歳7千人滞留",
+     "publisher": "北海道新聞",
+     "quote": "2日間で特急などを含む1145本が運休し、約33万人に影響が出た。"
+    }
+   ],
+   "note": "545本はNikkei(26日19:38配信)の数字。1/25〜27で1,407本とする別集計あり(未開封)。札幌圏の路線名の内訳は記事で未確認のため区間は札幌圏とした。"
+  },
+  {
+   "date": "2026-01-26",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "快速エアポート",
+    "特急"
+   ],
+   "section": "札幌圏 / 札幌〜新千歳空港は13:25ごろから再開",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": "13:25",
+   "resumedDate": "2026-01-26",
+   "trainsCancelled": 471,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOFC2660I0W6A120C2000000/",
+     "title": "記録的大雪で列車1000本超運休 JR北海道、除雪の遅れ見通せず",
+     "publisher": "日本経済新聞",
+     "quote": "545本"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1267510",
+     "title": "JR運休、33万人に影響 25~26日で1145本 新千歳7千人滞留",
+     "publisher": "北海道新聞",
+     "quote": "2日間で特急などを含む1145本が運休し、約33万人に影響が出た。"
+    }
+   ],
+   "note": "471本は16:40時点。13時台に段階再開(一部区間除く)。"
+  },
+  {
+   "date": "2026-01-27",
+   "lines": [
+    "快速エアポート",
+    "特急",
+    "宗谷線"
+   ],
+   "section": "札幌圏 / 宗谷線 南稚内〜稚内は17時ごろまで",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": "2026-01-27",
+   "trainsCancelled": 176,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.uhb.jp/news/single.html?id=56881",
+     "title": "【最新】災害級の記録的豪雪の影響続く_JRは特急や快速エアポートなど176本が運休…",
+     "publisher": "UHB",
+     "quote": "午後5時ごろまで"
+    }
+   ],
+   "note": "10:15時点で176本(特急25・エアポート28・快速普通123)。北海道新聞(1/26朝)は『27日はJR通常運行予定』と報じており、当日朝の計画と実績に差がある。"
+  },
+  {
+   "date": "2026-01-28",
+   "lines": [
+    "快速エアポート",
+    "函館線",
+    "特急",
+    "宗谷線",
+    "石北線"
+   ],
+   "section": "札幌駅発着 21時以降全列車運休 / 特急一部運休(旭川〜札幌ほか)",
+   "kind": "planned-suspension",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "21:00",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1267533/",
+     "title": "28、29の2日間、午後9時以降はJR全列車運休 札幌駅発着",
+     "publisher": "北海道新聞",
+     "quote": "28、29の2日間、午後9時以降はJR全列車運休"
+    },
+    {
+     "url": "https://travel.watch.impress.co.jp/docs/news/2081562.html",
+     "title": "JR北海道、札幌駅発着21時以降運休(1/28)",
+     "publisher": "トラベルWatch",
+     "quote": "21時以降に札幌を発着する列車をすべて運休する"
+    }
+   ],
+   "note": "除雪時間確保のための計画運休。特急は28〜30日に一部運休(ライラック・北斗・おおぞら等)、代行輸送なし。"
+  },
+  {
+   "date": "2026-01-29",
+   "lines": [
+    "快速エアポート",
+    "函館線",
+    "特急"
+   ],
+   "section": "札幌駅発着 21時以降全列車運休 / 特急一部運休",
+   "kind": "planned-suspension",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "21:00",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1267533/",
+     "title": "28、29の2日間、午後9時以降はJR全列車運休 札幌駅発着",
+     "publisher": "北海道新聞",
+     "quote": "28、29の2日間、午後9時以降はJR全列車運休"
+    },
+    {
+     "url": "https://www.j-cast.com/2026/01/29511482.html",
+     "title": "北海道電力公式XがJR北海道の「運休決定」に異例エール",
+     "publisher": "J-CAST",
+     "quote": "しっかり除雪ができるだけの時間を確保する必要がある"
+    }
+   ]
+  },
+  {
+   "date": "2026-01-30",
+   "lines": [
+    "特急"
+   ],
+   "section": "特急一部列車(札幌発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://travel.watch.impress.co.jp/docs/news/2081562.html",
+     "title": "JR北海道、札幌駅発着21時以降運休(1/28)",
+     "publisher": "トラベルWatch",
+     "quote": "一部列車"
+    }
+   ],
+   "note": "記事は特急の一部運休が28〜30日と述べるのみ。30日自体の本数・区間は未確認。"
+  },
+  {
+   "date": "2026-01-31",
+   "lines": [
+    "快速エアポート",
+    "函館線",
+    "特急"
+   ],
+   "section": "札幌圏",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 315,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1269782/",
+     "title": "大雪うんざり 札幌圏再び交通混乱",
+     "publisher": "北海道新聞",
+     "quote": "エアポート75本含む315本運休"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1269658/",
+     "title": "道内大雪 JR、エアポート75本含む315本運休",
+     "publisher": "北海道新聞",
+     "quote": "エアポート75本含む315本運休"
+    }
+   ],
+   "note": "2記事とも同一媒体のためmedium。『影響は2日朝まで続く見通し』と報道。"
+  },
+  {
+   "date": "2026-02-02",
+   "lines": [
+    "快速エアポート",
+    "札幌圏"
+   ],
+   "section": "札幌圏",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 121,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6388665419112/",
+     "title": "石狩管内中心に大雪 JR北海道は間引き運転",
+     "publisher": "北海道新聞",
+     "quote": "新千歳空港と札幌駅などを結ぶ快速エアポート19本を含む計121本を運休した"
+    }
+   ]
+  },
+  {
+   "date": "2026-02-06",
+   "lines": [
+    "快速エアポート",
+    "函館線",
+    "千歳線",
+    "学園都市線"
+   ],
+   "section": "札幌圏",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 267,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1272349/",
+     "title": "2/6 道内大雪・暴風雪 JR運休(2/6付)",
+     "publisher": "北海道新聞",
+     "quote": "快速エアポート38本など267本を運休した"
+    }
+   ],
+   "note": "JR北海道の2/10資料(未開封・検索スニペットのみ)では2/6は202本とされ、本件267本は当日夜時点の報道値で差異あり。"
+  },
+  {
+   "date": "2026-02-07",
+   "lines": [
+    "快速エアポート",
+    "学園都市線"
+   ],
+   "section": "札幌圏",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 166,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1272349/",
+     "title": "2/6 道内大雪・暴風雪 JR運休(2/6付)",
+     "publisher": "北海道新聞",
+     "quote": "エアポート38本を含む計166本を運休し"
+    }
+   ],
+   "note": "2/6夜時点の見込み値。2/7は計画運休の土曜でもあり、純粋な気象理由かは不明。"
+  },
+  {
+   "date": "2026-02-08",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "学園都市線",
+    "快速エアポート",
+    "特急"
+   ],
+   "section": "札幌圏 間引き / 函館線 長万部〜小樽(日付は記事上あいまい) ",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/article/1272349/",
+     "title": "2/6 道内大雪・暴風雪 JR運休(2/6付)",
+     "publisher": "北海道新聞",
+     "quote": "函館線長万部-小樽間は終日運休し"
+    }
+   ],
+   "note": "長万部〜小樽終日運休が8日付かは記事から確定できない。UHB(id=57196)で8日に特急とかち終日運休・間引きを確認(本数なし)。"
+  },
+  {
+   "date": "2026-02-09",
+   "lines": [
+    "千歳線",
+    "快速エアポート",
+    "函館線",
+    "学園都市線",
+    "特急"
+   ],
+   "section": "札幌圏 間引き",
+   "kind": "planned-suspension",
+   "scale": "some-trains",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 131,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.uhb.jp/news/single.html?id=57196",
+     "title": "【交通情報】8日夜から9日にかけて札幌圏で大雪のおそれ_JRは9日も131本の運休を決定",
+     "publisher": "UHB",
+     "quote": "特急4本・快速エアポート38本を含む131本の運休を決めました"
+    }
+   ],
+   "note": "2/8 14:50発表の計画運休(事前決定)。実績で増える可能性あり。STVも同内容を報道(検索結果で確認、未開封)。"
+  },
+  {
+   "date": "2026-02-19",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "快速エアポート",
+    "学園都市線",
+    "石勝線",
+    "室蘭線",
+    "特急"
+   ],
+   "section": "札幌圏ほか(函館千歳線122・函館線108・学園都市線54・石勝線2・室蘭線1)",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 317,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.uhb.jp/news/single.html?id=57464",
+     "title": "【運休欠航情報】JR北海道は降雪強風で317本運休…",
+     "publisher": "UHB",
+     "quote": "運休本数は計317本にのぼり"
+    }
+   ],
+   "note": "17:20時点。データ収集開始(2/20)の前日。"
+  }
+ ]
+}

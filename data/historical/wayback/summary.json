@@ -1,0 +1,130 @@
+[
+ {
+  "file": "20251118021951_eikyo_map_status.json",
+  "timestamp": "20251118021951",
+  "time": null,
+  "today_kukan_status1": 31,
+  "today_kukan_total": 55,
+  "note": "map feed: kukan status 1/2 only; no semantics verified"
+ },
+ {
+  "file": "20251208221136_area_01.json",
+  "timestamp": "20251208221136",
+  "time": "2025年12月09日 07時11分現在",
+  "today": {
+   "dateText": "12/9",
+   "areaStatus_1": [
+    "spo",
+    "doo",
+    "donan",
+    "doto",
+    "shin"
+   ],
+   "senku_1": [
+    "express",
+    "airport",
+    "hakochise",
+    "gakuen"
+   ],
+   "gaikyo_titles": [
+    "【地震による列車への影響について】"
+   ]
+  },
+  "tomorrow": {
+   "dateText": "12/10",
+   "areaStatus_1": [],
+   "senku_1": [],
+   "gaikyo_titles": []
+  }
+ },
+ {
+  "file": "20251208221136_eikyo_map_status.json",
+  "timestamp": "20251208221136",
+  "time": null,
+  "today_kukan_status1": 17,
+  "today_kukan_total": 55,
+  "note": "map feed: kukan status 1/2 only; no semantics verified"
+ },
+ {
+  "file": "20260125064614_area_03.json",
+  "timestamp": "20260125064614",
+  "time": "2026年01月25日 15時45分現在",
+  "today": {
+   "dateText": "1/25",
+   "areaStatus_1": [
+    "spo",
+    "doo",
+    "donan",
+    "dohoku",
+    "doto"
+   ],
+   "senku_1": [
+    "express"
+   ],
+   "gaikyo_titles": [
+    "【雪による列車への影響について】",
+    "【列車への影響について】",
+    "【列車への影響について】",
+    "【列車への影響について】"
+   ]
+  },
+  "tomorrow": {
+   "dateText": "1/26",
+   "areaStatus_1": [
+    "spo",
+    "doo",
+    "donan",
+    "dohoku"
+   ],
+   "senku_1": [
+    "express"
+   ],
+   "gaikyo_titles": [
+    "【雪による列車への影響について】"
+   ]
+  }
+ },
+ {
+  "file": "20260125064614_eikyo_map_status.json",
+  "timestamp": "20260125064614",
+  "time": null,
+  "today_kukan_status1": 15,
+  "today_kukan_total": 55,
+  "note": "map feed: kukan status 1/2 only; no semantics verified"
+ },
+ {
+  "file": "20260126022008_eikyo_map_status.json",
+  "timestamp": "20260126022008",
+  "time": null,
+  "today_kukan_status1": 11,
+  "today_kukan_total": 55,
+  "note": "map feed: kukan status 1/2 only; no semantics verified"
+ },
+ {
+  "file": "20260212005502_eikyo_map_status.json",
+  "timestamp": "20260212005502",
+  "time": null,
+  "today_kukan_status1": 52,
+  "today_kukan_total": 55,
+  "note": "map feed: kukan status 1/2 only; no semantics verified"
+ },
+ {
+  "file": "20260212005507_area_01.json",
+  "timestamp": "20260212005507",
+  "time": "2026年02月12日 09時54分現在",
+  "today": {
+   "dateText": "2/12",
+   "areaStatus_1": [
+    "dohoku"
+   ],
+   "senku_1": [],
+   "gaikyo_titles": []
+  },
+  "tomorrow": {
+   "dateText": "2/13",
+   "areaStatus_1": [],
+   "senku_1": [],
+   "gaikyo_titles": []
+  }
+ }
+]

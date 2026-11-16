@@ -3,7 +3,7 @@ import { ArrowLeft, Snowflake, Clock3, Radio, ShieldCheck } from 'lucide-react';
 import { winterCatalogSummary, winterCaseReferences } from '@/lib/forecast/historical';
 import catalog from '@/data/historical/winter-events.json';
 import replay from '@/artifacts/winter-evidence-replay.json';
-import coreCv from '@/artifacts/eval/core-cv-2026-11-16.json';
+import coreCv from '@/artifacts/eval/core-cv-2026-11-17.json';
 import coefficients from '@/lib/forecast/core-coefficients.json';
 import type { Metadata } from 'next';
 
@@ -29,7 +29,8 @@ export default function AccuracyPage() {
                 <div><dt className="text-sm">冬（11〜3月）</dt><dd className="mt-1 text-3xl font-bold">{at4('winter', 'newCore_cv')}<span className="text-base font-normal"> / {total('winter')}件</span></dd><dd className="text-sm">以前の判定：{at4('winter', 'engineB')}件</dd></div>
             </dl>
             <p className="text-sm">運休のなかった日の約4%で「移動計画の見直しを」以上を表示する設定での件数です。1時間の降水量、1時間と24時間の降雪量、24時間の雨量を使っています（{coefficients.training.period[0]}〜{coefficients.training.period[1]}のデータで調整）。</p>
-            <p className="mt-3 text-sm">限界：12〜2月の「雪は降ったが運行できた日」の記録がまだ無く、真冬に警告が多すぎないかは確認できていません。2026年1月25日の札幌の大雪のように、前日の予報自体に大雪が出ていない場合は捉えられません。当日は気象庁の警報と降雪の観測で補います。強風による運休は事例が少ないため、突風25m/s以上の予報では一律に「変化に注意」としています。</p>
+            <p className="mt-3 text-sm">真冬（12〜2月）の札幌圏は、報道で確認できた運休日と照らして別に検証しました（2025年12月11日〜2026年2月19日の71日）。大きな運休が始まった4日のうち3日は前日に「変化に注意」以上を出せましたが、運休記事のない59日のうち約3割でも同じ表示が出ています。真冬は「降っても走る」日が多く、前日の予報だけでは見分けきれません。そのため12〜2月は表示の区切りを厳しめにしています。</p>
+            <p className="mt-3 text-sm">限界：2026年1月25日の札幌の大雪のように、前日の予報自体に大雪が出ていない場合は捉えられません。当日は気象庁の警報と降雪の観測で補います。大雪の翌日以降に続く運休（除雪が追いつかない日）も、気象予報からは予測できません。強風による運休は事例が少ないため、突風25m/s以上の予報では一律に「変化に注意」としています。</p>
         </section>
         <section className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-6">
             <h2 className="text-xl font-bold">確認した冬の過去記録</h2>

@@ -16,7 +16,7 @@ export function journeyDesignFixture(scenario: 'normal' | 'official' | 'unknown'
     };
     const expected = new Date(now.getTime() + 90 * 60_000).toISOString();
     return {
-        modelVersion: 'risk-core-1.0', calibrated: false, generatedAt: now.toISOString(),
+        modelVersion: 'risk-core-1.1', calibrated: false, generatedAt: now.toISOString(),
         request: { departureId: 'sapporo', arrivalId: 'shin-chitose-airport', date, time },
         route: { id: 'jr-hokkaido.chitose', name: '千歳線', scope: '画面確認用', points: ['札幌', '千歳'], lines: [{ id: 'jr-hokkaido.chitose', name: '千歳線' }] },
         current,

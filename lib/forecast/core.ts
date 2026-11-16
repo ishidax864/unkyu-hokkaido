@@ -12,7 +12,7 @@
 import type { WeatherForecast } from '@/lib/types';
 import coefficients from './core-coefficients.json';
 
-export const CORE_VERSION = 'risk-core-1.0' as const;
+export const CORE_VERSION = 'risk-core-1.1' as const;
 
 export interface HourFeatures {
     snow1: number;   // その時刻の降雪 cm/h
@@ -92,16 +92,22 @@ export function featureVector(f: HourFeatures): Record<FeatureName, number> {
     };
 }
 
+export interface Thresholds { watch: number; high: number; severe: number }
+export const isDeepWinter = (date: string) => [12, 1, 2].includes(Number(date.slice(5, 7)));
+
 export interface CoreModel {
     bias: number;
     weights: Record<FeatureName, number>;
-    thresholds: { watch: number; high: number; severe: number };
+    thresholds: Thresholds;
+    /** 12〜2月用の区切り。真冬は「降っても走る」日が多く、同じ区切りでは警告が出すぎるため */
+    deepWinterThresholds?: Thresholds;
 }
 
 export const MODEL: CoreModel = {
     bias: coefficients.bias,
     weights: coefficients.weights as Record<FeatureName, number>,
     thresholds: coefficients.thresholds,
+    deepWinterThresholds: (coefficients as { deepWinterThresholds?: Thresholds }).deepWinterThresholds,
 };
 
 export function logit(f: HourFeatures, model: CoreModel = MODEL): number {
@@ -114,8 +120,10 @@ export function probability(f: HourFeatures, model: CoreModel = MODEL): number {
 }
 
 export type CoreLevel = 'low' | 'watch' | 'high' | 'severe';
-export function levelOf(p: number, model: CoreModel = MODEL): CoreLevel {
-    return p >= model.thresholds.severe ? 'severe' : p >= model.thresholds.high ? 'high' : p >= model.thresholds.watch ? 'watch' : 'low';
+/** date (YYYY-MM-DD) を渡すと、12〜2月は真冬用の区切りを使う */
+export function levelOf(p: number, date?: string, model: CoreModel = MODEL): CoreLevel {
+    const t = date && isDeepWinter(date) && model.deepWinterThresholds ? model.deepWinterThresholds : model.thresholds;
+    return p >= t.severe ? 'severe' : p >= t.high ? 'high' : p >= t.watch ? 'watch' : 'low';
 }
 
 /** 画面に出す根拠。寄与の大きい順に、予報値そのものを示す。 */
