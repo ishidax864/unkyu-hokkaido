@@ -52,14 +52,14 @@ export interface Board {
 }
 
 const jst = (d: Date) => new Date(d.getTime() + 9 * 3_600_000).toISOString();
-const addDays = (date: string, n: number) => new Date(Date.parse(`${date}T00:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
+export const addDays = (date: string, n: number) => new Date(Date.parse(`${date}T00:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
 export const serviceDateOf = (now: Date) => {
     const iso = jst(now);
     return +iso.slice(11, 13) < 3 ? addDays(iso.slice(0, 10), -1) : iso.slice(0, 10);
 };
 const RANK: Record<RiskLevel, number> = { unknown: -1, low: 0, watch: 1, high: 2, severe: 3 };
 
-function worstOver(points: PointForecast[], expected: number, slots: { date: string; time: string }[]): RiskSummary | null {
+export function worstOver(points: PointForecast[], expected: number, slots: { date: string; time: string }[]): RiskSummary | null {
     if (!slots.length) return null;
     let worst: (RiskAssessment & { date: string; time: string }) | null = null;
     let unknown = 0;
@@ -73,7 +73,7 @@ function worstOver(points: PointForecast[], expected: number, slots: { date: str
     return { level: worst.level, peakAt: worst.level === 'low' ? null : worst.time, peakDate: worst.level === 'low' ? null : worst.date, reasons: worst.reasons, location: worst.location };
 }
 
-const hoursBetween = (date: string, from: number, to: number) =>
+export const hoursBetween = (date: string, from: number, to: number) =>
     Array.from({ length: Math.max(0, to - from + 1) }, (_, i) => ({ date, time: `${String(from + i).padStart(2, '0')}:00` }));
 
 export interface BoardInputs {
