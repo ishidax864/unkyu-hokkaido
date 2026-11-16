@@ -27,6 +27,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "scripts/**",
+    "supabase/functions/**", // Generated bundle; source is checked before bundling.
   ]),
 ]);
 

@@ -1,0 +1,134 @@
+[
+  {
+    "file": "snow-2022-02-06-reanalysis.json",
+    "stormId": "snow-2022-02-06",
+    "kind": "reanalysis",
+    "model": "era5",
+    "leadHours": null,
+    "points": 2,
+    "expectedHours": 264,
+    "availableRows": 528,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "46cd91202e52308054b4037408c839ec3e51b6210e94e63da8528c3fa94ab5a4",
+    "fetchedAt": "2026-10-12T12:40:25.956Z",
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.0687%2C42.828&longitude=141.3508%2C141.651&start_date=2022-02-04&end_date=2022-02-14&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m%2Cprecipitation%2Csnowfall%2Cwind_speed_10m%2Cwind_gusts_10m&models=era5"
+  },
+  {
+    "file": "snow-2022-02-21-reanalysis.json",
+    "stormId": "snow-2022-02-21",
+    "kind": "reanalysis",
+    "model": "era5",
+    "leadHours": null,
+    "points": 2,
+    "expectedHours": 240,
+    "availableRows": 480,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "48b4f6a91a7572e6bcccf822e891f74f2d16e82d82f6ca728b1f6ad5f2dae47a",
+    "fetchedAt": "2026-10-12T12:40:26.278Z",
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.0687%2C42.828&longitude=141.3508%2C141.651&start_date=2022-02-19&end_date=2022-02-28&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m%2Cprecipitation%2Csnowfall%2Cwind_speed_10m%2Cwind_gusts_10m&models=era5"
+  },
+  {
+    "file": "snow-2025-12-14-reanalysis.json",
+    "stormId": "snow-2025-12-14",
+    "kind": "reanalysis",
+    "model": "era5",
+    "leadHours": null,
+    "points": 2,
+    "expectedHours": 216,
+    "availableRows": 432,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "14a162fa1cbdcbf718e60a9bb5abe8295fb7fe830e3f0079ece8475a7202dd13",
+    "fetchedAt": "2026-10-12T12:40:26.592Z",
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=44.059%2C44.02&longitude=143.522%2C144.26&start_date=2025-12-12&end_date=2025-12-20&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m%2Cprecipitation%2Csnowfall%2Cwind_speed_10m%2Cwind_gusts_10m&models=era5"
+  },
+  {
+    "file": "snow-2025-12-14-forecast-24h.json",
+    "stormId": "snow-2025-12-14",
+    "kind": "forecast-24h",
+    "model": "gfs_global",
+    "leadHours": 24,
+    "points": 2,
+    "expectedHours": 216,
+    "availableRows": 432,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "e942b852942deac7ba163355b81868023f5d3a7719d7b5969e1d9f234b0c28d7",
+    "fetchedAt": "2026-10-12T12:50:06.834Z",
+    "url": "https://previous-runs-api.open-meteo.com/v1/forecast?latitude=44.059%2C44.02&longitude=143.522%2C144.26&start_date=2025-12-12&end_date=2025-12-20&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m_previous_day1%2Cprecipitation_previous_day1%2Csnowfall_previous_day1%2Cwind_speed_10m_previous_day1%2Cwind_gusts_10m_previous_day1&models=gfs_global"
+  },
+  {
+    "file": "snow-2026-01-25-reanalysis.json",
+    "stormId": "snow-2026-01-25",
+    "kind": "reanalysis",
+    "model": "era5",
+    "leadHours": null,
+    "points": 2,
+    "expectedHours": 168,
+    "availableRows": 336,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "a607ebfaefbafdc3c474a58464c4caf07a36aebcbc107e4f9657406221a00afb",
+    "fetchedAt": "2026-10-12T12:42:04.628Z",
+    "url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.0687%2C42.828&longitude=141.3508%2C141.651&start_date=2026-01-23&end_date=2026-01-29&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m%2Cprecipitation%2Csnowfall%2Cwind_speed_10m%2Cwind_gusts_10m&models=era5"
+  },
+  {
+    "file": "snow-2026-01-25-forecast-24h.json",
+    "stormId": "snow-2026-01-25",
+    "kind": "forecast-24h",
+    "model": "gfs_global",
+    "leadHours": 24,
+    "points": 2,
+    "expectedHours": 168,
+    "availableRows": 336,
+    "missingRows": 0,
+    "missingByField": {
+      "temperature_2m": 0,
+      "precipitation": 0,
+      "snowfall": 0,
+      "wind_speed_10m": 0,
+      "wind_gusts_10m": 0
+    },
+    "status": "complete",
+    "sha256": "adc362a18c356f29565ddab69ad527ea56bde6c7397ee66b34030ae1f1f5699b",
+    "fetchedAt": "2026-10-12T12:50:08.764Z",
+    "url": "https://previous-runs-api.open-meteo.com/v1/forecast?latitude=43.0687%2C42.828&longitude=141.3508%2C141.651&start_date=2026-01-23&end_date=2026-01-29&timezone=Asia%2FTokyo&wind_speed_unit=ms&hourly=temperature_2m_previous_day1%2Cprecipitation_previous_day1%2Csnowfall_previous_day1%2Cwind_speed_10m_previous_day1%2Cwind_gusts_10m_previous_day1&models=gfs_global"
+  }
+]

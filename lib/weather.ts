@@ -4,6 +4,7 @@
 import { WeatherForecast, WeatherWarning } from './types';
 import { logger } from './logger';
 import { getJMAWarningsForRoute } from './jma-warnings';
+import { japanDate, japanTime } from './forecast/time';
 
 // 路線別の代表座標（最も影響を受けやすい地点）
 // 長距離路線は複数地点を設定し、最悪地点の気象を採用
@@ -222,292 +223,92 @@ export function generateWarningsFromHourly(
     return warnings;
 }
 
-/**
- * Fetch hourly weather forecast for a specific route and time.
- * Used for detailed risk calculation at a specific point in time.
- * @param routeId Route ID
- * @param targetDateTime Target date and time (ISO string)
- * @param coordinates Optional custom coordinates
- */
-export async function fetchHourlyWeatherForecast(
-    routeId?: string,
-    targetDateTime?: string, // ISO format: "2026-02-03T15:00"
-    coordinates?: { lat: number; lon: number }
-): Promise<WeatherForecast | null> {
-    const { lat, lon } = getRouteCoordinates(routeId, coordinates);
+export interface WeatherSeries { hours: WeatherForecast[]; fetchedAt: string }
+const seriesCache = new Map<string, { expires: number; value: Promise<WeatherSeries> }>();
 
-    try {
+/** One seven-day hourly fetch serves the selected time, timeline and week.
+ * Units: wind m/s, snowfall cm/hour, snow depth metres, precipitation mm/hour.
+ * Missing values are omitted, never coerced to fair weather. */
+export async function fetchWeatherSeries(coordinates: { lat: number; lon: number }): Promise<WeatherSeries> {
+    const { lat, lon } = coordinates;
+    const key = `${lat},${lon}:${japanDate()}`;
+    const cached = seriesCache.get(key);
+    if (cached && cached.expires > Date.now()) return cached.value;
+    const value = (async () => {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?` +
-            `latitude=${lat}&longitude=${lon}` +
-            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl` +
-            `&timezone=Asia/Tokyo` +
-            `&wind_speed_unit=ms` + // m/sに統一
-            `&forecast_days=7`,
-            { next: { revalidate: 3600 } } // 1時間ごとに更新
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+            '&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl' +
+            '&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1',
+            { cache: 'no-store', signal: AbortSignal.timeout(8000) } // own 15-min cache; Next's stale-while-revalidate once served a month-old forecast
         );
-
-        if (!response.ok) {
-            throw new Error(`Open-Meteo API error: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
         const data: OpenMeteoHourlyResponse = await response.json();
-
-        // ターゲット時刻に最も近い時間を見つける
-        const targetTime = targetDateTime || new Date().toISOString();
-        const targetDate = targetTime.split('T')[0];
-        const targetHour = parseInt(targetTime.split('T')[1].split(':')[0]);
-
-        let closestIndex = 0;
-        let minDiff = Infinity;
-
-        data.hourly.time.forEach((time, index) => {
-            const hourTime = new Date(time);
-            const hourDate = time.split('T')[0];
-            const hour = hourTime.getHours();
-
-            // 同じ日で最も近い時間を探す
-            if (hourDate === targetDate) {
-                const diff = Math.abs(hour - targetHour);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    closestIndex = index;
-                }
-            }
+        if (!Array.isArray(data.hourly?.time)) throw new Error('Invalid weather response');
+        const h = data.hourly;
+        const hours: WeatherForecast[] = [];
+        h.time.forEach((time, i) => {
+            const required = [h.temperature_2m?.[i], h.precipitation?.[i], h.wind_speed_10m?.[i],
+                h.wind_gusts_10m?.[i], h.snowfall?.[i], h.snow_depth?.[i], h.weather_code?.[i]];
+            if (!required.every(v => typeof v === 'number' && Number.isFinite(v))) return;
+            if ([h.precipitation[i], h.wind_speed_10m[i], h.wind_gusts_10m[i], h.snowfall![i], h.snow_depth[i]].some(v => v < 0)) return;
+            hours.push({
+                date: time.split('T')[0], targetTime: time.split('T')[1].slice(0, 5),
+                weather: getWeatherName(h.weather_code[i]), weatherCode: h.weather_code[i],
+                temperature: h.temperature_2m[i], tempMax: h.temperature_2m[i], tempMin: h.temperature_2m[i],
+                precipitation: h.precipitation[i], windSpeed: h.wind_speed_10m[i],
+                windGust: h.wind_gusts_10m[i], snowfall: h.snowfall![i], snowDepth: h.snow_depth[i],
+                snowDepthChange: i > 0 && Number.isFinite(h.snow_depth[i-1]) ? (h.snow_depth[i] - h.snow_depth[i-1]) * 100 : undefined,
+                windDirection: h.winddirection_10m?.[i], pressure: h.pressure_msl?.[i], warnings: [],
+            });
         });
+        if (!hours.length) throw new Error('Weather response contains no usable hours');
+        return { hours, fetchedAt: new Date().toISOString() };
+    })();
+    if (seriesCache.size >= 100) seriesCache.delete(seriesCache.keys().next().value!);
+    seriesCache.set(key, { expires: Date.now() + 900_000, value });
+    try { return await value; }
+    catch (error) { seriesCache.delete(key); throw error; }
+}
 
-        // 共通ヘルパー: 任意のインデックスから WeatherForecast エントリを構築
-        // メインweatherとsurroundingHoursで同一ロジックを使用し、データ構造の対称性を保証
-        const buildHourlyEntry = (idx: number): Omit<WeatherForecast, 'surroundingHours'> => {
-            const hTime = data.hourly.time[idx];
-            const snowDepthM = data.hourly.snow_depth[idx] || 0;
-            const prevSnowDepthM = idx > 0 ? (data.hourly.snow_depth[idx - 1] || 0) : snowDepthM;
-            const snowDepthChangeCm = parseFloat(((snowDepthM - prevSnowDepthM) * 100).toFixed(1));
-            const hSnowfall = data.hourly.snowfall ? data.hourly.snowfall[idx] : 0;
-
-            const hWarnings = generateWarningsFromHourly(
-                data.hourly.precipitation[idx],
-                data.hourly.wind_speed_10m[idx],
-                hSnowfall,
-                data.hourly.wind_gusts_10m[idx]
-            );
-
-            return {
-                date: hTime.split('T')[0],
-                targetTime: hTime.split('T')[1],
-                weather: getWeatherName(data.hourly.weather_code[idx]),
-                temperature: data.hourly.temperature_2m[idx],
-                tempMax: data.hourly.temperature_2m[idx],
-                tempMin: data.hourly.temperature_2m[idx],
-                precipitation: data.hourly.precipitation[idx],
-                windSpeed: data.hourly.wind_speed_10m[idx],
-                snowfall: hSnowfall,
-                snowDepth: snowDepthM,
-                snowDepthChange: snowDepthChangeCm,
-                windGust: data.hourly.wind_gusts_10m[idx],
-                pressure: data.hourly.pressure_msl ? data.hourly.pressure_msl[idx] : 1013,
-                weatherCode: data.hourly.weather_code[idx],
-                windDirection: data.hourly.winddirection_10m[idx],
-                warnings: hWarnings,
-            };
-        };
-
-        // 気象庁公式警報を優先し、取得失敗時は擬似警報にフォールバック
-        let warnings: WeatherWarning[];
-        const jmaWarnings = await getJMAWarningsForRoute(routeId || '');
-        if (jmaWarnings !== null) {
-            warnings = jmaWarnings;
-            logger.info('[Weather] Using JMA official warnings', { routeId, count: jmaWarnings.length });
-        } else {
-            const mainEntry = buildHourlyEntry(closestIndex);
-            warnings = mainEntry.warnings; // 擬似警報はヘルパーが生成済み
-            logger.info('[Weather] Using pseudo warnings (JMA unavailable)', { routeId });
-        }
-
-        // 前後12時間のデータを抽出（タイムシフト提案・グラフ用）
-        const surroundingHours: WeatherForecast[] = [];
-        for (let i = -12; i <= 12; i++) {
-            const targetIdx = closestIndex + i;
-            if (targetIdx >= 0 && targetIdx < data.hourly.time.length) {
-                surroundingHours.push(buildHourlyEntry(targetIdx) as WeatherForecast);
-            }
-        }
-
-        // メインweatherもヘルパーで構築（surroundingHoursと同一構造を保証）
-        const mainWeather = buildHourlyEntry(closestIndex);
-        return {
-            ...mainWeather,
-            warnings, // JMA公式警報を優先使用
-            surroundingHours,
-        } as WeatherForecast;
+export async function fetchHourlyWeatherForecast(
+    routeId?: string, targetDateTime?: string, coordinates?: { lat: number; lon: number }
+): Promise<WeatherForecast | null> {
+    try {
+        const { hours } = await fetchWeatherSeries(getRouteCoordinates(routeId, coordinates));
+        const target = targetDateTime || `${japanDate()}T${japanTime()}`;
+        const [date, time] = target.split('T');
+        const entry = hours.find(h => h.date === date && h.targetTime === `${time.slice(0, 2)}:00`);
+        if (!entry) return null;
+        const index = hours.indexOf(entry);
+        const nearNow = Math.abs(Date.parse(`${date}T${entry.targetTime}:00+09:00`) - Date.now()) < 3_600_000;
+        const officialWarnings = nearNow ? await getJMAWarningsForRoute(routeId || '') : null;
+        return { ...entry, warnings: officialWarnings || [], surroundingHours: hours.slice(Math.max(0, index-12), index+13) };
     } catch (error) {
-        logger.error('Failed to fetch hourly weather', error, { routeId, targetDateTime });
+        logger.error('Failed to fetch hourly weather', error);
         return null;
     }
 }
 
-/**
- * Fetch daily weather forecast for the next 7 days.
- * Aggregates hourly data to find daily maximums/minimums and risks.
- * @param routeId Route ID
- * @param coordinates Optional custom coordinates
- */
-export async function fetchDailyWeatherForecast(
-    routeId?: string,
-    coordinates?: { lat: number; lon: number }
-): Promise<WeatherForecast[]> {
-    const { lat, lon } = getRouteCoordinates(routeId, coordinates);
-
+export async function fetchDailyWeatherForecast(routeId?: string, coordinates?: { lat: number; lon: number }): Promise<WeatherForecast[]> {
     try {
-        // 時間単位のデータを7日間分取得して、独自に集計する
-        const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?` +
-            `latitude=${lat}&longitude=${lon}` +
-            `&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,winddirection_10m,snowfall` +
-            `&timezone=Asia/Tokyo` +
-            `&wind_speed_unit=ms` + // m/sに統一
-            `&forecast_days=7`,
-            { next: { revalidate: 3600 } } // 1時間ごとに更新
-        );
-
-        if (!response.ok) {
-            throw new Error(`Open-Meteo API error: ${response.status}`);
+        const { hours } = await fetchWeatherSeries(getRouteCoordinates(routeId, coordinates));
+        const grouped = new Map<string, WeatherForecast[]>();
+        for (const hour of hours) {
+            if (hour.date < japanDate()) continue;
+            grouped.set(hour.date, [...(grouped.get(hour.date) || []), hour]);
         }
-
-        const data: OpenMeteoHourlyResponse = await response.json();
-        const dailyForecasts: WeatherForecast[] = [];
-
-        // 日付ごとにグループ化して集計
-        const groupedByDate: Record<string, {
-            temps: number[];
-            precipitations: number[];
-            windSpeeds: number[];
-            windGusts: number[];
-            snowDepths: number[];
-            windDirections: number[]; //
-            weatherCodes: number[];
-        }> = {};
-
-        data.hourly.time.forEach((t, i) => {
-            const date = t.split('T')[0];
-            const hour = parseInt(t.split('T')[1].split(':')[0]);
-
-            // 営業時間内 (06:00 - 23:00) のデータのみをおおむね考慮する
-            // ただし、運休リスクは「始発前」の状況も影響するため、04:00くらいから含めるのが妥当
-            // ユーザー感覚に合わせるため、深夜(00:00-04:00)の突発的な悪天候は除外する（翌日の運休影響は別途考慮されるべきだが）
-            if (hour >= 5 && hour <= 23) {
-                if (!groupedByDate[date]) {
-                    groupedByDate[date] = {
-                        temps: [],
-                        precipitations: [],
-                        windSpeeds: [],
-                        windGusts: [],
-                        snowDepths: [],
-                        windDirections: [], //
-                        weatherCodes: [],
-                    };
-                }
-                groupedByDate[date].temps.push(data.hourly.temperature_2m[i]);
-                groupedByDate[date].precipitations.push(data.hourly.precipitation[i]);
-                groupedByDate[date].windSpeeds.push(data.hourly.wind_speed_10m[i]);
-                groupedByDate[date].windGusts.push(data.hourly.wind_gusts_10m[i]);
-                groupedByDate[date].snowDepths.push(data.hourly.snow_depth[i]);
-                groupedByDate[date].windDirections.push(data.hourly.winddirection_10m[i]); //
-                groupedByDate[date].weatherCodes.push(data.hourly.weather_code[i]);
-            }
-        });
-
-        // 集計
-        Object.keys(groupedByDate).sort().forEach(date => {
-            const group = groupedByDate[date];
-            if (group.temps.length === 0) return;
-
-            const tempMax = Math.max(...group.temps);
-            const tempMin = Math.min(...group.temps);
-
-            // 降水量は合計（営業時間内）
-            const precipitation = group.precipitations.reduce((a, b) => a + b, 0);
-
-            // 風速は「営業時間内の上位30%点（70パーセンタイル）」を採用
-            // これにより、一瞬の突風のみで一日全体が高リスクになるのを防ぎつつ、
-            // ある程度継続する悪天候を捕捉する。
-            const sortedWinds = [...group.windSpeeds].sort((a, b) => b - a);
-            const sortedGusts = [...group.windGusts].sort((a, b) => b - a);
-
-            // 例: 18時間分なら 18 * 0.30 = 5.4 -> index 5 (6番目に強い風)
-            const percentileIndex = Math.floor(group.windSpeeds.length * 0.30);
-            const windSpeed = sortedWinds[percentileIndex] || sortedWinds[0] || 0;
-            const windGust = sortedGusts[percentileIndex] || sortedGusts[0] || 0;
-
-            // 風向は「最大風速時」のものを採用する
-            // 全体の平均をとるより、リスクがある瞬間の風向が重要
-            // windSpeedに対応するindexを見つけるのは難しい（sortしてしまっているため）
-            // なので簡易的に「最多風向」または「平均ベクトル」を採用すべきだが、
-            // ここではシンプルに「最大風速を記録した時間帯の風向」に近いものを取るのがベスト。
-            // しかしgroup.windSpeedsはsort済みではない元の配列が欲しい。
-            // -> group.windSpeedsは未ソート。
-
-            // 最大風速のインデックスを探す
-            let maxWindIndex = 0;
-            let maxWindVal = -1;
-            group.windSpeeds.forEach((w, idx) => {
-                if (w > maxWindVal) {
-                    maxWindVal = w;
-                    maxWindIndex = idx;
-                }
-            });
-            const windDirection = group.windDirections[maxWindIndex] || 0;
-
-            // 積雪は最大深さ - 最小深さ（その日の積雪増分）または最大値
-            // ここではシンプルにその日の最大積雪深を採用（除雪閾値と比較するため）
-            const snowfall = Math.max(...group.snowDepths);
-
-            // 天気コードは最も頻出するもの、または悪天候を優先
-            // ここでは簡易的に「昼12時」に近いインデックスのもの、あるいは悪天候コード(>50)があればそれを優先
-            const badWeather = group.weatherCodes.find(c => c >= 51) || group.weatherCodes[Math.floor(group.weatherCodes.length / 2)];
-            const weatherCode = badWeather;
-
-            const warnings: WeatherWarning[] = [];
-            const now = new Date().toISOString();
-
-            // 暴風警報 (基準を厳しくして過剰反応を防ぐ)
-            // 気象庁基準: 平均風速20m/s以上だが、APIの予測値は高めに出がちなので調整
-            if (windSpeed >= 23) {
-                warnings.push({ type: '暴風警報', area: '北海道', issuedAt: now });
-            } else if (windSpeed >= 16 || windGust >= 35) {
-                warnings.push({ type: '暴風注意報', area: '北海道', issuedAt: now });
-            }
-
-            // 大雨警報
-            if (precipitation >= 30) { // 時間降水積み上げなので閾値調整
-                warnings.push({ type: '大雨警報', area: '北海道', issuedAt: now });
-            } else if (precipitation >= 10) {
-                warnings.push({ type: '大雨注意報', area: '北海道', issuedAt: now });
-            }
-
-            // 大雪警報
-            if (snowfall >= 30) {
-                warnings.push({ type: '大雪警報', area: '北海道', issuedAt: now });
-            }
-
-            dailyForecasts.push({
-                date,
-                weather: getWeatherName(weatherCode),
-                tempMax,
-                tempMin,
-                precipitation,
-                windSpeed,
-                snowfall,
-                windGust,
-                windDirection, //
-                weatherCode,
-                warnings,
-            });
-        });
-
-        return dailyForecasts;
+        return [...grouped.entries()].map(([date, day]) => ({
+            ...day[Math.floor(day.length / 2)], date,
+            tempMax: Math.max(...day.map(h => h.tempMax)), tempMin: Math.min(...day.map(h => h.tempMin)),
+            // The legacy risk model expects hourly intensities, not daily totals.
+            precipitation: Math.max(...day.map(h => h.precipitation)),
+            snowfall: Math.max(...day.map(h => h.snowfall ?? 0)),
+            snowDepth: Math.max(...day.map(h => h.snowDepth ?? 0)),
+            windSpeed: Math.max(...day.map(h => h.windSpeed)), windGust: Math.max(...day.map(h => h.windGust ?? 0)),
+            surroundingHours: day, warnings: [],
+        }));
     } catch (error) {
-        logger.error('Failed to fetch/aggregate hourly weather for weekly forecast', error, { routeId });
+        logger.error('Failed to fetch daily weather', error);
         return [];
     }
 }

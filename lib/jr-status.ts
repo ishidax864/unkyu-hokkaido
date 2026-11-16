@@ -4,6 +4,7 @@ import { logger } from './logger';
 import { JRStatus } from './types';
 
 import crawlerConfig from '../data/crawler-config.json';
+import { classifyOfficialObservation, hasExplicitAreaAllClear, specificRouteKeywords, officialPublishedAt } from './official-observation';
 
 // JR北海道公式JSON URL (エリア別)
 export const JR_JSON_URLS = crawlerConfig.areas;
@@ -34,7 +35,7 @@ export const ROUTE_DEFINITIONS: RouteDefinition[] = crawlerConfig.routeMatching.
                                                 rm.id.split('.').pop() === 'nemuro-main' ? '根室本線' :
                                                     rm.id.split('.').pop() === 'senmo-main' ? '釧網本線' : '当該路線',
     keywords: rm.keywords,
-    routeId: rm.id,
+    routeId: rm.id === 'jr-hokkaido.gakuentoshi' ? 'jr-hokkaido.sassho' : rm.id,
     validAreas: rm.areas
 }));
 
@@ -47,6 +48,7 @@ export interface JROperationStatus {
     affectedSection?: string;
     expectedRecovery?: string;
     updatedAt: string;
+    publishedAt?: string;
     rawText?: string; // 生の概況テキスト
     sourceArea?: string; // 情報取得元エリアID
     delayMinutes?: number; // 抽出された遅延分
@@ -100,13 +102,14 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                 try {
                     const res = await fetch(`${BASE_URL}${area.id}.json`, {
                         headers: { 'User-Agent': 'Mozilla/5.0' },
-                        cache: 'no-store'
+                        cache: 'no-store',
+                        signal: AbortSignal.timeout(6000)
                     });
                     if (!res.ok) return null;
 
                     const text = await res.text();
                     const cleanJson = text.replace(/^\uFEFF/, '');
-                    const data = JSON.parse(cleanJson) as { today?: { gaikyo?: Array<{ honbun: string }> } };
+                    const data = JSON.parse(cleanJson) as { time?: string; today?: { gaikyo?: Array<{ honbun: string }> } };
                     return { name: area.name, id: area.id, data };
                 } catch (e) {
                     logger.error(`Area ${area.name} fetch error:`, e);
@@ -115,9 +118,13 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
             })
         );
 
+        if (!results.some(Boolean)) throw new Error('JR official sources unavailable');
+
         for (const result of results) {
             if (!result || !result.data) continue;
             const { name: areaName, id: areaId, data } = result;
+            const publishedAt = officialPublishedAt(data.time);
+            if (!publishedAt || Date.parse(now) - Date.parse(publishedAt) > 24 * 3600_000 || Date.parse(publishedAt) > Date.parse(now) + 5 * 60_000) continue;
 
             // 概況テキストから運休・遅延を判定
             const gaikyoText = data.today?.gaikyo?.map((g: { honbun: string }) => g.honbun).join(' ') || '';
@@ -133,59 +140,37 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                 let description = '平常運転';
 
                 // キーワードが含まれているか
-                const hasRouteMention = route.keywords.some(k => cleanGaikyo.includes(k));
-                if (!hasRouteMention) continue;
-
-                // コンテキスト判定: キーワードが「通常通り」「通常運転」の文脈で出現しているかチェック
-                // 例: "快速エアポートを含む札幌近郊の列車は現時点では通常通りの運転をします"
-                // → この場合、エアポート(千歳線)は通常運転なのでsuspendedにしない
-                let isExplicitlyNormal = false;
-                for (const keyword of route.keywords) {
-                    const keyIdx = cleanGaikyo.indexOf(keyword);
-                    if (keyIdx === -1) continue;
-
-                    // キーワード周辺の文（。で区切られた一文、または前後100文字）を取得
-                    const sentenceStart = cleanGaikyo.lastIndexOf('。', keyIdx) + 1;
-                    const sentenceEnd = cleanGaikyo.indexOf('。', keyIdx);
-                    const sentence = cleanGaikyo.substring(
-                        sentenceStart >= 0 ? sentenceStart : Math.max(0, keyIdx - 100),
-                        sentenceEnd >= 0 ? sentenceEnd : Math.min(cleanGaikyo.length, keyIdx + 100)
-                    );
-
-                    if (/通常通り|通常運転|平常通り|平常運転/.test(sentence)) {
-                        isExplicitlyNormal = true;
-                        break;
-                    }
-                }
-
-                // 公式に「通常通り」と言及されている路線は、明示的にnormalとして登録
-                // （area-wide partialチェックによる上書きを防止）
-                if (isExplicitlyNormal) {
-                    const existing = allItems.find(i => i.routeId === route.routeId);
-                    if (!existing) {
-                        allItems.push({
-                            routeId: route.routeId,
-                            routeName: route.name,
-                            status: 'normal',
-                            statusText: '公式発表により通常運転',
-                            updatedAt: now,
-                            rawText: cleanGaikyo,
-                            sourceArea: `${areaName} (${areaId})`,
-                        });
+                const hasRouteMention = specificRouteKeywords(route.keywords).some(k => cleanGaikyo.includes(k));
+                if (!hasRouteMention) {
+                    if (hasExplicitAreaAllClear(cleanGaikyo) && !allItems.some(item => item.routeId === route.routeId)) {
+                        allItems.push({ routeId: route.routeId, routeName: route.name, status: 'normal',
+                            statusText: '現在、遅れに関する情報はありません', updatedAt: now, publishedAt, rawText: cleanGaikyo });
                     }
                     continue;
                 }
 
-                // 運休判定
-                if (cleanGaikyo.includes('運休') || cleanGaikyo.includes('運転見合わせ') || cleanGaikyo.includes('運転見合せ')) {
-                    status = 'suspended';
-                    description = '運休・運転見合わせが発生しています';
-                } else if (cleanGaikyo.includes('遅れ') || cleanGaikyo.includes('遅延')) {
-                    status = 'delay';
-                    description = '遅延が発生しています';
-                }
+                // Keep the recovery sentence attached to its own bulletin. For bulletins
+                // mentioning several lines, use only sentences naming this line.
+                const routeText = (data.today?.gaikyo || []).flatMap((bulletin: { honbun: string }) => {
+                    const text = (bulletin.honbun || '').replace(/<[^>]*>/g, ' ');
+                    const mentions = ROUTE_DEFINITIONS.filter(candidate => specificRouteKeywords(candidate.keywords).some(k => text.includes(k)));
+                    if (!mentions.some(candidate => candidate.routeId === route.routeId)) return [];
+                    return mentions.length === 1 ? [text] : text.split(/(?<=[。！？\n])/).filter(sentence => specificRouteKeywords(route.keywords).some(k => sentence.includes(k)));
+                }).join(' ');
 
-                if (status !== 'normal') {
+                const observation = classifyOfficialObservation(routeText);
+                if (observation === 'unknown') continue;
+                if (observation === 'normal') {
+                    if (!allItems.some(item => item.routeId === route.routeId)) allItems.push({
+                        routeId: route.routeId, routeName: route.name, status: 'normal',
+                        statusText: '公式の通常運転・再開の案内', updatedAt: now, publishedAt, rawText: routeText,
+                    });
+                    continue;
+                }
+                status = observation === 'delayed' ? 'delay' : 'suspended';
+                description = observation === 'delayed' ? '遅延が発生しています' : '運休・運転見合わせが発生しています';
+
+                {
                     // 計画運休判定（「明日」「計画的」「事前」「当初から」「終日」等のキーワード）
                     const isPlanned = /明日|計画的|事前|当初から|終日|運休とします|運休といたし|運転を見合わせる予定|運転を取りやめ/.test(cleanGaikyo);
 
@@ -195,7 +180,8 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                         if (existing) {
                             existing.status = status;
                             existing.statusText = description;
-                            existing.rawText = cleanGaikyo;
+                            existing.rawText = routeText;
+                            existing.publishedAt = publishedAt;
                             existing.sourceArea = `${areaName} (${areaId})`;
                             existing.isPlannedSuspension = isPlanned;
                             if (isPlanned) existing.plannedSuspensionDetails = cleanGaikyo;
@@ -205,8 +191,8 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
                                 routeName: route.name,
                                 status,
                                 statusText: description,
-                                updatedAt: now,
-                                rawText: cleanGaikyo,
+                                updatedAt: now, publishedAt,
+                                rawText: routeText,
                                 sourceArea: `${areaName} (${areaId})`,
                                 isPlannedSuspension: isPlanned,
                                 plannedSuspensionDetails: isPlanned ? cleanGaikyo : undefined,
@@ -217,21 +203,19 @@ export async function fetchJRHokkaidoStatus(): Promise<JROperationStatus[]> {
             }
         }
 
-        // 何もなければ平常運転（JR北海道全体として）
-        if (allItems.length === 0) {
-            allItems.push({
-                routeId: 'jr-hokkaido',
-                routeName: 'JR北海道',
-                status: 'normal',
-                statusText: '概ね平常運転です',
-                updatedAt: now
-            });
-        }
-
-        return allItems;
+        // Absence of a route mention is not an explicit normal-operation statement.
+        // Failed/empty feeds must never become a synthetic all-clear.
+        return allItems.filter(item => item.status !== 'normal' || ROUTE_DEFINITIONS.find(route => route.routeId === item.routeId)?.validAreas?.every(id => {
+            const source = results.find(result => result?.id === id);
+            const published = officialPublishedAt(source?.data.time);
+            if (!published || Date.parse(now) - Date.parse(published) > 24 * 3600_000) return false;
+            const text = source?.data.today?.gaikyo?.map(bulletin => bulletin.honbun).join(' ') || '';
+            // A regional all-clear cannot settle an affected line in another area.
+            return hasExplicitAreaAllClear(text);
+        }));
     } catch (error) {
         logger.error('fetchJRHokkaidoStatus major error:', error);
-        return getMockJRStatus(); // 最終的なフォールバック
+        throw error;
     }
 }
 

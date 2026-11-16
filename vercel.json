@@ -36,11 +36,5 @@
             "source": "/sitemap.xml",
             "destination": "/sitemap"
         }
-    ],
-    "crons": [
-        {
-            "path": "/api/cron/crawl",
-            "schedule": "0 0 * * *"
-        }
     ]
 }

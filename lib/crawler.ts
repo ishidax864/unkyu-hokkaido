@@ -1,7 +1,8 @@
 import { getAdminSupabaseClient } from '@/lib/supabase';
 import { JR_JSON_URLS, ROUTE_DEFINITIONS, extractNumericalStatus } from '@/lib/jr-status';
 import { logger } from '@/lib/logger';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+import { classifyOfficialObservation, hasExplicitAreaAllClear, specificRouteKeywords, officialPublishedAt } from './official-observation';
 
 import crawlerConfig from '../data/crawler-config.json';
 
@@ -14,6 +15,7 @@ const EXCLUDE_KEYWORDS = ['鹿', '人身', '信号', '車両', '線路支障', '
 // ----- Weather Snapshot Fetching -----
 
 interface WeatherSnapshot {
+    evidence?: { url: string; fetchedAt: string; kind: string; payload: unknown };
     temperature: number | null;
     wind_speed: number | null;
     wind_gust: number | null;
@@ -26,55 +28,91 @@ interface WeatherSnapshot {
     visibility: number | null;
 }
 
+const NULL_SNAPSHOT: WeatherSnapshot = {
+    temperature: null, wind_speed: null, wind_gust: null,
+    snowfall: null, precipitation: null, snow_depth: null,
+    weather_code: null, wind_direction: null, pressure_msl: null, visibility: null
+};
+
+const WEATHER_TIMEOUT_MS = 8000;
+const WEATHER_RETRY_DELAYS_MS = [1500, 4000];
+
+export interface WeatherAttempt { status?: number; error?: string; retryAfter?: string | null }
+
 /**
- * エリアの代表座標で現在の天気を取得 (Open-Meteo Current Weather API)
+ * 全エリアの代表座標で現在の天気を1回のリクエストでまとめて取得 (Open-Meteo, 複数地点指定)。
+ * 共有IPからの5並列リクエストはレート制限に当たりやすいため1リクエストに集約し、
+ * 429/5xx/タイムアウト時のみ待機して再試行する。失敗理由は attempts として返し、収集記録に残す。
  */
-async function fetchCurrentWeather(lat: number, lon: number): Promise<WeatherSnapshot> {
-    const nullSnapshot: WeatherSnapshot = {
-        temperature: null, wind_speed: null, wind_gust: null,
-        snowfall: null, precipitation: null, snow_depth: null,
-        weather_code: null, wind_direction: null, pressure_msl: null, visibility: null
-    };
+export async function fetchAreaWeather(
+    areas: Array<{ id: string; lat: number; lon: number }>,
+    fetchImpl: typeof fetch = fetch,
+    sleep: (ms: number) => Promise<void> = ms => new Promise(r => setTimeout(r, ms)),
+): Promise<{ byArea: Record<string, WeatherSnapshot>; attempts: WeatherAttempt[] }> {
+    const byArea: Record<string, WeatherSnapshot> = Object.fromEntries(areas.map(a => [a.id, { ...NULL_SNAPSHOT }]));
+    const attempts: WeatherAttempt[] = [];
+    if (areas.length === 0) return { byArea, attempts };
 
-    try {
-        const params = new URLSearchParams({
-            latitude: lat.toString(),
-            longitude: lon.toString(),
-            current: [
-                'temperature_2m', 'wind_speed_10m', 'wind_gusts_10m',
-                'snowfall', 'precipitation', 'snow_depth',
-                'weather_code', 'wind_direction_10m', 'pressure_msl'
-            ].join(','),
-            timezone: 'Asia/Tokyo'
-        });
+    const params = new URLSearchParams({
+        latitude: areas.map(a => a.lat).join(','),
+        longitude: areas.map(a => a.lon).join(','),
+        current: [
+            'temperature_2m', 'wind_speed_10m', 'wind_gusts_10m',
+            'snowfall', 'precipitation', 'snow_depth',
+            'weather_code', 'wind_direction_10m', 'pressure_msl'
+        ].join(','),
+        timezone: 'Asia/Tokyo',
+        wind_speed_unit: 'kmh' // Legacy training store uses km/h; never mix with m/s prediction inputs.
+    });
+    const url = `${OPEN_METEO_URL}?${params}`;
 
-        const res = await fetch(`${OPEN_METEO_URL}?${params}`, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(5000) // 5s timeout
-        });
-
-        if (!res.ok) return nullSnapshot;
-
-        const data = await res.json();
-        const current = data.current;
-        if (!current) return nullSnapshot;
-
-        return {
-            temperature: current.temperature_2m ?? null,
-            wind_speed: current.wind_speed_10m ?? null,
-            wind_gust: current.wind_gusts_10m ?? null,
-            snowfall: current.snowfall ?? null,
-            precipitation: current.precipitation ?? null,
-            snow_depth: current.snow_depth ?? null,
-            weather_code: current.weather_code ?? null,
-            wind_direction: current.wind_direction_10m ?? null,
-            pressure_msl: current.pressure_msl ?? null,
-            visibility: null // Open-Meteo current doesn't include visibility
-        };
-    } catch (e) {
-        logger.warn('Weather snapshot fetch failed', { lat, lon, error: e });
-        return nullSnapshot;
+    for (let i = 0; i <= WEATHER_RETRY_DELAYS_MS.length; i++) {
+        let retryable = false;
+        try {
+            const res = await fetchImpl(url, { cache: 'no-store', signal: AbortSignal.timeout(WEATHER_TIMEOUT_MS) });
+            if (!res.ok) {
+                attempts.push({ status: res.status, retryAfter: res.headers.get('retry-after') });
+                retryable = res.status === 429 || res.status >= 500;
+            } else {
+                const data = await res.json();
+                // 1地点ならオブジェクト、複数地点なら配列で返る
+                const list: unknown[] = Array.isArray(data) ? data : [data];
+                if (list.length !== areas.length) {
+                    attempts.push({ status: res.status, error: `location count mismatch: ${list.length}/${areas.length}` });
+                    break;
+                }
+                const fetchedAt = new Date().toISOString();
+                areas.forEach((area, idx) => {
+                    const payload = list[idx] as { current?: Record<string, number | null> };
+                    const current = payload?.current;
+                    if (!current) return;
+                    byArea[area.id] = {
+                        temperature: current.temperature_2m ?? null,
+                        wind_speed: current.wind_speed_10m ?? null,
+                        wind_gust: current.wind_gusts_10m ?? null,
+                        snowfall: current.snowfall ?? null,
+                        precipitation: current.precipitation ?? null,
+                        snow_depth: current.snow_depth ?? null,
+                        weather_code: current.weather_code ?? null,
+                        wind_direction: current.wind_direction_10m ?? null,
+                        pressure_msl: current.pressure_msl ?? null,
+                        visibility: null, // Open-Meteo current does not include visibility.
+                        evidence: { url, fetchedAt, kind: 'model-current-15min', payload }
+                    };
+                });
+                attempts.push({ status: res.status });
+                return { byArea, attempts };
+            }
+        } catch (e) {
+            const name = (e as Error)?.name;
+            attempts.push({ error: name === 'TimeoutError' || name === 'AbortError' ? 'timeout' : String((e as Error)?.message ?? e).slice(0, 200) });
+            retryable = true;
+        }
+        if (!retryable || i === WEATHER_RETRY_DELAYS_MS.length) break;
+        await sleep(WEATHER_RETRY_DELAYS_MS[i]);
     }
+    logger.warn('Weather snapshot fetch failed', { attempts });
+    return { byArea, attempts };
 }
 
 // ----- Content Hash for Deduplication -----
@@ -106,10 +144,7 @@ export async function runJRCrawler() {
 
     // Fetch weather for all areas in parallel
     const areaConfigs = crawlerConfig.areas as Array<{ id: string; name: string; lat: number; lon: number }>;
-    const weatherByArea: Record<string, WeatherSnapshot> = {};
-    await Promise.all(areaConfigs.map(async (area) => {
-        weatherByArea[area.id] = await fetchCurrentWeather(area.lat, area.lon);
-    }));
+    const { byArea: weatherByArea, attempts: weatherAttempts } = await fetchAreaWeather(areaConfigs);
 
     // Collect all ML training rows for batch insert
     const mlBatch: Array<Record<string, unknown>> = [];
@@ -132,32 +167,30 @@ export async function runJRCrawler() {
         // Content hash for dedup
         const contentHash = hashContent(JSON.stringify(json));
 
-        // Check if content changed since last crawl
-        const { data: lastLog } = await supabase
-            .from('crawler_logs')
-            .select('content_hash')
-            .eq('area_id', area.id)
-            .order('fetched_at', { ascending: false })
-            .limit(1);
-        const contentChanged = !lastLog?.length || lastLog[0].content_hash !== contentHash;
-
-        // Store raw_json only when content changed (saves ~97% storage)
         const { data: logData, error: logError } = await supabase
             .from('crawler_logs')
             .insert({
                 area_id: area.id,
-                raw_json: contentChanged ? json : null,
+                raw_json: json, // Keep independently replayable provenance for every collected observation.
                 content_hash: contentHash,
-                status: 'success'
+                status: 'success',
+                source_url: url,
+                collector_version: 'verified-source-v3.1',
+                weather_snapshot: weatherByArea[area.id]?.evidence ?? null
             })
             .select('id')
             .single();
 
         if (logError) {
             logger.error(`❌ Failed to log for ${area.name}:`, logError);
-            return { area: area.name, saved: 0, ml: [] as Array<Record<string, unknown>> };
+            throw new Error(`Provenance logging failed for area ${area.id}`);
         }
 
+        const published = officialPublishedAt(json.time);
+        // Preserve stale raw feeds for review, but never label them as current.
+        if (!published || now.getTime() - Date.parse(published) > 24 * 3600_000 || Date.parse(published) > now.getTime() + 5 * 60_000) {
+            return { area: area.name, saved: 0, ml: areaML, labelStatus: 'stale-or-unverifiable' };
+        }
         const gaikyoList = json.today?.gaikyo || [];
         const weather = weatherByArea[area.id];
         const routesWithStatus = new Set<string>();
@@ -183,6 +216,7 @@ export async function runJRCrawler() {
             wind_direction: weather.wind_direction,
             pressure_msl: weather.pressure_msl,
             visibility: weather.visibility,
+            crawler_log_id: logData.id,
             month, hour, day_of_week: dayOfWeek
         });
 
@@ -194,9 +228,12 @@ export async function runJRCrawler() {
             if (!content) continue;
 
             let matchedRouteId = null;
-            for (const def of ROUTE_DEFINITIONS) {
+            const matches = ROUTE_DEFINITIONS.filter(def => (!def.validAreas || def.validAreas.includes(area.id)) && specificRouteKeywords(def.keywords).some(kw => content.includes(kw)));
+            // A multi-route bulletin must be reviewed at section level before it becomes a label.
+            if (matches.length !== 1) { for (const def of matches) routesIgnored.add(def.routeId); continue; }
+            for (const def of matches) {
                 if (def.validAreas && !def.validAreas.includes(area.id)) continue;
-                if (def.keywords.some(kw => content.includes(kw))) {
+                if (specificRouteKeywords(def.keywords).some(kw => content.includes(kw))) {
                     matchedRouteId = def.routeId;
                     break;
                 }
@@ -211,23 +248,10 @@ export async function runJRCrawler() {
 
             routesWithStatus.add(matchedRouteId);
 
-            let status = 'normal';
-            const normalized = content.replace(/\s+/g, '');
-            const hasSuspend = /運休|見合/.test(normalized);
-            const hasDelay = /遅れ|遅延/.test(normalized);
-            const hasRecovered = /再開|平常/.test(normalized);
+            const status = classifyOfficialObservation(content);
+            if (status === 'unknown') { routesIgnored.add(matchedRouteId); continue; }
 
-            if (hasSuspend && !hasRecovered) {
-                status = 'suspended';
-            } else if (hasDelay) {
-                status = 'delayed';
-            } else if (hasRecovered) {
-                status = 'normal';
-            } else if (hasSuspend && hasRecovered) {
-                status = 'normal';
-            }
-
-            let cause = 'weather';
+            let cause = 'unknown';
             if (content.includes('雪')) cause = 'snow';
             else if (content.includes('風')) cause = 'wind';
             else if (content.includes('雨')) cause = 'rain';
@@ -239,9 +263,7 @@ export async function runJRCrawler() {
                 route_id: matchedRouteId,
                 status, cause,
                 details: content,
-                crawler_log_id: logData.id,
-                delay_minutes: delayMinutes,
-                recovery_time: recoveryTime
+                crawler_log_id: logData.id
             });
 
             areaML.push(mkMlRow(matchedRouteId, status, cause, content, delayMinutes, recoveryTime));
@@ -254,16 +276,18 @@ export async function runJRCrawler() {
                 .insert(statusInserts);
             if (batchErr) {
                 logger.error(`Failed to batch insert statuses for ${area.name}:`, batchErr);
+                throw new Error(`History write failed for area ${area.id}`);
             } else {
                 savedCount = statusInserts.length;
             }
         }
 
         // Normal routes (ネガティブサンプル) — collect
+        const explicitAllClear = gaikyoList.length > 0 && gaikyoList.every((item: { honbun?: string }) => hasExplicitAreaAllClear(item.honbun || ''));
         const areaRoutes = ROUTE_DEFINITIONS.filter(r => r.validAreas?.includes(area.id));
         for (const route of areaRoutes) {
-            if (!routesWithStatus.has(route.routeId) && !routesIgnored.has(route.routeId)) {
-                areaML.push(mkMlRow(route.routeId, 'normal', null, null, undefined, undefined));
+            if (explicitAllClear && !routesWithStatus.has(route.routeId) && !routesIgnored.has(route.routeId)) {
+                areaML.push(mkMlRow(route.routeId, 'normal', null, '現在、遅れに関する情報はありません。', undefined, undefined));
             }
         }
 
@@ -308,5 +332,6 @@ export async function runJRCrawler() {
     }
 
     logger.info('🏁 Crawler finished (ML Enhanced).', { results });
-    return { success: true, results, ml: mlResult };
+    const weatherMissing = areaConfigs.filter(area => !weatherByArea[area.id]?.evidence).map(area => area.id);
+    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts };
 }

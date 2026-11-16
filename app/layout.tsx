@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: "運休北海道 - JR北海道の運休予測サービス",
     template: "%s | 運休北海道",
   },
-  description: "明日の電車、動く？AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。北海道の通勤・通学を支える運行予報士。",
+  description: "JR北海道の運行情報・気象リスク・復旧の見通しを確認。運休時の待機場所、代替交通、宿泊先を探せます。",
   keywords: ["運休", "北海道", "JR北海道", "電車", "遅延", "予測", "AI", "天気", "通勤", "札幌", "新千歳空港", "吹雪", "雪"],
   authors: [{ name: "運休北海道" }],
   creator: "運休北海道",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "運休北海道 - JR北海道の運休予測サービス",
-    description: "明日の電車、動く？AIが天候や運行状況からJR北海道の運休リスクをリアルタイムで予測。",
+    description: "JR北海道の運行情報・気象リスク・復旧の見通しを確認。運休時の待機場所、代替交通、宿泊先を探せます。",
     url: siteUrl,
     siteName: "運休北海道",
     locale: "ja_JP",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "運休北海道 - JR北海道の運休予測サービス",
-    description: "明日の電車、動く？AIがJR北海道の運休リスクをリアルタイムで予測。",
+    description: "JR北海道の運行情報・気象リスク・復旧の見通しを確認。運休時の待機場所、代替交通、宿泊先を探せます。",
     images: ["/og-image.png"],
   },
   robots: {
@@ -104,13 +104,13 @@ const jsonLd = [
     "url": siteUrl,
     "operatingSystem": "All",
     "applicationCategory": "UtilitiesApplication",
-    "description": "JR北海道13路線の運休リスクをAIで予測。天気・運行情報・路線特性を統合分析し、代替交通手段も提案。",
+    "description": "JR北海道の運行情報・気象リスク・復旧の見通しと代替手段を確認できます。",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "JPY"
     },
-    "featureList": "AI運休予測, リアルタイム運行情報, 代替交通提案, お気に入りルート, 13路線対応",
+    "featureList": "気象リスクの目安, 公式運行情報, 復旧見通し, 現地報告, 代替交通・滞在先の検索, お気に入りルート",
     "inLanguage": "ja",
   },
   {

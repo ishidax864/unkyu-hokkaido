@@ -1,0 +1,473 @@
+{
+  "auditedAt": "2026-10-12T11:34:52.914Z",
+  "scope": "Read-only full ml_training_data snapshot; latest 20 non-null raw feeds; all returned legacy history rows. Automated flags are not adjudicated error counts.",
+  "total": 58527,
+  "read": 58527,
+  "statuses": {
+    "normal": 57508,
+    "delayed": 159,
+    "suspended": 860
+  },
+  "months": {
+    "2026-02": 9439,
+    "2026-03": 20294,
+    "2026-04": 13615,
+    "2026-05": 9398,
+    "2026-06": 3514,
+    "2026-07": 676,
+    "2026-08": 677,
+    "2026-09": 656,
+    "2026-10": 258
+  },
+  "routes": {
+    "jr-hokkaido.chitose": 5327,
+    "jr-hokkaido.hakodate-main": 7973,
+    "jr-hokkaido.gakuentoshi": 2668,
+    "jr-hokkaido.muroran-main": 5310,
+    "jr-hokkaido.hidaka": 5332,
+    "jr-hokkaido.sekisho": 5306,
+    "jr-hokkaido.nemuro-main": 7988,
+    "jr-hokkaido.hakodate-south": 2674,
+    "jr-hokkaido.soya-main": 2636,
+    "jr-hokkaido.sekihoku-main": 5320,
+    "jr-hokkaido.furano": 2663,
+    "jr-hokkaido.rumoi": 2664,
+    "jr-hokkaido.senmo-main": 2666
+  },
+  "missing": {
+    "temperature": 1643,
+    "wind_speed": 1643,
+    "wind_gust": 1643,
+    "snowfall": 1643,
+    "precipitation": 1643,
+    "snow_depth": 1643,
+    "weather_code": 1643,
+    "wind_direction": 1643,
+    "pressure_msl": 1643
+  },
+  "numeric": {
+    "temperature": {
+      "min": -10.7,
+      "max": 30.9
+    },
+    "wind_speed": {
+      "min": 0,
+      "max": 64.5
+    },
+    "wind_gust": {
+      "min": 0.7,
+      "max": 110.9
+    },
+    "snowfall": {
+      "min": 0,
+      "max": 0.63
+    },
+    "precipitation": {
+      "min": 0,
+      "max": 1.8
+    },
+    "snow_depth": {
+      "min": 0,
+      "max": 0.92
+    },
+    "weather_code": {
+      "min": 0,
+      "max": 95
+    },
+    "wind_direction": {
+      "min": 1,
+      "max": 360
+    },
+    "pressure_msl": {
+      "min": 983.9,
+      "max": 1031
+    }
+  },
+  "flags": {
+    "missingProvenance": 58527,
+    "normalNoText": 57499,
+    "unknownRoutes": 2668,
+    "futureText": 0,
+    "resumptionPlanNormal": 2,
+    "invalidTime": 0,
+    "invalidWeather": 0,
+    "duplicateRows": 35,
+    "conflictingRouteTimes": 379
+  },
+  "history": {
+    "rows": 567,
+    "latest": "2026-03-01",
+    "statuses": {
+      "suspended": 411,
+      "delayed": 95,
+      "normal": 61
+    },
+    "actualResumptionText": 58
+  },
+  "rawSamples": [
+    {
+      "id": "a6c4f780-7204-438b-93e9-a7a3ec639b63",
+      "area": "02",
+      "at": "2026-10-12T00:50:56.076916+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "091319c7-d627-4ecf-bda8-ed3b7b8431b0",
+      "area": "01",
+      "at": "2026-10-12T00:50:56.072017+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "ef77ee8a-477b-4a65-9294-cd19c1084955",
+      "area": "04",
+      "at": "2026-10-12T00:50:56.063317+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "030a02c9-6787-445b-9249-49569b500502",
+      "area": "05",
+      "at": "2026-10-12T00:50:56.056358+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "82809b4d-630f-4a04-a00f-690913b80768",
+      "area": "03",
+      "at": "2026-10-12T00:50:56.056355+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "21502e52-74a6-403f-a11b-7f7d6b7ed061",
+      "area": "04",
+      "at": "2026-10-11T00:50:56.311186+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "914970bc-5bcd-433c-9cf9-7fe21cec46a8",
+      "area": "05",
+      "at": "2026-10-11T00:50:56.280549+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "0094fc48-fc1b-4f06-b5e5-f14681451281",
+      "area": "01",
+      "at": "2026-10-11T00:50:56.276589+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "370b381a-b3c0-421a-adca-1d9717fee4f2",
+      "area": "02",
+      "at": "2026-10-11T00:50:56.274619+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "9654f93c-2157-4c3b-8aa7-0939500d857d",
+      "area": "03",
+      "at": "2026-10-11T00:50:56.274566+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "19d7298e-e673-4aae-bc6c-236521437dc4",
+      "area": "03",
+      "at": "2026-10-10T00:50:56.521484+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "e7e3b176-0879-4772-b219-18c1acc86158",
+      "area": "02",
+      "at": "2026-10-10T00:50:56.520557+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "44bd083c-1bed-4892-9a97-10287cab8caf",
+      "area": "01",
+      "at": "2026-10-10T00:50:56.520322+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "aa4dff47-cee7-4d42-a709-4d7ad414783e",
+      "area": "04",
+      "at": "2026-10-10T00:50:56.518179+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "42cb617b-0545-4b0e-9c75-2669c3763f6f",
+      "area": "05",
+      "at": "2026-10-10T00:50:56.506643+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "ccff9507-2563-43f4-b360-5bda3d3e4c67",
+      "area": "02",
+      "at": "2026-10-09T00:50:56.023743+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "211a134c-bb76-4774-96db-2e2e66209cf7",
+      "area": "01",
+      "at": "2026-10-09T00:50:56.011018+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "a549f812-5720-411d-b610-6165374335c9",
+      "area": "05",
+      "at": "2026-10-09T00:50:56.00556+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "7e7e3abd-66cc-40bd-83d3-21c6c7899f46",
+      "area": "04",
+      "at": "2026-10-09T00:50:55.994808+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    },
+    {
+      "id": "489d477e-7d3e-4706-b9de-e829f100418b",
+      "area": "03",
+      "at": "2026-10-09T00:50:55.985398+00:00",
+      "keys": [
+        "time",
+        "today",
+        "tomorrow"
+      ],
+      "hasToday": true,
+      "bulletins": 1
+    }
+  ],
+  "examples": {
+    "normalWithResumptionPlan": [
+      {
+        "id": 57358,
+        "at": "2026-08-20T00:50:53.928+00:00",
+        "route": "jr-hokkaido.nemuro-main",
+        "text": "根室線 御影～西帯広駅間で19日に発生した停電の影響により、20日の一部列車に運休が出ています。このため、根室線新得～帯広駅間で運転を見合わせています。また札幌～帯広・釧路間の特急についても運休が発生しています。なお、運転再開見込み(復旧の見込み)は9時30分頃を予定していますが、作業の状況によっては前後する場合があります。【停電による列車への影響について】                                                                                                       "
+      },
+      {
+        "id": 57372,
+        "at": "2026-08-20T00:50:53.928+00:00",
+        "route": "jr-hokkaido.nemuro-main",
+        "text": "根室線 御影～西帯広駅間で19日に発生した停電の影響により、20日の一部列車に運休が出ています。このため、根室線新得～帯広駅間で運転を見合わせています。また札幌～帯広・釧路間の特急についても運休が発生しています。なお、運転再開見込み(復旧の見込み)は9時30分頃を予定していますが、作業の状況によっては前後する場合があります。【停電による列車への影響について】                                                                                                       "
+      }
+    ],
+    "futureNotices": []
+  },
+  "collection": {
+    "latest": "2026-10-12T00:50:53.766+00:00",
+    "first": "2026-02-20T09:12:08.06+00:00",
+    "latest14Days": [
+      {
+        "day": "2026-10-12",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-11",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-10",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-09",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-08",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-07",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-06",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-05",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-04",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-03",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-02",
+        "runs": 1
+      },
+      {
+        "day": "2026-10-01",
+        "runs": 1
+      },
+      {
+        "day": "2026-09-30",
+        "runs": 1
+      },
+      {
+        "day": "2026-09-29",
+        "runs": 1
+      }
+    ],
+    "normalBaselineAccuracy": 0.9825892323201257
+  },
+  "seasons": {
+    "winter": {
+      "months": [
+        12,
+        1,
+        2,
+        3
+      ],
+      "total": 29491,
+      "statuses": {
+        "normal": 28940,
+        "delayed": 51,
+        "suspended": 500
+      }
+    },
+    "shoulder": {
+      "months": [
+        11,
+        4
+      ],
+      "total": 13681,
+      "statuses": {
+        "normal": 13349,
+        "suspended": 262,
+        "delayed": 70
+      }
+    },
+    "reference": {
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "total": 15355,
+      "statuses": {
+        "normal": 15219,
+        "suspended": 98,
+        "delayed": 38
+      }
+    }
+  }
+}

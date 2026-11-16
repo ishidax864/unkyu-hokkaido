@@ -1,310 +1,78 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { SearchForm } from '@/components/search-form';
-import { HeadlineStatus } from '@/components/headline-status';
-import { getStationById } from '@/lib/hokkaido-data';
-import { useAppInit } from '@/hooks/useAppInit';
-import { saveUserReport } from '@/lib/user-reports';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, ArrowUpRight, ArrowUpDown, TrainFront, CalendarDays, Clock3,
+    Bookmark, Snowflake, AlertCircle, ChevronRight, Check, LoaderCircle,
+    Search } from 'lucide-react';
+import { RailwayMark, RouteSymbol } from '@/components/journey-symbols';
+import { JourneyStationInput } from '@/components/journey-station-input';
+import { ForecastResult } from '@/components/journey-result';
+import { useJourneyForecast } from '@/hooks/useJourneyForecast';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useRouteSearch } from '@/hooks/useRouteSearch';
-import { FavoriteSelector } from '@/components/favorite-selector';
-import { useToast } from '@/components/toast';
-import { Cloud, Train, MapPin, AlertTriangle } from 'lucide-react';
-import { sendGAEvent } from '@next/third-parties/google';
-import { useTranslation } from '@/lib/i18n';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import { getWeatherIcon } from '@/lib/weather-utils';
-import { logger } from '@/lib/logger';
+import { getStationById } from '@/lib/hokkaido-data';
+import { japanDate, japanTime, addDays } from '@/lib/forecast/time';
+import './journey.css';
 
-// 遅延ロード: 初回表示に不要なコンポーネント
-const PredictionResults = dynamic(() => import('@/components/prediction-results').then(m => ({ default: m.PredictionResults })));
-const ServiceFeatures = dynamic(() => import('@/components/service-features').then(m => ({ default: m.ServiceFeatures })));
-const WeatherWarningList = dynamic(() => import('@/components/weather-warning-list').then(m => ({ default: m.WeatherWarningList })));
-const ProgressiveLoading = dynamic(() => import('@/components/progressive-loading').then(m => ({ default: m.ProgressiveLoading })));
-
+const quickRoutes = [
+    { from: 'sapporo', to: 'shin-chitose-airport', name: '新千歳空港' },
+    { from: 'sapporo', to: 'otaru', name: '小樽' },
+    { from: 'sapporo', to: 'asahikawa', name: '旭川' },
+    { from: 'sapporo', to: 'obihiro', name: '帯広' },
+    { from: 'sapporo', to: 'hakodate', name: '函館' },
+    { from: 'sapporo', to: 'kutchan', name: '倶知安' },
+];
 export default function Home() {
-  // 検索ロジックのフック
-  const {
-    departureStation, setDepartureStation,
-    arrivalStation, setArrivalStation,
-    date, setDate,
-    time, setTime,
-
-    isLoading,
-    searchError, //
-    prediction,
-    weeklyPredictions,
-    selectedRouteId,
-    timeShiftSuggestion,
-    riskTrend,
-    realtimeStatus, //
-    handleSearch,
-    refreshRealtimeStatus, //
-  } = useRouteSearch();
-
-
-
-  // 初期化ロジック（天気、現在地、警報、時刻）
-  const {
-    weather,
-    warnings,
-    currentTime: _currentTime,
-    isWeatherLoading,
-    lastWeatherUpdate,
-    locationName,
-    userLocation,
-    jrStatus
-  } = useAppInit();
-
-  // トースト
-  const { showToast } = useToast();
-  const { t } = useTranslation();
-
-  // 予測結果セクションへの自動スクロール
-  const predictionRef = useRef<HTMLDivElement>(null);
-  const prevPrediction = useRef(prediction);
-
-  useEffect(() => {
-    // prediction が新しく設定されたときだけスクロール
-    if (prediction && prediction !== prevPrediction.current) {
-      prevPrediction.current = prediction;
-      // レンダリング後にスクロール
-      setTimeout(() => {
-        predictionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }, [prediction]);
-
-  // お気に入りフック
-  const { favorites, addFavorite: addFav, removeFavorite, isFavorite, isLoaded: isFavoritesLoaded } = useFavorites();
-
-  // お気に入り追加（トースト付き）
-  const addFavorite = (depId: string, arrId: string, depName: string, arrName: string) => {
-    addFav(depId, arrId, depName, arrName);
-    showToast(`⭐ ${depName} → ${arrName} をお気に入りに追加しました`);
-  };
-
-  // ユーザー報告を保存（Supabase優先、ローカルストレージにフォールバック）
-  const handleReport = async (type: 'stopped' | 'delayed' | 'crowded' | 'normal', comment?: string, trainId?: string) => {
-    if (!selectedRouteId) return;
-
-    const reportLabels = { stopped: '運休', delayed: '遅延', crowded: '混雑', normal: '通常運行' };
-    try {
-      await saveUserReport({
-        routeId: selectedRouteId,
-        reportType: type,
-        trainId,
-        comment,
-        createdAt: new Date().toISOString(),
-      });
-
-      showToast(`📝 ${reportLabels[type]}の報告を送信しました。ありがとうございます！`);
-      // 自分の投稿を即座に反映させるため、データを再取得
-      refreshRealtimeStatus();
-    } catch (error) {
-      logger.error('Report save error:', error);
-      showToast(t('report.reportFailed'), 'error');
-    }
-  };
-
-  const todayWeather = weather[0];
-  // Use state from hook directly (Station type via useRouteSearch)
-
-  return (
-    <main className="min-h-screen bg-[var(--background-secondary)]">
-      {/* ヘッダー */}
-      <header className="bg-[var(--primary)] text-white px-3 sm:px-4 py-3 sm:py-4">
-        <div className="max-w-2xl mx-auto flex justify-between items-center">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <Train className="w-5 h-5 shrink-0" />
-              <h1 className="text-[15px] sm:text-[16px] font-bold whitespace-nowrap">{t('header.title')}</h1>
+    const [departure, setDeparture] = useState('');
+    const [arrival, setArrival] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('09:00');
+    const [deadline, setDeadline] = useState('');
+    const [editing, setEditing] = useState(false);
+    const { result, loading, error, search, refresh } = useJourneyForecast();
+    const { favorites, isLoaded, addFavorite, removeFavorite, isFavorite } = useFavorites();
+    const resultRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLElement>(null);
+    // Browser clock is initialized after hydration so the first render agrees with SSR.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    useEffect(() => { setDate(japanDate()); setTime(japanTime()); }, []);
+    const today = japanDate();
+    const matches = result && result.request.departureId === departure && result.request.arrivalId === arrival && result.request.date === date && result.request.time === time;
+    const showSearch = !matches || editing;
+    const submit = (from = departure, to = arrival, day = date) => {
+        if (!getStationById(from) || !getStationById(to) || from === to) return;
+        setDeparture(from); setArrival(to); setDate(day); setEditing(false);
+        void search({ departureId: from, arrivalId: to, date: day, time });
+    };
+    useEffect(() => {
+        if (result) resultRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    }, [result]);
+    const favorite = isFavorite(departure, arrival);
+    const validStations = !!getStationById(departure) && !!getStationById(arrival) && departure !== arrival;
+    const edit = () => { setEditing(true); requestAnimationFrame(() => searchRef.current?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })); };
+    return <main className="journey-app">
+        <a href={showSearch ? '#journey-search' : '#journey-result'} className="journey-skip">{showSearch ? 'ルート検索' : '検索結果'}へスキップ</a>
+        <header className="journey-header"><div><Link href="/" className="journey-brand" aria-label="運休北海道 ホーム"><RailwayMark className="brand-mark"/><span>運休北海道<small>運行情報・復旧予測</small></span></Link><nav aria-label="メインナビゲーション"><Link href="/faq">使い方</Link><a href="https://www3.jrhokkaido.co.jp/webunkou/" target="_blank" rel="noopener noreferrer">JR公式<ArrowUpRight size={14}/></a></nav></div></header>
+        <div className={`journey-shell ${matches ? 'has-result' : ''}`}>
+            {showSearch && <section className="journey-search-card" id="journey-search" ref={searchRef}>
+                <div className="search-heading"><span className="section-kicker">JR北海道</span><h1>{matches ? '検索条件' : '運休・復旧予測'}</h1><span className="beta-badge">試験運用</span></div>
+                <div className="journey-landscape" aria-hidden="true"><Image src="/images/winter-railway-v1.webp" alt="" width={1536} height={1024} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 40vw, 400px" priority/></div>
+                <div className="quick-routes"><h2><span>札幌から</span> 人気のルート</h2><div>{quickRoutes.map(route => <button type="button" key={route.to} aria-pressed={departure === route.from && arrival === route.to} aria-label={`札幌から${route.name}を選択`} onClick={() => { setDeparture(route.from); setArrival(route.to); }}><RouteSymbol destination={route.to}/><span>{route.name}</span>{departure === route.from && arrival === route.to ? <Check size={15}/> : <ChevronRight size={15}/>}</button>)}</div></div>
+                <form className="journey-search-form" onSubmit={e => { e.preventDefault(); submit(); }}>
+                    <div className="station-pair"><JourneyStationInput label="出発駅" value={departure} onChange={setDeparture} exclude={arrival}/><button type="button" className="station-swap" aria-label="出発駅と到着駅を入れ替える" disabled={!departure && !arrival} onClick={() => { setDeparture(arrival); setArrival(departure); }}><ArrowUpDown size={19}/></button><JourneyStationInput label="到着駅" value={arrival} onChange={setArrival} exclude={departure}/></div>
+                    <div className="search-controls"><div className="date-shortcut-label"><span>出発日</span><div className="form-date-shortcuts"><button type="button" aria-pressed={date === today} onClick={() => setDate(today)}>今日</button><button type="button" aria-pressed={date === addDays(today, 1)} onClick={() => setDate(addDays(today, 1))}>明日</button></div></div><div className="journey-date-row"><label><span><CalendarDays size={15}/> 日付を指定</span><input aria-label="出発日" type="date" required min={today} max={addDays(today, 6)} value={date} onChange={e => setDate(e.target.value)}/></label><label><span><Clock3 size={15}/> 出発時刻</span><input aria-label="出発時刻" type="time" required value={time} onChange={e => setTime(e.target.value)}/></label></div></div>
+                    <button type="submit" className="journey-button search-submit" disabled={loading || !date || !time || !validStations}>{loading ? <><LoaderCircle size={22} className="spin"/> 検索中</> : <><Search size={22}/>このルートを調べる<ArrowRight size={21}/></>}</button>
+                    <div className="search-extras"><details className="arrival-deadline"><summary>到着希望時刻を指定<ChevronRight size={14}/></summary><label htmlFor="arrival-deadline">到着希望<input id="arrival-deadline" type="time" value={deadline} onChange={e => setDeadline(e.target.value)}/></label></details>{validStations && <button className="save-route" type="button" onClick={() => favorite ? removeFavorite(`${departure}-${arrival}`) : addFavorite(departure, arrival, getStationById(departure)!.name, getStationById(arrival)!.name)}>{favorite ? <Check size={16}/> : <Bookmark size={16}/>} {favorite ? '保存済み' : 'ルートを保存'}</button>}{matches && <button type="button" className="cancel-edit" onClick={() => setEditing(false)}>閉じる</button>}</div>
+                </form>
+                {isLoaded && favorites.length > 0 && <div className="saved-routes"><h2><Bookmark size={15}/> 保存したルート</h2><div>{favorites.slice(0, 5).map(favorite => <button type="button" key={favorite.id} onClick={() => submit(favorite.departureId, favorite.arrivalId)}>{favorite.departureName}<ArrowRight size={13}/>{favorite.arrivalName}</button>)}</div></div>}
+                {result && !matches && <p className="journey-notice search-change-notice">条件を変更しました。検索して結果を更新。</p>}
+            </section>}
+            <div className="journey-content" id="journey-result" ref={resultRef} aria-busy={loading}>
+                {loading ? <div className="forecast-loading" role="status"><LoaderCircle size={32} className="spin"/><h2>運行情報・気象予報を確認中</h2></div> : error ? <div className="forecast-error" role="alert"><AlertCircle size={30}/><h2>情報を取得できませんでした</h2><p>{error}</p><button type="button" className="journey-button" onClick={() => submit()}>もう一度検索する</button><a href="https://www3.jrhokkaido.co.jp/webunkou/" target="_blank" rel="noopener noreferrer">JR公式情報 ↗</a></div> : matches && <ForecastResult key={result.generatedAt} result={result} deadline={deadline} refresh={refresh} selectDate={day => submit(departure, arrival, day)} edit={edit}/>}
             </div>
-            <p className="text-[11px] sm:text-[12px] text-white/70 mt-0.5 pl-[26px] tracking-wide">
-              {t('header.catchphrase')}
-            </p>
-          </div>
-          <div className="shrink-0">
-            <LanguageSwitcher />
-          </div>
+            {!result && !loading && <div className="start-links"><a href="https://www3.jrhokkaido.co.jp/webunkou/" target="_blank" rel="noopener noreferrer"><TrainFront size={23}/><span>JR公式の運行情報</span><ArrowUpRight size={19}/></a><Link href="/accuracy"><Snowflake size={23}/><span>予測について</span><ChevronRight size={19}/></Link></div>}
+            <div className="journey-bottom-note"><p>乗車する列車の運行は、JR公式・駅の案内をご確認ください。</p></div>
         </div>
-      </header>
-
-      <div className="max-w-2xl mx-auto px-4 py-4 pb-24 sm:px-6">
-
-        {/* Headline Status (Phase 27) */}
-        <HeadlineStatus
-          warnings={warnings.flatMap(w => w.warnings)}
-          weatherCondition={todayWeather?.weather || ''}
-          jrStatus={jrStatus} //
-          isLoading={isWeatherLoading}
-        />
-
-        {/* 検索フォーム — ファーストビュー直下に配置 */}
-        <section className="mb-5" aria-labelledby="search-section-title">
-          <h2 id="search-section-title" className="section-label">{t('search.sectionTitle')}</h2>
-
-          {/* お気に入りルートセレクター */}
-          {isFavoritesLoaded && favorites.length > 0 && (
-            <FavoriteSelector
-              favorites={favorites}
-              onSelect={(fav) => {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const currentDate = `${year}-${month}-${day}`;
-                const currentTime = now.toTimeString().slice(0, 5);
-
-                // フォームの状態を更新（ユーザーリクエスト: 入力欄に反映させる）
-                setDepartureStation(getStationById(fav.departureId) || null);
-                setArrivalStation(getStationById(fav.arrivalId) || null);
-                setDate(currentDate);
-                setTime(currentTime);
-
-
-                sendGAEvent('event', 'favorite_select', {
-                  departure: fav.departureName,
-                  arrival: fav.arrivalName
-                });
-                handleSearch(
-                  fav.departureId,
-                  fav.arrivalId,
-                  currentDate,
-                  currentTime
-                );
-              }}
-            />
-          )}
-          <div className="card p-5">
-            <SearchForm
-              onSearch={handleSearch}
-              isLoading={isLoading}
-              departureStation={departureStation}
-              setDepartureStation={setDepartureStation}
-              arrivalStation={arrivalStation}
-              setArrivalStation={setArrivalStation}
-              date={date}
-              setDate={setDate}
-              time={time}
-              setTime={setTime}
-            />
-          </div>
-        </section>
-
-        {/* 天気サマリー — 検索フォームの下に移動（セカンダリ情報） */}
-        {isWeatherLoading ? (
-          <section className="card p-4 mb-4 flex items-center justify-between animate-pulse min-h-[72px]">
-            <div className="flex items-center gap-3">
-              <div className="w-5 h-5 bg-gray-200 rounded-full" />
-              <div>
-                <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
-                <div className="h-2 bg-gray-200 rounded w-32" />
-              </div>
-            </div>
-            <div className="w-10 h-10 bg-gray-200 rounded-lg" />
-          </section>
-        ) : todayWeather ? (
-          <section className="card p-4 mb-4 flex items-center justify-between" aria-labelledby="weather-summary-title">
-            <div className="flex items-center gap-3">
-              <Cloud className="w-5 h-5 text-[var(--muted)]" aria-hidden="true" />
-              <div>
-                <h2 id="weather-summary-title" className="font-medium text-sm flex items-center gap-2">
-                  {t('weather.todayWeather', { location: locationName.replace(/（.*?）/, '') })}
-                  {userLocation && <MapPin className="w-3 h-3 text-[var(--primary)]" aria-hidden="true" />}
-                </h2>
-                <div className="text-xs text-[var(--muted)]">
-                  {todayWeather.weather}
-                  {lastWeatherUpdate && (
-                    <span className="ml-2">{t('weather.updated', { time: lastWeatherUpdate })}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="text-right" role="img" aria-label={`現在の天気: ${todayWeather.weather}`}>
-              <div className="text-2xl" aria-hidden="true">
-                {getWeatherIcon(todayWeather.weather)}
-              </div>
-              <div className="text-xs font-medium text-[var(--muted)]">
-                {todayWeather.windSpeed >= 15 ? (
-                  <span className="text-orange-500 font-bold">💨{todayWeather.windSpeed}m/s</span>
-                ) : (
-                  <span>{todayWeather.tempMax}°/{todayWeather.tempMin}°</span>
-                )}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {/* 全道の警報表示 (折りたたみコンポーネント) */}
-        <WeatherWarningList warnings={warnings} isLoading={isWeatherLoading} />
-
-
-
-        {/* Progressive Loading (Phase 27) */}
-        {isLoading && <ProgressiveLoading isLoading={isLoading} />}
-
-        {/* P1-4: エラー表示 */}
-        {searchError && (
-          <div className="card p-4 mb-4 border-2 border-red-200 bg-red-50">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold text-sm text-red-800">{t('prediction.error')}</p>
-                <p className="text-xs text-red-700 mt-1">{searchError}</p>
-                <p className="text-[11px] text-red-600 mt-2">
-                  {t('prediction.directCheck')}
-                  <a href="https://www3.jrhokkaido.co.jp/webunkou/" target="_blank" rel="noopener noreferrer"
-                    className="underline hover:opacity-80 ml-1 font-medium">{t('common.jrOfficialLink')}</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 予測結果セクション */}
-        {prediction && (
-          <div ref={predictionRef}>
-            <PredictionResults
-              prediction={prediction}
-              selectedRouteId={selectedRouteId}
-              date={date}
-              time={time}
-              depStation={departureStation}
-              arrStation={arrivalStation}
-              riskTrend={riskTrend}
-              realtimeStatus={realtimeStatus}
-              timeShiftSuggestion={timeShiftSuggestion}
-              weeklyPredictions={weeklyPredictions}
-              weather={weather}
-              handleReport={handleReport}
-              isFavorite={isFavorite}
-              addFavorite={addFavorite}
-              removeFavorite={removeFavorite}
-            />
-          </div>
-        )}
-
-        {/* Pro誘導バナー - 後で機能追加予定（現在非公開）
-        <div className="mt-8 card p-5 text-center border-[var(--primary)] border-2">
-          <h3 className="text-base font-bold text-[var(--primary)] mb-2">🚀 Proプランで先読み</h3>
-          <p className="text-sm text-[var(--muted)] mb-4">
-            公式発表の30分前にプッシュ通知。<br />
-            24時間先までの詳細予測グラフも。
-          </p>
-          <button className="btn-primary py-2.5 px-6 text-sm">
-            7日間無料で試す
-          </button>
-        </div>
-        */}
-
-        {/* サービス特徴・価値提案 */}
-        <ServiceFeatures />
-
-        {/* フッター */}
-      </div>
-    </main>
-  );
+    </main>;
 }

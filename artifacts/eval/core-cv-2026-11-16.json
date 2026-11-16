@@ -1,0 +1,645 @@
+{
+ "config": {
+  "key": "precipSnowBoth",
+  "lambda": 0.001,
+  "mode": "max"
+ },
+ "report": {
+  "all": {
+   "newCore_cv": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.8002775185719306,
+    "ap": 0.17513413467095854,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 26,
+      "recall": 0.6046511627906976,
+      "recallCI": [
+       0.4557879659331909,
+       0.7363489380154359
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 15,
+      "recall": 0.3488372093023256,
+      "recallCI": [
+       0.22418398748963103,
+       0.49828492902901905
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 11,
+      "recall": 0.2558139534883721,
+      "recallCI": [
+       0.14929365877065542,
+       0.40238689868254857
+      ]
+     }
+    ]
+   },
+   "engineA": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.5547341759879783,
+    "ap": 0.04207992743257769,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 11,
+      "recall": 0.2558139534883721,
+      "recallCI": [
+       0.14929365877065542,
+       0.40238689868254857
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 6,
+      "recall": 0.13953488372093023,
+      "recallCI": [
+       0.06555634267713947,
+       0.27263876594425684
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 3,
+      "recall": 0.06976744186046512,
+      "recallCI": [
+       0.024011153791962503,
+       0.1860926855303493
+      ]
+     }
+    ]
+   },
+   "engineB": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.6227201667535175,
+    "ap": 0.049865062159329974,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 15,
+      "recall": 0.3488372093023256,
+      "recallCI": [
+       0.22418398748963103,
+       0.49828492902901905
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 6,
+      "recall": 0.13953488372093023,
+      "recallCI": [
+       0.06555634267713947,
+       0.27263876594425684
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 2,
+      "recall": 0.046511627906976744,
+      "recallCI": [
+       0.01284899031731969,
+       0.15455775923863058
+      ]
+     }
+    ]
+   },
+   "maxSnowHour": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.6672503847691991,
+    "ap": 0.1467163267744157,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 19,
+      "recall": 0.4418604651162791,
+      "recallCI": [
+       0.30433085623921335,
+       0.5889264193448829
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 16,
+      "recall": 0.37209302325581395,
+      "recallCI": [
+       0.2437613889377433,
+       0.5214046173472683
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 8,
+      "recall": 0.18604651162790697,
+      "recallCI": [
+       0.09741635580105981,
+       0.3261729323530596
+      ]
+     }
+    ]
+   },
+   "maxGust": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.5841281190542554,
+    "ap": 0.03370263555539935,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 10,
+      "recall": 0.23255813953488372,
+      "recallCI": [
+       0.1315353846924483,
+       0.37744808299439414
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 5,
+      "recall": 0.11627906976744186,
+      "recallCI": [
+       0.050703529948620846,
+       0.24479448890641395
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 0,
+      "recall": 0,
+      "recallCI": [
+       0,
+       0.08201257002322722
+      ]
+     }
+    ]
+   },
+   "maxRainHour": {
+    "positives": 43,
+    "negatives": 1919,
+    "auc": 0.8411115285335143,
+    "ap": 0.13432044871055066,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 20,
+      "recall": 0.46511627906976744,
+      "recallCI": [
+       0.3251082626391856,
+       0.6108461027112722
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 9,
+      "recall": 0.20930232558139536,
+      "recallCI": [
+       0.11422705997811458,
+       0.35205931794236645
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 6,
+      "recall": 0.13953488372093023,
+      "recallCI": [
+       0.06555634267713947,
+       0.27263876594425684
+      ]
+     }
+    ]
+   }
+  },
+  "winter": {
+   "newCore_cv": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.9329511465603191,
+    "ap": 0.29004990056195495,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 15,
+      "recall": 0.8823529411764706,
+      "recallCI": [
+       0.6566315750229009,
+       0.9671209199870792
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 8,
+      "recall": 0.47058823529411764,
+      "recallCI": [
+       0.26164801196088106,
+       0.6903710268845051
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 5,
+      "recall": 0.29411764705882354,
+      "recallCI": [
+       0.13279793865556405,
+       0.5313353332621391
+      ]
+     }
+    ]
+   },
+   "engineA": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.6122050515121302,
+    "ap": 0.06721813326171516,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 8,
+      "recall": 0.47058823529411764,
+      "recallCI": [
+       0.26164801196088106,
+       0.6903710268845051
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 4,
+      "recall": 0.23529411764705882,
+      "recallCI": [
+       0.09554889071675943,
+       0.47262245889171606
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 0,
+      "recall": 0,
+      "recallCI": [
+       0,
+       0.18432366037156456
+      ]
+     }
+    ]
+   },
+   "engineB": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.7546111665004985,
+    "ap": 0.17101259079445771,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 10,
+      "recall": 0.5882352941176471,
+      "recallCI": [
+       0.3600507438551554,
+       0.7838921396086861
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 5,
+      "recall": 0.29411764705882354,
+      "recallCI": [
+       0.13279793865556405,
+       0.5313353332621391
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 2,
+      "recall": 0.11764705882352941,
+      "recallCI": [
+       0.03287908001292091,
+       0.3433684249770991
+      ]
+     }
+    ]
+   },
+   "maxSnowHour": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.9519358590893985,
+    "ap": 0.3086737254231946,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 16,
+      "recall": 0.9411764705882353,
+      "recallCI": [
+       0.730174547964372,
+       0.9895398693548358
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 10,
+      "recall": 0.5882352941176471,
+      "recallCI": [
+       0.3600507438551554,
+       0.7838921396086861
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 2,
+      "recall": 0.11764705882352941,
+      "recallCI": [
+       0.03287908001292091,
+       0.3433684249770991
+      ]
+     }
+    ]
+   },
+   "maxGust": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.7165586573612496,
+    "ap": 0.06092655666470487,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 6,
+      "recall": 0.35294117647058826,
+      "recallCI": [
+       0.17309486143904904,
+       0.5870003327878818
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 3,
+      "recall": 0.17647058823529413,
+      "recallCI": [
+       0.06191013712548989,
+       0.41029929017375777
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 0,
+      "recall": 0,
+      "recallCI": [
+       0,
+       0.18432366037156456
+      ]
+     }
+    ]
+   },
+   "maxRainHour": {
+    "positives": 17,
+    "negatives": 708,
+    "auc": 0.873587570621469,
+    "ap": 0.09955971384119847,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 10,
+      "recall": 0.5882352941176471,
+      "recallCI": [
+       0.3600507438551554,
+       0.7838921396086861
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 2,
+      "recall": 0.11764705882352941,
+      "recallCI": [
+       0.03287908001292091,
+       0.3433684249770991
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 1,
+      "recall": 0.058823529411764705,
+      "recallCI": [
+       0.010460130645164236,
+       0.26982545203562797
+      ]
+     }
+    ]
+   }
+  },
+  "nonWinter": {
+   "newCore_cv": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.7129359080226132,
+    "ap": 0.12253870339449431,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 11,
+      "recall": 0.4230769230769231,
+      "recallCI": [
+       0.255441899027294,
+       0.6105170307888017
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 5,
+      "recall": 0.19230769230769232,
+      "recallCI": [
+       0.08506935771788268,
+       0.3787663615465
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 4,
+      "recall": 0.15384615384615385,
+      "recallCI": [
+       0.061499339989294764,
+       0.3353158441831357
+      ]
+     }
+    ]
+   },
+   "engineA": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.555739058629232,
+    "ap": 0.029880918924778323,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 4,
+      "recall": 0.15384615384615385,
+      "recallCI": [
+       0.061499339989294764,
+       0.3353158441831357
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 1,
+      "recall": 0.038461538461538464,
+      "recallCI": [
+       0.006821808976989882,
+       0.18893176991958402
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 1,
+      "recall": 0.038461538461538464,
+      "recallCI": [
+       0.006821808976989882,
+       0.18893176991958402
+      ]
+     }
+    ]
+   },
+   "engineB": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.5369211713142349,
+    "ap": 0.023308655102794396,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 5,
+      "recall": 0.19230769230769232,
+      "recallCI": [
+       0.08506935771788268,
+       0.3787663615465
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 1,
+      "recall": 0.038461538461538464,
+      "recallCI": [
+       0.006821808976989882,
+       0.18893176991958402
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 0,
+      "recall": 0,
+      "recallCI": [
+       0,
+       0.12873304380462175
+      ]
+     }
+    ]
+   },
+   "maxSnowHour": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.5145302674204408,
+    "ap": 0.04562555472013839,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 2,
+      "recall": 0.07692307692307693,
+      "recallCI": [
+       0.021354639183375553,
+       0.24141947480515055
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 2,
+      "recall": 0.07692307692307693,
+      "recallCI": [
+       0.021354639183375553,
+       0.24141947480515055
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 2,
+      "recall": 0.07692307692307693,
+      "recallCI": [
+       0.021354639183375553,
+       0.24141947480515055
+      ]
+     }
+    ]
+   },
+   "maxGust": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.494696055389697,
+    "ap": 0.024882163318289862,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 3,
+      "recall": 0.11538461538461539,
+      "recallCI": [
+       0.04003171821149494,
+       0.28976293086898336
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 2,
+      "recall": 0.07692307692307693,
+      "recallCI": [
+       0.021354639183375553,
+       0.24141947480515055
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 0,
+      "recall": 0,
+      "recallCI": [
+       0,
+       0.12873304380462175
+      ]
+     }
+    ]
+   },
+   "maxRainHour": {
+    "positives": 26,
+    "negatives": 1211,
+    "auc": 0.8370228037858096,
+    "ap": 0.1756733713718534,
+    "atFalseAlarm": [
+     {
+      "falseAlarmTarget": 0.15,
+      "caught": 14,
+      "recall": 0.5384615384615384,
+      "recallCI": [
+       0.35457636204430115,
+       0.712444173047651
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.04,
+      "caught": 8,
+      "recall": 0.3076923076923077,
+      "recallCI": [
+       0.1650112093979267,
+       0.4998861151423124
+      ]
+     },
+     {
+      "falseAlarmTarget": 0.01,
+      "caught": 5,
+      "recall": 0.19230769230769232,
+      "recallCI": [
+       0.08506935771788268,
+       0.3787663615465
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

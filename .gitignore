@@ -51,3 +51,9 @@ verification_report*.csv
 accuracy_report*.md
 recovery_results.json
 lint_output.txt
+
+# Supabase CLI cache
+supabase/.temp/
+
+# image generation intermediates (shipped assets are public/images/*.webp)
+/artifacts/imagegen/

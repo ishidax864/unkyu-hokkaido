@@ -12,7 +12,7 @@ import {
     MessageSquare,
     MapPin,
 } from 'lucide-react';
-import { UserFeedbackDB, getMLTrainingStats } from '@/lib/supabase';
+import type { UserFeedbackDB } from '@/lib/supabase';
 
 export default function AdminDashboard() {
     const [feedback, setFeedback] = useState<UserFeedbackDB[]>([]);
@@ -22,17 +22,16 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<{ reports: number; recentReports: number; feedbackOpen: number } | null>(null);
 
     const [crawlerOk, setCrawlerOk] = useState<boolean | null>(null);
-    const [mlTotal, setMlTotal] = useState<number>(0);
+    const [mlTotal, setMlTotal] = useState<number | null>(null);
 
     const fetchData = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const [statsRes, feedbackRes, statusRes, mlRes] = await Promise.all([
+            const [statsRes, feedbackRes, mlRes] = await Promise.all([
                 fetch('/api/admin/stats'),
                 fetch('/api/admin/feedback'),
-                fetch('/api/admin/status'),
-                getMLTrainingStats(),
+                fetch('/api/admin/ml-stats', { cache: 'no-store' }),
             ]);
 
             if (statsRes.ok) {
@@ -43,13 +42,16 @@ export default function AdminDashboard() {
                 const f = await feedbackRes.json();
                 setFeedback(f.items || []);
             }
-            if (statusRes.ok) {
-                const data = await statusRes.json();
-                const items = data.items || [];
-                setCrawlerOk(items.length > 0 && items.every((s: { status: string }) => s.status === 'normal'));
+            if (mlRes.ok) {
+                const data = await mlRes.json();
+                setMlTotal(data.totalRows);
+                setCrawlerOk(data.collection.state === 'healthy' || data.collection.state === 'running');
+            } else {
+                setMlTotal(null); setCrawlerOk(null);
+                setError('収集状況を取得できませんでした');
             }
-            if (mlRes.success) setMlTotal(mlRes.data.totalRows || 0);
         } catch {
+            setMlTotal(null); setCrawlerOk(null);
             setError('データの取得に失敗しました');
         } finally {
             setIsLoading(false);
@@ -106,7 +108,7 @@ export default function AdminDashboard() {
                         <BrainCircuit className="w-4 h-4 text-purple-400 group-hover:text-purple-600 transition-colors" />
                     </div>
                     <div className="text-2xl font-black text-gray-800">
-                        {isLoading ? <Skeleton /> : mlTotal.toLocaleString()}
+                        {isLoading ? <Skeleton /> : mlTotal === null ? '取得不可' : mlTotal.toLocaleString()}
                     </div>
                     <div className="flex items-center gap-1 mt-2 text-[10px] text-gray-400 group-hover:text-purple-500 transition-colors">
                         詳細を見る <ArrowRight className="w-3 h-3" />

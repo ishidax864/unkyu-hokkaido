@@ -1,0 +1,14 @@
+artifacts/*
+!artifacts/winter-evidence-replay.json
+tests/
+supabase/
+data/historical/sources/
+data/historical/weather/
+data/historical/regional-weather/
+data/historical/jma/
+scripts/db-deep-analysis.ts
+scripts/db-fact-check.ts
+scripts/db-health-check.ts
+.agents/
+.codex/
+*.tsbuildinfo

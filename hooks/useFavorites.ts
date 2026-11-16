@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getStationById } from '@/lib/hokkaido-data';
 
 const STORAGE_KEY = 'unkyu-ai-favorites';
 
@@ -12,27 +13,23 @@ export interface FavoriteRoute {
 }
 
 export function useFavorites() {
-    const [favorites, setFavorites] = useState<FavoriteRoute[]>(() => {
-        if (typeof window !== 'undefined') {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    return JSON.parse(stored);
-                }
-            } catch {
-                // localStorage unavailable
-            }
-        }
-        return [];
-    });
-    // SSR判定: windowがあればクライアントサイド = ロード完了
-    const [isLoaded] = useState(() => typeof window !== 'undefined');
+    const [favorites, setFavorites] = useState<FavoriteRoute[]>([]);
+    const [isLoaded, setLoaded] = useState(false);
+    useEffect(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            // Hydrate optional browser storage after the server/initial render.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            if (Array.isArray(stored)) setFavorites(stored.filter(item => item && typeof item.id === 'string' && typeof item.departureId === 'string' && typeof item.arrivalId === 'string' && getStationById(item.departureId) && getStationById(item.arrivalId)));
+        } catch { /* Stored routes are optional. */ }
+        setLoaded(true);
+    }, []);
 
     // Save to storage
     const saveFavorites = (newFavorites: FavoriteRoute[]) => {
         setFavorites(newFavorites);
         if (typeof window !== 'undefined') {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(newFavorites));
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newFavorites)); } catch { /* Session-only when storage is unavailable. */ }
         }
     };
 

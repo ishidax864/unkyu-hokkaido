@@ -2,10 +2,11 @@
     "routes": {
         "jr-hokkaido.chitose": {
             "areaCodes": [
-                "016000"
+                "016000", "015000"
             ],
             "areaNames": [
-                "石狩・空知・後志地方"
+                "石狩・空知・後志地方",
+                "胆振・日高地方"
             ]
         },
         "jr-hokkaido.hakodate-main": {
@@ -90,11 +91,12 @@
         },
         "jr-hokkaido.sekisho": {
             "areaCodes": [
-                "016000",
+                "016000", "015000",
                 "014030"
             ],
             "areaNames": [
                 "石狩・空知・後志地方",
+                "胆振・日高地方",
                 "十勝地方"
             ]
         },

@@ -16,11 +16,12 @@ export function FeedbackButton() {
             ) : (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-blue-600/90 text-white p-3 sm:p-4 rounded-full shadow-lg hover:bg-blue-700 hover:scale-110 active:scale-95 transition-all duration-200 group flex items-center gap-2"
+                    aria-label="ご意見・フィードバック"
+                    className="bg-white text-[#203b4b] px-3 py-2.5 rounded-full border border-[#cbd7db] shadow-sm hover:bg-[#edf3f5] transition-colors duration-150 flex items-center gap-1.5"
                 >
-                    <MessageSquarePlus className="w-5 h-5 sm:w-6 sm:h-6" />
-                    <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap text-sm font-bold">
-                        フィードバック
+                    <MessageSquarePlus className="w-4 h-4" />
+                    <span className="text-xs font-medium">
+                        ご意見
                     </span>
                 </button>
             )}

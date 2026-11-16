@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getMLTrainingStats } from '@/lib/supabase';
+import type { CollectionHealth } from '@/lib/collection-health';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,6 +29,7 @@ interface JRStatus {
 }
 
 interface MLStats {
+    collection: CollectionHealth;
     totalRows: number;
     todayRows?: number;
     statusBreakdown: { normal: number; delayed: number; suspended: number };
@@ -56,15 +57,17 @@ export default function CrawlerMLPage() {
         try {
             const [statusRes, mRes] = await Promise.all([
                 fetch('/api/admin/status'),
-                getMLTrainingStats(),
+                fetch('/api/admin/ml-stats', { cache: 'no-store' }),
             ]);
             if (statusRes.ok) {
                 const data = await statusRes.json();
                 setJrStatus(data.items || []);
             }
-            if (mRes.success) setMlStats(mRes.data);
-            if (!statusRes.ok && !mRes.success) setError('データ取得に失敗しました');
+            if (mRes.ok) setMlStats(await mRes.json());
+            else setMlStats(null);
+            if (!statusRes.ok || !mRes.ok) setError('一部のデータを取得できませんでした');
         } catch (err) {
+            setMlStats(null); setJrStatus([]);
             setError(err instanceof Error ? err.message : 'エラーが発生しました');
         } finally {
             setLoading(false);
@@ -132,7 +135,7 @@ export default function CrawlerMLPage() {
                                 {abnormalCount > 0 ? (
                                     <span className="text-red-500 font-bold">{abnormalCount} 路線に影響</span>
                                 ) : (
-                                    <span className="text-green-500">全路線正常</span>
+                                    <span className="text-green-500">取得できた路線は平常</span>
                                 )}
                             </span>
                         )}
@@ -177,6 +180,10 @@ export default function CrawlerMLPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
+                        <div className={`rounded-lg border p-4 ${mlStats.collection.state === 'healthy' ? 'border-green-200 bg-green-50' : 'border-amber-300 bg-amber-50'}`}>
+                            <strong>15分収集：{{ healthy: '正常', running: '実行中', failed: '失敗', stale: '更新停止の疑い', unknown: '確認できません' }[mlStats.collection.state]}</strong>
+                            <p className="mt-1 text-sm">最終完了 {mlStats.collection.finishedAt ? new Date(mlStats.collection.finishedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }) : '—'}</p>
+                        </div>
                         {/* ステータス分布 */}
                         <div>
                             <h4 className="text-xs font-bold text-gray-500 mb-3 flex items-center gap-1">
@@ -212,7 +219,7 @@ export default function CrawlerMLPage() {
                                             { icon: Thermometer, color: 'text-orange-500', value: `${mlStats.latestWeather.temperature ?? '--'}°C`, label: '気温' },
                                             { icon: Wind, color: 'text-blue-500', value: `${mlStats.latestWeather.wind_speed ?? '--'} km/h`, label: '風速' },
                                             { icon: Snowflake, color: 'text-cyan-500', value: `${mlStats.latestWeather.snowfall ?? '--'} cm`, label: '降雪量' },
-                                            { icon: Database, color: 'text-gray-500', value: `${mlStats.latestWeather.snow_depth ?? '--'} cm`, label: '積雪深' },
+                                            { icon: Database, color: 'text-gray-500', value: `${mlStats.latestWeather.snow_depth ?? '--'} m`, label: '積雪深' },
                                         ].map(({ icon: Icon, color, value, label }) => (
                                             <div key={label} className="flex items-center gap-2">
                                                 <Icon className={`w-4 h-4 ${color}`} />

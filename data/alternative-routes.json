@@ -29,7 +29,7 @@
                 "name": "高速おたる号（中央バス/JRバス）",
                 "details": "札幌ターミナル・札幌駅から頻発。円山経由・北大経由あり。",
                 "time": "約65分",
-                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=8"
+                "url": "https://www.chuo-bus.co.jp/highway/?ope=list&o=1&t=21"
             },
             {
                 "type": "subway",
@@ -47,10 +47,10 @@
             {
                 "type": "bus",
                 "name": "高速あさひかわ号",
-                "details": "札幌駅前ターミナル発。30分間隔で運行。",
+                "details": "札幌駅前〜旭川。運行日・停留所は公式時刻表で確認。",
                 "time": "約130分",
-                "note": "JR特急運休時は非常に混雑し、積み残し発生の可能性あり。予約推奨（一部便）。",
-                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=1"
+                "note": "悪天候時の運休・満席・遅延は公式案内で確認。",
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=8&o=1&t=170"
             }
         ]
     },
@@ -77,7 +77,7 @@
                 "details": "札幌駅前 ↔ 函館駅前。要予約。所要約5時間30分。",
                 "time": "約5時間30分",
                 "note": "JR運休時は満席になりやすい。夜行便もあり。",
-                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=2"
+                "url": "https://www.chuo-bus.co.jp/highway/index.cgi?ope=det&n=0&o=1&t=129"
             }
         ]
     },

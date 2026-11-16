@@ -20,6 +20,8 @@ export async function saveReportToSupabase(report: UserReportDB): Promise<DbResu
                         report_type: report.report_type,
                         comment: report.comment,
                         ip_hash: report.ip_hash,
+                        station_id: report.station_id,
+                        direction_station_id: report.direction_station_id,
                     });
 
                 if (error) {
@@ -50,7 +52,7 @@ export async function saveReportToSupabase(report: UserReportDB): Promise<DbResu
         logger.info('User report saved successfully', { routeId: report.route_id });
         return { success: true, data: result };
     } catch (error) {
-        logger.error('Failed to save user report', { error, report });
+        logger.error('Failed to save user report', { error, routeId: report.route_id });
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error'

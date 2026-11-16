@@ -1,0 +1,322 @@
+{
+  "generatedAt": "2026-10-12T15:55:57.211Z",
+  "catalog": {
+    "records": 24,
+    "storms": 5,
+    "actualSegmentReopenings": 16,
+    "exactDurationRows": 7,
+    "exactDurationStorms": 2,
+    "plannedExcluded": 5,
+    "rescueExcluded": 2
+  },
+  "weatherRows": 3312,
+  "accumulationConvention": "Preceding-hour totals: calendar day includes hour ending 01:00 through next-day 00:00 JST.",
+  "observationDays": 59,
+  "observationComparisons": [
+    {
+      "date": "2022-02-06",
+      "station": "札幌",
+      "model": "era5",
+      "kind": "reanalysis",
+      "modelSnowCmCalendarDay": 1.9,
+      "observedSnowCmCalendarDay": 32,
+      "sourceUrl": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2022&month=2&day=&view=a3"
+    },
+    {
+      "date": "2022-02-21",
+      "station": "札幌",
+      "model": "era5",
+      "kind": "reanalysis",
+      "modelSnowCmCalendarDay": 6.8,
+      "observedSnowCmCalendarDay": 23,
+      "sourceUrl": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2022&month=2&day=&view=a3"
+    },
+    {
+      "date": "2026-01-25",
+      "station": "札幌",
+      "model": "era5",
+      "kind": "reanalysis",
+      "modelSnowCmCalendarDay": 0.5,
+      "observedSnowCmCalendarDay": 48,
+      "sourceUrl": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2026&month=1&day=&view=a3"
+    },
+    {
+      "date": "2026-01-25",
+      "station": "札幌",
+      "model": "gfs_global",
+      "kind": "forecast-24h",
+      "modelSnowCmCalendarDay": 2.9,
+      "observedSnowCmCalendarDay": 48,
+      "sourceUrl": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2026&month=1&day=&view=a3"
+    },
+    {
+      "date": "2026-01-25",
+      "station": "札幌",
+      "model": "jma_msm",
+      "kind": "forecast-24h",
+      "modelSnowCmCalendarDay": 6.4,
+      "observedSnowCmCalendarDay": 48,
+      "sourceUrl": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2026&month=1&day=&view=a3"
+    }
+  ],
+  "cancellationAccuracy": null,
+  "recoveryErrorHours": null,
+  "limitations": [
+    "選択した大雪4事例の気象指標再現であり、汎化性能の評価ではない。",
+    "ERA5は事後の再解析。事前予測の評価には使わない。",
+    "GFSは各時刻に対する24時間前の予報。1回の発表時点の予報一式ではない。",
+    "現在のBest Match予報とGFSはモデルが異なる。",
+    "気象庁の点観測とモデルの格子推計は異なる。降雪はどちらも日本時間の暦日合計で照合し、任意の連続24時間の最大値と混同しない。",
+    "日単位の最大指標を運休開始前の警告成功と数えない。",
+    "平常・短時間運休の対照群がないため、運休の見逃し率・誤警報率は未算定。",
+    "復旧時刻が正確な7区間は2回の雪害に属する。同じ雪害の区間を独立した標本として復旧推定に投入しない。"
+  ],
+  "windows": [
+    {
+      "stormId": "snow-2022-02-06",
+      "eventDate": "2022-02-06",
+      "kind": "reanalysis",
+      "model": "era5",
+      "leadHours": null,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "札幌",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.14,
+          "snowCmOnCalendarDay": 1.9,
+          "maximumWindMs": 4.08,
+          "maximumGustMs": 9.5
+        },
+        {
+          "location": "千歳",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.07,
+          "snowCmOnCalendarDay": 0.1,
+          "maximumWindMs": 5,
+          "maximumGustMs": 7.5
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2022-02-21",
+      "eventDate": "2022-02-21",
+      "kind": "reanalysis",
+      "model": "era5",
+      "leadHours": null,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "札幌",
+          "maxWeatherIndex": 40,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.77,
+          "snowCmOnCalendarDay": 6.8,
+          "maximumWindMs": 9.91,
+          "maximumGustMs": 23.2
+        },
+        {
+          "location": "千歳",
+          "maxWeatherIndex": 25,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.35,
+          "snowCmOnCalendarDay": 3.3,
+          "maximumWindMs": 10.93,
+          "maximumGustMs": 19.4
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2025-12-14",
+      "eventDate": "2025-12-14",
+      "kind": "reanalysis",
+      "model": "era5",
+      "leadHours": null,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "遠軽",
+          "maxWeatherIndex": 70,
+          "hoursWithHighIndex": 1,
+          "maximumSnowCmPerHour": 3.99,
+          "snowCmOnCalendarDay": 15.6,
+          "maximumWindMs": 6.02,
+          "maximumGustMs": 15.8
+        },
+        {
+          "location": "網走",
+          "maxWeatherIndex": 85,
+          "hoursWithHighIndex": 1,
+          "maximumSnowCmPerHour": 3.64,
+          "snowCmOnCalendarDay": 13.3,
+          "maximumWindMs": 11.29,
+          "maximumGustMs": 16.7
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2025-12-14",
+      "eventDate": "2025-12-14",
+      "kind": "forecast-24h",
+      "model": "gfs_global",
+      "leadHours": 24,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "遠軽",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.91,
+          "snowCmOnCalendarDay": 4.7,
+          "maximumWindMs": 8.77,
+          "maximumGustMs": 13.8
+        },
+        {
+          "location": "網走",
+          "maxWeatherIndex": 50,
+          "hoursWithHighIndex": 1,
+          "maximumSnowCmPerHour": 1.12,
+          "snowCmOnCalendarDay": 4.4,
+          "maximumWindMs": 13.92,
+          "maximumGustMs": 18.7
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2026-01-25",
+      "eventDate": "2026-01-25",
+      "kind": "reanalysis",
+      "model": "era5",
+      "leadHours": null,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "札幌",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.14,
+          "snowCmOnCalendarDay": 0.5,
+          "maximumWindMs": 2.92,
+          "maximumGustMs": 6.5
+        },
+        {
+          "location": "千歳",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.07,
+          "snowCmOnCalendarDay": 0.1,
+          "maximumWindMs": 5.9,
+          "maximumGustMs": 9.5
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2026-01-25",
+      "eventDate": "2026-01-25",
+      "kind": "forecast-24h",
+      "model": "gfs_global",
+      "leadHours": 24,
+      "snowfallMethod": null,
+      "unsupportedFields": [],
+      "points": [
+        {
+          "location": "札幌",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.63,
+          "snowCmOnCalendarDay": 2.9,
+          "maximumWindMs": 3.77,
+          "maximumGustMs": 7.1
+        },
+        {
+          "location": "千歳",
+          "maxWeatherIndex": 0,
+          "hoursWithHighIndex": 0,
+          "maximumSnowCmPerHour": 0.42,
+          "snowCmOnCalendarDay": 1.6,
+          "maximumWindMs": 5.46,
+          "maximumGustMs": 12.6
+        }
+      ]
+    },
+    {
+      "file": "snow-2022-02-06-jma-msm-24h.json",
+      "excluded": "incomplete weather"
+    },
+    {
+      "file": "snow-2022-02-21-jma-msm-24h.json",
+      "excluded": "incomplete weather"
+    },
+    {
+      "stormId": "snow-2025-12-14",
+      "eventDate": "2025-12-14",
+      "kind": "forecast-24h",
+      "model": "jma_msm",
+      "leadHours": 24,
+      "snowfallMethod": "Open-Meteo derivation: below 0 C, precipitation multiplied by 0.7 cm/mm",
+      "unsupportedFields": [
+        "wind_gusts_10m",
+        "snow_depth"
+      ],
+      "points": [
+        {
+          "location": "遠軽",
+          "maxWeatherIndex": null,
+          "hoursWithHighIndex": null,
+          "maximumSnowCmPerHour": 1.4,
+          "snowCmOnCalendarDay": 4.4,
+          "maximumWindMs": 4.4,
+          "maximumGustMs": null
+        },
+        {
+          "location": "網走",
+          "maxWeatherIndex": null,
+          "hoursWithHighIndex": null,
+          "maximumSnowCmPerHour": 0.07,
+          "snowCmOnCalendarDay": 0.1,
+          "maximumWindMs": 7.93,
+          "maximumGustMs": null
+        }
+      ]
+    },
+    {
+      "stormId": "snow-2026-01-25",
+      "eventDate": "2026-01-25",
+      "kind": "forecast-24h",
+      "model": "jma_msm",
+      "leadHours": 24,
+      "snowfallMethod": "Open-Meteo derivation: below 0 C, precipitation multiplied by 0.7 cm/mm",
+      "unsupportedFields": [
+        "wind_gusts_10m",
+        "snow_depth"
+      ],
+      "points": [
+        {
+          "location": "札幌",
+          "maxWeatherIndex": null,
+          "hoursWithHighIndex": null,
+          "maximumSnowCmPerHour": 2.52,
+          "snowCmOnCalendarDay": 6.4,
+          "maximumWindMs": 3,
+          "maximumGustMs": null
+        },
+        {
+          "location": "千歳",
+          "maxWeatherIndex": null,
+          "hoursWithHighIndex": null,
+          "maximumSnowCmPerHour": 0.35,
+          "snowCmOnCalendarDay": 0.8,
+          "maximumWindMs": 2.55,
+          "maximumGustMs": null
+        }
+      ]
+    }
+  ]
+}

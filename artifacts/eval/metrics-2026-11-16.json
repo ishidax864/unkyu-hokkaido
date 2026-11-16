@@ -1,0 +1,1054 @@
+{
+ "all": {
+  "engineA": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.5547341759879783,
+   "ap": 0.04207992743257769,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 15,
+     "missed": 28,
+     "recall": 0.3488372093023256,
+     "recallCI": [
+      0.22418398748963103,
+      0.49828492902901905
+     ],
+     "falseAlarms": 623,
+     "falseAlarmRate": 0.32464825429911415,
+     "precision": 0.023510971786833857
+    },
+    {
+     "threshold": 65,
+     "caught": 6,
+     "missed": 37,
+     "recall": 0.13953488372093023,
+     "recallCI": [
+      0.06555634267713947,
+      0.27263876594425684
+     ],
+     "falseAlarms": 60,
+     "falseAlarmRate": 0.031266284523189164,
+     "precision": 0.09090909090909091
+    }
+   ]
+  },
+  "engineA_depthFixed": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.5650593211095896,
+   "ap": 0.05337687315042235,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 16,
+     "missed": 27,
+     "recall": 0.37209302325581395,
+     "recallCI": [
+      0.2437613889377433,
+      0.5214046173472683
+     ],
+     "falseAlarms": 627,
+     "falseAlarmRate": 0.32673267326732675,
+     "precision": 0.024883359253499222
+    },
+    {
+     "threshold": 65,
+     "caught": 8,
+     "missed": 35,
+     "recall": 0.18604651162790697,
+     "recallCI": [
+      0.09741635580105981,
+      0.3261729323530596
+     ],
+     "falseAlarms": 64,
+     "falseAlarmRate": 0.03335070349140177,
+     "precision": 0.1111111111111111
+    }
+   ]
+  },
+  "engineB": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.6227201667535175,
+   "ap": 0.049865062159329974,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 17,
+     "missed": 26,
+     "recall": 0.3953488372093023,
+     "recallCI": [
+      0.263651061984564,
+      0.5442120340668091
+     ],
+     "falseAlarms": 306,
+     "falseAlarmRate": 0.15945805106826472,
+     "precision": 0.05263157894736842
+    },
+    {
+     "threshold": 50,
+     "caught": 6,
+     "missed": 37,
+     "recall": 0.13953488372093023,
+     "recallCI": [
+      0.06555634267713947,
+      0.27263876594425684
+     ],
+     "falseAlarms": 74,
+     "falseAlarmRate": 0.0385617509119333,
+     "precision": 0.075
+    },
+    {
+     "threshold": 75,
+     "caught": 1,
+     "missed": 42,
+     "recall": 0.023255813953488372,
+     "recallCI": [
+      0.004116981177419916,
+      0.12059267861216881
+     ],
+     "falseAlarms": 4,
+     "falseAlarmRate": 0.0020844189682126106,
+     "precision": 0.2
+    }
+   ]
+  },
+  "maxGust": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.5841281190542554,
+   "ap": 0.03370263555539935,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 15,
+     "caught": 14,
+     "missed": 29,
+     "recall": 0.32558139534883723,
+     "recallCI": [
+      0.20493115181779817,
+      0.4748406749344904
+     ],
+     "falseAlarms": 505,
+     "falseAlarmRate": 0.2631578947368421,
+     "precision": 0.02697495183044316
+    },
+    {
+     "threshold": 20,
+     "caught": 7,
+     "missed": 36,
+     "recall": 0.16279069767441862,
+     "recallCI": [
+      0.08116524502857547,
+      0.2997269533591824
+     ],
+     "falseAlarms": 178,
+     "falseAlarmRate": 0.09275664408546118,
+     "precision": 0.03783783783783784
+    },
+    {
+     "threshold": 25,
+     "caught": 4,
+     "missed": 39,
+     "recall": 0.09302325581395349,
+     "recallCI": [
+      0.036771045103346514,
+      0.21602988398532677
+     ],
+     "falseAlarms": 58,
+     "falseAlarmRate": 0.030224075039082855,
+     "precision": 0.06451612903225806
+    }
+   ]
+  },
+  "maxSnowHour": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.6672503847691991,
+   "ap": 0.1467163267744157,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 1,
+     "caught": 9,
+     "missed": 34,
+     "recall": 0.20930232558139536,
+     "recallCI": [
+      0.11422705997811458,
+      0.35205931794236645
+     ],
+     "falseAlarms": 23,
+     "falseAlarmRate": 0.011985409067222511,
+     "precision": 0.28125
+    },
+    {
+     "threshold": 2,
+     "caught": 2,
+     "missed": 41,
+     "recall": 0.046511627906976744,
+     "recallCI": [
+      0.01284899031731969,
+      0.15455775923863058
+     ],
+     "falseAlarms": 6,
+     "falseAlarmRate": 0.003126628452318916,
+     "precision": 0.25
+    },
+    {
+     "threshold": 3,
+     "caught": 1,
+     "missed": 42,
+     "recall": 0.023255813953488372,
+     "recallCI": [
+      0.004116981177419916,
+      0.12059267861216881
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": 1
+    }
+   ]
+  },
+  "maxRainHour": {
+   "n": 1962,
+   "positives": 43,
+   "negatives": 1919,
+   "missing": 0,
+   "auc": 0.8411115285335143,
+   "ap": 0.13432044871055066,
+   "baseRate": 0.021916411824668705,
+   "at": [
+    {
+     "threshold": 10,
+     "caught": 2,
+     "missed": 41,
+     "recall": 0.046511627906976744,
+     "recallCI": [
+      0.01284899031731969,
+      0.15455775923863058
+     ],
+     "falseAlarms": 5,
+     "falseAlarmRate": 0.0026055237102657635,
+     "precision": 0.2857142857142857
+    },
+    {
+     "threshold": 20,
+     "caught": 0,
+     "missed": 43,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.08201257002322722
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    }
+   ]
+  }
+ },
+ "winter": {
+  "engineA": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.6122050515121302,
+   "ap": 0.06721813326171516,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 11,
+     "missed": 6,
+     "recall": 0.6470588235294118,
+     "recallCI": [
+      0.41299966721211817,
+      0.8269051385609512
+     ],
+     "falseAlarms": 457,
+     "falseAlarmRate": 0.6454802259887006,
+     "precision": 0.023504273504273504
+    },
+    {
+     "threshold": 65,
+     "caught": 5,
+     "missed": 12,
+     "recall": 0.29411764705882354,
+     "recallCI": [
+      0.13279793865556405,
+      0.5313353332621391
+     ],
+     "falseAlarms": 43,
+     "falseAlarmRate": 0.06073446327683616,
+     "precision": 0.10416666666666667
+    }
+   ]
+  },
+  "engineA_depthFixed": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.6585659687603855,
+   "ap": 0.10032100098054242,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 12,
+     "missed": 5,
+     "recall": 0.7058823529411765,
+     "recallCI": [
+      0.468664666737861,
+      0.8672020613444361
+     ],
+     "falseAlarms": 461,
+     "falseAlarmRate": 0.6511299435028248,
+     "precision": 0.02536997885835095
+    },
+    {
+     "threshold": 65,
+     "caught": 7,
+     "missed": 10,
+     "recall": 0.4117647058823529,
+     "recallCI": [
+      0.21610786039131383,
+      0.6399492561448445
+     ],
+     "falseAlarms": 46,
+     "falseAlarmRate": 0.06497175141242938,
+     "precision": 0.1320754716981132
+    }
+   ]
+  },
+  "engineB": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.7546111665004985,
+   "ap": 0.17101259079445771,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 11,
+     "missed": 6,
+     "recall": 0.6470588235294118,
+     "recallCI": [
+      0.41299966721211817,
+      0.8269051385609512
+     ],
+     "falseAlarms": 117,
+     "falseAlarmRate": 0.1652542372881356,
+     "precision": 0.0859375
+    },
+    {
+     "threshold": 50,
+     "caught": 5,
+     "missed": 12,
+     "recall": 0.29411764705882354,
+     "recallCI": [
+      0.13279793865556405,
+      0.5313353332621391
+     ],
+     "falseAlarms": 29,
+     "falseAlarmRate": 0.04096045197740113,
+     "precision": 0.14705882352941177
+    },
+    {
+     "threshold": 75,
+     "caught": 1,
+     "missed": 16,
+     "recall": 0.058823529411764705,
+     "recallCI": [
+      0.010460130645164236,
+      0.26982545203562797
+     ],
+     "falseAlarms": 1,
+     "falseAlarmRate": 0.0014124293785310734,
+     "precision": 0.5
+    }
+   ]
+  },
+  "maxGust": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.7165586573612496,
+   "ap": 0.06092655666470487,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 15,
+     "caught": 7,
+     "missed": 10,
+     "recall": 0.4117647058823529,
+     "recallCI": [
+      0.21610786039131383,
+      0.6399492561448445
+     ],
+     "falseAlarms": 173,
+     "falseAlarmRate": 0.2443502824858757,
+     "precision": 0.03888888888888889
+    },
+    {
+     "threshold": 20,
+     "caught": 4,
+     "missed": 13,
+     "recall": 0.23529411764705882,
+     "recallCI": [
+      0.09554889071675943,
+      0.47262245889171606
+     ],
+     "falseAlarms": 62,
+     "falseAlarmRate": 0.08757062146892655,
+     "precision": 0.06060606060606061
+    },
+    {
+     "threshold": 25,
+     "caught": 3,
+     "missed": 14,
+     "recall": 0.17647058823529413,
+     "recallCI": [
+      0.06191013712548989,
+      0.41029929017375777
+     ],
+     "falseAlarms": 23,
+     "falseAlarmRate": 0.03248587570621469,
+     "precision": 0.11538461538461539
+    }
+   ]
+  },
+  "maxSnowHour": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.9519358590893985,
+   "ap": 0.3086737254231946,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 1,
+     "caught": 8,
+     "missed": 9,
+     "recall": 0.47058823529411764,
+     "recallCI": [
+      0.26164801196088106,
+      0.6903710268845051
+     ],
+     "falseAlarms": 19,
+     "falseAlarmRate": 0.026836158192090395,
+     "precision": 0.2962962962962963
+    },
+    {
+     "threshold": 2,
+     "caught": 2,
+     "missed": 15,
+     "recall": 0.11764705882352941,
+     "recallCI": [
+      0.03287908001292091,
+      0.3433684249770991
+     ],
+     "falseAlarms": 5,
+     "falseAlarmRate": 0.007062146892655367,
+     "precision": 0.2857142857142857
+    },
+    {
+     "threshold": 3,
+     "caught": 1,
+     "missed": 16,
+     "recall": 0.058823529411764705,
+     "recallCI": [
+      0.010460130645164236,
+      0.26982545203562797
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": 1
+    }
+   ]
+  },
+  "maxRainHour": {
+   "n": 725,
+   "positives": 17,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.873587570621469,
+   "ap": 0.09955971384119847,
+   "baseRate": 0.023448275862068966,
+   "at": [
+    {
+     "threshold": 10,
+     "caught": 0,
+     "missed": 17,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.18432366037156456
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    },
+    {
+     "threshold": 20,
+     "caught": 0,
+     "missed": 17,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.18432366037156456
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    }
+   ]
+  }
+ },
+ "nonWinter": {
+  "engineA": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.555739058629232,
+   "ap": 0.029880918924778323,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 4,
+     "missed": 22,
+     "recall": 0.15384615384615385,
+     "recallCI": [
+      0.061499339989294764,
+      0.3353158441831357
+     ],
+     "falseAlarms": 166,
+     "falseAlarmRate": 0.1370767960363336,
+     "precision": 0.023529411764705882
+    },
+    {
+     "threshold": 65,
+     "caught": 1,
+     "missed": 25,
+     "recall": 0.038461538461538464,
+     "recallCI": [
+      0.006821808976989882,
+      0.18893176991958402
+     ],
+     "falseAlarms": 17,
+     "falseAlarmRate": 0.014037985136251032,
+     "precision": 0.05555555555555555
+    }
+   ]
+  },
+  "engineA_depthFixed": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.5556914184081814,
+   "ap": 0.02774416678802618,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 4,
+     "missed": 22,
+     "recall": 0.15384615384615385,
+     "recallCI": [
+      0.061499339989294764,
+      0.3353158441831357
+     ],
+     "falseAlarms": 166,
+     "falseAlarmRate": 0.1370767960363336,
+     "precision": 0.023529411764705882
+    },
+    {
+     "threshold": 65,
+     "caught": 1,
+     "missed": 25,
+     "recall": 0.038461538461538464,
+     "recallCI": [
+      0.006821808976989882,
+      0.18893176991958402
+     ],
+     "falseAlarms": 18,
+     "falseAlarmRate": 0.01486374896779521,
+     "precision": 0.05263157894736842
+    }
+   ]
+  },
+  "engineB": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.5369211713142349,
+   "ap": 0.023308655102794396,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 6,
+     "missed": 20,
+     "recall": 0.23076923076923078,
+     "recallCI": [
+      0.11033699683676688,
+      0.42051925751956787
+     ],
+     "falseAlarms": 189,
+     "falseAlarmRate": 0.15606936416184972,
+     "precision": 0.03076923076923077
+    },
+    {
+     "threshold": 50,
+     "caught": 1,
+     "missed": 25,
+     "recall": 0.038461538461538464,
+     "recallCI": [
+      0.006821808976989882,
+      0.18893176991958402
+     ],
+     "falseAlarms": 45,
+     "falseAlarmRate": 0.037159372419488024,
+     "precision": 0.021739130434782608
+    },
+    {
+     "threshold": 75,
+     "caught": 0,
+     "missed": 26,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.12873304380462175
+     ],
+     "falseAlarms": 3,
+     "falseAlarmRate": 0.002477291494632535,
+     "precision": 0
+    }
+   ]
+  },
+  "maxGust": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.494696055389697,
+   "ap": 0.024882163318289862,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 15,
+     "caught": 7,
+     "missed": 19,
+     "recall": 0.2692307692307692,
+     "recallCI": [
+      0.13704275525067386,
+      0.46083403419761304
+     ],
+     "falseAlarms": 332,
+     "falseAlarmRate": 0.2741535920726672,
+     "precision": 0.02064896755162242
+    },
+    {
+     "threshold": 20,
+     "caught": 3,
+     "missed": 23,
+     "recall": 0.11538461538461539,
+     "recallCI": [
+      0.04003171821149494,
+      0.28976293086898336
+     ],
+     "falseAlarms": 116,
+     "falseAlarmRate": 0.0957886044591247,
+     "precision": 0.025210084033613446
+    },
+    {
+     "threshold": 25,
+     "caught": 1,
+     "missed": 25,
+     "recall": 0.038461538461538464,
+     "recallCI": [
+      0.006821808976989882,
+      0.18893176991958402
+     ],
+     "falseAlarms": 35,
+     "falseAlarmRate": 0.028901734104046242,
+     "precision": 0.027777777777777776
+    }
+   ]
+  },
+  "maxSnowHour": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.5145302674204408,
+   "ap": 0.04562555472013839,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 1,
+     "caught": 1,
+     "missed": 25,
+     "recall": 0.038461538461538464,
+     "recallCI": [
+      0.006821808976989882,
+      0.18893176991958402
+     ],
+     "falseAlarms": 4,
+     "falseAlarmRate": 0.0033030553261767133,
+     "precision": 0.2
+    },
+    {
+     "threshold": 2,
+     "caught": 0,
+     "missed": 26,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.12873304380462175
+     ],
+     "falseAlarms": 1,
+     "falseAlarmRate": 0.0008257638315441783,
+     "precision": 0
+    },
+    {
+     "threshold": 3,
+     "caught": 0,
+     "missed": 26,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.12873304380462175
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    }
+   ]
+  },
+  "maxRainHour": {
+   "n": 1237,
+   "positives": 26,
+   "negatives": 1211,
+   "missing": 0,
+   "auc": 0.8370228037858096,
+   "ap": 0.1756733713718534,
+   "baseRate": 0.021018593371059015,
+   "at": [
+    {
+     "threshold": 10,
+     "caught": 2,
+     "missed": 24,
+     "recall": 0.07692307692307693,
+     "recallCI": [
+      0.021354639183375553,
+      0.24141947480515055
+     ],
+     "falseAlarms": 5,
+     "falseAlarmRate": 0.004128819157720892,
+     "precision": 0.2857142857142857
+    },
+    {
+     "threshold": 20,
+     "caught": 0,
+     "missed": 26,
+     "recall": 0,
+     "recallCI": [
+      0,
+      0.12873304380462175
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    }
+   ]
+  }
+ },
+ "winterDay1Only": {
+  "engineA": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.6166538263995891,
+   "ap": 0.040395804740458216,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 8,
+     "missed": 3,
+     "recall": 0.7272727272727273,
+     "recallCI": [
+      0.4343497069897538,
+      0.9025411942607853
+     ],
+     "falseAlarms": 457,
+     "falseAlarmRate": 0.6454802259887006,
+     "precision": 0.017204301075268817
+    },
+    {
+     "threshold": 65,
+     "caught": 3,
+     "missed": 8,
+     "recall": 0.2727272727272727,
+     "recallCI": [
+      0.09745880573921469,
+      0.5656502930102462
+     ],
+     "falseAlarms": 43,
+     "falseAlarmRate": 0.06073446327683616,
+     "precision": 0.06521739130434782
+    }
+   ]
+  },
+  "engineA_depthFixed": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.6895865434001027,
+   "ap": 0.07129463275357144,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 9,
+     "missed": 2,
+     "recall": 0.8181818181818182,
+     "recallCI": [
+      0.5230138624217553,
+      0.9486333993289994
+     ],
+     "falseAlarms": 461,
+     "falseAlarmRate": 0.6511299435028248,
+     "precision": 0.019148936170212766
+    },
+    {
+     "threshold": 65,
+     "caught": 5,
+     "missed": 6,
+     "recall": 0.45454545454545453,
+     "recallCI": [
+      0.21270957543988048,
+      0.7199122443100118
+     ],
+     "falseAlarms": 46,
+     "falseAlarmRate": 0.06497175141242938,
+     "precision": 0.09803921568627451
+    }
+   ]
+  },
+  "engineB": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.7499357986646122,
+   "ap": 0.09651005082810411,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 25,
+     "caught": 7,
+     "missed": 4,
+     "recall": 0.6363636363636364,
+     "recallCI": [
+      0.35379677689163724,
+      0.8483377638586862
+     ],
+     "falseAlarms": 117,
+     "falseAlarmRate": 0.1652542372881356,
+     "precision": 0.056451612903225805
+    },
+    {
+     "threshold": 50,
+     "caught": 3,
+     "missed": 8,
+     "recall": 0.2727272727272727,
+     "recallCI": [
+      0.09745880573921469,
+      0.5656502930102462
+     ],
+     "falseAlarms": 29,
+     "falseAlarmRate": 0.04096045197740113,
+     "precision": 0.09375
+    },
+    {
+     "threshold": 75,
+     "caught": 0,
+     "missed": 11,
+     "recall": 0,
+     "recallCI": [
+      2.057132194452876e-17,
+      0.2588400172488141
+     ],
+     "falseAlarms": 1,
+     "falseAlarmRate": 0.0014124293785310734,
+     "precision": 0
+    }
+   ]
+  },
+  "maxGust": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.6847714432460195,
+   "ap": 0.02980583120059827,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 15,
+     "caught": 4,
+     "missed": 7,
+     "recall": 0.36363636363636365,
+     "recallCI": [
+      0.15166223614131386,
+      0.6462032231083628
+     ],
+     "falseAlarms": 173,
+     "falseAlarmRate": 0.2443502824858757,
+     "precision": 0.022598870056497175
+    },
+    {
+     "threshold": 20,
+     "caught": 2,
+     "missed": 9,
+     "recall": 0.18181818181818182,
+     "recallCI": [
+      0.05136660067100062,
+      0.4769861375782449
+     ],
+     "falseAlarms": 62,
+     "falseAlarmRate": 0.08757062146892655,
+     "precision": 0.03125
+    },
+    {
+     "threshold": 25,
+     "caught": 1,
+     "missed": 10,
+     "recall": 0.09090909090909091,
+     "recallCI": [
+      0.016231752262825964,
+      0.3773646254862038
+     ],
+     "falseAlarms": 23,
+     "falseAlarmRate": 0.03248587570621469,
+     "precision": 0.041666666666666664
+    }
+   ]
+  },
+  "maxSnowHour": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.9428608115048793,
+   "ap": 0.2640024417351663,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 1,
+     "caught": 5,
+     "missed": 6,
+     "recall": 0.45454545454545453,
+     "recallCI": [
+      0.21270957543988048,
+      0.7199122443100118
+     ],
+     "falseAlarms": 19,
+     "falseAlarmRate": 0.026836158192090395,
+     "precision": 0.20833333333333334
+    },
+    {
+     "threshold": 2,
+     "caught": 1,
+     "missed": 10,
+     "recall": 0.09090909090909091,
+     "recallCI": [
+      0.016231752262825964,
+      0.3773646254862038
+     ],
+     "falseAlarms": 5,
+     "falseAlarmRate": 0.007062146892655367,
+     "precision": 0.16666666666666666
+    },
+    {
+     "threshold": 3,
+     "caught": 1,
+     "missed": 10,
+     "recall": 0.09090909090909091,
+     "recallCI": [
+      0.016231752262825964,
+      0.3773646254862038
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": 1
+    }
+   ]
+  },
+  "maxRainHour": {
+   "n": 719,
+   "positives": 11,
+   "negatives": 708,
+   "missing": 0,
+   "auc": 0.8576656394453005,
+   "ap": 0.06955818649558602,
+   "baseRate": 0.015299026425591099,
+   "at": [
+    {
+     "threshold": 10,
+     "caught": 0,
+     "missed": 11,
+     "recall": 0,
+     "recallCI": [
+      2.057132194452876e-17,
+      0.2588400172488141
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    },
+    {
+     "threshold": 20,
+     "caught": 0,
+     "missed": 11,
+     "recall": 0,
+     "recallCI": [
+      2.057132194452876e-17,
+      0.2588400172488141
+     ],
+     "falseAlarms": 0,
+     "falseAlarmRate": 0,
+     "precision": null
+    }
+   ]
+  }
+ }
+}

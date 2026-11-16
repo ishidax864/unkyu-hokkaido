@@ -1,0 +1,881 @@
+{
+  "source": "気象庁 過去の気象データ検索",
+  "kind": "station-observation",
+  "station": "札幌",
+  "stationCode": "47412",
+  "url": "https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=14&block_no=47412&year=2026&month=1&day=&view=a3",
+  "fetchedAt": "2026-10-12T12:57:52.894552+00:00",
+  "sourceSha256": "46014efeb0aa1fe727638f6edf558a9ae321901246c0dcb2dae33fb570c8c569",
+  "timeZone": "Asia/Tokyo",
+  "snowfallWindow": "calendar day; NOT rolling maximum 24h",
+  "rows": [
+    {
+      "date": "2026-01-01",
+      "meanWindMs": {
+        "value": 1.9,
+        "raw": "1.9",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.3,
+        "raw": "4.3",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 7.1,
+        "raw": "7.1",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 5.0,
+        "raw": "5",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 18.0,
+        "raw": "18",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-02",
+      "meanWindMs": {
+        "value": 2.7,
+        "raw": "2.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 8.4,
+        "raw": "8.4",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 12.9,
+        "raw": "12.9",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 15.0,
+        "raw": "15",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 31.0,
+        "raw": "31",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-03",
+      "meanWindMs": {
+        "value": 3.0,
+        "raw": "3.0",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 6.0,
+        "raw": "6.0",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 10.5,
+        "raw": "10.5",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 1.0,
+        "raw": "1",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 30.0,
+        "raw": "30",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-04",
+      "meanWindMs": {
+        "value": 2.1,
+        "raw": "2.1",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 5.5,
+        "raw": "5.5",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 10.9,
+        "raw": "10.9",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 3.0,
+        "raw": "3",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 28.0,
+        "raw": "28",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-05",
+      "meanWindMs": {
+        "value": 2.0,
+        "raw": "2.0",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.9,
+        "raw": "4.9",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 8.4,
+        "raw": "8.4",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 25.0,
+        "raw": "25",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-06",
+      "meanWindMs": {
+        "value": 1.7,
+        "raw": "1.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.7,
+        "raw": "4.7",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 9.1,
+        "raw": "9.1",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 23.0,
+        "raw": "23",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-07",
+      "meanWindMs": {
+        "value": 3.5,
+        "raw": "3.5",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 7.2,
+        "raw": "7.2",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 13.3,
+        "raw": "13.3",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 7.0,
+        "raw": "7",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 29.0,
+        "raw": "29",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "meanWindMs": {
+        "value": 3.9,
+        "raw": "3.9",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 7.3,
+        "raw": "7.3",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 13.0,
+        "raw": "13.0",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 41.0,
+        "raw": "41",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 64.0,
+        "raw": "64",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-09",
+      "meanWindMs": {
+        "value": 2.0,
+        "raw": "2.0",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 6.0,
+        "raw": "6.0",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 12.2,
+        "raw": "12.2",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 61.0,
+        "raw": "61",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-10",
+      "meanWindMs": {
+        "value": 3.9,
+        "raw": "3.9",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 9.2,
+        "raw": "9.2",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 16.3,
+        "raw": "16.3",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 50.0,
+        "raw": "50",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-11",
+      "meanWindMs": {
+        "value": 6.2,
+        "raw": "6.2",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 15.6,
+        "raw": "15.6",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 24.4,
+        "raw": "24.4",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 14.0,
+        "raw": "14",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 46.0,
+        "raw": "46",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-12",
+      "meanWindMs": {
+        "value": 4.1,
+        "raw": "4.1",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 11.2,
+        "raw": "11.2",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 19.7,
+        "raw": "19.7",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 7.0,
+        "raw": "7",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 51.0,
+        "raw": "51",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-13",
+      "meanWindMs": {
+        "value": 3.3,
+        "raw": "3.3",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 15.1,
+        "raw": "15.1",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 29.5,
+        "raw": "29.5",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 14.0,
+        "raw": "14",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 56.0,
+        "raw": "56",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-14",
+      "meanWindMs": {
+        "value": 2.6,
+        "raw": "2.6",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 6.5,
+        "raw": "6.5",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 11.9,
+        "raw": "11.9",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 1.0,
+        "raw": "1",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 56.0,
+        "raw": "56",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-15",
+      "meanWindMs": {
+        "value": 1.7,
+        "raw": "1.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 3.5,
+        "raw": "3.5",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 5.7,
+        "raw": "5.7",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 2.0,
+        "raw": "2",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 51.0,
+        "raw": "51",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-16",
+      "meanWindMs": {
+        "value": 1.4,
+        "raw": "1.4",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 3.8,
+        "raw": "3.8",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 6.3,
+        "raw": "6.3",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 47.0,
+        "raw": "47",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-17",
+      "meanWindMs": {
+        "value": 1.6,
+        "raw": "1.6",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.4,
+        "raw": "4.4",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 6.8,
+        "raw": "6.8",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 1.0,
+        "raw": "1",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 45.0,
+        "raw": "45",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-18",
+      "meanWindMs": {
+        "value": 1.8,
+        "raw": "1.8",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 6.3,
+        "raw": "6.3",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 10.8,
+        "raw": "10.8",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 10.0,
+        "raw": "10",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 54.0,
+        "raw": "54",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-19",
+      "meanWindMs": {
+        "value": 1.5,
+        "raw": "1.5",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 3.2,
+        "raw": "3.2",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 5.1,
+        "raw": "5.1",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 2.0,
+        "raw": "2",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 49.0,
+        "raw": "49",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-20",
+      "meanWindMs": {
+        "value": 3.4,
+        "raw": "3.4",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 9.0,
+        "raw": "9.0",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 15.6,
+        "raw": "15.6",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 11.0,
+        "raw": "11",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 57.0,
+        "raw": "57",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-21",
+      "meanWindMs": {
+        "value": 3.7,
+        "raw": "3.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 7.6,
+        "raw": "7.6",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 15.7,
+        "raw": "15.7",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 14.0,
+        "raw": "14",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 66.0,
+        "raw": "66",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-22",
+      "meanWindMs": {
+        "value": 1.9,
+        "raw": "1.9",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.8,
+        "raw": "4.8",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 7.8,
+        "raw": "7.8",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 9.0,
+        "raw": "9",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 72.0,
+        "raw": "72",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-23",
+      "meanWindMs": {
+        "value": 1.8,
+        "raw": "1.8",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.9,
+        "raw": "4.9",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 8.1,
+        "raw": "8.1",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 68.0,
+        "raw": "68",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-24",
+      "meanWindMs": {
+        "value": 2.0,
+        "raw": "2.0",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 5.9,
+        "raw": "5.9",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 10.7,
+        "raw": "10.7",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 6.0,
+        "raw": "6",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 66.0,
+        "raw": "66",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-25",
+      "meanWindMs": {
+        "value": 3.2,
+        "raw": "3.2",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 8.7,
+        "raw": "8.7",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 16.8,
+        "raw": "16.8",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 48.0,
+        "raw": "48",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 112.0,
+        "raw": "112",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-26",
+      "meanWindMs": {
+        "value": 1.6,
+        "raw": "1.6",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 5.2,
+        "raw": "5.2",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 8.8,
+        "raw": "8.8",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 11.0,
+        "raw": "11",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 111.0,
+        "raw": "111",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-27",
+      "meanWindMs": {
+        "value": 2.0,
+        "raw": "2.0",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 5.0,
+        "raw": "5.0",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 7.2,
+        "raw": "7.2",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 101.0,
+        "raw": "101",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-28",
+      "meanWindMs": {
+        "value": 1.7,
+        "raw": "1.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 3.0,
+        "raw": "3.0",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 5.0,
+        "raw": "5.0",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 92.0,
+        "raw": "92",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-29",
+      "meanWindMs": {
+        "value": 1.5,
+        "raw": "1.5",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 4.4,
+        "raw": "4.4",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 5.4,
+        "raw": "5.4",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 87.0,
+        "raw": "87",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-30",
+      "meanWindMs": {
+        "value": 3.9,
+        "raw": "3.9",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 9.1,
+        "raw": "9.1",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 14.2,
+        "raw": "14.2",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": null,
+        "raw": "--",
+        "quality": "symbol-or-flagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 82.0,
+        "raw": "82",
+        "quality": "unflagged"
+      }
+    },
+    {
+      "date": "2026-01-31",
+      "meanWindMs": {
+        "value": 3.7,
+        "raw": "3.7",
+        "quality": "unflagged"
+      },
+      "maxWindMs": {
+        "value": 9.1,
+        "raw": "9.1",
+        "quality": "unflagged"
+      },
+      "maxGustMs": {
+        "value": 17.7,
+        "raw": "17.7",
+        "quality": "unflagged"
+      },
+      "snowfallCmCalendarDay": {
+        "value": 20.0,
+        "raw": "20",
+        "quality": "unflagged"
+      },
+      "maximumSnowDepthCm": {
+        "value": 99.0,
+        "raw": "99",
+        "quality": "unflagged"
+      }
+    }
+  ]
+}

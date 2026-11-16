@@ -1,6 +1,7 @@
 import { DatabaseError } from '../errors';
 import { logger } from '../logger';
 import { getAdminSupabaseClient, getSupabaseClient, DbResult } from './client';
+import { japanDate } from '../forecast/time';
 
 // 管理用グローバル統計
 export async function getGlobalStats(): Promise<DbResult<{
@@ -131,38 +132,42 @@ export async function getMLTrainingStats(): Promise<DbResult<{
     estimatedStorageMB: number;
     oldestRecord: string | null;
 }>> {
-    const client = getAdminSupabaseClient() || getSupabaseClient();
+    const client = getAdminSupabaseClient();
     if (!client) return { success: false, error: 'Supabase not configured' };
 
     try {
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
+        const todayStart = new Date(`${japanDate()}T00:00:00+09:00`);
 
-        const [totalRes, todayRes, statusRes, latestRes, oldestRes] = await Promise.all([
+        const [totalRes, todayRes, statusResults, latestRes, oldestRes] = await Promise.all([
             client.from('ml_training_data').select('id', { count: 'exact', head: true }),
             client.from('ml_training_data').select('id', { count: 'exact', head: true })
                 .gte('recorded_at', todayStart.toISOString()),
-            client.from('ml_training_data').select('train_status'),
+            Promise.all(['normal', 'delayed', 'suspended'].map(status => client.from('ml_training_data')
+                .select('id', { count: 'exact', head: true }).eq('train_status', status))),
             client.from('ml_training_data')
                 .select('area_id, temperature, wind_speed, snowfall, snow_depth, recorded_at')
                 .order('recorded_at', { ascending: false })
                 .limit(1)
-                .single(),
+                .maybeSingle(),
             client.from('ml_training_data')
                 .select('recorded_at')
                 .order('recorded_at', { ascending: true })
                 .limit(1)
-                .single(),
+                .maybeSingle(),
         ]);
+        const [normalRes, delayedRes, suspendedRes] = statusResults;
+
+        if ([totalRes, todayRes, normalRes, delayedRes, suspendedRes, latestRes, oldestRes].some(result => result.error)) {
+            return { success: false, error: '学習用データの統計を取得できませんでした' };
+        }
 
         const totalRows = totalRes.count || 0;
         const todayRows = todayRes.count || 0;
 
-        const statuses = statusRes.data || [];
         const statusBreakdown = {
-            normal: statuses.filter(s => s.train_status === 'normal').length,
-            delayed: statuses.filter(s => s.train_status === 'delayed').length,
-            suspended: statuses.filter(s => s.train_status === 'suspended').length,
+            normal: normalRes.count ?? 0,
+            delayed: delayedRes.count ?? 0,
+            suspended: suspendedRes.count ?? 0,
         };
 
         return {
