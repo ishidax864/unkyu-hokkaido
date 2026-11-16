@@ -1,0 +1,5 @@
+project_id = "odbrttexoreltltojodn"
+
+[functions.collect-rail]
+entrypoint = "./functions/collect-rail/index.mjs"
+verify_jwt = false
