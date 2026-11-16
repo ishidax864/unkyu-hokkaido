@@ -2,7 +2,8 @@
  * 区間の結果: 関係路線の公式状態(構造化) + 区間の気象リスク + 復旧の見通し + 代替手段 → 1つの結論。
  * 気象(区間の地点・時間別・7日・空港バス)は既存の getJourneyForecast を使い、公式状態は新しいボードを使う。
  */
-import { getStationById, getAlternativeRoutes, type Station, type AlternativeRouteOption } from '@/lib/hokkaido-data';
+import { getStationById, type Station } from '@/lib/hokkaido-data';
+import { findAlternatives, type AlternativesView } from './alternatives';
 import { linesForJourney } from '@/lib/registry/journey-lines';
 import { getBoard, type BoardLine } from './board';
 import { combine, type OfficialState, type UnknownReason } from './status';
@@ -11,7 +12,6 @@ import { recoveryView, type RecoveryView } from './recovery';
 import { getCurrentOnsets } from './onsets';
 import { advise, type Advice } from './advice';
 import coefficients from '@/lib/forecast/core-coefficients.json';
-import { stationPlaces } from '@/lib/forecast/places';
 import type { JourneyForecast, RiskLevel } from '@/lib/forecast/types';
 
 export type Verdict = 'go' | 'watch' | 'caution' | 'disrupted' | 'unknown';
@@ -36,8 +36,7 @@ export interface JourneyResult {
     /** 指定時刻の気象条件での「天候による運休・大幅な遅れ」の目安。multiple はふだんの何倍か */
     probability: { percent: number; multiple: number } | null;
     forecast: JourneyForecast | null;
-    alternatives: AlternativeRouteOption[];
-    places: ReturnType<typeof stationPlaces>[];
+    alternatives: AlternativesView;
 }
 
 const RISK_RANK: Record<RiskLevel, number> = { unknown: -1, low: 0, watch: 1, high: 2, severe: 3 };
@@ -90,15 +89,13 @@ export async function getJourneyResult(req: { from: string; to: string; date: st
     const baseRate = coefficients.training.positives / coefficients.training.rows * 100;
     const probability = typeof score === 'number' ? { percent: score, multiple: Math.round(score / baseRate) } : null;
     const hour = new Date(now.getTime() + 9 * 3_600_000).getUTCHours();
-    const advice = advise({ disrupted: state === 'disrupted' && dayKind === 'today', recovery, risk: riskAtTime, hour });
+    const advice = advise({ disrupted: state === 'disrupted' && dayKind === 'today', recovery, risk: riskAtTime, hour, officialKnown: state !== 'unknown' });
     const published = days.map(d => d.publishedAt).filter((x): x is string => !!x).sort();
-    const at = new Date(`${req.date}T${req.time}:00+09:00`);
     return {
         request: req, from: { id: from.id, name: from.name }, to: { id: to.id, name: to.name }, lines,
         official: { state, ...(reason ? { reason } : {}), dayKind, publishedAt: published[0] ?? null, disrupted },
         riskAtTime, verdict: decideVerdict(state, riskAtTime), recovery, advice, probability, forecast,
-        alternatives: getAlternativeRoutes(from.id, to.id),
-        places: [stationPlaces(from.id, at, now), stationPlaces(to.id, at, now)],
+        alternatives: findAlternatives(from.id, to.id, lines.map(l => l.slug), now),
     };
 }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpRight, Bus, Coffee, Hotel, Megaphone, Pencil, Wind, CloudSnow, TrainFront } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Bus, Coffee, Plane, Hotel, Megaphone, Pencil, Wind, CloudSnow, TrainFront } from 'lucide-react';
 import { getJourneyResult, JourneyInputError, type JourneyResult, type Verdict } from '@/lib/engine/journey';
 import { UNKNOWN_REASON_LABELS } from '@/lib/engine/status';
 import { OfficialPill, RiskPill } from '@/components/ui/status-pill';
@@ -45,28 +45,46 @@ function verdictDetail(r: JourneyResult) {
     }
 }
 
+const MODE_ICON = { bus: Bus, subway: TrainFront, air: Plane } as const;
+const minutesLabel = (m: [number, number]) => { const f = (x: number) => x >= 60 ? `${Math.floor(x / 60)}時間${x % 60 ? `${x % 60}分` : ''}` : `${x}分`; return m[0] === m[1] ? `約${f(m[0])}` : `${f(m[0])}〜${f(m[1])}`; };
+
 function Alternatives({ r, open }: { r: JourneyResult; open: boolean }) {
     const buses = r.forecast?.buses;
-    const places = r.places.flatMap((p, i) => [p.hotel && { ...p.hotel, kind: 'hotel' as const, station: i ? r.to.name : r.from.name }, p.cafe && { ...p.cafe, kind: 'cafe' as const, station: i ? r.to.name : r.from.name }]).filter(Boolean) as { name: string; detail: string; url: string; kind: 'hotel' | 'cafe'; station: string }[];
-    const body = <div className="space-y-4">
+    const alt = r.alternatives;
+    const order = r.advice.emphasize;
+    const staysFirst = order[0] === 'hotel' || order[0] === 'cafe';
+    const transport = <>
         {buses?.available && buses.departures.length > 0 && <div className="rounded-2xl border border-line bg-surface p-4 shadow-card">
-            <h3 className="flex items-center gap-2 font-bold"><Bus size={18} className="text-brand" aria-hidden />空港連絡バス（公式時刻表から）</h3>
+            <h3 className="flex items-center gap-2 font-bold"><Bus size={18} className="text-brand" aria-hidden />次の空港連絡バス（公式時刻表から）</h3>
             <ul className="mt-2 divide-y divide-line">{buses.departures.map(d => <li key={d.departsAt + d.name} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
                 <span className="text-lg font-bold tabular">{clock(d.departsAt)} 発 → {clock(d.arrivesAt)} 着<span className="ml-2 text-sm font-normal text-ink-3">約{d.durationMinutes}分</span></span>
                 <a href={d.boardingUrl} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center gap-1 text-sm font-bold text-brand hover:underline">{d.boarding}のりば<ArrowUpRight size={14} aria-hidden /></a>
             </li>)}</ul>
             <p className="mt-1 text-sm text-ink-3">遅延・満席・運休は反映していません。<a href={buses.url} target="_blank" rel="noopener noreferrer" className="underline">時刻表</a>で確認してください。</p>
         </div>}
-        {r.alternatives.length > 0 && <ul className="space-y-3">{r.alternatives.slice(0, 4).map(a => <li key={a.name} className="rounded-2xl border border-line bg-surface p-4 shadow-card">
-            <p className="font-bold">{a.name}<span className="ml-2 text-sm font-normal text-ink-3">{a.time}</span></p>
-            <p className="mt-0.5 text-[15px] text-ink-2">{a.details}</p>
-            {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-brand hover:underline">運行・時刻を確認<ArrowUpRight size={14} aria-hidden /></a>}
-        </li>)}</ul>}
-        {places.length > 0 && <ul className="grid gap-3 sm:grid-cols-2">{places.map(p => <li key={p.url}><a href={p.url} target="_blank" rel="noopener noreferrer" className="flex min-h-16 items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-card hover:bg-surface-2">
+        {alt.options.length > 0 && <ul className="space-y-3">{alt.options.map(a => { const Icon = MODE_ICON[a.mode]; return <li key={a.name} className="rounded-2xl border border-line bg-surface p-4 shadow-card">
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-bold"><Icon size={18} className="shrink-0 text-brand" aria-hidden />{a.name}
+                {a.reservation === 'required' && <span className="rounded bg-watch-soft px-1.5 text-sm text-watch">要予約</span>}
+                {a.reservation === 'none' && <span className="rounded bg-ok-soft px-1.5 text-sm text-ok">予約不要</span>}</p>
+            <p className="mt-1 text-[15px] text-ink-2">札幌側ののりば: {a.boarding}{alt.timesValid && a.minutes ? `・${minutesLabel(a.minutes)}` : ''}{alt.timesValid && a.perDay ? `・1日${a.perDay}本ほど` : ''}</p>
+            {a.note && <p className="mt-0.5 text-sm text-ink-3">{a.note}</p>}
+            <p className="mt-1 flex flex-wrap gap-x-4 text-sm font-bold">
+                <a href={a.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-brand hover:underline">時刻・のりば<ArrowUpRight size={14} aria-hidden /></a>
+                {a.statusUrl && <a href={a.statusUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-brand hover:underline">運休していないか確認<ArrowUpRight size={14} aria-hidden /></a>}
+            </p>
+            <p className="text-sm text-ink-3">{a.operator}</p>
+        </li>; })}</ul>}
+        {!buses?.available && !alt.options.length && <p className="rounded-2xl border border-line bg-surface p-4 text-ink-2">この区間の代わりの交通手段は、まだ登録していません。</p>}
+    </>;
+    const stays = alt.stays && <div>
+        <h3 className="mb-2 font-bold">{alt.stays.station}駅の近くで待つ・泊まる</h3>
+        <ul className="grid gap-3 sm:grid-cols-2">{alt.stays.places.map(p => <li key={p.url}><a href={p.url} target="_blank" rel="noopener noreferrer" className="flex min-h-16 items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-card hover:bg-surface-2">
             {p.kind === 'hotel' ? <Hotel size={22} className="shrink-0 text-brand" aria-hidden /> : <Coffee size={22} className="shrink-0 text-brand" aria-hidden />}
-            <span><span className="block font-bold">{p.name}</span><span className="block text-sm text-ink-3">{p.station}・{p.detail}</span></span></a></li>)}</ul>}
-        {!buses?.available && !r.alternatives.length && !places.length && <p className="text-ink-2">この区間の代替手段はまだ登録していません。</p>}
-        <p className="text-sm text-ink-3">大雪・暴風のときはバスや道路も止まることがあります。各社の運行情報を確認してください。</p>
+            <span><span className="block font-bold">{p.name}</span><span className="block text-sm text-ink-3">{p.detail}{p.kind === 'hotel' ? '・空室は公式で確認' : ''}</span></span></a></li>)}</ul>
+    </div>;
+    const body = <div className="space-y-4">
+        {staysFirst ? <>{stays}{transport}</> : <>{transport}{stays}</>}
+        <p className="text-sm text-ink-3">大雪・暴風のときはバスや道路も止まることがあります。乗る前に各社の運行情報を確認してください。{alt.timesValid ? `所要時間・本数は${alt.checkedAt.slice(5).replace('-', '/')}時点の時刻表によります。` : '冬ダイヤへの切り替え後のため、所要時間・本数は各社の時刻表で確認してください。'}</p>
     </div>;
     return <section aria-labelledby="alt-title" className="mt-8">
         {open ? <><h2 id="alt-title" className="mb-3 text-lg font-bold">代わりの移動手段・待つ場所</h2>{body}</>

@@ -18,6 +18,8 @@ const span = (m: number) => m < 60 ? `${m}分` : m % 60 === 0 ? `${m / 60}時間
 
 export function advise(input: {
     disrupted: boolean; recovery: RecoveryView | null; risk: RiskLevel;
+    /** JRの公式情報を確認できているか(false なら「情報なし」と言い切らない) */
+    officialKnown?: boolean;
     /** 現在の時 (JST, 0-23) */
     hour: number;
     /** この時刻までに着きたい(あと何分)。指定なしは null */
@@ -33,6 +35,8 @@ export function advise(input: {
             message: '天候による運休・遅れが起きやすい条件です。早めの列車に変える、予定をずらす、代わりの手段を先に調べておくと安心です。' };
         if (risk === 'watch') return { action: 'check-again', emphasize: [],
             title: '出発前にもう一度確認', message: '今のところ動く見込みですが、天候が変わるかもしれません。家や建物を出る前にもう一度確認してください。' };
+        if (input.officialKnown === false) return { action: 'check-again', emphasize: [],
+            title: '出発前にJRの情報を確認', message: 'JRの運行情報をいま確認できていません。天候のリスクは別に示していますが、出発前にJR公式の情報を確認してください。' };
         if (risk === 'unknown') return { action: 'check-again', emphasize: [],
             title: '出発前にJRの情報を確認', message: '気象データが揃わず、リスクを判断できません。JRの運行情報を確認してから出発してください。' };
         return { action: 'go', emphasize: [], title: 'そのまま出発して大丈夫そうです', message: '運休・遅れの情報はなく、天候のリスクも低めです。' };
