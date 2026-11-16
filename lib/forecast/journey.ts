@@ -1,4 +1,4 @@
-import { HOKKAIDO_ROUTES, HOKKAIDO_STATIONS, getStationById, getJRStatusUrl } from '@/lib/hokkaido-data';
+import { HOKKAIDO_ROUTES, getStationById, getJRStatusUrl } from '@/lib/hokkaido-data';
 import { fetchWeatherSeries, getRouteAllCoordinates } from '@/lib/weather';
 import { fetchJRHokkaidoStatus, type JROperationStatus } from '@/lib/jr-status';
 import { assessWeather, withCurrentWarnings } from './risk';
@@ -12,24 +12,8 @@ import { loadRecoveryEvidence } from './recovery-store';
 import { winterCaseReferences } from './historical';
 import type { JourneyForecast, PointForecast, WeatherPoint } from './types';
 
-/** Route connectivity from shared stations, never silently choosing the arrival line. */
-export function journeyRouteIds(departureId: string, arrivalId: string): string[] | null {
-    const departure = getStationById(departureId), arrival = getStationById(arrivalId);
-    if (!departure || !arrival || departureId === arrivalId) return null;
-    const queue = departure.lines.map(line => [line]);
-    const seen = new Set(departure.lines);
-    while (queue.length) {
-        const path = queue.shift()!;
-        const line = path[path.length - 1];
-        if (arrival.lines.includes(line)) return path;
-        for (const station of HOKKAIDO_STATIONS.filter(s => s.lines.includes(line))) {
-            for (const next of station.lines) if (!seen.has(next)) {
-                seen.add(next); queue.push([...path, next]);
-            }
-        }
-    }
-    return null;
-}
+export { journeyRouteIds } from '@/lib/registry/journey-lines';
+import { journeyRouteIds } from '@/lib/registry/journey-lines';
 
 let officialCache: { expires: number; value: Promise<JROperationStatus[] | null> } | null = null;
 async function officialSnapshot(): Promise<JROperationStatus[] | null> {

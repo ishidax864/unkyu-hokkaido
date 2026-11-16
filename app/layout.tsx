@@ -135,14 +135,15 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#007849" },
-    { media: "(prefers-color-scheme: dark)", color: "#007849" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1410" },
   ],
   colorScheme: "light dark",
 };
 
 import { GoogleAnalytics } from '@next/third-parties/google'; //
 import { SiteFooter } from '@/components/site-footer';
+import { SiteHeader } from '@/components/site-header';
 import { ToastProvider } from '@/components/toast';
 import { LanguageProvider } from '@/lib/i18n';
 import dynamic from 'next/dynamic';
@@ -169,7 +170,9 @@ export default function RootLayout({
         />
         <LanguageProvider>
           <ToastProvider>
+            <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:font-bold">本文へスキップ</a>
             <div className="flex flex-col min-h-screen">
+              <SiteHeader />
               <div className="flex-grow">
                 {children}
               </div>

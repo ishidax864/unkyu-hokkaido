@@ -225,49 +225,86 @@ export function generateWarningsFromHourly(
 
 export interface WeatherSeries { hours: WeatherForecast[]; fetchedAt: string }
 const seriesCache = new Map<string, { expires: number; value: Promise<WeatherSeries> }>();
+const SERIES_TTL_MS = 900_000;
+const HOURLY_VARS = 'temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl';
+const seriesKey = (p: { lat: number; lon: number }) => `${p.lat},${p.lon}:${japanDate()}`;
+
+/** Open-Meteo の hourly を WeatherForecast[] に。欠損・負値の時刻は捨てる(晴れ扱いにしない)。 */
+export function seriesFromHourly(h: OpenMeteoHourlyResponse['hourly'] | undefined): WeatherForecast[] {
+    if (!h || !Array.isArray(h.time)) throw new Error('Invalid weather response');
+    const hours: WeatherForecast[] = [];
+    h.time.forEach((time, i) => {
+        const required = [h.temperature_2m?.[i], h.precipitation?.[i], h.wind_speed_10m?.[i],
+            h.wind_gusts_10m?.[i], h.snowfall?.[i], h.snow_depth?.[i], h.weather_code?.[i]];
+        if (!required.every(v => typeof v === 'number' && Number.isFinite(v))) return;
+        if ([h.precipitation[i], h.wind_speed_10m[i], h.wind_gusts_10m[i], h.snowfall![i], h.snow_depth[i]].some(v => v < 0)) return;
+        hours.push({
+            date: time.split('T')[0], targetTime: time.split('T')[1].slice(0, 5),
+            weather: getWeatherName(h.weather_code[i]), weatherCode: h.weather_code[i],
+            temperature: h.temperature_2m[i], tempMax: h.temperature_2m[i], tempMin: h.temperature_2m[i],
+            precipitation: h.precipitation[i], windSpeed: h.wind_speed_10m[i],
+            windGust: h.wind_gusts_10m[i], snowfall: h.snowfall![i], snowDepth: h.snow_depth[i],
+            snowDepthChange: i > 0 && Number.isFinite(h.snow_depth[i-1]) ? (h.snow_depth[i] - h.snow_depth[i-1]) * 100 : undefined,
+            windDirection: h.winddirection_10m?.[i], pressure: h.pressure_msl?.[i], warnings: [],
+        });
+    });
+    if (!hours.length) throw new Error('Weather response contains no usable hours');
+    return hours;
+}
 
 /** One seven-day hourly fetch serves the selected time, timeline and week.
  * Units: wind m/s, snowfall cm/hour, snow depth metres, precipitation mm/hour.
  * Missing values are omitted, never coerced to fair weather. */
 export async function fetchWeatherSeries(coordinates: { lat: number; lon: number }): Promise<WeatherSeries> {
     const { lat, lon } = coordinates;
-    const key = `${lat},${lon}:${japanDate()}`;
+    const key = seriesKey(coordinates);
     const cached = seriesCache.get(key);
     if (cached && cached.expires > Date.now()) return cached.value;
     const value = (async () => {
         const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-            '&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl' +
-            '&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1',
+            `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`,
             { cache: 'no-store', signal: AbortSignal.timeout(8000) } // own 15-min cache; Next's stale-while-revalidate once served a month-old forecast
         );
         if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
         const data: OpenMeteoHourlyResponse = await response.json();
-        if (!Array.isArray(data.hourly?.time)) throw new Error('Invalid weather response');
-        const h = data.hourly;
-        const hours: WeatherForecast[] = [];
-        h.time.forEach((time, i) => {
-            const required = [h.temperature_2m?.[i], h.precipitation?.[i], h.wind_speed_10m?.[i],
-                h.wind_gusts_10m?.[i], h.snowfall?.[i], h.snow_depth?.[i], h.weather_code?.[i]];
-            if (!required.every(v => typeof v === 'number' && Number.isFinite(v))) return;
-            if ([h.precipitation[i], h.wind_speed_10m[i], h.wind_gusts_10m[i], h.snowfall![i], h.snow_depth[i]].some(v => v < 0)) return;
-            hours.push({
-                date: time.split('T')[0], targetTime: time.split('T')[1].slice(0, 5),
-                weather: getWeatherName(h.weather_code[i]), weatherCode: h.weather_code[i],
-                temperature: h.temperature_2m[i], tempMax: h.temperature_2m[i], tempMin: h.temperature_2m[i],
-                precipitation: h.precipitation[i], windSpeed: h.wind_speed_10m[i],
-                windGust: h.wind_gusts_10m[i], snowfall: h.snowfall![i], snowDepth: h.snow_depth[i],
-                snowDepthChange: i > 0 && Number.isFinite(h.snow_depth[i-1]) ? (h.snow_depth[i] - h.snow_depth[i-1]) * 100 : undefined,
-                windDirection: h.winddirection_10m?.[i], pressure: h.pressure_msl?.[i], warnings: [],
-            });
-        });
-        if (!hours.length) throw new Error('Weather response contains no usable hours');
-        return { hours, fetchedAt: new Date().toISOString() };
+        return { hours: seriesFromHourly(data.hourly), fetchedAt: new Date().toISOString() };
     })();
-    if (seriesCache.size >= 100) seriesCache.delete(seriesCache.keys().next().value!);
-    seriesCache.set(key, { expires: Date.now() + 900_000, value });
+    if (seriesCache.size >= 200) seriesCache.delete(seriesCache.keys().next().value!);
+    seriesCache.set(key, { expires: Date.now() + SERIES_TTL_MS, value });
     try { return await value; }
     catch (error) { seriesCache.delete(key); throw error; }
+}
+
+/**
+ * 複数地点を1回のリクエストでまとめて取得し、地点ごとのキャッシュに入れる。
+ * 共有IPからの並列リクエストはレート制限に当たりやすいため、全路線ボードはこれを使う。
+ * 戻り値は入力と同じ順。取れなかった地点は Error。
+ */
+export async function fetchWeatherSeriesBatch(points: { lat: number; lon: number }[], fetchImpl: typeof fetch = fetch): Promise<(WeatherSeries | Error)[]> {
+    const missing = points.filter(p => { const c = seriesCache.get(seriesKey(p)); return !c || c.expires <= Date.now(); });
+    const unique = missing.filter((p, i) => missing.findIndex(q => q.lat === p.lat && q.lon === p.lon) === i);
+    if (unique.length) {
+        const batch = (async () => {
+            const response = await fetchImpl(
+                `https://api.open-meteo.com/v1/forecast?latitude=${unique.map(p => p.lat).join(',')}&longitude=${unique.map(p => p.lon).join(',')}` +
+                `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`,
+                { cache: 'no-store', signal: AbortSignal.timeout(12000) });
+            if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
+            const data = await response.json() as OpenMeteoHourlyResponse | OpenMeteoHourlyResponse[];
+            const list = Array.isArray(data) ? data : [data];
+            if (list.length !== unique.length) throw new Error('Weather response location count mismatch');
+            return list;
+        })();
+        const fetchedAt = new Date().toISOString();
+        unique.forEach((p, i) => {
+            const value = batch.then(list => ({ hours: seriesFromHourly(list[i].hourly), fetchedAt }));
+            value.catch(() => seriesCache.delete(seriesKey(p)));
+            seriesCache.set(seriesKey(p), { expires: Date.now() + SERIES_TTL_MS, value });
+        });
+    }
+    return Promise.all(points.map(p => (seriesCache.get(seriesKey(p))?.value ?? fetchWeatherSeries(p))
+        .catch((e: unknown) => e instanceof Error ? e : new Error(String(e)))));
 }
 
 export async function fetchHourlyWeatherForecast(

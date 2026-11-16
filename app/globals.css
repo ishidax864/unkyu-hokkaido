@@ -1,341 +1,179 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-  --font-en: var(--font-inter), sans-serif;
-}
-
+/*
+ * 運休北海道 デザイントークン(唯一の定義)
+ * - 主色は独自のグリーン(JR北海道の色・ロゴは使わない)
+ * - 状態色は意味ごと。色だけで伝えず、必ずアイコンと文字を添える
+ * - 文字は本文16px、最小14px。ダークモードは prefers-color-scheme に従う
+ */
 :root {
-  /* ── P2-1: JR北海道ブランドカラーパレット ── */
-  --background: #ffffff;
-  --background-secondary: #f5f7f6;
-  /* 微かにグリーンを帯びた白 */
-  --foreground: #1a1a1a;
+  --surface: #ffffff;
+  --surface-2: #f3f6f4;
+  --surface-3: #e7ede9;
+  --ink: #0e1913;
+  --ink-2: #374740;
+  --ink-3: #5d6b64;
+  --line: #d7e0db;
 
-  --card: #ffffff;
-  --card-foreground: #1a1a1a;
+  --brand: #0a7f56;
+  --brand-strong: #075f40;
+  --brand-soft: #e3f3eb;
+  --on-brand: #ffffff;
 
-  /* JR Hokkaido Green — 公式ブランド */
-  --primary: #007849;
-  --primary-light: #e6f4ed;
-  /* プライマリの薄い背景 */
-  --primary-foreground: #ffffff;
+  --ok: #0d7343;
+  --ok-soft: #e2f4ea;
+  --watch: #835600;
+  --watch-soft: #fff1c9;
+  --high: #ad3d0b;
+  --high-soft: #ffe7d8;
+  --stop: #b0241a;
+  --stop-soft: #fde6e4;
+  --unknown: #4a5560;
+  --unknown-soft: #edf0f3;
 
-  --secondary: #e8eef3;
-  --secondary-foreground: #1a1a1a;
-
-  /* WCAG AA compliant muted tones */
-  --muted: #525a66;
-  --muted-foreground: #6b7280;
-
-  /* JR北海道のアクセントカラー（信号系） */
-  --accent: #0066cc;
-  --accent-foreground: #ffffff;
-
-  /* 信号カラー — JR路線図ベース */
-  --status-normal: #007849;
-  /* JRグリーン */
-  --status-caution: #e89b00;
-  /* 暖かみのあるアンバー */
-  --status-warning: #e06020;
-  /* JRオレンジ */
-  --status-suspended: #c82333;
-  /* JRレッド */
-
-  /* ブランド派生カラー（Tailwindデフォルト置き換え用） */
-  --brand-green-50: #e6f4ed;
-  --brand-green-100: #c1eacd;
-  --brand-green-600: #007849;
-  --brand-orange-50: #fef3e6;
-  --brand-orange-600: #e06020;
-  --brand-red-50: #fde8ea;
-  --brand-red-600: #c82333;
-  --brand-blue-50: #e6f0fa;
-  --brand-blue-600: #0066cc;
-  --brand-yellow-50: #fef9e6;
-  --brand-yellow-600: #e89b00;
-
-  --border: #e2e8f0;
-  --input: #f8fafc;
-  --ring: #007849;
-
-  --radius: 0.75rem;
-
-  /* ── P2-5: タイポグラフィスケール ── */
-  --text-hero: 1.5rem;
-  /* 24px — ページ見出し */
-  --text-heading: 1.125rem;
-  /* 18px — セクション見出し */
-  --text-subheading: 0.9375rem;
-  /* 15px — カードタイトル */
-  --text-body: 0.875rem;
-  /* 14px — 本文 */
-  --text-caption: 0.75rem;
-  /* 12px — キャプション */
-  --text-footnote: 0.6875rem;
-  /* 11px — 最小テキスト */
+  --focus: #1b66d2;
+  --shadow: 0 1px 2px rgb(14 25 19 / 0.06), 0 4px 16px rgb(14 25 19 / 0.06);
+  color-scheme: light;
 }
 
-/* ── P2-2: ダークモード ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f1114;
-    --background-secondary: #1a1d21;
-    --foreground: #e8eaed;
+    --surface: #0d1410;
+    --surface-2: #141d18;
+    --surface-3: #1c2721;
+    --ink: #e8f0eb;
+    --ink-2: #bdccc4;
+    --ink-3: #8e9f96;
+    --line: #27352d;
 
-    --card: #1e2127;
-    --card-foreground: #e8eaed;
+    --brand: #3cc791;
+    --brand-strong: #6ad8ab;
+    --brand-soft: #12291e;
+    --on-brand: #04130c;
 
-    --primary: #2ecc71;
-    /* 暗い背景でも映えるグリーン */
-    --primary-light: #1a3a2a;
-    --primary-foreground: #0f1114;
+    --ok: #5fd49c;
+    --ok-soft: #10281b;
+    --watch: #f0c04b;
+    --watch-soft: #2b2310;
+    --high: #ff9b5e;
+    --high-soft: #301b10;
+    --stop: #ff7e74;
+    --stop-soft: #321513;
+    --unknown: #a9b4be;
+    --unknown-soft: #1e252b;
 
-    --secondary: #2a2e35;
-    --secondary-foreground: #e8eaed;
-
-    --muted: #9ca3af;
-    --muted-foreground: #6b7280;
-
-    --accent: #4da6ff;
-    --accent-foreground: #0f1114;
-
-    --status-normal: #2ecc71;
-    --status-caution: #f5c542;
-    --status-warning: #ff8c42;
-    --status-suspended: #ff5252;
-
-    --brand-green-50: #1a3a2a;
-    --brand-green-100: #1e4d35;
-    --brand-green-600: #2ecc71;
-    --brand-orange-50: #3a2a1a;
-    --brand-orange-600: #ff8c42;
-    --brand-red-50: #3a1a1e;
-    --brand-red-600: #ff5252;
-    --brand-blue-50: #1a2a3a;
-    --brand-blue-600: #4da6ff;
-    --brand-yellow-50: #3a351a;
-    --brand-yellow-600: #f5c542;
-
-    --border: #2a2e35;
-    --input: #1e2127;
-    --ring: #2ecc71;
+    --focus: #6aa6ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    color-scheme: dark;
   }
 }
 
+@theme inline {
+  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, system-ui, sans-serif;
+  --font-num: var(--font-inter), var(--font-noto-sans-jp), system-ui, sans-serif;
+
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-watch: var(--watch);
+  --color-watch-soft: var(--watch-soft);
+  --color-high: var(--high);
+  --color-high-soft: var(--high-soft);
+  --color-stop: var(--stop);
+  --color-stop-soft: var(--stop-soft);
+  --color-unknown: var(--unknown);
+  --color-unknown-soft: var(--unknown-soft);
+  --color-focus: var(--focus);
+  --shadow-card: var(--shadow);
+}
+
+html { -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
-
-/* Card Styles - Clean and Functional */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.tabular { font-variant-numeric: tabular-nums; font-family: var(--font-num); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
 
-.card-elevated {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+/* ── 作り直し前のページ(法務・管理など)向けの互換レイヤー。段階7で各ページを新トークンに移したら削除する ── */
+:root {
+  --background: var(--surface);
+  --background-secondary: var(--surface-2);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-light: var(--brand-soft);
+  --primary-foreground: var(--on-brand);
+  --secondary: var(--surface-3);
+  --secondary-foreground: var(--ink);
+  --muted: var(--ink-3);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--focus);
+  --accent-foreground: #ffffff;
+  --status-normal: var(--ok);
+  --status-caution: var(--watch);
+  --status-warning: var(--high);
+  --status-suspended: var(--stop);
+  --brand-green-50: var(--ok-soft);
+  --brand-green-100: var(--ok-soft);
+  --brand-green-600: var(--ok);
+  --brand-orange-50: var(--high-soft);
+  --brand-orange-600: var(--high);
+  --brand-red-50: var(--stop-soft);
+  --brand-red-600: var(--stop);
+  --brand-blue-50: var(--surface-3);
+  --brand-blue-600: var(--focus);
+  --brand-yellow-50: var(--watch-soft);
+  --brand-yellow-600: var(--watch);
+  --border: var(--line);
+  --input: var(--surface);
+  --ring: var(--brand);
+  --radius: 0.75rem;
+  --text-hero: 1.5rem;
+  --text-heading: 1.125rem;
+  --text-subheading: 1rem;
+  --text-body: 0.9375rem;
+  --text-caption: 0.875rem;
+  --text-footnote: 0.875rem;
 }
-
-/* Status Badge Styles */
-.status-normal {
-  background: var(--brand-green-50);
-  color: var(--status-normal);
-  border: 1px solid var(--brand-green-100);
-}
-
-.status-warning {
-  background: var(--brand-orange-50);
-  color: var(--status-warning);
-  border: 1px solid var(--brand-orange-600);
-}
-
-.status-suspended {
-  background: var(--brand-red-50);
-  color: var(--status-suspended);
-  border: 1px solid var(--brand-red-600);
-}
-
-/* Button Styles */
-.btn-primary {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-weight: 600;
-  border-radius: 0.625rem;
-  transition: background-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 1px 3px 0 rgba(0, 120, 73, 0.15);
-}
-
-.btn-primary:hover {
-  opacity: 0.92;
-  box-shadow: 0 2px 6px 0 rgba(0, 120, 73, 0.2);
-}
-
-.btn-primary:disabled {
-  background: var(--primary);
-  cursor: not-allowed;
-  opacity: 0.35;
-  box-shadow: none;
-}
-
-.btn-secondary {
-  background: var(--background-secondary);
-  color: var(--foreground);
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  transition: background-color 0.15s ease;
-}
-
-.btn-secondary:hover {
-  background: var(--border);
-}
-
-/* Input Styles */
-.input-field {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 0.625rem;
-  color: var(--foreground);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.input-field:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 120, 73, 0.1);
-}
-
-/* ── P2-5: タイポグラフィ階層 ── */
-.section-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--foreground);
-  margin-bottom: 0.375rem;
-  letter-spacing: -0.01em;
-}
-
-.text-hero {
-  font-size: var(--text-hero);
-}
-
-.text-heading {
-  font-size: var(--text-heading);
-}
-
-.text-subheading {
-  font-size: var(--text-subheading);
-}
-
-.text-body {
-  font-size: var(--text-body);
-}
-
-.text-caption {
-  font-size: var(--text-caption);
-}
-
-.text-footnote {
-  font-size: var(--text-footnote);
-}
-
-/* Route Color Bar */
-.route-color-bar {
-  width: 4px;
-  border-radius: 2px;
-}
-
-/* Utilities */
-.text-balance {
-  text-wrap: balance;
-}
-
-/* ─── P2-6: フッター余白統一 ─── */
-footer {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-/* ─── Accessibility ─── */
-
-/* Focus-visible for keyboard navigation */
-*:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Minimum touch target size (44×44 WCAG 2.5.5) */
-button,
-a,
-[role="button"] {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-/* Except inline text links and tiny badges */
-.text-xs a,
-.text-sm a,
-span a,
-.inline-flex,
-[data-compact] {
-  min-height: unset;
-  min-width: unset;
-}
-
-/* Animations (framer-motion replacement) */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes shimmer {
-
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Hide scrollbar for horizontal scroll containers */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.card-elevated { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.status-normal { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); }
+.status-warning { background: var(--high-soft); color: var(--high); border: 1px solid var(--high); }
+.status-suspended { background: var(--stop-soft); color: var(--stop); border: 1px solid var(--stop); }
+.btn-primary { background: var(--brand); color: var(--on-brand); font-weight: 700; border-radius: 0.625rem; }
+.btn-primary:hover { background: var(--brand-strong); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary { background: var(--surface-2); color: var(--ink); font-weight: 500; border: 1px solid var(--line); border-radius: 0.5rem; }
+.input-field { background: var(--surface); border: 1px solid var(--line); border-radius: 0.625rem; color: var(--ink); }
+.input-field:focus { outline: none; border-color: var(--brand); }
+.section-label { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 0.375rem; }
+.text-hero { font-size: var(--text-hero); }
+.text-heading { font-size: var(--text-heading); }
+.text-subheading { font-size: var(--text-subheading); }
+.text-body { font-size: var(--text-body); }
+.text-caption { font-size: var(--text-caption); }
+.text-footnote { font-size: var(--text-footnote); }
+.route-color-bar { width: 4px; border-radius: 2px; }
+.text-balance { text-wrap: balance; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
