@@ -1,0 +1,927 @@
+{
+ "researchedAt": "2026-11-17",
+ "coverageNote": "2021-12-01〜2022-03-31 と 2022-12-01〜2023-03-31 の札幌圏JR北海道の気象起因運休。確実なのは JR北海道公式『2022年2月札幌圏大雪 最終報告』(2/6-13, 2/20-27の日別本数)と『12/22低気圧影響』報告(道東・道北のみ)。その他は新聞・ニュースサイト・地域ブログ。公式PDFは本文テキストを抽出して読んだ。引用はWebFetchの要約出力由来で原文と微差の可能性あり、[要約]付きは逐語ではない。未発見: 2021-12月(札幌圏の大雪運休記事を開けず。存在しないとは限らない)、2022-01-01〜01-11・01-15〜31、2022-03月、2022-12-01〜21と12/27〜31の札幌圏、2023-01-05〜09・01-11〜24・01-27〜31、2023-02-03〜03-31。検索結果には2025-26冬の道新記事が混在するため年不明記事は全て不採用。毎週土曜夜の除雪計画運休(2023-01-07〜02-26)は定常運用のため除外。2022-02-05の6日15%間引き予告、2023-01-31の300本超の報、2022-01-14夜の札幌駅21時以降全列車運休は未開封のため未収録。onsetDatesは札幌圏のみ(2022-02-20は前日の予防運休で本格運休は2/21)。2022-12-22〜26は道東・道北のみで sapporoArea=false。",
+ "onsetDates": [
+  "2022-01-12",
+  "2022-02-06",
+  "2022-02-20",
+  "2023-01-03",
+  "2023-01-10",
+  "2023-01-25",
+  "2023-02-01"
+ ],
+ "events": [
+  {
+   "date": "2022-01-12",
+   "lines": [
+    "千歳線",
+    "石勝線",
+    "根室線",
+    "特急(北斗・おおぞら・カムイ・ライラック等)"
+   ],
+   "section": "千歳線 札幌〜新千歳空港・苫小牧 終日 / 石勝線 南千歳〜新夕張 / 根室線 富良野〜釧路 / 釧網線",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/114420",
+     "title": "雪の「量と重さ」が異常事態 終日運休の千歳線",
+     "publisher": "乗りものニュース",
+     "quote": "終日運休の千歳線"
+    },
+    {
+     "url": "https://ebetsunopporo.com/?p=28736",
+     "title": "2022年1月12日 大雪の影響でJR運休、空の便欠航…",
+     "publisher": "江別の情報サイト",
+     "quote": "大雪の影響によりJR北海道の各路線に運休"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "湿った重い雪で排雪難航。同サイトは運休320本(当該時点)と記載、全日本数は未確認(動画見出しの635本は未開封のため不採用)。"
+  },
+  {
+   "date": "2022-01-13",
+   "lines": [
+    "石勝線",
+    "室蘭本線",
+    "宗谷線"
+   ],
+   "section": "石勝線 南千歳〜新夕張 始発〜17時頃(普通のみ) / 室蘭本線 岩見沢〜苫小牧 〜15時頃 / 宗谷線 一部終日",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/114420",
+     "title": "雪の「量と重さ」が異常事態 終日運休の千歳線",
+     "publisher": "乗りものニュース",
+     "quote": "13日の運休予定(石勝線・室蘭線・宗谷線)"
+    },
+    {
+     "url": "https://ebetsunopporo.com/?p=28774",
+     "title": "14日 北海道大雪の影響でJR各線517本運休…",
+     "publisher": "江別の情報サイト",
+     "quote": "13日 176本(見出し数字のみ)"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "1/12記事の13日予定のみ。札幌圏主要線(函館線・千歳線)の13日の状況は未確認。176本は同サイトの記載で文脈が曖昧。"
+  },
+  {
+   "date": "2022-01-14",
+   "lines": [
+    "函館線",
+    "石北線",
+    "富良野線"
+   ],
+   "section": "函館線 岩見沢〜旭川 終日 / 函館線 札幌〜江別・岩見沢〜江別〜小樽 早朝から多数運休 / 石北線 新旭川〜遠軽 / 富良野線",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": "早朝",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 517,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://ebetsunopporo.com/?p=28774",
+     "title": "14日 北海道大雪の影響でJR各線517本運休…",
+     "publisher": "江別の情報サイト",
+     "quote": "JR北海道の各路線で517本が運休"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "517本は正午時点の道内全体。札幌駅発21時以降全列車運休の報(動画見出し)は未開封のため不採用。"
+  },
+  {
+   "date": "2022-02-06",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏 始発から間引き→ポイント不転換多発→12時札幌駅発着終日運休決定",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "始発(間引き)",
+   "resumedTime": "12:00(札幌駅発着終日運休決定)",
+   "resumedDate": null,
+   "trainsCancelled": 661,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "札幌圏を発着する列車が6日～13日までのべ3,525本が運休"
+    },
+    {
+     "url": "https://tabiris.com/archives/sapporo-gosetsu2022/",
+     "title": "札幌圏大雪 JR北海道 運休",
+     "publisher": "tabiris",
+     "quote": "29編成が留まった"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "運休本数661は報告書の日別表(6日)。6日朝からの急速な降雪(10cm/h)で29本が運行不能。"
+  },
+  {
+   "date": "2022-02-07",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 728,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "札幌駅を発着する列車を終日運休"
+    },
+    {
+     "url": "https://trafficnews.jp/post/115252",
+     "title": "除雪作業追い付かず 札幌圏JRあす8日も始発から運休",
+     "publisher": "乗りものニュース",
+     "quote": "運転再開の見込みが立っている路線はありません"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "札幌駅発着全列車終日運転見合わせ。再開見込みなし(乗りものニュース)。"
+  },
+  {
+   "date": "2022-02-08",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 724,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "８日札幌駅を発着する列車を終日運休"
+    },
+    {
+     "url": "https://trafficnews.jp/post/115252",
+     "title": "除雪作業追い付かず 札幌圏JRあす8日も始発から運休",
+     "publisher": "乗りものニュース",
+     "quote": "運転再開の見込みが立っている路線はありません"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "夜(19時目途)に小樽〜札幌〜空港が大幅減便で再開計画。"
+  },
+  {
+   "date": "2022-02-09",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 634,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "９日札幌駅を発着する全特急列車は終日運転見合わせ"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6296264970001/",
+     "title": "9日も札幌駅発着の全特急と学園都市線を運休 JR北海道",
+     "publisher": "北海道新聞",
+     "quote": "9日も札幌駅発着の全特急と学園都市線を運休"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6296497537001/",
+     "title": "札幌―岩見沢間の運行が再開 JR北海道",
+     "publisher": "北海道新聞",
+     "quote": "札幌―岩見沢間の運行が再開"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "特急全108本と学園都市線は終日運休。函館線・千歳線は大幅減便で再開、札幌〜岩見沢は18時頃再開。"
+  },
+  {
+   "date": "2022-02-10",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 442,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "10日函館線･千歳線は４～５割程度の運転"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "函館線・千歳線は4〜5割運転、学園都市線は札幌〜あいの里公園のみ18時再開。"
+  },
+  {
+   "date": "2022-02-11",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 243,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "11日朝より学園都市線は全線運転再開"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "特急はカムイ・ライラック3割等、札幌圏4〜5割運転。"
+  },
+  {
+   "date": "2022-02-12",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 78,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "運休本数 78本"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "残存の間引き。"
+  },
+  {
+   "date": "2022-02-13",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 15,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "13日よりほぼ所定運転"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "残存の間引き(15本)。"
+  },
+  {
+   "date": "2022-02-20",
+   "lines": [
+    "札幌圏(函館線・千歳線等)"
+   ],
+   "section": "石狩地方の暴風雪警報を受けた前日の運休・間引き",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 232,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOUF211300R20C22A2000000/",
+     "title": "JR北海道、札幌駅発着列車を終日運休 暴風雪受け",
+     "publisher": "日本経済新聞",
+     "quote": "札幌駅発着列車を終日運休"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "日経2/21記事に『20日に232本を運休』。報告書も運休集計を20日から開始(のべ3,791本は20〜27日)。"
+  },
+  {
+   "date": "2022-02-21",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 1097,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "札幌圏は始発から全面運休を決定"
+    },
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOUF211300R20C22A2000000/",
+     "title": "JR北海道、札幌駅発着列車を終日運休 暴風雪受け",
+     "publisher": "日本経済新聞",
+     "quote": "札幌駅発着列車を終日運休"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "爆弾低気圧。始発から終日。日経は14:45時点1,096本と記載。"
+  },
+  {
+   "date": "2022-02-22",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 977,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "22日始発から運転見合わせ"
+    },
+    {
+     "url": "https://trafficnews.jp/post/115785",
+     "title": "暴風雪 JR線は22日も始発から運休多数 札幌発着の特急は終日",
+     "publisher": "乗りものニュース",
+     "quote": "札幌発着の特急は全て終日運休"
+    },
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6298438639001/",
+     "title": "北海道内また大雪 札幌市電が渋滞、車の立ち往生も続発 JR950本運休",
+     "publisher": "北海道新聞",
+     "quote": "JR950本運休"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "札幌発着特急は終日運休。千歳線は夕方以降再開できず、23日午後以降に持越し。"
+  },
+  {
+   "date": "2022-02-23",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 860,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "23日午後以降運転再開"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "千歳線(空港)は夜まで見合わせ、新千歳空港に約7,000人滞留。"
+  },
+  {
+   "date": "2022-02-24",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 380,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "運休本数 380本"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "運転再開後の間引き。"
+  },
+  {
+   "date": "2022-02-25",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 167,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "運休本数 167本"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "残存の間引き。"
+  },
+  {
+   "date": "2022-02-26",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 60,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "運休本数 60本"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "残存の間引き。"
+  },
+  {
+   "date": "2022-02-27",
+   "lines": [
+    "函館線(小樽〜札幌〜岩見沢)",
+    "千歳線(札幌〜新千歳空港・苫小牧)",
+    "学園都市線",
+    "特急(札幌駅発着)"
+   ],
+   "section": "札幌圏(札幌駅発着)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 18,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/20220608_KO_Snow.pdf",
+     "title": "2022年2月 札幌圏大雪による大規模輸送障害の検証と改善策(最終報告)",
+     "publisher": "JR北海道",
+     "quote": "運休本数 18本"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "残存の間引き。28日から通常運転。"
+  },
+  {
+   "date": "2022-12-22",
+   "lines": [
+    "根室線",
+    "石北線"
+   ],
+   "section": "根室線 富良野〜釧路 / 石北線 白滝〜北見 見合わせ(夕方から計画運休)",
+   "kind": "planned-suspension",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "夕方",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 51,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/221226_KO_heavy_snow_lecture.pdf",
+     "title": "12月22日からの発達した低気圧による影響について",
+     "publisher": "JR北海道",
+     "quote": "22日の夕方から道東・道北方面の列車から計画的に運休"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "低気圧による湿った重い雪。道東・道北が対象で札幌圏への言及は報告書になし。"
+  },
+  {
+   "date": "2022-12-23",
+   "lines": [
+    "根室線",
+    "石北線",
+    "宗谷線",
+    "釧網線",
+    "石勝線"
+   ],
+   "section": "石勝線 新夕張〜新得 / 根室線 滝川〜音別 / 宗谷線 名寄〜稚内 / 石北線 上川〜網走 / 釧網線",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 160,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/221226_KO_heavy_snow_lecture.pdf",
+     "title": "12月22日からの発達した低気圧による影響について",
+     "publisher": "JR北海道",
+     "quote": "22日の夕方から道東・道北方面の列車から計画的に運休"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "網走・稚内方面は前日から計画的に終日運休。"
+  },
+  {
+   "date": "2022-12-24",
+   "lines": [
+    "根室線",
+    "石北線",
+    "宗谷線",
+    "釧網線",
+    "石勝線"
+   ],
+   "section": "根室線 富良野〜新得 / 宗谷線 名寄〜稚内 / 石北線 上川〜北見 / 釧網線 川湯温泉〜網走",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 89,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/221226_KO_heavy_snow_lecture.pdf",
+     "title": "12月22日からの発達した低気圧による影響について",
+     "publisher": "JR北海道",
+     "quote": "22日の夕方から道東・道北方面の列車から計画的に運休"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "釧路方面は朝から再開。"
+  },
+  {
+   "date": "2022-12-25",
+   "lines": [
+    "根室線",
+    "石北線",
+    "宗谷線",
+    "釧網線",
+    "石勝線"
+   ],
+   "section": "宗谷線 名寄〜稚内 / 石北線 上川〜北見 / 釧網線 釧路〜網走",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 72,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/221226_KO_heavy_snow_lecture.pdf",
+     "title": "12月22日からの発達した低気圧による影響について",
+     "publisher": "JR北海道",
+     "quote": "22日の夕方から道東・道北方面の列車から計画的に運休"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "除雪・倒木で継続。"
+  },
+  {
+   "date": "2022-12-26",
+   "lines": [
+    "根室線",
+    "石北線",
+    "宗谷線",
+    "釧網線",
+    "石勝線"
+   ],
+   "section": "宗谷線 名寄〜稚内 / 石北線 上川〜北見 / 釧網線 釧路〜網走",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 70,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.jrhokkaido.co.jp/CM/Info/press/pdf/221226_KO_heavy_snow_lecture.pdf",
+     "title": "12月22日からの発達した低気圧による影響について",
+     "publisher": "JR北海道",
+     "quote": "22日の夕方から道東・道北方面の列車から計画的に運休"
+    }
+   ],
+   "sapporoArea": false,
+   "note": "報告書は26日までの記載。27日以降は未確認。"
+  },
+  {
+   "date": "2023-01-03",
+   "lines": [],
+   "section": "JR北海道(路線不明)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 123,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://ebetsunopporo.com/?p=36101",
+     "title": "【江別市】2023年1月3日 積雪50センチ超の大雪！",
+     "publisher": "江別の情報サイト",
+     "quote": "[要約]JR北海道123本運休(特急8本含む)"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "地域サイトの記載のみ。路線・時間帯は不明。"
+  },
+  {
+   "date": "2023-01-04",
+   "lines": [
+    "函館線"
+   ],
+   "section": "函館線 江別〜札幌 14時から列車なしとの読者報告(岩見沢〜江別方面もポイント不転換報)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 240,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://biz-journal.jp/company/post_332018.html",
+     "title": "なぜJR北海道は「雪に弱く」なった？",
+     "publisher": "ビジネスジャーナル",
+     "quote": "1月4日に240本前後の列車を運休、または部分運休"
+    },
+    {
+     "url": "https://ebetsunopporo.com/?p=36101",
+     "title": "【江別市】2023年1月3日 積雪50センチ超の大雪！",
+     "publisher": "江別の情報サイト",
+     "quote": "[要約]4日14時から江別〜札幌で列車なし"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "240本前後は道内全体。読者報告は2次情報。"
+  },
+  {
+   "date": "2023-01-10",
+   "lines": [
+    "函館線"
+   ],
+   "section": "函館線 小樽〜札幌(小樽駅の分岐器が雪で不転換)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 97,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://s-bi.com/wp_diary/kou/2023/01/12/post-75964.html",
+     "title": "ＪＲ北海道、除排雪強化策追いつかず",
+     "publisher": "s-bi(ブログ)",
+     "quote": "[要約]小樽駅の分岐器が雪で作動せず"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "約2万500人に影響とブログに記載。単一ブログ出典のため追加確認が望ましい。"
+  },
+  {
+   "date": "2023-01-25",
+   "lines": [],
+   "section": "JR北海道全道(路線不明)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 407,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6319231260112/",
+     "title": "北海道暴風雪、11人けが 踏切で車と列車が衝突 JR運休は今冬最多",
+     "publisher": "北海道新聞",
+     "quote": "JR運休は今冬最多"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "1日の運行本数の約3割。ページ記載は407本運休・部分運休のみで路線名なし。江別付近での列車立ち往生報道は未開封のため不採用。"
+  },
+  {
+   "date": "2023-01-26",
+   "lines": [],
+   "section": "JR北海道全道(路線不明)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 155,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6319231260112/",
+     "title": "北海道暴風雪、11人けが 踏切で車と列車が衝突 JR運休は今冬最多",
+     "publisher": "北海道新聞",
+     "quote": "26日も155本の運転を取りやめる"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "1/25夜時点の予定数。実績は未確認。"
+  },
+  {
+   "date": "2023-02-01",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "学園都市線",
+    "快速エアポート"
+   ],
+   "section": "札幌圏 1日20時以降発着の列車を運休(大規模間引きも)",
+   "kind": "planned-suspension",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "20:00頃",
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": 256,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOFC017GG0R00C23A2000000/",
+     "title": "JR北海道、2日の快速エアポート一部運休 降雪で",
+     "publisher": "日本経済新聞",
+     "quote": "札幌圏の列車を運休(2日始発〜11時頃)"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "16:20時点で256本(特急19・エアポート30)。"
+  },
+  {
+   "date": "2023-02-02",
+   "lines": [
+    "函館線",
+    "千歳線",
+    "学園都市線",
+    "快速エアポート",
+    "石北線",
+    "留萌線"
+   ],
+   "section": "千歳線 札幌〜千歳以南 〜10:00 / 函館線 札幌〜小樽 〜10:00・札幌〜岩見沢 〜11:00 / 学園都市線 〜11:00 / エアポート 〜9:30",
+   "kind": "planned-suspension",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": "始発",
+   "resumedTime": "11:00頃",
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOFC017GG0R00C23A2000000/",
+     "title": "JR北海道、2日の快速エアポート一部運休 降雪で",
+     "publisher": "日本経済新聞",
+     "quote": "札幌圏の列車を運休(2日始発〜11時頃)"
+    }
+   ],
+   "sapporoArea": true,
+   "note": "始発〜午前の計画運休。石北線(旭川〜網走)・留萌線は終日。"
+  }
+ ]
+}

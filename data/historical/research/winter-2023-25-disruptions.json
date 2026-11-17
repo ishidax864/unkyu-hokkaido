@@ -1,0 +1,215 @@
+{
+ "researchedAt": "2026-11-17",
+ "coverageNote": "対象: 2023-12-01〜2024-03-31 と 2024-12-01〜2025-03-31。WebSearchの検索エンジンは2026年冬の記事を優先して返し、2024-25年の旧記事(北海道新聞・UHB・HBC・HTB・STV・Yahoo!ニュースの多くは404/410/403)は本文を開けなかったため、開けた資料だけを出典にした。検索要約にあった以下の情報は本文未確認につき出典に使っていない: 2024-01-25の449本運休・26日225/254本・27日朝の再開(北海道新聞2024年1月の記事)、2024-12-16〜18の岩見沢の記録的大雪(積雪121cm、JR83〜119本運休)の本数、2024-12-16の最終列車繰り上げ。月別: 2023-12(留萌で12/17-18に75cm降雪、国交省資料が北海道の大荒れを記載するが、JR運休は検索で見つからず), 2024-02, 2024-03, 2025-01, 2025-03(3/17新千歳で大雪、航空は欠航だがJR運休記事は見つからず)は該当記事を発見できなかった。これは『運休なし』を意味するとは限らず、検索で見つからなかっただけの可能性が高い(特に2024-02〜03と2025-01〜03の札幌圏)。計画運休(土曜夜の普通列車3本、2024年は1/6,13,20,27,2/3,10,17,24、2025年は1/4,11,18,25,2/1,8,15,22)は除雪時間確保の恒常運用のため収録せず。2024-01-24〜26の函館線小樽〜ほしみ間の見合わせは直接の原因が高波(暴風雪を伴う低気圧による)で、気象起因として収録。2024-12-09(千歳駅停電)・12-16(ブレーキ故障)は気象起因でないため除外。2026年冬の記事と混同しやすいので注意(例: 315本運休=2026-01-31、210本=2026-02-02)。onsetDatesは確認できた開始日のみで網羅的ではない。",
+ "onsetDates": [
+  "2024-01-08",
+  "2024-01-24",
+  "2024-12-17"
+ ],
+ "events": [
+  {
+   "date": "2024-01-08",
+   "lines": [
+    "函館線",
+    "倶知安方面(函館線 小樽〜倶知安)"
+   ],
+   "section": "小樽・倶知安地区(降雪の除雪作業等で一部列車が運休・遅れ)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://otaru.gr.jp/tourist/2024-1-8ooyuki",
+     "title": "小樽市内大雪の影響で交通機関に運休や遅延が出ています(2024.1.8 9:00現在)",
+     "publisher": "小樽市観光協会(JR北海道の運行状況を転載)",
+     "quote": "降雪による除雪作業等の影響により、一部の列車に運休および遅れが出ています"
+    }
+   ],
+   "note": "9:00時点の速報のみ。具体的な区間・本数・終日か否かは不明。札幌圏(札幌〜岩見沢・千歳線)の状況はこの資料では確認できていない。札幌管区気象台の気象速報一覧に『令和6年1月7日から8日にかけての大雪』あり(気象事象の裏付けのみ、JR情報ではない)。",
+   "sapporoArea": true
+  },
+  {
+   "date": "2024-01-24",
+   "lines": [
+    "函館線"
+   ],
+   "section": "小樽築港〜銭函間(24日夜から高波が線路に到達、小樽〜ほしみ間で運転見合わせ)",
+   "kind": "stoppage",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6345528033112/",
+     "title": "JR北海道 小樽―ほしみ間終日運休 高波で線路の点検できず",
+     "publisher": "北海道新聞",
+     "quote": "線路の点検、復旧作業が行えない状況が続いている"
+    },
+    {
+     "url": "https://trafficnews.jp/post/130629",
+     "title": "時刻表に軒並み「×」 大雪でJR北海道も混乱 「車両不足」「施設点検すら難しい」 それでも運行は維持",
+     "publisher": "乗りものニュース",
+     "quote": "同区間では運休し、正午時点で25日中の運転再開の見込みが立っていません"
+    }
+   ],
+   "note": "原因は低気圧に伴う暴風雪・高波(24日夜から)。24日の具体的な見合わせ開始時刻・本数は取得できず。STV報道(札幌発最終列車の運休・夕方からの間引き)は検索要約で見ただけで本文を開けていないため出典に含めていない。",
+   "sapporoArea": true
+  },
+  {
+   "date": "2024-01-25",
+   "lines": [
+    "函館線",
+    "根室線",
+    "石北線",
+    "宗谷線",
+    "釧網線"
+   ],
+   "section": "函館線 小樽〜ほしみ 終日運休(高波)、札幌圏は小樽に取り残された8編成の車両不足で各方面運休/函館線 小樽〜長万部ほか道内各線で終日運休",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "high",
+   "sources": [
+    {
+     "url": "https://www.hokkaido-np.co.jp/movies/detail/6345528033112/",
+     "title": "JR北海道 小樽―ほしみ間終日運休 高波で線路の点検できず",
+     "publisher": "北海道新聞",
+     "quote": "運転再開のめどは立っていない"
+    },
+    {
+     "url": "https://trafficnews.jp/post/130629",
+     "title": "時刻表に軒並み「×」 大雪でJR北海道も混乱 「車両不足」「施設点検すら難しい」 それでも運行は維持",
+     "publisher": "乗りものニュース",
+     "quote": "札幌圏で使用する車両のうち8編成が小樽に取り残されており"
+    }
+   ],
+   "note": "全道の運休本数は開いた記事に記載なし(検索要約では449本等とあるが本文未確認のため数値は入れない)。札幌圏の運休は車両不足による二次的影響。快速エアポートへの影響は26日のNikkei記事で確認。",
+   "sapporoArea": true
+  },
+  {
+   "date": "2024-01-26",
+   "lines": [
+    "函館線",
+    "千歳線(快速エアポート)"
+   ],
+   "section": "函館線 小樽〜ほしみ 運転見合わせ継続、札幌圏(快速エアポート含む)朝夕中心に運休",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "blizzard",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://www.nikkei.com/article/DGXZQOFC264KT0W4A120C2000000/",
+     "title": "JR北海道「エアポート」など一部運休、27日も続く可能性",
+     "publisher": "日本経済新聞",
+     "quote": "27日朝以降になる"
+    }
+   ],
+   "note": "Nikkei(1/26 19:19付)は『小樽・小樽築港の車両を札幌方面に移せず、朝夕中心に快速エアポートなど札幌圏の一部列車が運休』『再開は27日朝以降の見通し』と報じる。実際の再開日時は開けた資料では未確認(北海道新聞の27日再開記事は取得不能)。運休本数は未確認。",
+   "sapporoArea": true
+  },
+  {
+   "date": "2024-12-17",
+   "lines": [
+    "函館線"
+   ],
+   "section": "札幌〜岩見沢方面(岩見沢駅構内の分岐器が雪で切替不能、最終列車繰り上げ等)",
+   "kind": "suspended",
+   "scale": "some-trains",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://news.yahoo.co.jp/expert/articles/e4ec4489c81e3ca917f289557ba5a8ae097ee532",
+     "title": "12月は「札幌―新千歳空港」もたびたび運休のJR 頼みの高速バスは札幌都心部から「1時間20分」(鉄道乗蔵)",
+     "publisher": "Yahoo!ニュース エキスパート(2024-12-20付)",
+     "quote": "大雪の影響でポイントが動かず岩見沢方面で運休"
+    },
+    {
+     "url": "https://weathernews.jp/s/topics/202412/170115/",
+     "title": "北海道や東北北部で大雪に 北海道岩見沢市で積雪110cmを超える",
+     "publisher": "ウェザーニュース(2024-12-17)",
+     "quote": "すでに鉄道の運休などが発生しています"
+    }
+   ],
+   "note": "引用はWebFetch要約が返した文言で原文との微差の可能性。本数は未確認(検索要約では83〜119本と報道ごとに差があるが原文は取得不能=410/404)。Yahooエキスパート記事はこの日の他の12/9(千歳駅停電)・12/16(ブレーキ故障)のエアポート運休を伝えるが、いずれも気象起因でないため除外。12/16に札幌発岩見沢行き最終繰り上げがあった旨の検索要約があるが本文未確認で未収録。",
+   "sapporoArea": true
+  },
+  {
+   "date": "2025-02-04",
+   "lines": [
+    "特急おおぞら",
+    "特急とかち",
+    "根室線",
+    "釧網線",
+    "花咲線"
+   ],
+   "section": "札幌〜釧路・札幌〜帯広の特急 終日運休 / 根室線 新得〜釧路 / 釧網線 知床斜里〜釧路 / 花咲線 根室〜釧路",
+   "kind": "suspended",
+   "scale": "all-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "medium",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/517696",
+     "title": "半日で1m超え… ドカ雪で特急「とかち」など終日運休に 道東の普通列車も影響",
+     "publisher": "乗りものニュース",
+     "quote": "ドカ雪で特急「とかち」など終日運休に"
+    }
+   ],
+   "note": "道東(帯広)の記録的大雪。札幌圏の運休は確認できていない(sapporoArea=false)。単一の開いた情報源。札幌管区気象台の2/3〜6大雪・暴風雪の気象速報あり(気象の裏付けのみ)。",
+   "sapporoArea": false
+  },
+  {
+   "date": "2025-02-05",
+   "lines": [
+    "特急おおぞら",
+    "特急とかち"
+   ],
+   "section": "札幌〜釧路・札幌〜帯広の特急(『少なくとも5日午前中まで運休の見込み』)",
+   "kind": "suspended",
+   "scale": "partial-day",
+   "cause": "snow",
+   "startTime": null,
+   "resumedTime": null,
+   "resumedDate": null,
+   "trainsCancelled": null,
+   "confidence": "low",
+   "sources": [
+    {
+     "url": "https://trafficnews.jp/post/517696",
+     "title": "半日で1m超え… ドカ雪で特急「とかち」など終日運休に 道東の普通列車も影響",
+     "publisher": "乗りものニュース",
+     "quote": "特急列車は明日午前中まで運休の見通し"
+    }
+   ],
+   "note": "2/4付記事の『見込み』ベースで、5日の実際の運休・再開時刻は未確認。",
+   "sapporoArea": false
+  }
+ ]
+}

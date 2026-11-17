@@ -85,7 +85,7 @@ export async function getJourneyResult(req: { from: string; to: string; date: st
     const disrupted = dayKind === 'later' ? [] : lines.filter(l => (dayKind === 'today' ? l.today : l.tomorrow).state === 'disrupted')
         .map(l => ({ slug: l.slug, name: l.name, note: l.note, notices: (dayKind === 'today' ? l.today : l.tomorrow).notices }));
     let riskAtTime: RiskLevel = forecast?.current.level ?? 'unknown';
-    // 積雪が多いところに大雪・風雪の注意報: 今日、または(12時以降に見ている)明日の区間は少なくとも「警戒」
+    // 大雪・風雪の注意報・警報: 今日、または(12時以降に見ている)明日の区間は少なくとも「注意」。積雪も多ければ「警戒」
     const load = core.map(l => l.snowLoad).find(x => x && (dayKind === 'today' || (dayKind === 'tomorrow' && x.appliesTomorrow))) ?? null;
     let loadReason: string | null = null;
     if (load && riskAtTime !== 'unknown') {
