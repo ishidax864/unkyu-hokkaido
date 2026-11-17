@@ -3,7 +3,7 @@ import { ArrowLeft, Snowflake, Clock3, Radio, ShieldCheck } from 'lucide-react';
 import { winterCatalogSummary, winterCaseReferences } from '@/lib/forecast/historical';
 import catalog from '@/data/historical/winter-events.json';
 import replay from '@/artifacts/winter-evidence-replay.json';
-import coreCv from '@/artifacts/eval/core-cv-2026-11-17.json';
+import coreCv from '@/data/model/core-cv.json';
 import coefficients from '@/lib/forecast/core-coefficients.json';
 import type { Metadata } from 'next';
 
