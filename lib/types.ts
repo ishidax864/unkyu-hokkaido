@@ -1,5 +1,4 @@
 
-import type { Timetable } from './timetable-data';
 
 // =====================
 // 運休AI 型定義
@@ -258,7 +257,6 @@ export interface PredictionInput {
     recovery_time?: string;
   }[] | null;
   historicalMatch?: HistoricalMatch | null;
-  timetableTrain?: Timetable | null;
 }
 
 /** 過去の気象条件との類似マッチ結果 */

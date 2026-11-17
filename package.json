@@ -14,10 +14,8 @@
         "test:visual:update": "playwright test --update-snapshots",
         "test:visual:ui": "playwright test --ui",
         "test:visual:debug": "playwright test --debug",
-        "db:check": "tsx scripts/db-integrity-check.ts",
         "security:check": "npm audit && echo 'Run: npx snyk test (requires Snyk account)'",
-        "typecheck": "tsc --noEmit",
-        "postinstall": "if [ \"$VERCEL\" = \"1\" ]; then node scripts/archive/prune-onnx.js; fi"
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@next/third-parties": "^16.1.6",
@@ -26,7 +24,6 @@
         "clsx": "^2.1.1",
         "lucide-react": "^0.563.0",
         "next": "16.1.6",
-        "onnxruntime-node": "^1.24.1",
         "react": "19.2.3",
         "react-dom": "19.2.3",
         "recharts": "^3.7.0",

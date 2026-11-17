@@ -7,7 +7,6 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { ROUTE_COORDINATES, getWeatherName } from '../../lib/weather';
-import { calculateSuspensionRisk } from '../../lib/prediction-engine';
 import { assessWeather } from '../../lib/forecast/risk';
 import { hourFeatures, featureVector, FEATURE_NAMES } from '../../lib/forecast/core';
 import catalog from '../../data/historical/winter-events.json';
@@ -103,10 +102,7 @@ function main() {
         const dayHours = (s: WeatherForecast[]) => s.filter(h => h.date === d.date && HOURS.includes(h.targetTime!));
         if (dayHours(primary).length < HOURS.length) { skipped++; continue; }
 
-        // エンジンA: /api/prediction/v2 と同じく代表1地点・翌日以降扱い(surroundingHours無し)・JR情報無し
-        const engineA = (s: WeatherForecast[]) => Math.max(...dayHours(s).map(w => calculateSuspensionRisk({
-            weather: w, routeId: d.routeId, routeName: d.routeId, targetDate: d.date, targetTime: w.targetTime, jrStatus: null,
-        }).probability));
+        // 旧ルールエンジン(A)は 2026-11-17 に削除。当時の比較結果は artifacts/予測精度の測定_2026-11-16.md に残してある
         // エンジンB: 現在の lib/forecast/risk.ts(旅程API)。2026-11-16以降は新しい中核(学習データ内の値なので交差検証ではない)
         const points: PointForecast[] = coords.map((p, i) => ({ point: { name: p.name, lat: p.lat, lon: p.lon }, hours: all[i]!, fetchedAt: '' }));
         const bLevels = HOURS.map(t => assessWeather(points, coords.length, d.date, t));
@@ -125,8 +121,6 @@ function main() {
         rows.push({
             routeId: d.routeId, date: d.date, label: d.label, source: d.source, lead: d.lead,
             winter: [11, 12, 1, 2, 3].includes(+d.date.slice(5, 7)),
-            engineA: engineA(primary),
-            engineA_depthFixed: engineA(primaryCm),
             engineB: bScores.length ? Math.max(...bScores) : null,
             engineB_unknownHours: bLevels.filter(r => r.level === 'unknown').length,
             maxGust: Math.max(...allDay.map(h => h.windGust ?? 0)),

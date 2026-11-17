@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import routesData from '@/data/hokkaido-routes.json';
+import { LINES } from '@/lib/registry/lines';
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://unkyu-hokkaido.jp';
@@ -19,12 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/accuracy`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/onboarding`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
@@ -50,10 +44,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // 路線別ページを動的生成
-    const routePages: MetadataRoute.Sitemap = (routesData as { id: string }[]).map((route) => ({
-        url: `${baseUrl}/route/${route.id}`,
+    const routePages: MetadataRoute.Sitemap = LINES.map((line) => ({
+        url: `${baseUrl}/line/${line.slug}`,
         lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
+        changeFrequency: 'hourly' as const,
         priority: 0.8,
     }));
 
