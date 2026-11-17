@@ -132,3 +132,22 @@ describe('advice', () => {
         expect(a.action).toBe('switch');
     });
 });
+
+import { mergeRows, extend } from '@/lib/engine/recovery-data';
+describe('auto-recorded incidents', () => {
+    const row = (route_id: string, start: string, end: string | null, censoredAt?: string) => ({ route_id, cause: 'animal', started_at: start, resumed_at: end, resumption_source_url: end ? 'u' : `censored:off-hours:${censoredAt}` });
+    it('merges the same incident across units and keeps censored ones as lower bounds', () => {
+        const merged = mergeRows([
+            row('01:express', '2026-12-01T01:00:00Z', '2026-12-01T02:00:00Z'), row('05:nemuro', '2026-12-01T01:15:00Z', '2026-12-01T03:15:00Z'),
+            row('04:soya', '2026-12-02T10:00:00Z', null, '2026-12-02T15:00:00Z'),
+        ]);
+        expect(merged).toEqual([expect.objectContaining({ minutes: 120, censored: false }), expect.objectContaining({ minutes: 300, censored: true })]);
+    });
+    it('extends the bundled dataset without mutating it', () => {
+        const base = { all: { resumed: [60], censored: [] }, byCause: { animal: { resumed: [60], censored: [] } } };
+        const out = extend(base, [{ cause: 'animal', minutes: 120, censored: false }, { cause: 'snow', minutes: 600, censored: true }]);
+        expect(out.byCause.animal!.resumed).toEqual([60, 120]);
+        expect(out.byCause.snow!.censored).toEqual([600]);
+        expect(base.all.resumed).toEqual([60]);
+    });
+});

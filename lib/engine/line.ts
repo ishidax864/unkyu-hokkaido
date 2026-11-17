@@ -7,6 +7,7 @@ import { fetchWeatherSeriesBatch } from '@/lib/weather';
 import { assessWeather } from '@/lib/forecast/risk';
 import { recoveryView, type RecoveryView } from './recovery';
 import { getCurrentOnsets } from './onsets';
+import { loadRecoveryDataset } from './recovery-data';
 import type { PointForecast, RiskLevel } from '@/lib/forecast/types';
 import type { WeatherForecast } from '@/lib/types';
 
@@ -56,10 +57,10 @@ export async function getLineDetail(slug: string, now = new Date()): Promise<Lin
     let recovery: RecoveryView | null = null;
     if (line.today.state === 'disrupted') {
         const own = line.today.notices.filter(n => !n.areaWide);
-        const onsets = await getCurrentOnsets(now);
+        const [onsets, data] = await Promise.all([getCurrentOnsets(now), loadRecoveryDataset()]);
         const starts = line.today.units.filter(u => u.state === 'disrupted')
             .map(u => u.unit === 'shinkansen' ? undefined : onsets.get(u.unit)).filter((x): x is number => x != null);
-        recovery = recoveryView({ notices: own.length ? own : line.today.notices, onset: starts.length ? Math.min(...starts) : null, now });
+        recovery = recoveryView({ notices: own.length ? own : line.today.notices, onset: starts.length ? Math.min(...starts) : null, now, data });
     }
     return { line, generatedAt: board.generatedAt, serviceDate: board.serviceDate, hourly, daily, recovery, weatherAvailable: points.length === expected };
 }

@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import { classifyOfficialObservation, hasExplicitAreaAllClear, specificRouteKeywords, officialPublishedAt } from './official-observation';
 
 import crawlerConfig from '../data/crawler-config.json';
+import { seriesFromLogs, episodesOfUnit } from './engine/episodes';
 
 const BASE_URL = 'https://www3.jrhokkaido.co.jp/webunkou/json/area/area_';
 const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -157,6 +158,38 @@ export async function collectExtras(
         }
     }));
     return out;
+}
+
+// ----- 運休事例の自動記録 -----
+
+/**
+ * 直近30時間の保存フィードから、終わった運休・大幅な遅れの事例を切り出して verified_recovery_incidents に追記する。
+ * - route_id は線区ID(例 '05:nemuro')、cause は原因の分類、verified は false(自動で切り出したもの。人の確認ではない)。
+ * - 運行時間外まで続いて終わりを観測できなかった事例は resumed_at を空にし、resumption_source_url に 'censored:off-hours' と
+ *   最後に運休を観測した時刻を残す(「少なくともそこまでは続いた」として統計に使う)。
+ * - 同じ (route_id, started_at) は上書きしない。失敗しても本体の収集は成功扱いのまま。
+ */
+export async function recordEpisodes(supabase: NonNullable<ReturnType<typeof getAdminSupabaseClient>>, now = new Date()): Promise<string> {
+    const since = new Date(now.getTime() - 30 * 3_600_000).toISOString();
+    const { data, error } = await supabase.from('crawler_logs').select('fetched_at,area_id,raw_json')
+        .gte('fetched_at', since).in('area_id', ['01', '02', '03', '04', '05']).not('raw_json', 'is', null).order('fetched_at').limit(1000);
+    if (error || !data) return `error: ${error?.message ?? 'no data'}`.slice(0, 120);
+    const rows: Record<string, unknown>[] = [];
+    for (const [unit, series] of seriesFromLogs(data)) for (const e of episodesOfUnit(unit, series)) {
+        if (!e.onsetKnown || (e.outcome !== 'resumed' && e.outcome !== 'off-hours')) continue;
+        const area = unit.split(':')[0];
+        const url = `${BASE_URL}${area}.json`;
+        rows.push({
+            route_id: unit, cause: e.cause, started_at: new Date(e.onset).toISOString(),
+            resumed_at: e.outcome === 'resumed' ? new Date(e.end).toISOString() : null,
+            start_source_url: url,
+            resumption_source_url: e.outcome === 'resumed' ? url : `censored:off-hours:${new Date(e.end).toISOString()}`,
+            verified: false,
+        });
+    }
+    if (!rows.length) return 'none';
+    const { error: writeError } = await supabase.from('verified_recovery_incidents').upsert(rows, { onConflict: 'route_id,started_at', ignoreDuplicates: true });
+    return writeError ? `error: ${writeError.message}`.slice(0, 120) : `checked ${rows.length}`;
 }
 
 // ----- Content Hash for Deduplication -----
@@ -377,6 +410,7 @@ export async function runJRCrawler() {
 
     logger.info('🏁 Crawler finished (ML Enhanced).', { results });
     const extras = await collectExtras(supabase).catch(e => ({ all: `error: ${String(e)}`.slice(0, 120) }));
+    const episodes = await recordEpisodes(supabase, now).catch(e => `error: ${String(e)}`.slice(0, 120));
     const weatherMissing = areaConfigs.filter(area => !weatherByArea[area.id]?.evidence).map(area => area.id);
-    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras };
+    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes };
 }

@@ -10,6 +10,7 @@ import { combine, type OfficialState, type UnknownReason } from './status';
 import { getJourneyForecast } from '@/lib/forecast/journey';
 import { recoveryView, type RecoveryView } from './recovery';
 import { getCurrentOnsets } from './onsets';
+import { loadRecoveryDataset } from './recovery-data';
 import { advise, type Advice } from './advice';
 import { withSnowLoad } from '@/lib/forecast/snow-load';
 import coefficients from '@/lib/forecast/core-coefficients.json';
@@ -96,11 +97,11 @@ export async function getJourneyResult(req: { from: string; to: string; date: st
     if (state === 'disrupted' && dayKind === 'today') {
         const own = disrupted.flatMap(d => d.notices.filter(n => !n.areaWide));
         const notices = own.length ? own : disrupted.flatMap(d => d.notices);
-        const onsets = await getCurrentOnsets(now);
+        const [onsets, data] = await Promise.all([getCurrentOnsets(now), loadRecoveryDataset()]);
         const starts = lines.filter(l => l.today.state === 'disrupted')
             .flatMap(l => l.today.units.filter(u => u.state === 'disrupted').map(u => u.unit === 'shinkansen' ? undefined : onsets.get(u.unit)))
             .filter((x): x is number => x != null);
-        recovery = recoveryView({ notices, onset: starts.length ? Math.min(...starts) : null, now });
+        recovery = recoveryView({ notices, onset: starts.length ? Math.min(...starts) : null, now, data });
     }
     const score = forecast?.current.score;
     const baseRate = coefficients.training.positives / coefficients.training.rows * 100;
