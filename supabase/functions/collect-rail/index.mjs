@@ -907,13 +907,13 @@ async function collectExtras(supabase, fetchImpl = fetch) {
   }));
   return out;
 }
-async function cacheForecast(supabase, fetchImpl = fetch) {
+async function cacheForecast(supabase, fetchImpl = fetch, attempts = 2) {
   const points = allWeatherPoints();
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${points.map((p) => p.lat).join(",")}&longitude=${points.map((p) => p.lon).join(",")}&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`;
   let last = "no attempt";
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetchImpl(url, { cache: "no-store", signal: AbortSignal.timeout(9e3) });
+      const res = await fetchImpl(url, { cache: "no-store", signal: AbortSignal.timeout(8e3) });
       if (!res.ok) {
         last = `HTTP ${res.status}`;
         if (res.status !== 429 && res.status < 500) break;
@@ -933,7 +933,7 @@ async function cacheForecast(supabase, fetchImpl = fetch) {
     } catch (e) {
       last = e?.name === "TimeoutError" ? "timeout" : String(e?.message ?? e).slice(0, 80);
     }
-    await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 1500));
   }
   return `error: ${last}`;
 }
@@ -1136,8 +1136,9 @@ async function runJRCrawler() {
   }
   logger.info("\u{1F3C1} Crawler finished (ML Enhanced).", { results });
   const extras = await collectExtras(supabase).catch((e) => ({ all: `error: ${String(e)}`.slice(0, 120) }));
-  const forecast = await cacheForecast(supabase).catch((e) => `error: ${String(e)}`.slice(0, 120));
   const episodes = await recordEpisodes(supabase, now).catch((e) => `error: ${String(e)}`.slice(0, 120));
+  const weatherReachable = weatherAttempts.some((a) => a.status === 200);
+  const forecast = weatherReachable ? await cacheForecast(supabase).catch((e) => `error: ${String(e)}`.slice(0, 120)) : "skipped: weather source unreachable this run";
   const weatherMissing = areaConfigs.filter((area) => !weatherByArea[area.id]?.evidence).map((area) => area.id);
   return { success: areaResults.every((r) => r.status === "fulfilled") && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes, forecast };
 }

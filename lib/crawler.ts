@@ -168,14 +168,14 @@ export async function collectExtras(
  * サイトが表示に使う7日間の時間別予報を、全地点まとめて1回で取得して1行に保存する(上書き)。
  * サイト(Vercel)からは天気APIに接続できないことがあるため、サイトはこの行を読む。失敗したら前回の行が残る。
  */
-export async function cacheForecast(supabase: NonNullable<ReturnType<typeof getAdminSupabaseClient>>, fetchImpl: typeof fetch = fetch): Promise<string> {
+export async function cacheForecast(supabase: NonNullable<ReturnType<typeof getAdminSupabaseClient>>, fetchImpl: typeof fetch = fetch, attempts = 2): Promise<string> {
     const points = allWeatherPoints();
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${points.map(p => p.lat).join(',')}&longitude=${points.map(p => p.lon).join(',')}` +
         `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`;
     let last = 'no attempt';
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < attempts; i++) {
         try {
-            const res = await fetchImpl(url, { cache: 'no-store', signal: AbortSignal.timeout(9000) });
+            const res = await fetchImpl(url, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
             if (!res.ok) { last = `HTTP ${res.status}`; if (res.status !== 429 && res.status < 500) break; }
             else {
                 const data = await res.json();
@@ -190,7 +190,7 @@ export async function cacheForecast(supabase: NonNullable<ReturnType<typeof getA
                 return error ? `error: ${error.message}`.slice(0, 120) : `saved ${points.length} points`;
             }
         } catch (e) { last = (e as Error)?.name === 'TimeoutError' ? 'timeout' : String((e as Error)?.message ?? e).slice(0, 80); }
-        await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+        if (i < attempts - 1) await new Promise(r => setTimeout(r, 1500));
     }
     return `error: ${last}`;
 }
@@ -445,8 +445,12 @@ export async function runJRCrawler() {
 
     logger.info('🏁 Crawler finished (ML Enhanced).', { results });
     const extras = await collectExtras(supabase).catch(e => ({ all: `error: ${String(e)}`.slice(0, 120) }));
-    const forecast = await cacheForecast(supabase).catch(e => `error: ${String(e)}`.slice(0, 120));
     const episodes = await recordEpisodes(supabase, now).catch(e => `error: ${String(e)}`.slice(0, 120));
+    // 収集全体は45秒で打ち切られる。この回で天気APIに一度も繋がらなかったなら、予報の保存は試さない(前回の行が残る)
+    const weatherReachable = weatherAttempts.some(a => a.status === 200);
+    const forecast = weatherReachable
+        ? await cacheForecast(supabase).catch(e => `error: ${String(e)}`.slice(0, 120))
+        : 'skipped: weather source unreachable this run';
     const weatherMissing = areaConfigs.filter(area => !weatherByArea[area.id]?.evidence).map(area => area.id);
     return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes, forecast };
 }
