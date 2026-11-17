@@ -94,7 +94,8 @@ function Alternatives({ r, open }: { r: JourneyResult; open: boolean }) {
 
 export default async function JourneyPage({ searchParams }: { searchParams: Promise<Params> }) {
     const p = await searchParams;
-    const req = { from: one(p.from), to: one(p.to), date: one(p.date), time: one(p.time) };
+    const by = /^\d{2}:\d{2}$/.test(one(p.by)) ? one(p.by) : undefined;
+    const req = { from: one(p.from), to: one(p.to), date: one(p.date), time: one(p.time), by };
     const valid = /^\d{4}-\d{2}-\d{2}$/.test(req.date) && /^\d{2}:\d{2}$/.test(req.time);
     let r: JourneyResult | null = null;
     let error: string | null = null;
@@ -111,14 +112,14 @@ export default async function JourneyPage({ searchParams }: { searchParams: Prom
     const f = r.forecast;
     const showAltFirst = r.advice.emphasize.length > 0;
     const primary = r.lines.find(l => l.slug !== 'express') ?? r.lines[0];
-    const qs = (date: string) => `/journey?from=${r!.from.id}&to=${r!.to.id}&date=${date}&time=${r!.request.time}`;
+    const qs = (date: string) => `/journey?from=${r!.from.id}&to=${r!.to.id}&date=${date}&time=${r!.request.time}${r!.request.by ? `&by=${r!.request.by}` : ''}`;
     return <main id="main" className="mx-auto max-w-3xl px-4 pb-16 pt-4 sm:px-6">
         <div className="flex items-center justify-between gap-2">
             <Link href="/" className="inline-flex min-h-11 items-center gap-1.5 font-bold text-brand"><ArrowLeft size={18} aria-hidden />全路線</Link>
             <RefreshButton />
         </div>
         <header className="mt-2">
-            <p className="text-sm font-bold text-ink-3 tabular">{dateLabel(r.request.date)} {r.request.time} 出発</p>
+            <p className="text-sm font-bold text-ink-3 tabular">{dateLabel(r.request.date)} {r.request.time} 出発{r.request.by ? `・${r.request.by} までに到着したい` : ''}</p>
             <h1 className="mt-0.5 text-3xl font-bold">{r.from.name}<span className="mx-2 text-ink-3">→</span>{r.to.name}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-2">
                 {r.lines.map(l => <Link key={l.slug} href={`/line/${l.slug}`} className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line bg-surface px-3 text-sm font-bold text-ink-2 hover:bg-surface-2"><TrainFront size={14} aria-hidden />{l.name}{l.note?.match(/^(札幌近郊|道央|道南)/) ? `（${l.note.match(/^(札幌近郊|道央|道南)/)![1]}）` : ''}</Link>)}

@@ -93,6 +93,7 @@ function SearchForm({ onSaved }: { onSaved: (from: string, to: string) => void }
     const [otherDate, setOtherDate] = useState('');
     const [time, setTime] = useState('');
     const [save, setSave] = useState(false);
+    const [by, setBy] = useState('');
     // 端末の時刻は表示後に入れる(サーバー描画と食い違わないように)
     // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => { setTime(jstNow().time); }, []);
@@ -104,7 +105,7 @@ function SearchForm({ onSaved }: { onSaved: (from: string, to: string) => void }
         const date = day === 'today' ? today : day === 'tomorrow'
             ? new Date(Date.parse(`${today}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : otherDate || today;
         if (save) onSaved(from, to);
-        router.push(`/journey?from=${from}&to=${to}&date=${date}&time=${time || jstNow().time}`);
+        router.push(`/journey?from=${from}&to=${to}&date=${date}&time=${time || jstNow().time}${by ? `&by=${by}` : ''}`);
     };
     const chip = (key: typeof day, label: string) => <button type="button" aria-pressed={day === key} onClick={() => setDay(key)}
         className={`min-h-11 rounded-full border px-4 font-bold ${day === key ? 'border-brand bg-brand text-on-brand' : 'border-line bg-surface text-ink-2 hover:bg-surface-2'}`}>{label}</button>;
@@ -126,6 +127,10 @@ function SearchForm({ onSaved }: { onSaved: (from: string, to: string) => void }
         {day === 'other' && <label className="mt-3 flex items-center gap-2 text-sm font-bold text-ink-3">日付
             <input type="date" value={otherDate} onChange={e => setOtherDate(e.target.value)} required
                 className="min-h-11 rounded-lg border border-line bg-surface px-3 text-base text-ink" /></label>}
+        <label className="mt-3 flex flex-wrap items-center gap-2 text-sm font-bold text-ink-3">着きたい時刻（任意）
+            <input type="time" value={by} onChange={e => setBy(e.target.value)}
+                className="min-h-11 rounded-lg border border-line bg-surface px-3 text-base font-bold text-ink tabular" />
+            <span className="font-normal">運休時に「待つと間に合うか」で提案が変わります</span></label>
         <label className="mt-3 flex min-h-11 items-center gap-2 text-[15px] text-ink-2">
             <input type="checkbox" checked={save} onChange={e => setSave(e.target.checked)} className="size-5 accent-[var(--brand)]" />この区間を「よく使う区間」に保存</label>
         <button type="submit" disabled={!valid}

@@ -64,9 +64,12 @@ export function advise(input: {
     if (expected <= 30 && (official || (upper != null && upper <= 60))) return { action: 'wait-here', emphasize: [],
         title: 'まもなく動きそうです。駅で待つ', message: `${official ? 'JRの発表では' : '過去の実績では'}あと${span(Math.max(5, expected))}ほど。駅の中で待つのが早そうです。` };
 
+    // 実績ベースの目安は外れることがある。3時間以上かかった割合が1割5分以上なら、数字で伝える
+    const beyond3h = !official && recovery?.sample ? Math.round((1 - recovery.sample.within.h3) * 10) : 0;
+    const tail = beyond3h >= 2 ? `ただし同じような事例の約${beyond3h}割は、さらに3時間以上かかっています。` : !official && upper == null ? '長引くこともあります。' : '';
     if (expected <= 120) return { action: 'wait-nearby', emphasize: late ? ['cafe', 'hotel', 'alternatives'] : ['cafe', 'alternatives'],
         title: `${span(expected)}ほど。暖かい場所で待つ`,
-        message: `${official ? 'JRの発表では' : '過去の実績では'}あと${span(expected)}前後で動く見込みです。寒いホームではなく、駅の近くの暖かい場所で待つのがおすすめです。${!official && upper == null ? '長引くこともあるので、' : ''}急ぐなら代替手段も確認を。` };
+        message: `${official ? 'JRの発表では' : '過去の実績では'}あと${span(expected)}前後で動く見込みです。寒いホームではなく、駅の近くの暖かい場所で待つのがおすすめです。${tail}急ぐなら代替手段も確認を。` };
 
     return late
         ? { action: 'stay', emphasize: ['hotel', 'alternatives'], title: '長引きそうです。宿を先に確保', message: `再開まで${span(expected)}以上かかりそうです。夜遅いので、宿の確保を先に検討してください。` }

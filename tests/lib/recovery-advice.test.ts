@@ -110,6 +110,13 @@ describe('advice', () => {
         const a = advise({ disrupted: true, recovery: rec({ kind: 'empirical', expectedMinutes: 30, remaining: { lower: 15, median: 30, upper: 150 } }), risk: 'low', hour: 10 });
         expect(a.action).toBe('wait-nearby');
     });
+    it('tells the user how often similar cases ran past three hours', () => {
+        const a = advise({ disrupted: true, recovery: rec({ kind: 'empirical', expectedMinutes: 90, remaining: { lower: 45, median: 90, upper: 200 }, sample: { n: 40, pool: 'cause', within: { m30: 0.1, h1: 0.3, h2: 0.6, h3: 0.78 } } }), risk: 'low', hour: 10 });
+        expect(a.action).toBe('wait-nearby');
+        expect(a.message).toContain('約2割');
+        const official = advise({ disrupted: true, recovery: rec({ kind: 'official', expectedMinutes: 90 }), risk: 'low', hour: 10 });
+        expect(official.message).not.toContain('割');
+    });
     it('long or all-day: switch by day, secure a room late at night', () => {
         expect(advise({ disrupted: true, recovery: rec({ kind: 'empirical', expectedMinutes: 200 }), risk: 'low', hour: 13 }).action).toBe('switch');
         expect(advise({ disrupted: true, recovery: rec({ kind: 'empirical', expectedMinutes: 200 }), risk: 'low', hour: 22 }).action).toBe('stay');

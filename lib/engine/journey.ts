@@ -18,7 +18,7 @@ import type { JourneyForecast, RiskLevel } from '@/lib/forecast/types';
 export type Verdict = 'go' | 'watch' | 'caution' | 'disrupted' | 'unknown';
 
 export interface JourneyResult {
-    request: { from: string; to: string; date: string; time: string };
+    request: { from: string; to: string; date: string; time: string; by?: string };
     from: Pick<Station, 'id' | 'name'>;
     to: Pick<Station, 'id' | 'name'>;
     lines: BoardLine[];
@@ -55,7 +55,14 @@ export function decideVerdict(official: OfficialState, risk: RiskLevel): Verdict
 
 export class JourneyInputError extends Error {}
 
-export async function getJourneyResult(req: { from: string; to: string; date: string; time: string }, now = new Date()): Promise<JourneyResult> {
+function straightKm(a: { lat?: number; lon?: number }, b: { lat?: number; lon?: number }): number | null {
+    if (a.lat == null || a.lon == null || b.lat == null || b.lon == null) return null;
+    const r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLon = (b.lon - a.lon) * r;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.sqrt(h));
+}
+
+export async function getJourneyResult(req: { from: string; to: string; date: string; time: string; by?: string }, now = new Date()): Promise<JourneyResult> {
     const from = getStationById(req.from), to = getStationById(req.to);
     const lineDefs = from && to && req.from !== req.to ? linesForJourney(req.from, req.to) : null;
     if (!from || !to || !lineDefs?.length) throw new JourneyInputError('UNSUPPORTED_JOURNEY');
@@ -99,7 +106,13 @@ export async function getJourneyResult(req: { from: string; to: string; date: st
     const baseRate = coefficients.training.positives / coefficients.training.rows * 100;
     const probability = typeof score === 'number' ? { percent: score, multiple: Math.round(score / baseRate) } : null;
     const hour = new Date(now.getTime() + 9 * 3_600_000).getUTCHours();
-    const advice = advise({ disrupted: state === 'disrupted' && dayKind === 'today', recovery, risk: riskAtTime, hour, officialKnown: state !== 'unknown' });
+    // 着きたい時刻までの残りと、列車のおおよその所要時間(直線距離からの概算。期限に間に合うかの判断にだけ使う)
+    const deadlineAt = req.by ? Date.parse(`${req.date}T${req.by}:00+09:00`) : NaN;
+    const minutesToDeadline = Number.isFinite(deadlineAt) ? Math.round((deadlineAt - now.getTime()) / 60_000) : null;
+    const km = straightKm(from, to);
+    const rideMinutes = km != null ? Math.round(km * 1.3 / (km > 60 ? 85 : 50) * 60) : null;
+    const advice = advise({ disrupted: state === 'disrupted' && dayKind === 'today', recovery, risk: riskAtTime, hour, officialKnown: state !== 'unknown',
+        minutesToDeadline: minutesToDeadline != null && minutesToDeadline > 0 ? minutesToDeadline : null, rideMinutes });
     const published = days.map(d => d.publishedAt).filter((x): x is string => !!x).sort();
     return {
         request: req, from: { id: from.id, name: from.name }, to: { id: to.id, name: to.name }, lines,

@@ -144,7 +144,7 @@ export interface Outlook {
     /** あと何分で解消したか。打ち切りが多く到達しない場合は null(=長引くことが多い) */
     p25: number | null; median: number | null; p75: number | null;
     /** あと30分・1時間・2時間以内に解消した割合 */
-    within: { m30: number; h1: number; h2: number };
+    within: { m30: number; h1: number; h2: number; h3: number };
 }
 
 /** Kaplan–Meier。経過時間 elapsed を超えて続いた事例だけを使い、残り時間の分布を返す。 */
@@ -165,7 +165,7 @@ export function kaplanMeier(set: DurationSet, elapsed = 0): Omit<Outlook, 'pool'
     }
     const quantile = (q: number) => curve.find(c => c.s <= 1 - q)?.t ?? null;
     const within = (limit: number) => Math.round((1 - (curve.filter(c => c.t <= limit).at(-1)?.s ?? 1)) * 100) / 100;
-    return { n: subjects.length, p25: quantile(0.25), median: quantile(0.5), p75: quantile(0.75), within: { m30: within(30), h1: within(60), h2: within(120) } };
+    return { n: subjects.length, p25: quantile(0.25), median: quantile(0.5), p75: quantile(0.75), within: { m30: within(30), h1: within(60), h2: within(120), h3: within(180) } };
 }
 
 export const MIN_SAMPLES = 8;
