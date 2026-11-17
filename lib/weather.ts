@@ -226,6 +226,18 @@ export function generateWarningsFromHourly(
 export interface WeatherSeries { hours: WeatherForecast[]; fetchedAt: string }
 const seriesCache = new Map<string, { expires: number; value: Promise<WeatherSeries> }>();
 const SERIES_TTL_MS = 900_000;
+/** 取得に失敗したとき、直前に取れた予報をこの時間までは使う(取得時刻は元のまま返すので、画面に「◯時時点」と出せる) */
+export const STALE_WEATHER_MAX_MS = 6 * 3_600_000;
+const lastGood = new Map<string, WeatherSeries>();
+const pointKey = (p: { lat: number; lon: number }) => `${p.lat},${p.lon}`;
+const remember = (p: { lat: number; lon: number }, series: WeatherSeries) => { lastGood.set(pointKey(p), series); return series; };
+function staleOrThrow(p: { lat: number; lon: number }, error: unknown): WeatherSeries {
+    const kept = lastGood.get(pointKey(p));
+    if (kept && Date.now() - Date.parse(kept.fetchedAt) <= STALE_WEATHER_MAX_MS) return kept;
+    throw error;
+}
+/** テスト用 */
+export function __resetWeatherCache() { seriesCache.clear(); lastGood.clear(); }
 const HOURLY_VARS = 'temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl';
 const seriesKey = (p: { lat: number; lon: number }) => `${p.lat},${p.lon}:${japanDate()}`;
 
@@ -268,12 +280,12 @@ export async function fetchWeatherSeries(coordinates: { lat: number; lon: number
         );
         if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
         const data: OpenMeteoHourlyResponse = await response.json();
-        return { hours: seriesFromHourly(data.hourly), fetchedAt: new Date().toISOString() };
+        return remember(coordinates, { hours: seriesFromHourly(data.hourly), fetchedAt: new Date().toISOString() });
     })();
     if (seriesCache.size >= 200) seriesCache.delete(seriesCache.keys().next().value!);
     seriesCache.set(key, { expires: Date.now() + SERIES_TTL_MS, value });
     try { return await value; }
-    catch (error) { seriesCache.delete(key); throw error; }
+    catch (error) { seriesCache.delete(key); return staleOrThrow(coordinates, error); }
 }
 
 /**
@@ -298,13 +310,13 @@ export async function fetchWeatherSeriesBatch(points: { lat: number; lon: number
         })();
         const fetchedAt = new Date().toISOString();
         unique.forEach((p, i) => {
-            const value = batch.then(list => ({ hours: seriesFromHourly(list[i].hourly), fetchedAt }));
+            const value = batch.then(list => remember(p, { hours: seriesFromHourly(list[i].hourly), fetchedAt }));
             value.catch(() => seriesCache.delete(seriesKey(p)));
             seriesCache.set(seriesKey(p), { expires: Date.now() + SERIES_TTL_MS, value });
         });
     }
     return Promise.all(points.map(p => (seriesCache.get(seriesKey(p))?.value ?? fetchWeatherSeries(p))
-        .catch((e: unknown) => e instanceof Error ? e : new Error(String(e)))));
+        .catch((e: unknown) => { try { return staleOrThrow(p, e); } catch { return e instanceof Error ? e : new Error(String(e)); } })));
 }
 
 export async function fetchHourlyWeatherForecast(

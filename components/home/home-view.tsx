@@ -163,7 +163,11 @@ export function HomeView({ initialBoard }: { initialBoard: Board | null }) {
 
     return <main id="main" className="mx-auto max-w-4xl px-4 pb-16 pt-4 sm:px-6">
         <div className="mb-4 flex items-center justify-between gap-3">
-            <p className="text-sm text-ink-3">JR発表 <span className="font-bold text-ink-2 tabular">{clock(board?.sources.jr.publishedAt)}</span> 時点</p>
+            <p className="text-sm text-ink-3">JR発表 <span className="font-bold text-ink-2 tabular">{clock(board?.sources.jr.publishedAt)}</span> 時点
+                {board?.sources.weather.fetchedAt && Date.parse(board.generatedAt) - Date.parse(board.sources.weather.fetchedAt) > 45 * 60_000
+                    && <span className="ml-2 rounded bg-watch-soft px-1.5 py-0.5 font-bold text-watch">気象予報は {clock(board.sources.weather.fetchedAt)} 時点</span>}
+                {board && board.sources.weather.totalPoints > 0 && board.sources.weather.failedPoints === board.sources.weather.totalPoints
+                    && <span className="ml-2 rounded bg-unknown-soft px-1.5 py-0.5 font-bold text-unknown">気象予報を取得できません</span>}</p>
             <button type="button" onClick={() => void refresh()} disabled={loading}
                 className="flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-surface px-4 text-sm font-bold text-ink-2 hover:bg-surface-2 disabled:opacity-60">
                 <RefreshCw size={16} className={loading ? 'animate-spin' : ''} aria-hidden />{loading ? '更新中' : '更新'}</button>
