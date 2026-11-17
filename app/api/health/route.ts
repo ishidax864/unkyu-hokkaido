@@ -12,7 +12,7 @@ export async function GET() {
         return NextResponse.json({
             status: jrOk && weatherOk ? 'ok' : 'degraded', generatedAt: board.generatedAt,
             jr: { ok: jrOk, publishedAt: board.sources.jr.publishedAt, errors: board.sources.jr.errors },
-            weather: { ok: weatherOk, fetchedAt: board.sources.weather.fetchedAt, failedPoints: board.sources.weather.failedPoints },
+            weather: { ok: weatherOk, fetchedAt: board.sources.weather.fetchedAt, failedPoints: board.sources.weather.failedPoints, error: board.sources.weather.error },
         }, { status: jrOk ? 200 : 503, headers: { 'Cache-Control': 'no-store' } });
     } catch {
         return NextResponse.json({ status: 'error' }, { status: 503, headers: { 'Cache-Control': 'no-store' } });

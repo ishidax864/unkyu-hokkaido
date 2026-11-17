@@ -50,7 +50,7 @@ export interface Board {
     lines: BoardLine[];
     sources: {
         jr: { publishedAt: string | null; fetchedAt: string; errors: string[] };
-        weather: { fetchedAt: string | null; failedPoints: number; totalPoints: number };
+        weather: { fetchedAt: string | null; failedPoints: number; totalPoints: number; error?: string };
     };
 }
 
@@ -83,6 +83,7 @@ export interface BoardInputs {
     feeds: FeedSnapshot;
     weather: Map<string, PointForecast | null>;
     weatherFetchedAt: string | null;
+    weatherError?: string;
     warnings: Map<string, WarningSnapshot>;
     observedSnow: ObservedSnow | null;
 }
@@ -134,7 +135,7 @@ export function buildBoard(inputs: BoardInputs, now = new Date()): Board {
         generatedAt: now.toISOString(), serviceDate, tomorrowDate, lines,
         sources: {
             jr: { publishedAt: published[0] ?? null, fetchedAt: inputs.feeds.fetchedAt, errors: Object.entries(inputs.feeds.errors).map(([a, e]) => `${a}: ${e}`) },
-            weather: { fetchedAt: inputs.weatherFetchedAt, failedPoints, totalPoints },
+            weather: { fetchedAt: inputs.weatherFetchedAt, failedPoints, totalPoints, ...(inputs.weatherError ? { error: inputs.weatherError } : {}) },
         },
     };
 }
@@ -155,15 +156,21 @@ export async function getBoard(): Promise<Board> {
         ]);
         const weather = new Map<string, PointForecast | null>();
         let weatherFetchedAt: string | null = null;
+        let weatherError: string | undefined;
         unique.forEach((p, i) => {
             const s = series[i];
-            if (s instanceof Error) { weather.set(`${p.lat},${p.lon}`, null); return; }
+            if (s instanceof Error) {
+                weather.set(`${p.lat},${p.lon}`, null);
+                const cause = (s as Error & { cause?: { code?: string } }).cause?.code;
+                weatherError ??= `${s.name}: ${s.message}${cause ? ` (${cause})` : ''}`.slice(0, 160);
+                return;
+            }
             weatherFetchedAt = weatherFetchedAt && weatherFetchedAt < s.fetchedAt ? weatherFetchedAt : s.fetchedAt;
             weather.set(`${p.lat},${p.lon}`, { point: { name: p.name, lat: p.lat, lon: p.lon }, hours: s.hours, fetchedAt: s.fetchedAt });
         });
         const warnings = new Map<string, WarningSnapshot>();
         for (const [slug, w] of warningList) if (w) warnings.set(slug, w);
-        return buildBoard({ feeds, weather, weatherFetchedAt, warnings, observedSnow });
+        return buildBoard({ feeds, weather, weatherFetchedAt, weatherError, warnings, observedSnow });
     })();
     cache = { expires: Date.now() + 60_000, value };
     try { return await value; }
