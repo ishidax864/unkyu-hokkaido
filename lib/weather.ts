@@ -237,8 +237,8 @@ function staleOrThrow(p: { lat: number; lon: number }, error: unknown): WeatherS
     throw error;
 }
 /** テスト用 */
-export function __resetWeatherCache() { seriesCache.clear(); lastGood.clear(); }
-const HOURLY_VARS = 'temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl';
+export function __resetWeatherCache() { seriesCache.clear(); lastGood.clear(); dbCache = null; }
+export const HOURLY_VARS = 'temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl';
 const seriesKey = (p: { lat: number; lon: number }) => `${p.lat},${p.lon}:${japanDate()}`;
 
 /** Open-Meteo の hourly を WeatherForecast[] に。欠損・負値の時刻は捨てる(晴れ扱いにしない)。 */
@@ -264,6 +264,34 @@ export function seriesFromHourly(h: OpenMeteoHourlyResponse['hourly'] | undefine
     return hours;
 }
 
+/** 収集が保存した予報(crawler_logs の area_id='wx:forecast' の1行)。サイトは表示のたびに外部へ取りに行かず、まずこれを読む */
+export const FORECAST_CACHE_ID = 'wx:forecast';
+export interface ForecastCachePayload { fetchedAt: string; points: { lat: number; lon: number; hourly: OpenMeteoHourlyResponse['hourly'] }[] }
+/** 保存された予報をこの時間までは「新しい」として使う(収集は15分ごと) */
+const DB_FRESH_MS = 60 * 60_000;
+let dbCache: { expires: number; value: Promise<Map<string, WeatherSeries>> } | null = null;
+
+async function storedForecast(): Promise<Map<string, WeatherSeries>> {
+    if (dbCache && dbCache.expires > Date.now()) return dbCache.value;
+    const value = (async () => {
+        const out = new Map<string, WeatherSeries>();
+        const { getAdminSupabaseClient } = await import('./repos/client');
+        const client = getAdminSupabaseClient();
+        if (!client) return out;
+        const { data, error } = await client.from('crawler_logs').select('raw_json')
+            .eq('area_id', FORECAST_CACHE_ID).order('fetched_at', { ascending: false }).limit(1).abortSignal(AbortSignal.timeout(5000));
+        const payload = data?.[0]?.raw_json as ForecastCachePayload | undefined;
+        if (error || !payload?.fetchedAt || !Array.isArray(payload.points)) return out;
+        for (const p of payload.points) {
+            try { out.set(pointKey(p), { hours: seriesFromHourly(p.hourly), fetchedAt: payload.fetchedAt }); } catch { /* その地点は使わない */ }
+        }
+        return out;
+    })().catch(() => new Map<string, WeatherSeries>());
+    dbCache = { expires: Date.now() + 120_000, value };
+    return value;
+}
+const ageOf = (s: WeatherSeries) => Date.now() - Date.parse(s.fetchedAt);
+
 /** One seven-day hourly fetch serves the selected time, timeline and week.
  * Units: wind m/s, snowfall cm/hour, snow depth metres, precipitation mm/hour.
  * Missing values are omitted, never coerced to fair weather. */
@@ -273,10 +301,14 @@ export async function fetchWeatherSeries(coordinates: { lat: number; lon: number
     const cached = seriesCache.get(key);
     if (cached && cached.expires > Date.now()) return cached.value;
     const value = (async () => {
+        // まず収集が保存した予報。新しければ外部へは取りに行かない
+        const stored = (await storedForecast()).get(pointKey(coordinates));
+        if (stored && ageOf(stored) <= DB_FRESH_MS) return remember(coordinates, stored);
+        if (stored && ageOf(stored) <= STALE_WEATHER_MAX_MS && !lastGood.has(pointKey(coordinates))) lastGood.set(pointKey(coordinates), stored);
         const response = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
             `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`,
-            { cache: 'no-store', signal: AbortSignal.timeout(8000) } // own 15-min cache; Next's stale-while-revalidate once served a month-old forecast
+            { cache: 'no-store', signal: AbortSignal.timeout(5000) } // own 15-min cache; Next's stale-while-revalidate once served a month-old forecast
         );
         if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
         const data: OpenMeteoHourlyResponse = await response.json();
@@ -294,6 +326,16 @@ export async function fetchWeatherSeries(coordinates: { lat: number; lon: number
  * 戻り値は入力と同じ順。取れなかった地点は Error。
  */
 export async function fetchWeatherSeriesBatch(points: { lat: number; lon: number }[], fetchImpl: typeof fetch = fetch): Promise<(WeatherSeries | Error)[]> {
+    if (fetchImpl === fetch) {
+        // 保存された予報が新しければそれを使う。古くても最後の手段として覚えておく
+        const stored = await storedForecast();
+        for (const p of points) {
+            const s = stored.get(pointKey(p));
+            if (!s) continue;
+            if (ageOf(s) <= DB_FRESH_MS) seriesCache.set(seriesKey(p), { expires: Date.now() + 120_000, value: Promise.resolve(remember(p, s)) });
+            else if (ageOf(s) <= STALE_WEATHER_MAX_MS && !lastGood.has(pointKey(p))) lastGood.set(pointKey(p), s);
+        }
+    }
     const missing = points.filter(p => { const c = seriesCache.get(seriesKey(p)); return !c || c.expires <= Date.now(); });
     const unique = missing.filter((p, i) => missing.findIndex(q => q.lat === p.lat && q.lon === p.lon) === i);
     if (unique.length) {
@@ -301,7 +343,7 @@ export async function fetchWeatherSeriesBatch(points: { lat: number; lon: number
             const response = await fetchImpl(
                 `https://api.open-meteo.com/v1/forecast?latitude=${unique.map(p => p.lat).join(',')}&longitude=${unique.map(p => p.lon).join(',')}` +
                 `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`,
-                { cache: 'no-store', signal: AbortSignal.timeout(12000) });
+                { cache: 'no-store', signal: AbortSignal.timeout(6000) });
             if (!response.ok) throw new Error(`Weather source unavailable (${response.status})`);
             const data = await response.json() as OpenMeteoHourlyResponse | OpenMeteoHourlyResponse[];
             const list = Array.isArray(data) ? data : [data];

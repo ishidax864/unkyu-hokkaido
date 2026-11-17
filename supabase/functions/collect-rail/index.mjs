@@ -1,3 +1,17 @@
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+
+// scripts/edge/logger.mjs
+var logger;
+var init_logger = __esm({
+  "scripts/edge/logger.mjs"() {
+    logger = { info: (message) => console.info(message), warn: (message) => console.warn(message), error: (message) => console.error(message), debug: () => {
+    } };
+  }
+});
+
 // scripts/edge/client.mjs
 import { createClient } from "npm:@supabase/supabase-js@2.93.3";
 var client;
@@ -5,9 +19,8 @@ function getAdminSupabaseClient() {
   return client ??= createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
 }
 
-// scripts/edge/logger.mjs
-var logger = { info: (message) => console.info(message), warn: (message) => console.warn(message), error: (message) => console.error(message), debug: () => {
-} };
+// lib/jr-status.ts
+init_logger();
 
 // data/crawler-config.json
 var crawler_config_default = {
@@ -321,6 +334,7 @@ function extractNumericalStatus(text) {
 }
 
 // lib/crawler.ts
+init_logger();
 import crypto from "node:crypto";
 
 // lib/registry/units.ts
@@ -694,6 +708,79 @@ function seriesFromLogs(rows) {
   return series;
 }
 
+// lib/weather.ts
+init_logger();
+
+// lib/jma-warnings.ts
+init_logger();
+
+// lib/weather.ts
+var ROUTE_COORDINATES = {
+  // 札幌近郊
+  "jr-hokkaido.hakodate-main": [
+    { lat: 43.0621, lon: 141.3544, name: "\u672D\u5E4C" },
+    { lat: 43.2, lon: 140.9833, name: "\u5C0F\u6A3D" },
+    { lat: 43.3333, lon: 141.9167, name: "\u5CA9\u898B\u6CA2" }
+  ],
+  "jr-hokkaido.chitose": [
+    { lat: 42.7752, lon: 141.6922, name: "\u5343\u6B73" }
+  ],
+  "jr-hokkaido.sassho": [
+    { lat: 43.2167, lon: 141.35, name: "\u77F3\u72E9\u5F53\u5225" }
+  ],
+  // 道央
+  "jr-hokkaido.muroran-main": [
+    { lat: 42.315, lon: 140.9736, name: "\u5BA4\u862D" },
+    { lat: 42.6333, lon: 141.6, name: "\u82EB\u5C0F\u7267" }
+  ],
+  "jr-hokkaido.hidaka": [
+    { lat: 42.4833, lon: 142.05, name: "\u65E5\u9AD8\u9580\u5225" }
+  ],
+  // 道南
+  "jr-hokkaido.hakodate-south": [
+    { lat: 41.7686, lon: 140.7289, name: "\u51FD\u9928" },
+    { lat: 42.5, lon: 140.2333, name: "\u9577\u4E07\u90E8" }
+  ],
+  // 道北
+  "jr-hokkaido.soya-main": [
+    { lat: 45.4167, lon: 141.6833, name: "\u7A1A\u5185" },
+    { lat: 44.35, lon: 142.3833, name: "\u540D\u5BC4" }
+  ],
+  "jr-hokkaido.rumoi": [
+    { lat: 43.95, lon: 141.6333, name: "\u7559\u840C" }
+  ],
+  // 道東
+  "jr-hokkaido.sekihoku-main": [
+    { lat: 43.8, lon: 143.9, name: "\u5317\u898B" },
+    { lat: 43.7706, lon: 142.365, name: "\u4E0A\u5DDD\uFF08\u767D\u6EDD\uFF09" }
+  ],
+  "jr-hokkaido.senmo-main": [
+    { lat: 44.02, lon: 144.27, name: "\u7DB2\u8D70" },
+    { lat: 42.9849, lon: 144.3816, name: "\u91E7\u8DEF" }
+  ],
+  "jr-hokkaido.nemuro-main": [
+    { lat: 42.92, lon: 143.2, name: "\u5E2F\u5E83" },
+    { lat: 42.9849, lon: 144.3816, name: "\u91E7\u8DEF" }
+  ],
+  "jr-hokkaido.furano": [
+    { lat: 43.35, lon: 142.3833, name: "\u5BCC\u826F\u91CE" }
+  ],
+  "jr-hokkaido.sekisho": [
+    { lat: 43, lon: 142.75, name: "\u5360\u51A0" },
+    { lat: 42.92, lon: 143.2, name: "\u5E2F\u5E83" }
+  ]
+};
+var STALE_WEATHER_MAX_MS = 6 * 36e5;
+var HOURLY_VARS = "temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,snow_depth,weather_code,snowfall,winddirection_10m,pressure_msl";
+var FORECAST_CACHE_ID = "wx:forecast";
+var DB_FRESH_MS = 60 * 6e4;
+
+// lib/weather-points.ts
+function allWeatherPoints() {
+  const all = [...LINES.flatMap((l) => l.weatherPoints), ...Object.values(ROUTE_COORDINATES).flat()];
+  return all.filter((p, i) => all.findIndex((q) => q.lat === p.lat && q.lon === p.lon) === i).map((p) => ({ lat: p.lat, lon: p.lon }));
+}
+
 // lib/crawler.ts
 var BASE_URL = "https://www3.jrhokkaido.co.jp/webunkou/json/area/area_";
 var OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
@@ -819,6 +906,36 @@ async function collectExtras(supabase, fetchImpl = fetch) {
     }
   }));
   return out;
+}
+async function cacheForecast(supabase, fetchImpl = fetch) {
+  const points = allWeatherPoints();
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${points.map((p) => p.lat).join(",")}&longitude=${points.map((p) => p.lon).join(",")}&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`;
+  let last = "no attempt";
+  for (let i = 0; i < 3; i++) {
+    try {
+      const res = await fetchImpl(url, { cache: "no-store", signal: AbortSignal.timeout(9e3) });
+      if (!res.ok) {
+        last = `HTTP ${res.status}`;
+        if (res.status !== 429 && res.status < 500) break;
+      } else {
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : [data];
+        if (list.length !== points.length) {
+          last = "location count mismatch";
+          break;
+        }
+        const payload = { fetchedAt: (/* @__PURE__ */ new Date()).toISOString(), points: points.map((p, j) => ({ ...p, hourly: list[j].hourly })) };
+        const { data: existing } = await supabase.from("crawler_logs").select("id").eq("area_id", FORECAST_CACHE_ID).order("fetched_at", { ascending: false }).limit(1);
+        const row = { area_id: FORECAST_CACHE_ID, raw_json: payload, status: "success", source_url: "https://api.open-meteo.com/v1/forecast", collector_version: "forecast-cache-v1", fetched_at: payload.fetchedAt };
+        const { error } = existing?.[0]?.id ? await supabase.from("crawler_logs").update(row).eq("id", existing[0].id) : await supabase.from("crawler_logs").insert(row);
+        return error ? `error: ${error.message}`.slice(0, 120) : `saved ${points.length} points`;
+      }
+    } catch (e) {
+      last = e?.name === "TimeoutError" ? "timeout" : String(e?.message ?? e).slice(0, 80);
+    }
+    await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+  }
+  return `error: ${last}`;
 }
 async function recordEpisodes(supabase, now = /* @__PURE__ */ new Date()) {
   const since = new Date(now.getTime() - 30 * 36e5).toISOString();
@@ -1019,9 +1136,10 @@ async function runJRCrawler() {
   }
   logger.info("\u{1F3C1} Crawler finished (ML Enhanced).", { results });
   const extras = await collectExtras(supabase).catch((e) => ({ all: `error: ${String(e)}`.slice(0, 120) }));
+  const forecast = await cacheForecast(supabase).catch((e) => `error: ${String(e)}`.slice(0, 120));
   const episodes = await recordEpisodes(supabase, now).catch((e) => `error: ${String(e)}`.slice(0, 120));
   const weatherMissing = areaConfigs.filter((area) => !weatherByArea[area.id]?.evidence).map((area) => area.id);
-  return { success: areaResults.every((r) => r.status === "fulfilled") && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes };
+  return { success: areaResults.every((r) => r.status === "fulfilled") && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes, forecast };
 }
 
 // scripts/edge/entry.mjs

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fetchWeatherSeriesBatch, __resetWeatherCache, STALE_WEATHER_MAX_MS } from '@/lib/weather';
 
+vi.mock('@/lib/repos/client', async orig => ({ ...(await orig() as object), getAdminSupabaseClient: () => null }));
+
 const P = [{ lat: 43, lon: 141 }, { lat: 42, lon: 140 }];
 const hourly = () => ({ time: ['2026-01-15T12:00'], temperature_2m: [-3], precipitation: [1], wind_speed_10m: [4], wind_gusts_10m: [8], snow_depth: [0.5], weather_code: [71], snowfall: [0.7], winddirection_10m: [300], pressure_msl: [1010] });
 const ok = () => new Response(JSON.stringify(P.map(() => ({ hourly: hourly() }))));

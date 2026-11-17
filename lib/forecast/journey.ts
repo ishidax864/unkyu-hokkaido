@@ -1,4 +1,4 @@
-import { HOKKAIDO_ROUTES, getStationById, getJRStatusUrl } from '@/lib/hokkaido-data';
+import { HOKKAIDO_ROUTES, getJRStatusUrl } from '@/lib/hokkaido-data';
 import { fetchWeatherSeries, getRouteAllCoordinates } from '@/lib/weather';
 import { fetchJRHokkaidoStatus, type JROperationStatus } from '@/lib/jr-status';
 import { assessWeather, withCurrentWarnings } from './risk';
@@ -44,12 +44,6 @@ async function buildJourneyForecast(request: JourneyForecast['request']): Promis
     const ids = journeyRouteIds(request.departureId, request.arrivalId);
     if (!ids) throw new Error('UNSUPPORTED_JOURNEY');
     const points: WeatherPoint[] = ids.flatMap(id => getRouteAllCoordinates(id));
-    for (const id of [request.departureId, request.arrivalId]) {
-        const station = getStationById(id)!;
-        if (station.lat != null && station.lon != null && !points.some(p => Math.abs(p.lat - station.lat!) < 0.02 && Math.abs(p.lon - station.lon!) < 0.02)) {
-            points.push({ name: station.name, lat: station.lat, lon: station.lon });
-        }
-    }
     const unique = points.filter((p, i) => points.findIndex(other => other.lat === p.lat && other.lon === p.lon) === i);
     const [weatherResults, officialItems, warnings, observedSnow, buses] = await Promise.all([
         Promise.allSettled(unique.map(async point => ({ point, ...await fetchWeatherSeries(point) }))),

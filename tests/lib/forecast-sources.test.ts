@@ -3,6 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { officialPublishedAt } from '@/lib/official-observation';
 
+// 保存済み予報(Supabase)は使わず、外部取得の動きだけを確かめる
+vi.mock('@/lib/repos/client', async orig => ({ ...(await orig() as object), getAdminSupabaseClient: () => null }));
+
 const now = new Date('2026-01-15T03:00:00Z');
 beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(now); });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); vi.resetModules(); vi.clearAllMocks(); });

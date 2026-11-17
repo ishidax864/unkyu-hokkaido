@@ -6,6 +6,8 @@ import { classifyOfficialObservation, hasExplicitAreaAllClear, specificRouteKeyw
 
 import crawlerConfig from '../data/crawler-config.json';
 import { seriesFromLogs, episodesOfUnit } from './engine/episodes';
+import { HOURLY_VARS, FORECAST_CACHE_ID } from './weather';
+import { allWeatherPoints } from './weather-points';
 
 const BASE_URL = 'https://www3.jrhokkaido.co.jp/webunkou/json/area/area_';
 const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -158,6 +160,39 @@ export async function collectExtras(
         }
     }));
     return out;
+}
+
+// ----- 予報の保存 -----
+
+/**
+ * サイトが表示に使う7日間の時間別予報を、全地点まとめて1回で取得して1行に保存する(上書き)。
+ * サイト(Vercel)からは天気APIに接続できないことがあるため、サイトはこの行を読む。失敗したら前回の行が残る。
+ */
+export async function cacheForecast(supabase: NonNullable<ReturnType<typeof getAdminSupabaseClient>>, fetchImpl: typeof fetch = fetch): Promise<string> {
+    const points = allWeatherPoints();
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${points.map(p => p.lat).join(',')}&longitude=${points.map(p => p.lon).join(',')}` +
+        `&hourly=${HOURLY_VARS}&timezone=Asia/Tokyo&wind_speed_unit=ms&forecast_days=7&past_days=1`;
+    let last = 'no attempt';
+    for (let i = 0; i < 3; i++) {
+        try {
+            const res = await fetchImpl(url, { cache: 'no-store', signal: AbortSignal.timeout(9000) });
+            if (!res.ok) { last = `HTTP ${res.status}`; if (res.status !== 429 && res.status < 500) break; }
+            else {
+                const data = await res.json();
+                const list = Array.isArray(data) ? data : [data];
+                if (list.length !== points.length) { last = 'location count mismatch'; break; }
+                const payload = { fetchedAt: new Date().toISOString(), points: points.map((p, j) => ({ ...p, hourly: list[j].hourly })) };
+                const { data: existing } = await supabase.from('crawler_logs').select('id').eq('area_id', FORECAST_CACHE_ID).order('fetched_at', { ascending: false }).limit(1);
+                const row = { area_id: FORECAST_CACHE_ID, raw_json: payload, status: 'success', source_url: 'https://api.open-meteo.com/v1/forecast', collector_version: 'forecast-cache-v1', fetched_at: payload.fetchedAt };
+                const { error } = existing?.[0]?.id
+                    ? await supabase.from('crawler_logs').update(row).eq('id', existing[0].id)
+                    : await supabase.from('crawler_logs').insert(row);
+                return error ? `error: ${error.message}`.slice(0, 120) : `saved ${points.length} points`;
+            }
+        } catch (e) { last = (e as Error)?.name === 'TimeoutError' ? 'timeout' : String((e as Error)?.message ?? e).slice(0, 80); }
+        await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+    }
+    return `error: ${last}`;
 }
 
 // ----- 運休事例の自動記録 -----
@@ -410,7 +445,8 @@ export async function runJRCrawler() {
 
     logger.info('🏁 Crawler finished (ML Enhanced).', { results });
     const extras = await collectExtras(supabase).catch(e => ({ all: `error: ${String(e)}`.slice(0, 120) }));
+    const forecast = await cacheForecast(supabase).catch(e => `error: ${String(e)}`.slice(0, 120));
     const episodes = await recordEpisodes(supabase, now).catch(e => `error: ${String(e)}`.slice(0, 120));
     const weatherMissing = areaConfigs.filter(area => !weatherByArea[area.id]?.evidence).map(area => area.id);
-    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes };
+    return { success: areaResults.every(r => r.status === 'fulfilled') && !mlResult.error && weatherMissing.length === 0, results, ml: mlResult, weatherMissing, weatherAttempts, extras, episodes, forecast };
 }
